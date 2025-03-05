@@ -210,13 +210,32 @@ def find_color_or_texture(node, visited=None):
     
     return None, None
 
+def find_diffuse_texture(material):
+    """Find an image texture with a name ending in '_Diffuse' in the material."""
+    if not material.use_nodes or not material.node_tree:
+        return None
+    
+    # Search for image texture nodes with names ending in '_Diffuse'
+    for node in material.node_tree.nodes:
+        if node.type == 'TEX_IMAGE' and node.image:
+            if node.image.name.endswith('_Diffuse'):
+                return node.image
+    
+    return None
+
 def set_viewport_colors():
     """Set Viewport Display colors based on the final shader output."""
     for mat in bpy.data.materials:
         if not mat.use_nodes or not mat.node_tree:
             continue
         
-        # Get the final color or texture from the material
+        # First check for a diffuse texture
+        diffuse_texture = find_diffuse_texture(mat)
+        if diffuse_texture:
+            mat.diffuse_color = get_average_color(diffuse_texture)
+            continue
+        
+        # If no diffuse texture, proceed with normal calculation
         image, color = get_final_color(mat)
         
         # Set the viewport color
