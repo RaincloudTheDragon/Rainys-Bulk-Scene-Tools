@@ -1,7 +1,7 @@
 bl_info = {
     "name": "Set Viewport Colors from BSDF",
     "author": "RaincloudTheDragon",
-    "version": (0, 0, 1),
+    "version": (0, 0, 2),
     "blender": (4, 3, 2),
     "location": "Properties > Material > Viewport Display",
     "description": "Sets the Viewport Display color based on BSDF base color or the average color of the connected texture",
@@ -84,6 +84,18 @@ def set_viewport_colors():
                 # Check if a texture is connected
                 if node.inputs["Diffuse Color"].links:
                     linked_image = find_image_node(node)
+
+        # New fallback for Multiply node or "Diffuse Color" property
+        if not linked_image:
+            for node in mat.node_tree.nodes:
+                if node.type == 'MIX_RGB' and node.blend_type == 'MULTIPLY':
+                    # Check for Multiply node
+                    base_color = node.inputs['Color1'].default_value[:3]
+                    break
+                elif "Diffuse Color" in node.inputs:
+                    # Check for "Diffuse Color" property
+                    base_color = node.inputs["Diffuse Color"].default_value[:3]
+                    break
 
         # Use image color if available, otherwise use diffuse/base color
         display_color = get_average_color(linked_image) if linked_image else (*base_color, 1.0)
