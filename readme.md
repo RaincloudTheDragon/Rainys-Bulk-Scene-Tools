@@ -1,26 +1,26 @@
 # Set Viewport Colors from BSDF
 
-A basic Blender addon that automatically sets viewport display colors based on material node settings.
+A Blender addon that automatically sets viewport display colors based on material and material node settings.
 
 ## Description
 
 Simply sets viewport material colors with the actual material settings in your node setup. It works by:
 
-1. Reading the base color from Principled BSDF nodes
-2. If a texture is connected to the Base Color input, it calculates the average color of that texture
-3. Sets the viewport display color to match, making your viewport representation more accurate
+1. Calculating the final color by analyzing the node tree from the output node
+2. Properly handling color mixing operations (like Mix RGB and Multiply nodes)
+3. If a texture is used, calculating the average color of that texture as a fallback
 
-Useful for setting material viewport colors in bulk.
+This ensures your viewport shading better represents the final render appearance.
 
 ## Features
 
-- Automatically detects Principled BSDF nodes and extracts base colors
-- Calculates average colors from connected texture nodes
+- ""Intelligently"" calculates final colors by analyzing the entire node tree
+- Handles Mix RGB nodes with proper color mixing calculations
+- Supports Principled BSDF and other shader types
 - Works with all materials in your scene with a single click
-- Supports both solid color inputs and texture-based materials
 - Integrates seamlessly into the Material Properties panel
 
-## Version support
+## Requirements
 
 Blender 4.3.2
 
@@ -33,7 +33,7 @@ Blender 4.3.2
 
 ## Usage
 
-1. Open scene
+1. Select any object with materials
 2. Go to Properties > Material > Set Viewport Colors
 3. Click the "Set Viewport Colors" button
 4. All materials in your scene will have their viewport colors updated to match their node setups

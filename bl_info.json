@@ -1,7 +1,7 @@
 {
     "name": "Set Viewport Colors from BSDF",
     "author": "RaincloudTheDragon",
-    "version": [0, 0, 1],
+    "version": [0, 0, 3],
     "blender": [4, 3, 2],
     "location": "Properties > Material > Viewport Display",
     "description": "Sets the Viewport Display color based on BSDF base color or the average color of the connected texture",
