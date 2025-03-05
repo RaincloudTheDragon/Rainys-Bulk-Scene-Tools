@@ -38,16 +38,6 @@ Blender 4.3.2
 3. Click the "Set Viewport Colors" button
 4. All materials in your scene will have their viewport colors updated to match their node setups
 
-## How It Works
-
-The addon traverses the node tree of each material looking for Principled BSDF nodes. If found, it extracts the Base Color value. If a texture is connected to the Base Color input, it calculates the average color of that texture and uses it instead.
-
-For non-Principled BSDF materials, it looks for inputs named "Diffuse Color" as a fallback.
-
 ## Author
 
 - **RaincloudTheDragon**
-
-## Version
-
-0.0.1
