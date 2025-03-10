@@ -1,24 +1,11 @@
-# Set Viewport Colors from BSDF
+# Bulk Scene Tools
 
-A Blender addon that automatically sets viewport display colors based on material and material node settings.
-
-## Description
-
-Simply sets viewport material colors with the actual material settings in your node setup. It works by:
-
-1. Calculating the final color by analyzing the node tree from the output node
-2. Properly handling color mixing operations (like Mix RGB and Multiply nodes)
-3. If a texture is used, calculating the average color of that texture as a fallback
-
-This ensures your viewport shading better represents the final render appearance.
+A couple Blender tools to help me automate some tedious tasks.
 
 ## Features
 
-- ""Intelligently"" calculates final colors by analyzing the entire node tree
-- Handles Mix RGB nodes with proper color mixing calculations
-- Supports Principled BSDF and other shader types
-- Works with all materials in your scene with a single click
-- Integrates seamlessly into the Material Properties panel
+- Bulk Data Remap:
+- Bulk Viewport Display: 
 
 ## Requirements
 
