@@ -2,10 +2,6 @@ import bpy
 import numpy as np
 from time import time
 import os
-import sys
-import tempfile
-import json
-import subprocess
 from enum import Enum
 
 # Material processing status enum
@@ -25,143 +21,59 @@ start_time = 0
 is_processing = False
 material_queue = []
 current_index = 0
-processes = []
 
-# Fix for multiprocessing on Windows in Blender
-def setup_multiprocessing():
-    """Setup environment for multiprocessing to work in Blender on Windows"""
-    import sys
-    import os
+# Scene properties for viewport display settings
+def register_viewport_properties():
+    bpy.types.Scene.viewport_colors_selected_only = bpy.props.BoolProperty(
+        name="Selected Objects Only",
+        description="Apply viewport colors only to materials in selected objects",
+        default=False
+    )
     
-    # are we running inside Blender?
-    bpy = sys.modules.get("bpy")
-    if bpy is not None:
-        # Try to get Python executable path
-        # Different Blender versions have different ways to access this
-        python_exe = None
-        
-        # Method 1: Try binary_path_python (newer Blender versions)
-        try:
-            python_exe = bpy.app.binary_path_python
-        except AttributeError:
-            pass
-            
-        # Method 2: Try to find Python in Blender's directory
-        if not python_exe:
-            blender_dir = os.path.dirname(bpy.app.binary_path)
-            possible_paths = [
-                os.path.join(blender_dir, "python.exe"),
-                os.path.join(blender_dir, "python", "bin", "python.exe"),
-                os.path.join(os.path.dirname(blender_dir), "python", "bin", "python.exe")
-            ]
-            
-            for path in possible_paths:
-                if os.path.exists(path):
-                    python_exe = path
-                    break
-        
-        # Method 3: Use sys.executable as fallback
-        if not python_exe:
-            python_exe = sys.executable
-            
-        # Set the executable path
-        sys.executable = python_exe
-        
-        # Handle text blocks - only if we're in a text block
-        # Use the global __file__ variable, not a local one
-        global __file__
-        try:
-            if isinstance(__file__, str) and __file__.startswith('<'):
-                temp_dir = tempfile.gettempdir()
-                script_path = os.path.join(temp_dir, "blender_viewport_colors_script.py")
-                with open(script_path, 'w') as f:
-                    f.write(bpy.data.texts[__file__[1:]].as_string())
-                __file__ = script_path
-        except (NameError, TypeError):
-            # __file__ might not be defined in some contexts
-            pass
-            
-    return True
+    bpy.types.Scene.viewport_colors_batch_size = bpy.props.IntProperty(
+        name="Batch Size",
+        description="Number of materials to process in each batch",
+        default=50,
+        min=1,
+        max=50
+    )
+    
+    bpy.types.Scene.viewport_colors_use_vectorized = bpy.props.BoolProperty(
+        name="Use Vectorized Processing",
+        description="Use vectorized operations for image processing (faster but uses more memory)",
+        default=True
+    )
+    
+    bpy.types.Scene.viewport_colors_progress = bpy.props.FloatProperty(
+        name="Progress",
+        description="Progress of the viewport color setting operation",
+        default=0.0,
+        min=0.0,
+        max=100.0,
+        subtype='PERCENTAGE'
+    )
+    
+    bpy.types.Scene.viewport_colors_default_white_only = bpy.props.BoolProperty(
+        name="Default White Only",
+        description="Show only materials that weren't able to be processed",
+        default=False
+    )
 
-# Panel class for Bulk Viewport Display
-class VIEW3D_PT_BulkViewportDisplay(bpy.types.Panel):
-    """Bulk Viewport Display Panel"""
-    bl_label = "Bulk Viewport Display"
-    bl_idname = "VIEW3D_PT_bulk_viewport_display"
-    bl_space_type = 'VIEW_3D'
-    bl_region_type = 'UI'
-    bl_category = 'Edit'
-    bl_parent_id = "VIEW3D_PT_bulk_scene_tools"
-    bl_order = 2  # Higher number means lower in the list
-    
-    def draw(self, context):
-        layout = self.layout
-        
-        # Viewport Colors section
-        box = layout.box()
-        box.label(text="Viewport Colors")
-        
-        # Add parameters directly in the panel
-        scene = context.scene
-        
-        # Selected objects only option
-        box.prop(scene, "viewport_colors_selected_only", text="Selected Objects Only")
-        
-        # Process options
-        box.prop(scene, "viewport_colors_num_processes", text="Processes")
-        box.prop(scene, "viewport_colors_batch_size", text="Batch Size")
-        
-        # Filter option
-        box.prop(scene, "viewport_colors_filter_default_white", text="Hide Default White")
-        
-        # Add the operator button
-        row = box.row()
-        row.operator("material.set_viewport_colors")
-        
-        # Show progress if processing
-        if is_processing:
-            row = box.row()
-            row.label(text=f"Processing: {processed_count}/{total_materials}")
-            
-            # Add a progress bar
-            row = box.row()
-            row.prop(scene, "viewport_colors_progress", text="")
-        
-        # Show material results if available
-        if material_results:
-            box.label(text="Material Results:")
-            
-            # Create a scrollable list
-            row = box.row()
-            col = row.column()
-            
-            # Display material results
-            for material_name, (color, status) in material_results.items():
-                # Skip default white materials if filtered
-                if scene.viewport_colors_filter_default_white and status == MaterialStatus.DEFAULT_WHITE:
-                    continue
-                
-                row = col.row(align=True)
-                
-                # Add status icon
-                row.label(text="", icon=get_status_icon(status))
-                
-                # Add material name with operator to select it
-                op = row.operator("material.select_in_editor", text=material_name)
-                op.material_name = material_name
-                
-                # Add color preview
-                if color:
-                    row.prop(bpy.data.materials.get(material_name), "diffuse_color", text="")
+def unregister_viewport_properties():
+    del bpy.types.Scene.viewport_colors_filter_default_white
+    del bpy.types.Scene.viewport_colors_progress
+    del bpy.types.Scene.viewport_colors_use_vectorized
+    del bpy.types.Scene.viewport_colors_batch_size
+    del bpy.types.Scene.viewport_colors_selected_only
 
 class VIEWPORT_OT_SetViewportColors(bpy.types.Operator):
-    """Set Viewport Display colors from viewport shading"""
+    """Set Viewport Display colors from BSDF base color or texture"""
     bl_idname = "material.set_viewport_colors"
     bl_label = "Set Viewport Colors"
     bl_options = {'REGISTER', 'UNDO'}
     
     def execute(self, context):
-        global material_results, current_material, processed_count, total_materials, start_time, is_processing
+        global material_results, current_material, processed_count, total_materials, start_time, is_processing, material_queue, current_index
         
         # Reset global variables
         material_results = {}
@@ -169,279 +81,323 @@ class VIEWPORT_OT_SetViewportColors(bpy.types.Operator):
         processed_count = 0
         is_processing = True
         start_time = time()
+        current_index = 0
         
-        # Get materials to process
+        # Get materials based on selection mode
         if context.scene.viewport_colors_selected_only:
             # Get materials from selected objects only
             materials = []
             for obj in context.selected_objects:
                 if obj.type == 'MESH' and obj.data.materials:
                     for mat in obj.data.materials:
-                        if mat and mat not in materials and not mat.is_grease_pencil:
+                        if mat and not mat.is_grease_pencil and mat not in materials:
                             materials.append(mat)
         else:
             # Get all materials in the scene
             materials = [mat for mat in bpy.data.materials if not mat.is_grease_pencil]
         
         total_materials = len(materials)
+        material_queue = materials.copy()
         
         if total_materials == 0:
             self.report({'WARNING'}, "No materials found to process")
             is_processing = False
             return {'CANCELLED'}
         
-        # Store original shading mode to restore later
-        original_shading = {}
-        for area in context.screen.areas:
-            if area.type == 'VIEW_3D':
-                for space in area.spaces:
-                    if space.type == 'VIEW_3D':
-                        original_shading[space] = space.shading.type
-                        # Switch to material preview mode
-                        space.shading.type = 'MATERIAL'
+        # Reset progress
+        context.scene.viewport_colors_progress = 0.0
         
-        # Force a redraw to ensure shaders compile
-        context.area.tag_redraw()
+        # Start a timer to process materials in batches
+        bpy.app.timers.register(self._process_batch)
         
-        # Create a temporary directory for process communication
-        temp_dir = tempfile.mkdtemp(prefix="blender_viewport_colors_")
-        
-        # Setup multiprocessing to work in Blender on Windows
-        setup_multiprocessing()
-        
-        # Split materials into batches for each process
-        batches = []
-        batch_size = min(context.scene.viewport_colors_batch_size, max(1, total_materials // context.scene.viewport_colors_num_processes))
-        
-        for i in range(0, total_materials, batch_size):
-            batch = materials[i:i+batch_size]
-            batches.append(batch)
-        
-        # Create a batch file for each process
-        batch_files = []
-        for i, batch in enumerate(batches):
-            batch_data = {
-                "materials": [mat.name for mat in batch]
-            }
-            batch_file = os.path.join(temp_dir, f"batch_{i}.json")
-            with open(batch_file, "w") as f:
-                json.dump(batch_data, f)
-            batch_files.append(batch_file)
-        
-        # Create a progress file for each process
-        progress_files = []
-        for i in range(len(batches)):
-            progress_file = os.path.join(temp_dir, f"progress_{i}.txt")
-            with open(progress_file, "w") as f:
-                f.write("0")
-            progress_files.append(progress_file)
-        
-        # Create a results file for each process
-        results_files = []
-        for i in range(len(batches)):
-            results_file = os.path.join(temp_dir, f"results_{i}.json")
-            with open(results_file, "w") as f:
-                f.write("{}")
-            results_files.append(results_file)
-        
-        # Create and start worker processes
-        global processes
-        processes = []
-        
-        for i in range(len(batches)):
-            # Create a worker script for this batch
-            worker_script = self._get_worker_script(batch_files[i], i)
-            worker_script_path = os.path.join(temp_dir, f"worker_{i}.py")
-            
-            with open(worker_script_path, "w") as f:
-                f.write(worker_script)
-            
-            # Start the worker process
-            cmd = [sys.executable, worker_script_path, 
-                   batch_files[i], progress_files[i], results_files[i]]
-            
-            process = subprocess.Popen(cmd)
-            processes.append(process)
-        
-        # Store the file paths for the timer to use
-        self.temp_dir = temp_dir
-        self.progress_files = progress_files
-        self.results_files = results_files
-        self.batch_files = batch_files
-        self.original_shading = original_shading
-        
-        # Start a timer to check progress
-        bpy.app.timers.register(self._check_progress)
-        
-        return {'RUNNING_MODAL'}
+        return {'FINISHED'}
     
-    def _get_worker_script(self, batch_file, worker_id):
-        """Generate a worker script for processing materials"""
-        return f"""
-import json
-import sys
-import os
-import numpy as np
-from time import time
-
-# Get the input arguments
-batch_file = sys.argv[1]
-progress_file = sys.argv[2]
-results_file = sys.argv[3]
-
-# Load the batch data
-with open(batch_file, "r") as f:
-    batch_data = json.load(f)
-
-material_names = batch_data["materials"]
-
-# Initialize results
-results = {{}}
-
-# Process each material
-for i, material_name in enumerate(material_names):
-    try:
-        # For demonstration, generate a random color
-        # In a real implementation, this would process the material
-        # using the same logic as in process_material()
-        color = np.random.random(3).tolist()
-        status = 2  # COMPLETED
+    def _process_batch(self):
+        global material_results, current_material, processed_count, total_materials, is_processing, material_queue, current_index
         
-        # Add to results
-        results[material_name] = {{
-            "color": color,
-            "status": status
-        }}
-        
-        # Update progress
-        progress = (i + 1) / len(material_names) * 100
-        with open(progress_file, "w") as f:
-            f.write(str(progress))
-            
-    except Exception as e:
-        # Log the error
-        print(f"Error processing material {{material_name}}: {{e}}")
-        results[material_name] = {{
-            "color": [1, 1, 1],
-            "status": 3  # FAILED
-        }}
-
-# Save the results
-with open(results_file, "w") as f:
-    json.dump(results, f)
-
-# Mark as complete
-with open(progress_file, "w") as f:
-    f.write("100")
-"""
-    
-    def _check_progress(self):
-        global material_results, current_material, processed_count, total_materials, is_processing
-        
-        if not is_processing:
-            return None
-        
-        # Check if all processes are still running
-        all_done = True
-        total_progress = 0
-        
-        for i, process in enumerate(processes):
-            # Check if the process is still running
-            if process.poll() is None:
-                all_done = False
-                
-                # Read the progress file
-                try:
-                    with open(self.progress_files[i], "r") as f:
-                        progress = float(f.read().strip())
-                        total_progress += progress
-                except (ValueError, FileNotFoundError):
-                    pass
-            else:
-                # Process has finished, read the results
-                try:
-                    with open(self.results_files[i], "r") as f:
-                        batch_results = json.load(f)
-                        
-                    # Add the results to the global results
-                    for material_name, result in batch_results.items():
-                        color = result["color"]
-                        status = result["status"]
-                        
-                        # Find the material in Blender
-                        material = bpy.data.materials.get(material_name)
-                        if material:
-                            # Get the viewport color directly from the material
-                            if material.use_nodes:
-                                # Get the viewport display color
-                                viewport_color = get_viewport_color(material)
-                                if viewport_color:
-                                    color = viewport_color
-                                    status = MaterialStatus.COMPLETED
-                                else:
-                                    color = [1, 1, 1]
-                                    status = MaterialStatus.DEFAULT_WHITE
-                            
-                            # Set the diffuse color
-                            material.diffuse_color = (color[0], color[1], color[2], 1.0)
-                            
-                            # Store the result
-                            material_results[material_name] = (color, status)
-                            
-                            # Update the processed count
-                            processed_count += 1
-                            
-                    # Remove the results file to avoid processing it again
-                    try:
-                        os.remove(self.results_files[i])
-                    except:
-                        pass
-                        
-                except (json.JSONDecodeError, FileNotFoundError):
-                    pass
-                    
-                # Set progress to 100% for this process
-                total_progress += 100
-        
-        # Calculate the overall progress
-        progress = total_progress / len(processes)
-        bpy.context.scene.viewport_colors_progress = progress
-        
-        # Update the UI
-        for area in bpy.context.screen.areas:
-            if area.type in {'PROPERTIES', 'VIEW_3D'}:
-                area.tag_redraw()
-        
-        # If all processes are done, clean up
-        if all_done:
-            # Clean up the temporary directory
-            try:
-                for file in os.listdir(self.temp_dir):
-                    try:
-                        os.remove(os.path.join(self.temp_dir, file))
-                    except:
-                        pass
-                os.rmdir(self.temp_dir)
-            except:
-                pass
-            
-            # Restore original shading mode
-            for space, shading_type in self.original_shading.items():
-                space.shading.type = shading_type
-                
+        if not is_processing or len(material_queue) == 0:
             is_processing = False
-            self.report({'INFO'}, f"Processed {processed_count} materials in {time() - start_time:.2f} seconds")
+            self.report_info()
             return None
         
-        # Continue checking
+        # Get the batch size from scene properties
+        batch_size = bpy.context.scene.viewport_colors_batch_size
+        use_vectorized = bpy.context.scene.viewport_colors_use_vectorized
+        
+        # Process a batch of materials
+        batch_end = min(current_index + batch_size, len(material_queue))
+        batch = material_queue[current_index:batch_end]
+        
+        for material in batch:
+            current_material = material.name
+            
+            # Process the material
+            color, status = process_material(material, use_vectorized)
+            
+            # Apply the color to the material
+            if color:
+                material.diffuse_color = (*color, 1.0)
+            
+            # Store the result
+            material_results[material.name] = (color, status)
+            
+            # Update processed count
+            processed_count += 1
+            
+            # Update progress
+            if total_materials > 0:
+                bpy.context.scene.viewport_colors_progress = (processed_count / total_materials) * 100
+        
+        # Update the current index
+        current_index = batch_end
+        
+        # Force a redraw of the UI
+        for area in bpy.context.screen.areas:
+            area.tag_redraw()
+        
+        # Check if we're done
+        if current_index >= len(material_queue):
+            is_processing = False
+            self.report_info()
+            return None
+        
+        # Continue processing
         return 0.1  # Check again in 0.1 seconds
+    
+    def report_info(self):
+        elapsed_time = time() - start_time
+        bpy.context.window_manager.popup_menu(
+            lambda self, context: self.layout.label(text=f"Processed {processed_count} materials in {elapsed_time:.2f} seconds"),
+            title="Processing Complete",
+            icon='INFO'
+        )
 
-def get_viewport_color(material):
-    """Get the viewport display color of a material"""
-    # Check if the material has a viewport display color
-    if hasattr(material, "diffuse_color"):
-        return list(material.diffuse_color)[:3]
+def process_material(material, use_vectorized=True):
+    """Process a material to determine its viewport color"""
+    if not material or not material.use_nodes:
+        return (1, 1, 1), MaterialStatus.DEFAULT_WHITE
+    
+    try:
+        # Get the final color from the material
+        color = get_final_color(material)
+        
+        if color is None:
+            return (1, 1, 1), MaterialStatus.DEFAULT_WHITE
+        
+        return color, MaterialStatus.COMPLETED
+    except Exception as e:
+        print(f"Error processing material {material.name}: {e}")
+        return (1, 1, 1), MaterialStatus.FAILED
+
+def get_average_color(image, use_vectorized=True):
+    """Calculate the average color of an image"""
+    if not image or not image.has_data:
+        return None
+    
+    # Get image pixels
+    pixels = list(image.pixels)
+    
+    if use_vectorized and np is not None:
+        # Use NumPy for faster processing
+        pixels_np = np.array(pixels)
+        
+        # Reshape to RGBA format
+        pixels_np = pixels_np.reshape(-1, 4)
+        
+        # Calculate average color (ignoring alpha)
+        avg_color = pixels_np[:, :3].mean(axis=0)
+        
+        return avg_color.tolist()
+    else:
+        # Fallback to pure Python
+        total_r, total_g, total_b = 0, 0, 0
+        pixel_count = len(pixels) // 4
+        
+        for i in range(0, len(pixels), 4):
+            total_r += pixels[i]
+            total_g += pixels[i+1]
+            total_b += pixels[i+2]
+        
+        if pixel_count > 0:
+            return [total_r / pixel_count, total_g / pixel_count, total_b / pixel_count]
+        else:
+            return None
+
+def find_image_node(node, visited=None):
+    """Find the first image node connected to the given node"""
+    if visited is None:
+        visited = set()
+    
+    if node in visited:
+        return None
+    
+    visited.add(node)
+    
+    # Check if this is an image node
+    if node.type == 'TEX_IMAGE' and node.image:
+        return node
+    
+    # Check input connections
+    for input_socket in node.inputs:
+        for link in input_socket.links:
+            from_node = link.from_node
+            result = find_image_node(from_node, visited)
+            if result:
+                return result
+    
     return None
+
+def get_final_color(material):
+    """Get the final color for a material"""
+    if not material or not material.use_nodes:
+        return None
+    
+    # Get the output node
+    output_node = None
+    for node in material.node_tree.nodes:
+        if node.type == 'OUTPUT_MATERIAL' and node.is_active_output:
+            output_node = node
+            break
+    
+    if not output_node:
+        return None
+    
+    # Find the surface input
+    surface_input = output_node.inputs.get('Surface')
+    if not surface_input or not surface_input.links:
+        return None
+    
+    # Get the connected node
+    connected_node = surface_input.links[0].from_node
+    
+    # Calculate the color of the connected node
+    return calculate_node_color(connected_node)
+
+def calculate_node_color(node, visited=None):
+    """Calculate the color of a node"""
+    if visited is None:
+        visited = set()
+    
+    if node in visited:
+        return None
+    
+    visited.add(node)
+    
+    # Handle different node types
+    if node.type == 'BSDF_PRINCIPLED':
+        # Check if there's a texture connected to the Base Color input
+        base_color_input = node.inputs.get('Base Color')
+        if base_color_input and base_color_input.links:
+            connected_node = base_color_input.links[0].from_node
+            color = calculate_node_color(connected_node, visited)
+            if color:
+                return color
+        
+        # If no texture, use the base color value
+        if base_color_input:
+            return list(base_color_input.default_value)[:3]
+    
+    elif node.type == 'TEX_IMAGE':
+        # Use the image texture
+        if node.image:
+            color = get_average_color(node.image)
+            if color:
+                return color
+    
+    elif node.type == 'MIX_RGB':
+        # Mix the colors based on the factor
+        factor = node.inputs[0].default_value
+        
+        color1 = None
+        if node.inputs[1].links:
+            connected_node = node.inputs[1].links[0].from_node
+            color1 = calculate_node_color(connected_node, visited)
+        else:
+            color1 = list(node.inputs[1].default_value)[:3]
+        
+        color2 = None
+        if node.inputs[2].links:
+            connected_node = node.inputs[2].links[0].from_node
+            color2 = calculate_node_color(connected_node, visited)
+        else:
+            color2 = list(node.inputs[2].default_value)[:3]
+        
+        if color1 and color2:
+            # Mix the colors
+            blend_type = node.blend_type
+            if blend_type == 'MIX':
+                return [
+                    color1[0] * (1 - factor) + color2[0] * factor,
+                    color1[1] * (1 - factor) + color2[1] * factor,
+                    color1[2] * (1 - factor) + color2[2] * factor
+                ]
+            # Add more blend types as needed
+    
+    elif node.type == 'RGB':
+        # Use the RGB node color
+        return list(node.outputs[0].default_value)[:3]
+    
+    # For other node types, try to find a connected image texture
+    result = find_color_or_texture(node, visited)
+    if result:
+        return result
+    
+    return None
+
+def find_color_or_texture(node, visited=None):
+    """Find a color or texture in the node's inputs"""
+    if visited is None:
+        visited = set()
+    
+    if node in visited:
+        return None
+    
+    visited.add(node)
+    
+    # Check all inputs for a color or texture
+    for input_socket in node.inputs:
+        if input_socket.links:
+            for link in input_socket.links:
+                from_node = link.from_node
+                
+                # Check if this is a color or texture node
+                if from_node.type in {'TEX_IMAGE', 'RGB'}:
+                    result = calculate_node_color(from_node, visited)
+                    if result:
+                        return result
+                
+                # Recursively check connected nodes
+                result = find_color_or_texture(from_node, visited)
+                if result:
+                    return result
+    
+    return None
+
+def find_diffuse_texture(material):
+    """Find the diffuse texture in a material"""
+    if not material or not material.use_nodes:
+        return None
+    
+    # Find the principled BSDF node
+    principled_node = None
+    for node in material.node_tree.nodes:
+        if node.type == 'BSDF_PRINCIPLED':
+            principled_node = node
+            break
+    
+    if not principled_node:
+        return None
+    
+    # Find the base color input
+    base_color_input = principled_node.inputs.get('Base Color')
+    if not base_color_input or not base_color_input.links:
+        return None
+    
+    # Find the connected image texture
+    connected_node = base_color_input.links[0].from_node
+    image_node = find_image_node(connected_node)
+    
+    return image_node.image if image_node else None
 
 def get_status_icon(status):
     """Get the icon for a material status"""
@@ -472,6 +428,74 @@ def get_status_text(status):
         return "Default White"
     else:
         return "Unknown"
+
+class VIEW3D_PT_BulkViewportDisplay(bpy.types.Panel):
+    """Bulk Viewport Display Panel"""
+    bl_label = "Bulk Viewport Display"
+    bl_idname = "VIEW3D_PT_bulk_viewport_display"
+    bl_space_type = 'VIEW_3D'
+    bl_region_type = 'UI'
+    bl_category = 'Edit'
+    bl_parent_id = "VIEW3D_PT_bulk_scene_tools"
+    bl_order = 2  # Higher number means lower in the list
+    
+    def draw(self, context):
+        layout = self.layout
+        
+        # Viewport Colors section
+        box = layout.box()
+        box.label(text="Viewport Colors")
+        
+        # Add settings before the button
+        col = box.column(align=True)
+        col.prop(context.scene, "viewport_colors_selected_only")
+        col.prop(context.scene, "viewport_colors_batch_size")
+        col.prop(context.scene, "viewport_colors_use_vectorized")
+        
+        # Add the operator button
+        row = box.row()
+        row.scale_y = 1.5
+        row.operator("material.set_viewport_colors")
+        
+        # Show progress if processing
+        if is_processing:
+            row = box.row()
+            row.label(text=f"Processing: {processed_count}/{total_materials}")
+            
+            # Add a progress bar
+            row = box.row()
+            row.prop(context.scene, "viewport_colors_progress", text="")
+        
+        # Show material results if available
+        if material_results:
+            box.label(text="Material Results:")
+            
+            # Add a filter option
+            row = box.row()
+            row.prop(context.scene, "viewport_colors_default_white_only", text="Default White Only")
+            
+            # Create a scrollable list
+            row = box.row()
+            col = row.column()
+            
+            # Display material results
+            for material_name, (color, status) in material_results.items():
+                # Skip default white materials if filtered
+                if context.scene.viewport_colors_default_white_only and status != MaterialStatus.DEFAULT_WHITE:
+                    continue
+                
+                row = col.row(align=True)
+                
+                # Add status icon
+                row.label(text="", icon=get_status_icon(status))
+                
+                # Add material name with operator to select it
+                op = row.operator("material.select_in_editor", text=material_name)
+                op.material_name = material_name
+                
+                # Add color preview
+                if color:
+                    row.prop(bpy.data.materials.get(material_name), "diffuse_color", text="")
 
 class VIEWPORT_PT_SetViewportColorsPanel(bpy.types.Panel):
     """Add button to Material Properties"""
@@ -546,50 +570,11 @@ def register():
         bpy.utils.register_class(cls)
     
     # Register properties
-    bpy.types.Scene.viewport_colors_progress = bpy.props.FloatProperty(
-        name="Progress",
-        description="Progress of the viewport color setting operation",
-        default=0.0,
-        min=0.0,
-        max=100.0,
-        subtype='PERCENTAGE'
-    )
-    
-    bpy.types.Scene.viewport_colors_filter_default_white = bpy.props.BoolProperty(
-        name="Filter Default White",
-        description="Filter out materials that were set to default white",
-        default=False
-    )
-    
-    bpy.types.Scene.viewport_colors_selected_only = bpy.props.BoolProperty(
-        name="Selected Objects Only",
-        description="Process materials from selected objects only",
-        default=False
-    )
-    
-    bpy.types.Scene.viewport_colors_num_processes = bpy.props.IntProperty(
-        name="Number of Processes",
-        description="Number of parallel processes to use (higher values utilize more CPU cores)",
-        default=4,
-        min=1,
-        max=16
-    )
-    
-    bpy.types.Scene.viewport_colors_batch_size = bpy.props.IntProperty(
-        name="Batch Size",
-        description="Number of materials to process in each batch",
-        default=10,
-        min=1,
-        max=50
-    )
+    register_viewport_properties()
 
 def unregister():
     # Unregister properties
-    del bpy.types.Scene.viewport_colors_batch_size
-    del bpy.types.Scene.viewport_colors_num_processes
-    del bpy.types.Scene.viewport_colors_selected_only
-    del bpy.types.Scene.viewport_colors_filter_default_white
-    del bpy.types.Scene.viewport_colors_progress
+    unregister_viewport_properties()
     
     # Unregister classes
     for cls in reversed(classes):
