@@ -15,8 +15,8 @@ Blender 4.3.2
 
 1. Download the addon (zip file)
 2. In Blender, go to Edit > Preferences > Add-ons
-3. Click "Install..." and select the downloaded zip file
-4. Enable the addon by checking the box next to "Material: Set Viewport Colors from BSDF"
+3. Click "Install..." and select the downloaded zip file, or click and drag if it allows.
+4. Ensure addon is enabled.
 
 ## Usage
 
