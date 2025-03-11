@@ -545,7 +545,6 @@ class MATERIAL_OT_SelectInEditor(bpy.types.Operator):
 classes = (
     VIEWPORT_OT_SetViewportColors,
     VIEW3D_PT_BulkViewportDisplay,
-    VIEWPORT_PT_SetViewportColorsPanel,
     MATERIAL_OT_SelectInEditor,
 )
 
