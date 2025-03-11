@@ -46,6 +46,14 @@ def register_dataremap_properties():
     # Dictionary to store excluded groups
     if not hasattr(bpy.types.Scene, "excluded_remap_groups"):
         bpy.types.Scene.excluded_remap_groups = {}
+        
+    # Dictionary to store expanded groups
+    if not hasattr(bpy.types.Scene, "expanded_remap_groups"):
+        bpy.types.Scene.expanded_remap_groups = {}
+        
+    # Store the last clicked group for shift-click range selection
+    if not hasattr(bpy.types.Scene, "last_clicked_group"):
+        bpy.types.Scene.last_clicked_group = {}
 
 def unregister_dataremap_properties():
     del bpy.types.Scene.dataremap_images
@@ -56,6 +64,10 @@ def unregister_dataremap_properties():
     del bpy.types.Scene.show_font_duplicates
     if hasattr(bpy.types.Scene, "excluded_remap_groups"):
         del bpy.types.Scene.excluded_remap_groups
+    if hasattr(bpy.types.Scene, "expanded_remap_groups"):
+        del bpy.types.Scene.expanded_remap_groups
+    if hasattr(bpy.types.Scene, "last_clicked_group"):
+        del bpy.types.Scene.last_clicked_group
 
 def get_base_name(name):
     """Extract the base name without numbered suffix"""
@@ -65,10 +77,14 @@ def get_base_name(name):
     return name
 
 def find_data_groups(data_collection):
-    """Group data blocks by their base name"""
+    """Group data blocks by their base name, excluding those with no users"""
     groups = {}
     
     for data in data_collection:
+        # Skip datablocks with no users
+        if data.users == 0:
+            continue
+            
         base_name = get_base_name(data.name)
         if base_name not in groups:
             groups[base_name] = []
@@ -99,10 +115,14 @@ def find_target_data(data_group):
     return youngest
 
 def clean_data_names(data_collection):
-    """Remove numbered suffixes from all data blocks"""
+    """Remove numbered suffixes from all data blocks with users"""
     cleaned_count = 0
     
     for data in data_collection:
+        # Skip datablocks with no users
+        if data.users == 0:
+            continue
+            
         base_name = get_base_name(data.name)
         if base_name != data.name:
             data.name = base_name
@@ -338,11 +358,11 @@ class DATAREMAP_OT_RemapData(bpy.types.Operator):
         # Count data blocks with numbered suffixes
         total_numbered = 0
         if remap_images:
-            total_numbered += sum(1 for img in bpy.data.images if get_base_name(img.name) != img.name)
+            total_numbered += sum(1 for img in bpy.data.images if img.users > 0 and get_base_name(img.name) != img.name)
         if remap_materials:
-            total_numbered += sum(1 for mat in bpy.data.materials if get_base_name(mat.name) != mat.name)
+            total_numbered += sum(1 for mat in bpy.data.materials if mat.users > 0 and get_base_name(mat.name) != mat.name)
         if remap_fonts:
-            total_numbered += sum(1 for font in bpy.data.fonts if get_base_name(font.name) != font.name)
+            total_numbered += sum(1 for font in bpy.data.fonts if font.users > 0 and get_base_name(font.name) != font.name)
         
         if total_duplicates == 0 and total_numbered == 0:
             self.report({'INFO'}, "No data blocks to process")
@@ -418,6 +438,273 @@ class DATAREMAP_OT_ToggleGroupExclusion(bpy.types.Operator):
         
         return {'FINISHED'}
 
+class DATAREMAP_OT_SelectAllGroups(bpy.types.Operator):
+    """Select or deselect all groups of a specific data type"""
+    bl_idname = "scene.select_all_data_groups"
+    bl_label = "Select All Groups"
+    bl_options = {'REGISTER', 'UNDO'}
+    
+    data_type: bpy.props.StringProperty(
+        name="Data Type",
+        description="Type of data (images, materials, fonts)",
+        default=""
+    )
+    
+    select_all: bpy.props.BoolProperty(
+        name="Select All",
+        description="True to select all, False to deselect all",
+        default=True
+    )
+    
+    def execute(self, context):
+        # Initialize the dictionary if it doesn't exist
+        if not hasattr(context.scene, "excluded_remap_groups"):
+            context.scene.excluded_remap_groups = {}
+        
+        # Get the appropriate data groups based on data_type
+        data_groups = {}
+        if self.data_type == "images":
+            data_groups = find_data_groups(bpy.data.images)
+        elif self.data_type == "materials":
+            data_groups = find_data_groups(bpy.data.materials)
+        elif self.data_type == "fonts":
+            data_groups = find_data_groups(bpy.data.fonts)
+        
+        # Process only groups with more than one item
+        for base_name, items in data_groups.items():
+            if len(items) > 1:
+                key = f"{self.data_type}:{base_name}"
+                
+                if self.select_all:
+                    # Remove from excluded list to select
+                    if key in context.scene.excluded_remap_groups:
+                        del context.scene.excluded_remap_groups[key]
+                else:
+                    # Add to excluded list to deselect
+                    context.scene.excluded_remap_groups[key] = True
+        
+        return {'FINISHED'}
+
+# Update the toggle group selection operator to handle shift-click range selection
+class DATAREMAP_OT_ToggleGroupSelection(bpy.types.Operator):
+    """Toggle whether this group should be included in remapping"""
+    bl_idname = "scene.toggle_group_selection"
+    bl_label = "Toggle Group Selection"
+    bl_options = {'REGISTER', 'UNDO'}
+    
+    group_key: bpy.props.StringProperty(
+        name="Group Key",
+        description="Unique identifier for the group",
+        default=""
+    )
+    
+    data_type: bpy.props.StringProperty(
+        name="Data Type",
+        description="Type of data (images, materials, fonts)",
+        default=""
+    )
+    
+    def invoke(self, context, event):
+        # Initialize the dictionary if it doesn't exist
+        if not hasattr(context.scene, "excluded_remap_groups"):
+            context.scene.excluded_remap_groups = {}
+        
+        # Create a unique key for this group
+        key = f"{self.data_type}:{self.group_key}"
+        
+        # Get the current state
+        is_excluded = key in context.scene.excluded_remap_groups
+        
+        # Initialize the last clicked group dictionary if it doesn't exist
+        if not hasattr(context.scene, "last_clicked_group"):
+            context.scene.last_clicked_group = {}
+        
+        # Check if shift is held down for range selection
+        if event.shift and self.data_type in context.scene.last_clicked_group:
+            # Get the last clicked group
+            last_group = context.scene.last_clicked_group[self.data_type]
+            
+            # Get all data groups for this data type
+            data_groups = []
+            if self.data_type == "images":
+                data_groups = list(find_data_groups(bpy.data.images).keys())
+            elif self.data_type == "materials":
+                data_groups = list(find_data_groups(bpy.data.materials).keys())
+            elif self.data_type == "fonts":
+                data_groups = list(find_data_groups(bpy.data.fonts).keys())
+            
+            # Find the indices of the last clicked group and the current group
+            try:
+                last_index = data_groups.index(last_group)
+                current_index = data_groups.index(self.group_key)
+                
+                # Determine the range of groups to toggle
+                start_index = min(last_index, current_index)
+                end_index = max(last_index, current_index)
+                
+                # Toggle all groups in the range
+                for i in range(start_index, end_index + 1):
+                    group_name = data_groups[i]
+                    group_key = f"{self.data_type}:{group_name}"
+                    
+                    # Apply the same toggle state as the first clicked item
+                    if is_excluded:
+                        # Select this group (remove from excluded list)
+                        if group_key in context.scene.excluded_remap_groups:
+                            del context.scene.excluded_remap_groups[group_key]
+                    else:
+                        # Deselect this group (add to excluded list)
+                        context.scene.excluded_remap_groups[group_key] = True
+            except ValueError:
+                # If one of the groups is not found, just toggle the current group
+                if is_excluded:
+                    del context.scene.excluded_remap_groups[key]
+                else:
+                    context.scene.excluded_remap_groups[key] = True
+        else:
+            # Regular toggle for a single group
+            if is_excluded:
+                del context.scene.excluded_remap_groups[key]
+            else:
+                context.scene.excluded_remap_groups[key] = True
+        
+        # Store this group as the last clicked group for this data type
+        context.scene.last_clicked_group[self.data_type] = self.group_key
+        
+        return {'FINISHED'}
+    
+    def execute(self, context):
+        # This is only used when the operator is called programmatically
+        # Initialize the dictionary if it doesn't exist
+        if not hasattr(context.scene, "excluded_remap_groups"):
+            context.scene.excluded_remap_groups = {}
+        
+        # Create a unique key for this group
+        key = f"{self.data_type}:{self.group_key}"
+        
+        # Toggle the exclusion state
+        if key in context.scene.excluded_remap_groups:
+            del context.scene.excluded_remap_groups[key]
+        else:
+            context.scene.excluded_remap_groups[key] = True
+        
+        return {'FINISHED'}
+
+# Add a custom draw function for checkboxes that supports drag selection
+def draw_drag_selectable_checkbox(layout, context, data_type, group_key):
+    """Draw a checkbox that supports drag selection"""
+    # Create a unique key for this group
+    key = f"{data_type}:{group_key}"
+    
+    # Check if this group is excluded
+    is_excluded = key in context.scene.excluded_remap_groups
+    
+    # Draw the checkbox
+    op = layout.operator("scene.toggle_group_selection", 
+                         text="", 
+                         icon='CHECKBOX_HLT' if not is_excluded else 'CHECKBOX_DEHLT',
+                         emboss=False)
+    op.group_key = group_key
+    op.data_type = data_type
+
+# Update the UI code to use the custom draw function
+def draw_data_duplicates(layout, context, data_type, data_groups):
+    """Draw the list of duplicate data items with drag-selectable checkboxes"""
+    box_dup = layout.box()
+    
+    # Add Select All / Deselect All buttons
+    select_row = box_dup.row(align=True)
+    select_row.scale_y = 0.8
+    
+    select_op = select_row.operator("scene.select_all_data_groups", text="Select All")
+    select_op.data_type = data_type
+    select_op.select_all = True
+    
+    deselect_op = select_row.operator("scene.select_all_data_groups", text="Deselect All")
+    deselect_op.data_type = data_type
+    deselect_op.select_all = False
+    
+    box_dup.separator(factor=0.5)
+    
+    # Initialize the expanded groups dictionary if it doesn't exist
+    if not hasattr(context.scene, "expanded_remap_groups"):
+        context.scene.expanded_remap_groups = {}
+    
+    for base_name, items in data_groups.items():
+        if len(items) > 1:
+            row = box_dup.row()
+            
+            # Add checkbox to include/exclude this group using the custom draw function
+            draw_drag_selectable_checkbox(row, context, data_type, base_name)
+            
+            # Add dropdown toggle
+            group_key = f"{data_type}:{base_name}"
+            is_expanded = group_key in context.scene.expanded_remap_groups
+            
+            exp_op = row.operator("scene.toggle_group_expansion",
+                                 text="",
+                                 icon='DISCLOSURE_TRI_DOWN' if is_expanded else 'DISCLOSURE_TRI_RIGHT',
+                                 emboss=False)
+            exp_op.group_key = base_name
+            exp_op.data_type = data_type
+            
+            # Find the original data item (target) to show its preview
+            target_item = find_target_data(items)
+            
+            # Add icon based on data type
+            if data_type == "images":
+                if target_item and target_item.preview:
+                    # Force preview update if needed
+                    if target_item.preview.icon_id == 0:
+                        target_item.preview.icon_size = (32, 32)
+                        target_item.preview.reload()
+                    row.template_icon(icon_value=target_item.preview.icon_id, scale=1.0)
+                else:
+                    row.label(text="", icon='IMAGE_DATA')
+            elif data_type == "materials":
+                if target_item and target_item.preview:
+                    # Force preview update if needed
+                    if target_item.preview.icon_id == 0:
+                        target_item.preview.icon_size = (32, 32)
+                        target_item.preview.reload()
+                    row.template_icon(icon_value=target_item.preview.icon_id, scale=1.0)
+                else:
+                    row.label(text="", icon='MATERIAL')
+            elif data_type == "fonts":
+                row.label(text="", icon='FONT_DATA')
+            
+            row.label(text=f"{base_name}: {len(items)} versions")
+            
+            # Only show details if expanded
+            if is_expanded:
+                for item in items:
+                    sub_row = box_dup.row()
+                    sub_row.label(text="", icon='BLANK1')  # Indent
+                    
+                    # Add icon based on data type
+                    if data_type == "images":
+                        if item.preview:
+                            # Force preview update if needed
+                            if item.preview.icon_id == 0:
+                                item.preview.icon_size = (32, 32)
+                                item.preview.reload()
+                            sub_row.template_icon(icon_value=item.preview.icon_id, scale=1.0)
+                        else:
+                            sub_row.label(text="", icon='IMAGE_DATA')
+                    elif data_type == "materials":
+                        if item.preview:
+                            # Force preview update if needed
+                            if item.preview.icon_id == 0:
+                                item.preview.icon_size = (32, 32)
+                                item.preview.reload()
+                            sub_row.template_icon(icon_value=item.preview.icon_id, scale=1.0)
+                        else:
+                            sub_row.label(text="", icon='MATERIAL')
+                    elif data_type == "fonts":
+                        sub_row.label(text="", icon='FONT_DATA')
+                    
+                    sub_row.label(text=f"{item.name}")
+
 class VIEW3D_PT_BulkDataRemap(bpy.types.Panel):
     """Bulk Data Remap Panel"""
     bl_label = "Bulk Data Remap"
@@ -439,6 +726,7 @@ class VIEW3D_PT_BulkDataRemap(bpy.types.Panel):
         col = box.column()
         col.label(text="Find and remap redundant data")
         col.label(text="blocks like .001, .002 duplicates")
+        col.label(text="(only showing used datablocks)")
         
         # Add data type options with checkboxes
         col = box.column(align=True)
@@ -452,9 +740,9 @@ class VIEW3D_PT_BulkDataRemap(bpy.types.Panel):
         material_duplicates = sum(len(group) - 1 for group in material_groups.values())
         font_duplicates = sum(len(group) - 1 for group in font_groups.values())
         
-        image_numbered = sum(1 for img in bpy.data.images if get_base_name(img.name) != img.name)
-        material_numbered = sum(1 for mat in bpy.data.materials if get_base_name(mat.name) != mat.name)
-        font_numbered = sum(1 for font in bpy.data.fonts if get_base_name(font.name) != font.name)
+        image_numbered = sum(1 for img in bpy.data.images if img.users > 0 and get_base_name(img.name) != img.name)
+        material_numbered = sum(1 for mat in bpy.data.materials if mat.users > 0 and get_base_name(mat.name) != mat.name)
+        font_numbered = sum(1 for font in bpy.data.fonts if font.users > 0 and get_base_name(font.name) != font.name)
         
         # Initialize excluded_remap_groups if it doesn't exist
         if not hasattr(context.scene, "excluded_remap_groups"):
@@ -490,29 +778,7 @@ class VIEW3D_PT_BulkDataRemap(bpy.types.Panel):
         
         # Show image duplicates if enabled
         if context.scene.show_image_duplicates and image_duplicates > 0 and context.scene.dataremap_images:
-            box_dup = col.box()
-            for base_name, images in image_groups.items():
-                if len(images) > 1:
-                    row = box_dup.row()
-                    
-                    # Add checkbox to include/exclude this group
-                    group_key = f"images:{base_name}"
-                    is_excluded = group_key in context.scene.excluded_remap_groups
-                    
-                    op = row.operator("scene.toggle_group_exclusion", 
-                                      text="", 
-                                      icon='CHECKBOX_HLT' if not is_excluded else 'CHECKBOX_DEHLT',
-                                      emboss=False)
-                    op.group_key = base_name
-                    op.data_type = "images"
-                    
-                    row.label(text=f"{base_name}: {len(images)} versions")
-                    
-                    # Only show details if not excluded
-                    if not is_excluded:
-                        for img in images:
-                            sub_row = box_dup.row()
-                            sub_row.label(text=f"  • {img.name}")
+            draw_data_duplicates(col, context, "images", image_groups)
         
         # Materials
         row = col.row()
@@ -543,29 +809,7 @@ class VIEW3D_PT_BulkDataRemap(bpy.types.Panel):
         
         # Show material duplicates if enabled
         if context.scene.show_material_duplicates and material_duplicates > 0 and context.scene.dataremap_materials:
-            box_dup = col.box()
-            for base_name, materials in material_groups.items():
-                if len(materials) > 1:
-                    row = box_dup.row()
-                    
-                    # Add checkbox to include/exclude this group
-                    group_key = f"materials:{base_name}"
-                    is_excluded = group_key in context.scene.excluded_remap_groups
-                    
-                    op = row.operator("scene.toggle_group_exclusion", 
-                                      text="", 
-                                      icon='CHECKBOX_HLT' if not is_excluded else 'CHECKBOX_DEHLT',
-                                      emboss=False)
-                    op.group_key = base_name
-                    op.data_type = "materials"
-                    
-                    row.label(text=f"{base_name}: {len(materials)} versions")
-                    
-                    # Only show details if not excluded
-                    if not is_excluded:
-                        for mat in materials:
-                            sub_row = box_dup.row()
-                            sub_row.label(text=f"  • {mat.name}")
+            draw_data_duplicates(col, context, "materials", material_groups)
         
         # Fonts
         row = col.row()
@@ -596,29 +840,7 @@ class VIEW3D_PT_BulkDataRemap(bpy.types.Panel):
         
         # Show font duplicates if enabled
         if context.scene.show_font_duplicates and font_duplicates > 0 and context.scene.dataremap_fonts:
-            box_dup = col.box()
-            for base_name, fonts in font_groups.items():
-                if len(fonts) > 1:
-                    row = box_dup.row()
-                    
-                    # Add checkbox to include/exclude this group
-                    group_key = f"fonts:{base_name}"
-                    is_excluded = group_key in context.scene.excluded_remap_groups
-                    
-                    op = row.operator("scene.toggle_group_exclusion", 
-                                      text="", 
-                                      icon='CHECKBOX_HLT' if not is_excluded else 'CHECKBOX_DEHLT',
-                                      emboss=False)
-                    op.group_key = base_name
-                    op.data_type = "fonts"
-                    
-                    row.label(text=f"{base_name}: {len(fonts)} versions")
-                    
-                    # Only show details if not excluded
-                    if not is_excluded:
-                        for font in fonts:
-                            sub_row = box_dup.row()
-                            sub_row.label(text=f"  • {font.name}")
+            draw_data_duplicates(col, context, "fonts", font_groups)
         
         # Add the operator button
         row = box.row()
@@ -666,13 +888,51 @@ class DATAREMAP_OT_ToggleDataType(bpy.types.Operator):
         
         return {'FINISHED'}
 
+# Add a new operator for toggling group expansion
+class DATAREMAP_OT_ToggleGroupExpansion(bpy.types.Operator):
+    """Toggle whether this group should be expanded to show details"""
+    bl_idname = "scene.toggle_group_expansion"
+    bl_label = "Toggle Group Expansion"
+    bl_options = {'REGISTER', 'UNDO'}
+    
+    group_key: bpy.props.StringProperty(
+        name="Group Key",
+        description="Unique identifier for the group",
+        default=""
+    )
+    
+    data_type: bpy.props.StringProperty(
+        name="Data Type",
+        description="Type of data (images, materials, fonts)",
+        default=""
+    )
+    
+    def execute(self, context):
+        # Initialize the dictionary if it doesn't exist
+        if not hasattr(context.scene, "expanded_remap_groups"):
+            context.scene.expanded_remap_groups = {}
+        
+        # Create a unique key for this group
+        key = f"{self.data_type}:{self.group_key}"
+        
+        # Toggle the expansion state
+        if key in context.scene.expanded_remap_groups:
+            del context.scene.expanded_remap_groups[key]
+        else:
+            context.scene.expanded_remap_groups[key] = True
+        
+        return {'FINISHED'}
+
 # List of all classes in this module
 classes = (
     DATAREMAP_OT_RemapData,
     DATAREMAP_OT_PurgeUnused,
     DATAREMAP_OT_ToggleDataType,
     DATAREMAP_OT_ToggleGroupExclusion,
+    DATAREMAP_OT_SelectAllGroups,
     VIEW3D_PT_BulkDataRemap,
+    DATAREMAP_OT_ToggleGroupExpansion,
+    DATAREMAP_OT_ToggleGroupSelection,
 )
 
 # Registration
