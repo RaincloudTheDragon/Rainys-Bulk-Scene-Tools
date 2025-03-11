@@ -1,6 +1,6 @@
-# Bulk Scene Tools
+# Raincloud's Bulk Scene Tools
 
-A couple Blender tools to help me automate some tedious tasks.
+A couple Blender tools to help me automate some tedious tasks in scene optimization.
 
 ## Features
 
