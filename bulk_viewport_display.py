@@ -497,21 +497,6 @@ class VIEW3D_PT_BulkViewportDisplay(bpy.types.Panel):
                 if color:
                     row.prop(bpy.data.materials.get(material_name), "diffuse_color", text="")
 
-class VIEWPORT_PT_SetViewportColorsPanel(bpy.types.Panel):
-    """Add button to Material Properties"""
-    bl_label = "Set Viewport Colors"
-    bl_idname = "VIEWPORT_PT_set_viewport_colors"
-    bl_space_type = 'PROPERTIES'
-    bl_region_type = 'WINDOW'
-    bl_context = "material"
-    
-    def draw(self, context):
-        layout = self.layout
-        layout.label(text="This panel is deprecated.")
-        layout.label(text="Please use the Bulk Scene Tools panel")
-        layout.label(text="in the 3D View sidebar (Edit tab)")
-        layout.operator("material.set_viewport_colors")
-
 class MATERIAL_OT_SelectInEditor(bpy.types.Operator):
     """Select this material in the editor"""
     bl_idname = "material.select_in_editor"
