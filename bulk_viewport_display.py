@@ -446,25 +446,9 @@ class VIEW3D_PT_BulkViewportDisplay(bpy.types.Panel):
         box = layout.box()
         box.label(text="Viewport Colors")
         
-        # Add settings before the button
-        col = box.column(align=True)
-        col.prop(context.scene, "viewport_colors_selected_only")
-        col.prop(context.scene, "viewport_colors_batch_size")
-        col.prop(context.scene, "viewport_colors_use_vectorized")
-        
-        # Add the operator button
-        row = box.row()
-        row.scale_y = 1.5
-        row.operator("material.set_viewport_colors")
-        
-        # Show progress if processing
-        if is_processing:
-            row = box.row()
-            row.label(text=f"Processing: {processed_count}/{total_materials}")
-            
-            # Add a progress bar
-            row = box.row()
-            row.prop(context.scene, "viewport_colors_progress", text="")
+        # The detailed settings are now in the subpanel
+        # Just add a brief description here
+        box.label(text="Set viewport colors from diffuse colors")
         
         # Show material results if available
         if material_results:
@@ -496,6 +480,39 @@ class VIEW3D_PT_BulkViewportDisplay(bpy.types.Panel):
                 # Add color preview
                 if color:
                     row.prop(bpy.data.materials.get(material_name), "diffuse_color", text="")
+
+class VIEWPORT_PT_SetViewportColorsPanel(bpy.types.Panel):
+    """Viewport Colors Panel"""
+    bl_label = "Viewport Colors"
+    bl_idname = "VIEWPORT_PT_set_viewport_colors"
+    bl_space_type = 'VIEW_3D'
+    bl_region_type = 'UI'
+    bl_category = 'Edit'
+    bl_parent_id = "VIEW3D_PT_bulk_viewport_display"
+    bl_options = {'DEFAULT_CLOSED'}
+    
+    def draw(self, context):
+        layout = self.layout
+        
+        # Add settings for viewport colors
+        col = layout.column(align=True)
+        col.prop(context.scene, "viewport_colors_selected_only")
+        col.prop(context.scene, "viewport_colors_batch_size")
+        col.prop(context.scene, "viewport_colors_use_vectorized")
+        
+        # Add the operator button
+        row = layout.row()
+        row.scale_y = 1.5
+        row.operator("material.set_viewport_colors")
+        
+        # Show progress if processing
+        if is_processing:
+            row = layout.row()
+            row.label(text=f"Processing: {processed_count}/{total_materials}")
+            
+            # Add a progress bar
+            row = layout.row()
+            row.prop(context.scene, "viewport_colors_progress", text="")
 
 class MATERIAL_OT_SelectInEditor(bpy.types.Operator):
     """Select this material in the editor"""
@@ -545,6 +562,7 @@ class MATERIAL_OT_SelectInEditor(bpy.types.Operator):
 classes = (
     VIEWPORT_OT_SetViewportColors,
     VIEW3D_PT_BulkViewportDisplay,
+    VIEWPORT_PT_SetViewportColorsPanel,
     MATERIAL_OT_SelectInEditor,
 )
 

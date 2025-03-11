@@ -24,6 +24,12 @@ def register_dataremap_properties():
         default=True
     )
     
+    bpy.types.Scene.dataremap_worlds = bpy.props.BoolProperty(
+        name="Worlds",
+        description="Find and remap duplicate worlds",
+        default=True
+    )
+    
     # Add properties for showing duplicate lists
     bpy.types.Scene.show_image_duplicates = bpy.props.BoolProperty(
         name="Show Image Duplicates",
@@ -43,6 +49,12 @@ def register_dataremap_properties():
         default=False
     )
     
+    bpy.types.Scene.show_world_duplicates = bpy.props.BoolProperty(
+        name="Show World Duplicates",
+        description="Show list of duplicate worlds",
+        default=False
+    )
+    
     # Dictionary to store excluded groups
     if not hasattr(bpy.types.Scene, "excluded_remap_groups"):
         bpy.types.Scene.excluded_remap_groups = {}
@@ -59,9 +71,11 @@ def unregister_dataremap_properties():
     del bpy.types.Scene.dataremap_images
     del bpy.types.Scene.dataremap_materials
     del bpy.types.Scene.dataremap_fonts
+    del bpy.types.Scene.dataremap_worlds
     del bpy.types.Scene.show_image_duplicates
     del bpy.types.Scene.show_material_duplicates
     del bpy.types.Scene.show_font_duplicates
+    del bpy.types.Scene.show_world_duplicates
     if hasattr(bpy.types.Scene, "excluded_remap_groups"):
         del bpy.types.Scene.excluded_remap_groups
     if hasattr(bpy.types.Scene, "expanded_remap_groups"):
@@ -130,7 +144,7 @@ def clean_data_names(data_collection):
     
     return cleaned_count
 
-def remap_data_blocks(context, remap_images, remap_materials, remap_fonts):
+def remap_data_blocks(context, remap_images, remap_materials, remap_fonts, remap_worlds):
     """Remap redundant data blocks to their base versions like Blender's Remap Users function, and clean up names."""
     remapped_count = 0
     cleaned_count = 0
@@ -330,6 +344,55 @@ def remap_data_blocks(context, remap_images, remap_materials, remap_fonts):
         # Then clean up any remaining numbered suffixes
         cleaned_count += clean_data_names(bpy.data.fonts)
     
+    # Process worlds
+    if remap_worlds:
+        # First remap duplicates
+        world_groups = find_data_groups(bpy.data.worlds)
+        for base_name, worlds in world_groups.items():
+            # Skip excluded groups
+            if f"worlds:{base_name}" in context.scene.excluded_remap_groups:
+                continue
+                
+            target_world = find_target_data(worlds)
+            
+            # Rename the target if it has a numbered suffix and is the youngest
+            if get_base_name(target_world.name) != target_world.name:
+                target_world.name = get_base_name(target_world.name)
+            
+            # Try to use Blender's built-in functionality for remapping
+            try:
+                # First try to use the ID remap functionality directly
+                for world in worlds:
+                    if world != target_world:
+                        # Use the low-level ID remap functionality
+                        world.user_remap(target_world)
+                        remapped_count += 1
+            except Exception as e:
+                print(f"Error using built-in remap for worlds: {e}")
+                # Fall back to manual remapping
+                for world in worlds:
+                    if world != target_world:
+                        # Find all users of this world and replace with target
+                        
+                        # Check scenes
+                        for scene in bpy.data.scenes:
+                            if scene.world == world:
+                                scene.world = target_world
+                                remapped_count += 1
+                        
+                        # Check world node groups
+                        for node_group in bpy.data.node_groups:
+                            for node in node_group.nodes:
+                                if hasattr(node, 'world') and node.world == world:
+                                    node.world = target_world
+                                    remapped_count += 1
+            
+            # Keep duplicates with 0 users (don't remove them)
+            # This matches Blender's Remap Users behavior
+        
+        # Then clean up any remaining numbered suffixes
+        cleaned_count += clean_data_names(bpy.data.worlds)
+    
     # Force an update of the dependency graph to ensure all users are properly updated
     if context.view_layer:
         context.view_layer.update()
@@ -347,13 +410,15 @@ class DATAREMAP_OT_RemapData(bpy.types.Operator):
         remap_images = context.scene.dataremap_images
         remap_materials = context.scene.dataremap_materials
         remap_fonts = context.scene.dataremap_fonts
+        remap_worlds = context.scene.dataremap_worlds
         
         # Count duplicates before remapping
         image_groups = find_data_groups(bpy.data.images) if remap_images else {}
         material_groups = find_data_groups(bpy.data.materials) if remap_materials else {}
         font_groups = find_data_groups(bpy.data.fonts) if remap_fonts else {}
+        world_groups = find_data_groups(bpy.data.worlds) if remap_worlds else {}
         
-        total_duplicates = sum(len(group) - 1 for groups in [image_groups, material_groups, font_groups] for group in groups.values())
+        total_duplicates = sum(len(group) - 1 for groups in [image_groups, material_groups, font_groups, world_groups] for group in groups.values())
         
         # Count data blocks with numbered suffixes
         total_numbered = 0
@@ -363,6 +428,8 @@ class DATAREMAP_OT_RemapData(bpy.types.Operator):
             total_numbered += sum(1 for mat in bpy.data.materials if mat.users > 0 and get_base_name(mat.name) != mat.name)
         if remap_fonts:
             total_numbered += sum(1 for font in bpy.data.fonts if font.users > 0 and get_base_name(font.name) != font.name)
+        if remap_worlds:
+            total_numbered += sum(1 for world in bpy.data.worlds if world.users > 0 and get_base_name(world.name) != world.name)
         
         if total_duplicates == 0 and total_numbered == 0:
             self.report({'INFO'}, "No data blocks to process")
@@ -373,7 +440,8 @@ class DATAREMAP_OT_RemapData(bpy.types.Operator):
             context,
             remap_images,
             remap_materials,
-            remap_fonts
+            remap_fonts,
+            remap_worlds
         )
         
         # Report results
@@ -446,7 +514,7 @@ class DATAREMAP_OT_SelectAllGroups(bpy.types.Operator):
     
     data_type: bpy.props.StringProperty(
         name="Data Type",
-        description="Type of data (images, materials, fonts)",
+        description="Type of data (images, materials, fonts, worlds)",
         default=""
     )
     
@@ -469,6 +537,8 @@ class DATAREMAP_OT_SelectAllGroups(bpy.types.Operator):
             data_groups = find_data_groups(bpy.data.materials)
         elif self.data_type == "fonts":
             data_groups = find_data_groups(bpy.data.fonts)
+        elif self.data_type == "worlds":
+            data_groups = find_data_groups(bpy.data.worlds)
         
         # Process only groups with more than one item
         for base_name, items in data_groups.items():
@@ -500,7 +570,7 @@ class DATAREMAP_OT_ToggleGroupSelection(bpy.types.Operator):
     
     data_type: bpy.props.StringProperty(
         name="Data Type",
-        description="Type of data (images, materials, fonts)",
+        description="Type of data (images, materials, fonts, worlds)",
         default=""
     )
     
@@ -532,6 +602,8 @@ class DATAREMAP_OT_ToggleGroupSelection(bpy.types.Operator):
                 data_groups = list(find_data_groups(bpy.data.materials).keys())
             elif self.data_type == "fonts":
                 data_groups = list(find_data_groups(bpy.data.fonts).keys())
+            elif self.data_type == "worlds":
+                data_groups = list(find_data_groups(bpy.data.worlds).keys())
             
             # Find the indices of the last clicked group and the current group
             try:
@@ -653,12 +725,8 @@ def draw_data_duplicates(layout, context, data_type, data_groups):
             
             # Add icon based on data type
             if data_type == "images":
-                if target_item and target_item.preview:
-                    # Force preview update if needed
-                    if target_item.preview.icon_id == 0:
-                        target_item.preview.icon_size = (32, 32)
-                        target_item.preview.reload()
-                    row.template_icon(icon_value=target_item.preview.icon_id, scale=1.0)
+                if target_item:
+                    row.template_icon(icon_value=target_item.preview_ensure().icon_id, scale=1.0)
                 else:
                     row.label(text="", icon='IMAGE_DATA')
             elif data_type == "materials":
@@ -672,6 +740,8 @@ def draw_data_duplicates(layout, context, data_type, data_groups):
                     row.label(text="", icon='MATERIAL')
             elif data_type == "fonts":
                 row.label(text="", icon='FONT_DATA')
+            elif data_type == "worlds":
+                row.label(text="", icon='WORLD')
             
             row.label(text=f"{base_name}: {len(items)} versions")
             
@@ -683,12 +753,8 @@ def draw_data_duplicates(layout, context, data_type, data_groups):
                     
                     # Add icon based on data type
                     if data_type == "images":
-                        if item.preview:
-                            # Force preview update if needed
-                            if item.preview.icon_id == 0:
-                                item.preview.icon_size = (32, 32)
-                                item.preview.reload()
-                            sub_row.template_icon(icon_value=item.preview.icon_id, scale=1.0)
+                        if item:
+                            sub_row.template_icon(icon_value=item.preview_ensure().icon_id, scale=1.0)
                         else:
                             sub_row.label(text="", icon='IMAGE_DATA')
                     elif data_type == "materials":
@@ -702,6 +768,8 @@ def draw_data_duplicates(layout, context, data_type, data_groups):
                             sub_row.label(text="", icon='MATERIAL')
                     elif data_type == "fonts":
                         sub_row.label(text="", icon='FONT_DATA')
+                    elif data_type == "worlds":
+                        sub_row.label(text="", icon='WORLD')
                     
                     sub_row.label(text=f"{item.name}")
 
@@ -735,14 +803,17 @@ class VIEW3D_PT_BulkDataRemap(bpy.types.Panel):
         image_groups = find_data_groups(bpy.data.images)
         material_groups = find_data_groups(bpy.data.materials)
         font_groups = find_data_groups(bpy.data.fonts)
+        world_groups = find_data_groups(bpy.data.worlds)
         
         image_duplicates = sum(len(group) - 1 for group in image_groups.values())
         material_duplicates = sum(len(group) - 1 for group in material_groups.values())
         font_duplicates = sum(len(group) - 1 for group in font_groups.values())
+        world_duplicates = sum(len(group) - 1 for group in world_groups.values())
         
         image_numbered = sum(1 for img in bpy.data.images if img.users > 0 and get_base_name(img.name) != img.name)
         material_numbered = sum(1 for mat in bpy.data.materials if mat.users > 0 and get_base_name(mat.name) != mat.name)
         font_numbered = sum(1 for font in bpy.data.fonts if font.users > 0 and get_base_name(font.name) != font.name)
+        world_numbered = sum(1 for world in bpy.data.worlds if world.users > 0 and get_base_name(world.name) != world.name)
         
         # Initialize excluded_remap_groups if it doesn't exist
         if not hasattr(context.scene, "excluded_remap_groups"):
@@ -842,14 +913,45 @@ class VIEW3D_PT_BulkDataRemap(bpy.types.Panel):
         if context.scene.show_font_duplicates and font_duplicates > 0 and context.scene.dataremap_fonts:
             draw_data_duplicates(col, context, "fonts", font_groups)
         
+        # World
+        row = col.row()
+        split = row.split(factor=0.6)
+        sub_row = split.row()
+        
+        # Use depress parameter to show button as pressed when active
+        op = sub_row.operator("scene.toggle_data_type", text="", icon='WORLD', depress=context.scene.dataremap_worlds)
+        op.data_type = "worlds"
+        
+        # Use different text color based on activation
+        if context.scene.dataremap_worlds:
+            sub_row.label(text="Worlds")
+        else:
+            # Create a row with a different color for inactive text
+            sub_row.label(text="Worlds", icon='RADIOBUT_OFF')
+        
+        sub_row = split.row()
+        if world_duplicates > 0:
+            sub_row.prop(context.scene, "show_world_duplicates", 
+                         text=f"{world_duplicates} duplicates", 
+                         icon='DISCLOSURE_TRI_DOWN' if context.scene.show_world_duplicates else 'DISCLOSURE_TRI_RIGHT',
+                         emboss=False)
+        elif world_numbered > 0:
+            sub_row.label(text=f"{world_numbered} numbered")
+        else:
+            sub_row.label(text="0 duplicates")
+        
+        # Show world duplicates if enabled
+        if context.scene.show_world_duplicates and world_duplicates > 0 and context.scene.dataremap_worlds:
+            draw_data_duplicates(col, context, "worlds", world_groups)
+        
         # Add the operator button
         row = box.row()
         row.scale_y = 1.5
         row.operator("scene.bulk_data_remap")
         
         # Show total counts
-        total_duplicates = image_duplicates + material_duplicates + font_duplicates
-        total_numbered = image_numbered + material_numbered + font_numbered
+        total_duplicates = image_duplicates + material_duplicates + font_duplicates + world_duplicates
+        total_numbered = image_numbered + material_numbered + font_numbered + world_numbered
         
         if total_duplicates > 0 or total_numbered > 0:
             box.separator()
@@ -885,6 +987,8 @@ class DATAREMAP_OT_ToggleDataType(bpy.types.Operator):
             context.scene.dataremap_materials = not context.scene.dataremap_materials
         elif self.data_type == "fonts":
             context.scene.dataremap_fonts = not context.scene.dataremap_fonts
+        elif self.data_type == "worlds":
+            context.scene.dataremap_worlds = not context.scene.dataremap_worlds
         
         return {'FINISHED'}
 
