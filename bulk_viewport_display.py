@@ -3,6 +3,7 @@ import numpy as np
 from time import time
 import os
 from enum import Enum
+import colorsys  # Add colorsys for RGB to HSV conversion
 
 # Material processing status enum
 class MaterialStatus(Enum):
@@ -44,6 +45,15 @@ def register_viewport_properties():
         default=True
     )
     
+    bpy.types.Scene.viewport_colors_saturation_boost = bpy.props.FloatProperty(
+        name="Saturation Boost",
+        description="Amount to boost saturation of viewport colors",
+        default=0.2,
+        min=0.0,
+        max=1.0,
+        subtype='FACTOR'
+    )
+    
     bpy.types.Scene.viewport_colors_progress = bpy.props.FloatProperty(
         name="Progress",
         description="Progress of the viewport color setting operation",
@@ -62,6 +72,7 @@ def register_viewport_properties():
 def unregister_viewport_properties():
     del bpy.types.Scene.viewport_colors_filter_default_white
     del bpy.types.Scene.viewport_colors_progress
+    del bpy.types.Scene.viewport_colors_saturation_boost
     del bpy.types.Scene.viewport_colors_use_vectorized
     del bpy.types.Scene.viewport_colors_batch_size
     del bpy.types.Scene.viewport_colors_selected_only
@@ -123,6 +134,7 @@ class VIEWPORT_OT_SetViewportColors(bpy.types.Operator):
         # Get the batch size from scene properties
         batch_size = bpy.context.scene.viewport_colors_batch_size
         use_vectorized = bpy.context.scene.viewport_colors_use_vectorized
+        saturation_boost = bpy.context.scene.viewport_colors_saturation_boost
         
         # Process a batch of materials
         batch_end = min(current_index + batch_size, len(material_queue))
@@ -132,7 +144,7 @@ class VIEWPORT_OT_SetViewportColors(bpy.types.Operator):
             current_material = material.name
             
             # Process the material
-            color, status = process_material(material, use_vectorized)
+            color, status = process_material(material, use_vectorized, saturation_boost)
             
             # Apply the color to the material
             if color:
@@ -172,7 +184,18 @@ class VIEWPORT_OT_SetViewportColors(bpy.types.Operator):
             icon='INFO'
         )
 
-def process_material(material, use_vectorized=True):
+def boost_saturation(color, saturation_boost=0.2):
+    """Boost the saturation of a color by converting to HSV, increasing saturation, and converting back to RGB"""
+    # Convert RGB to HSV
+    h, s, v = colorsys.rgb_to_hsv(*color)
+    
+    # Increase saturation (clamping to 1.0 maximum)
+    s = min(s + saturation_boost, 1.0)
+    
+    # Convert back to RGB
+    return colorsys.hsv_to_rgb(h, s, v)
+
+def process_material(material, use_vectorized=True, saturation_boost=0.2):
     """Process a material to determine its viewport color"""
     if not material or not material.use_nodes:
         return (1, 1, 1), MaterialStatus.DEFAULT_WHITE
@@ -183,6 +206,9 @@ def process_material(material, use_vectorized=True):
         
         if color is None:
             return (1, 1, 1), MaterialStatus.DEFAULT_WHITE
+        
+        # Boost saturation to make colors more vibrant
+        color = boost_saturation(color, saturation_boost)
         
         return color, MaterialStatus.COMPLETED
     except Exception as e:
@@ -455,6 +481,7 @@ class VIEW3D_PT_BulkViewportDisplay(bpy.types.Panel):
         col.prop(context.scene, "viewport_colors_selected_only")
         col.prop(context.scene, "viewport_colors_batch_size")
         col.prop(context.scene, "viewport_colors_use_vectorized")
+        col.prop(context.scene, "viewport_colors_saturation_boost")
         
         # Add the operator button
         row = box.row()
