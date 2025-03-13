@@ -720,28 +720,31 @@ def draw_data_duplicates(layout, context, data_type, data_groups):
             exp_op.group_key = base_name
             exp_op.data_type = data_type
             
-            # Find the original data item (target) to show its preview
+            # Find the original data item (target)
             target_item = find_target_data(items)
             
             # Add icon based on data type
             if data_type == "images":
-                if target_item:
+                if target_item and hasattr(target_item, 'preview'):
+                    # Use the actual image thumbnail
                     row.template_icon(icon_value=target_item.preview_ensure().icon_id, scale=1.0)
                 else:
                     row.label(text="", icon='IMAGE_DATA')
             elif data_type == "materials":
-                if target_item and target_item.preview:
-                    # Force preview update if needed
-                    if target_item.preview.icon_id == 0:
-                        target_item.preview.icon_size = (32, 32)
-                        target_item.preview.reload()
-                    row.template_icon(icon_value=target_item.preview.icon_id, scale=1.0)
+                if target_item and hasattr(target_item, 'preview'):
+                    # Use UI_previews_ensure_material which is what Blender uses internally
+                    # This accesses the cached thumbnail without triggering a render
+                    icon_id = bpy.types.UILayout.icon(target_item)
+                    row.label(text="", icon_value=icon_id)
                 else:
                     row.label(text="", icon='MATERIAL')
             elif data_type == "fonts":
                 row.label(text="", icon='FONT_DATA')
             elif data_type == "worlds":
-                row.label(text="", icon='WORLD')
+                if target_item and hasattr(target_item, 'preview') and target_item.preview:
+                    row.template_icon(icon_value=target_item.preview.icon_id, scale=1.0)
+                else:
+                    row.label(text="", icon='WORLD')
             
             row.label(text=f"{base_name}: {len(items)} versions")
             
@@ -750,26 +753,28 @@ def draw_data_duplicates(layout, context, data_type, data_groups):
                 for item in items:
                     sub_row = box_dup.row()
                     sub_row.label(text="", icon='BLANK1')  # Indent
-                    
                     # Add icon based on data type
                     if data_type == "images":
-                        if item:
+                        if item and hasattr(item, 'preview'):
+                            # Use the actual image thumbnail
                             sub_row.template_icon(icon_value=item.preview_ensure().icon_id, scale=1.0)
                         else:
                             sub_row.label(text="", icon='IMAGE_DATA')
                     elif data_type == "materials":
-                        if item.preview:
-                            # Force preview update if needed
-                            if item.preview.icon_id == 0:
-                                item.preview.icon_size = (32, 32)
-                                item.preview.reload()
-                            sub_row.template_icon(icon_value=item.preview.icon_id, scale=1.0)
+                        if item and hasattr(item, 'preview'):
+                            # Use UI_previews_ensure_material which is what Blender uses internally
+                            # This accesses the cached thumbnail without triggering a render
+                            icon_id = bpy.types.UILayout.icon(item)
+                            sub_row.label(text="", icon_value=icon_id)
                         else:
                             sub_row.label(text="", icon='MATERIAL')
                     elif data_type == "fonts":
                         sub_row.label(text="", icon='FONT_DATA')
                     elif data_type == "worlds":
-                        sub_row.label(text="", icon='WORLD')
+                        if item and hasattr(item, 'preview') and item.preview:
+                            sub_row.template_icon(icon_value=item.preview.icon_id, scale=1.0)
+                        else:
+                            sub_row.label(text="", icon='WORLD')
                     
                     sub_row.label(text=f"{item.name}")
 
@@ -792,9 +797,8 @@ class VIEW3D_PT_BulkDataRemap(bpy.types.Panel):
         
         # Add description
         col = box.column()
-        col.label(text="Find and remap redundant data")
-        col.label(text="blocks like .001, .002 duplicates")
-        col.label(text="(only showing used datablocks)")
+        col.label(text="Find and remap redundant datablocks,")
+        col.label(text="e.g. .001, .002 duplicates")
         
         # Add data type options with checkboxes
         col = box.column(align=True)
