@@ -4,8 +4,8 @@ import os
 import sys
 import subprocess
 
-# Regular expression to match numbered suffixes like .001, .002, etc.
-NUMBERED_SUFFIX_PATTERN = re.compile(r'(.*?)\.(\d{3,})$')
+# Regular expression to match numbered suffixes like .001, .002, _001, _0001, etc.
+NUMBERED_SUFFIX_PATTERN = re.compile(r'(.*?)[._](\d{3,})$')
 
 # Function to check if any datablocks in a collection are linked from a library
 def has_linked_datablocks(data_collection):
