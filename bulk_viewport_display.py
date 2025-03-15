@@ -26,13 +26,13 @@ current_index = 0
 
 # Scene properties for viewport display settings
 def register_viewport_properties():
-    bpy.types.Scene.viewport_colors_selected_only = bpy.props.BoolProperty(
+    bpy.types.Scene.viewport_colors_selected_only = bpy.props.BoolProperty(  # type: ignore
         name="Selected Objects Only",
         description="Apply viewport colors only to materials in selected objects",
         default=False
     )
     
-    bpy.types.Scene.viewport_colors_batch_size = bpy.props.IntProperty(
+    bpy.types.Scene.viewport_colors_batch_size = bpy.props.IntProperty(  # type: ignore
         name="Batch Size",
         description="Number of materials to process in each batch",
         default=50,
@@ -40,13 +40,13 @@ def register_viewport_properties():
         max=50
     )
     
-    bpy.types.Scene.viewport_colors_use_vectorized = bpy.props.BoolProperty(
+    bpy.types.Scene.viewport_colors_use_vectorized = bpy.props.BoolProperty(  # type: ignore
         name="Use Vectorized Processing",
         description="Use vectorized operations for image processing (faster but uses more memory)",
         default=True
     )
     
-    bpy.types.Scene.viewport_colors_saturation_boost = bpy.props.FloatProperty(
+    bpy.types.Scene.viewport_colors_saturation_boost = bpy.props.FloatProperty(  # type: ignore
         name="Saturation Boost",
         description="Amount to boost saturation of viewport colors",
         default=0.1,
@@ -55,7 +55,7 @@ def register_viewport_properties():
         subtype='FACTOR'
     )
     
-    bpy.types.Scene.viewport_colors_progress = bpy.props.FloatProperty(
+    bpy.types.Scene.viewport_colors_progress = bpy.props.FloatProperty(  # type: ignore
         name="Progress",
         description="Progress of the viewport color setting operation",
         default=0.0,
@@ -64,33 +64,33 @@ def register_viewport_properties():
         subtype='PERCENTAGE'
     )
     
-    bpy.types.Scene.viewport_colors_default_white_only = bpy.props.BoolProperty(
+    bpy.types.Scene.viewport_colors_default_white_only = bpy.props.BoolProperty(  # type: ignore
         name="Default White Only",
         description="Show only materials that weren't able to be processed",
         default=False
     )
     
     # New properties for thumbnail-based color extraction
-    bpy.types.Scene.viewport_colors_use_preview = bpy.props.BoolProperty(
+    bpy.types.Scene.viewport_colors_use_preview = bpy.props.BoolProperty(  # type: ignore
         name="Use Material Thumbnails",
         description="Use Blender's material thumbnails for color extraction (faster and more reliable)",
         default=True
     )
     
-    bpy.types.Scene.viewport_colors_fallback_to_nodes = bpy.props.BoolProperty(
+    bpy.types.Scene.viewport_colors_fallback_to_nodes = bpy.props.BoolProperty(  # type: ignore
         name="Fallback to Node Analysis",
         description="If thumbnail extraction fails, fall back to node-based color extraction",
         default=True
     )
     
-    bpy.types.Scene.viewport_colors_show_advanced = bpy.props.BoolProperty(
+    bpy.types.Scene.viewport_colors_show_advanced = bpy.props.BoolProperty(  # type: ignore
         name="Show Advanced Options",
         description="Show advanced options for viewport color extraction",
         default=False
     )
     
     # Filter options for results
-    bpy.types.Scene.viewport_colors_filter_method = bpy.props.EnumProperty(
+    bpy.types.Scene.viewport_colors_filter_method = bpy.props.EnumProperty(  # type: ignore
         name="Filter by Method",
         description="Filter materials by the method used to extract colors",
         items=[
@@ -820,7 +820,7 @@ class MATERIAL_OT_SelectInEditor(bpy.types.Operator):
     bl_label = "Select Material"
     bl_options = {'REGISTER', 'UNDO'}
     
-    material_name: bpy.props.StringProperty(
+    material_name: bpy.props.StringProperty(  # type: ignore
         name="Material Name",
         description="Name of the material to select",
         default=""
@@ -880,7 +880,7 @@ def get_color_from_preview(material, use_vectorized=True):
         # Use Blender's standard preview size
         preview.icon_size = (128, 128)
         # This triggers Blender's internal preview generation
-        _ = preview.icon_id  # Assign to throwaway variable to avoid type expression error
+        icon_id = preview.icon_id  # Store in variable instead of just accessing
     
     # Access the preview image data - these are the same thumbnails shown in the material panel
     preview_image = preview.icon_pixels_float

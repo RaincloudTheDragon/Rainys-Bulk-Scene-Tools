@@ -1,55 +1,66 @@
 import bpy
 import re
+import os
+import sys
+import subprocess
 
 # Regular expression to match numbered suffixes like .001, .002, etc.
 NUMBERED_SUFFIX_PATTERN = re.compile(r'(.*?)\.(\d{3,})$')
 
+# Function to check if any datablocks in a collection are linked from a library
+def has_linked_datablocks(data_collection):
+    """Check if any datablocks in the collection are linked from a library"""
+    for data in data_collection:
+        if data.users > 0 and hasattr(data, 'library') and data.library is not None:
+            return True
+    return False
+
 # Register properties for data remap settings
 def register_dataremap_properties():
-    bpy.types.Scene.dataremap_images = bpy.props.BoolProperty(
+    bpy.types.Scene.dataremap_images = bpy.props.BoolProperty(  # type: ignore
         name="Images",
         description="Find and remap duplicate images",
         default=True
     )
     
-    bpy.types.Scene.dataremap_materials = bpy.props.BoolProperty(
+    bpy.types.Scene.dataremap_materials = bpy.props.BoolProperty(  # type: ignore
         name="Materials",
         description="Find and remap duplicate materials",
         default=True
     )
     
-    bpy.types.Scene.dataremap_fonts = bpy.props.BoolProperty(
+    bpy.types.Scene.dataremap_fonts = bpy.props.BoolProperty(  # type: ignore
         name="Fonts",
         description="Find and remap duplicate fonts",
         default=True
     )
     
-    bpy.types.Scene.dataremap_worlds = bpy.props.BoolProperty(
+    bpy.types.Scene.dataremap_worlds = bpy.props.BoolProperty(  # type: ignore
         name="Worlds",
         description="Find and remap duplicate worlds",
         default=True
     )
     
     # Add properties for showing duplicate lists
-    bpy.types.Scene.show_image_duplicates = bpy.props.BoolProperty(
+    bpy.types.Scene.show_image_duplicates = bpy.props.BoolProperty(  # type: ignore
         name="Show Image Duplicates",
         description="Show list of duplicate images",
         default=False
     )
     
-    bpy.types.Scene.show_material_duplicates = bpy.props.BoolProperty(
+    bpy.types.Scene.show_material_duplicates = bpy.props.BoolProperty(  # type: ignore
         name="Show Material Duplicates",
         description="Show list of duplicate materials",
         default=False
     )
     
-    bpy.types.Scene.show_font_duplicates = bpy.props.BoolProperty(
+    bpy.types.Scene.show_font_duplicates = bpy.props.BoolProperty(  # type: ignore
         name="Show Font Duplicates",
         description="Show list of duplicate fonts",
         default=False
     )
     
-    bpy.types.Scene.show_world_duplicates = bpy.props.BoolProperty(
+    bpy.types.Scene.show_world_duplicates = bpy.props.BoolProperty(  # type: ignore
         name="Show World Duplicates",
         description="Show list of duplicate worlds",
         default=False
@@ -91,12 +102,16 @@ def get_base_name(name):
     return name
 
 def find_data_groups(data_collection):
-    """Group data blocks by their base name, excluding those with no users"""
+    """Group data blocks by their base name, excluding those with no users or linked from libraries"""
     groups = {}
     
     for data in data_collection:
         # Skip datablocks with no users
         if data.users == 0:
+            continue
+            
+        # Skip linked datablocks
+        if hasattr(data, 'library') and data.library is not None:
             continue
             
         base_name = get_base_name(data.name)
@@ -109,16 +124,23 @@ def find_data_groups(data_collection):
 
 def find_target_data(data_group):
     """Find the target data block to remap to"""
+    # Filter out linked datablocks
+    local_data_group = [data for data in data_group if not (hasattr(data, 'library') and data.library is not None)]
+    
+    # If all datablocks are linked, return the first one (though this shouldn't happen due to earlier checks)
+    if not local_data_group:
+        return data_group[0]
+    
     # First, try to find a data block without a numbered suffix
-    for data in data_group:
+    for data in local_data_group:
         if get_base_name(data.name) == data.name:
             return data
     
     # If no unnumbered version exists, find the "youngest" version (highest number)
-    youngest = data_group[0]
+    youngest = local_data_group[0]
     highest_suffix = 0
     
-    for data in data_group:
+    for data in local_data_group:
         match = NUMBERED_SUFFIX_PATTERN.match(data.name)
         if match:
             suffix_num = int(match.group(2))
@@ -135,6 +157,10 @@ def clean_data_names(data_collection):
     for data in data_collection:
         # Skip datablocks with no users
         if data.users == 0:
+            continue
+            
+        # Skip linked datablocks
+        if hasattr(data, 'library') and data.library is not None:
             continue
             
         base_name = get_base_name(data.name)
@@ -162,16 +188,25 @@ def remap_data_blocks(context, remap_images, remap_materials, remap_fonts, remap
             
             # Rename the target if it has a numbered suffix and is the youngest
             if get_base_name(target_image.name) != target_image.name:
-                target_image.name = get_base_name(target_image.name)
+                try:
+                    target_image.name = get_base_name(target_image.name)
+                except AttributeError:
+                    # Skip if the target is linked and can't be renamed
+                    print(f"Warning: Cannot rename linked image {target_image.name}")
+                    continue
             
             # Try to use Blender's built-in functionality for remapping
             try:
                 # First try to use the ID remap functionality directly
                 for image in images:
                     if image != target_image:
-                        # Use the low-level ID remap functionality
-                        image.user_remap(target_image)
-                        remapped_count += 1
+                        try:
+                            # Use the low-level ID remap functionality
+                            image.user_remap(target_image)
+                            remapped_count += 1
+                        except AttributeError:
+                            # Skip if the image is linked and can't be remapped
+                            print(f"Warning: Cannot remap linked image {image.name}")
             except Exception as e:
                 print(f"Error using built-in remap for images: {e}")
                 # Fall back to manual remapping
@@ -182,23 +217,35 @@ def remap_data_blocks(context, remap_images, remap_materials, remap_fonts, remap
                             if mat.use_nodes:
                                 for node in mat.node_tree.nodes:
                                     if node.type == 'TEX_IMAGE' and node.image == image:
-                                        node.image = target_image
-                                        remapped_count += 1
+                                        try:
+                                            node.image = target_image
+                                            remapped_count += 1
+                                        except AttributeError:
+                                            # Skip if the node is in a linked material
+                                            print(f"Warning: Cannot modify linked material {mat.name}")
                         
                         # Check for other possible users (like brushes, world textures, etc.)
                         for brush in bpy.data.brushes:
                             if hasattr(brush, 'texture') and brush.texture and brush.texture.type == 'IMAGE':
                                 if hasattr(brush.texture, 'image') and brush.texture.image == image:
-                                    brush.texture.image = target_image
-                                    remapped_count += 1
+                                    try:
+                                        brush.texture.image = target_image
+                                        remapped_count += 1
+                                    except AttributeError:
+                                        # Skip if the brush is linked
+                                        print(f"Warning: Cannot modify linked brush {brush.name}")
                         
                         # Check for world textures
                         for world in bpy.data.worlds:
                             if world.use_nodes:
                                 for node in world.node_tree.nodes:
                                     if node.type == 'TEX_IMAGE' and node.image == image:
-                                        node.image = target_image
-                                        remapped_count += 1
+                                        try:
+                                            node.image = target_image
+                                            remapped_count += 1
+                                        except AttributeError:
+                                            # Skip if the world is linked
+                                            print(f"Warning: Cannot modify linked world {world.name}")
             
             # Keep duplicates with 0 users (don't remove them)
             # This matches Blender's Remap Users behavior
@@ -219,16 +266,25 @@ def remap_data_blocks(context, remap_images, remap_materials, remap_fonts, remap
             
             # Rename the target if it has a numbered suffix and is the youngest
             if get_base_name(target_material.name) != target_material.name:
-                target_material.name = get_base_name(target_material.name)
+                try:
+                    target_material.name = get_base_name(target_material.name)
+                except AttributeError:
+                    # Skip if the target is linked and can't be renamed
+                    print(f"Warning: Cannot rename linked material {target_material.name}")
+                    continue
             
             # Try to use Blender's built-in functionality for remapping
             try:
                 # First try to use the ID remap functionality directly
                 for material in materials:
                     if material != target_material:
-                        # Use the low-level ID remap functionality
-                        material.user_remap(target_material)
-                        remapped_count += 1
+                        try:
+                            # Use the low-level ID remap functionality
+                            material.user_remap(target_material)
+                            remapped_count += 1
+                        except AttributeError:
+                            # Skip if the material is linked and can't be remapped
+                            print(f"Warning: Cannot remap linked material {material.name}")
             except Exception as e:
                 print(f"Error using built-in remap for materials: {e}")
                 # Fall back to manual remapping
@@ -241,23 +297,35 @@ def remap_data_blocks(context, remap_images, remap_materials, remap_fonts, remap
                             if obj.type == 'MESH':
                                 for i, mat_slot in enumerate(obj.material_slots):
                                     if mat_slot.material == material:
-                                        obj.material_slots[i].material = target_material
-                                        remapped_count += 1
+                                        try:
+                                            obj.material_slots[i].material = target_material
+                                            remapped_count += 1
+                                        except AttributeError:
+                                            # Skip if the object is linked
+                                            print(f"Warning: Cannot modify linked object {obj.name}")
                         
                         # Check node groups that might use materials
                         for node_group in bpy.data.node_groups:
                             for node in node_group.nodes:
                                 if hasattr(node, 'material') and node.material == material:
-                                    node.material = target_material
-                                    remapped_count += 1
+                                    try:
+                                        node.material = target_material
+                                        remapped_count += 1
+                                    except AttributeError:
+                                        # Skip if the node group is linked
+                                        print(f"Warning: Cannot modify linked node group {node_group.name}")
                         
                         # Check other materials' node trees for material references
                         for other_mat in bpy.data.materials:
                             if other_mat.use_nodes:
                                 for node in other_mat.node_tree.nodes:
                                     if hasattr(node, 'material') and node.material == material:
-                                        node.material = target_material
-                                        remapped_count += 1
+                                        try:
+                                            node.material = target_material
+                                            remapped_count += 1
+                                        except AttributeError:
+                                            # Skip if the material is linked
+                                            print(f"Warning: Cannot modify linked material {other_mat.name}")
                         
                         # Check for material overrides in collections
                         for coll in bpy.data.collections:
@@ -265,8 +333,12 @@ def remap_data_blocks(context, remap_images, remap_materials, remap_fonts, remap
                                 if coll.override_library:
                                     for override in coll.override_library.properties:
                                         if override.rna_type.identifier == 'MaterialSlot' and override.value == material:
-                                            override.value = target_material
-                                            remapped_count += 1
+                                            try:
+                                                override.value = target_material
+                                                remapped_count += 1
+                                            except AttributeError:
+                                                # Skip if the collection is linked
+                                                print(f"Warning: Cannot modify linked collection {coll.name}")
                         
                         # Check for grease pencil materials - compatible with Blender 4.3.2
                         # In Blender 4.3, grease pencil layers don't have direct material references
@@ -276,16 +348,24 @@ def remap_data_blocks(context, remap_images, remap_materials, remap_fonts, remap
                             if hasattr(gpencil, 'materials'):
                                 for i, mat_slot in enumerate(gpencil.materials):
                                     if mat_slot == material:
-                                        gpencil.materials[i] = target_material
-                                        remapped_count += 1
+                                        try:
+                                            gpencil.materials[i] = target_material
+                                            remapped_count += 1
+                                        except AttributeError:
+                                            # Skip if the grease pencil is linked
+                                            print(f"Warning: Cannot modify linked grease pencil {gpencil.name}")
                             
                             # Check for any objects using this grease pencil data
                             for obj in bpy.data.objects:
                                 if obj.type == 'GPENCIL' and hasattr(obj, 'material_slots'):
                                     for i, mat_slot in enumerate(obj.material_slots):
                                         if mat_slot.material == material:
-                                            obj.material_slots[i].material = target_material
-                                            remapped_count += 1
+                                            try:
+                                                obj.material_slots[i].material = target_material
+                                                remapped_count += 1
+                                            except AttributeError:
+                                                # Skip if the object is linked
+                                                print(f"Warning: Cannot modify linked object {obj.name}")
             
             # Keep duplicates with 0 users (don't remove them)
             # This matches Blender's Remap Users behavior
@@ -306,16 +386,25 @@ def remap_data_blocks(context, remap_images, remap_materials, remap_fonts, remap
             
             # Rename the target if it has a numbered suffix and is the youngest
             if get_base_name(target_font.name) != target_font.name:
-                target_font.name = get_base_name(target_font.name)
+                try:
+                    target_font.name = get_base_name(target_font.name)
+                except AttributeError:
+                    # Skip if the target is linked and can't be renamed
+                    print(f"Warning: Cannot rename linked font {target_font.name}")
+                    continue
             
             # Try to use Blender's built-in functionality for remapping
             try:
                 # First try to use the ID remap functionality directly
                 for font in fonts:
                     if font != target_font:
-                        # Use the low-level ID remap functionality
-                        font.user_remap(target_font)
-                        remapped_count += 1
+                        try:
+                            # Use the low-level ID remap functionality
+                            font.user_remap(target_font)
+                            remapped_count += 1
+                        except AttributeError:
+                            # Skip if the font is linked and can't be remapped
+                            print(f"Warning: Cannot remap linked font {font.name}")
             except Exception as e:
                 print(f"Error using built-in remap for fonts: {e}")
                 # Fall back to manual remapping
@@ -326,17 +415,33 @@ def remap_data_blocks(context, remap_images, remap_materials, remap_fonts, remap
                             if text.type == 'FONT':
                                 # Check all font slots
                                 if text.font == font:
-                                    text.font = target_font
-                                    remapped_count += 1
+                                    try:
+                                        text.font = target_font
+                                        remapped_count += 1
+                                    except AttributeError:
+                                        # Skip if the text is linked
+                                        print(f"Warning: Cannot modify linked text {text.name}")
                                 if hasattr(text, 'font_bold') and text.font_bold == font:
-                                    text.font_bold = target_font
-                                    remapped_count += 1
+                                    try:
+                                        text.font_bold = target_font
+                                        remapped_count += 1
+                                    except AttributeError:
+                                        # Skip if the text is linked
+                                        print(f"Warning: Cannot modify linked text {text.name}")
                                 if hasattr(text, 'font_italic') and text.font_italic == font:
-                                    text.font_italic = target_font
-                                    remapped_count += 1
+                                    try:
+                                        text.font_italic = target_font
+                                        remapped_count += 1
+                                    except AttributeError:
+                                        # Skip if the text is linked
+                                        print(f"Warning: Cannot modify linked text {text.name}")
                                 if hasattr(text, 'font_bold_italic') and text.font_bold_italic == font:
-                                    text.font_bold_italic = target_font
-                                    remapped_count += 1
+                                    try:
+                                        text.font_bold_italic = target_font
+                                        remapped_count += 1
+                                    except AttributeError:
+                                        # Skip if the text is linked
+                                        print(f"Warning: Cannot modify linked text {text.name}")
             
             # Keep duplicates with 0 users (don't remove them)
             # This matches Blender's Remap Users behavior
@@ -357,16 +462,25 @@ def remap_data_blocks(context, remap_images, remap_materials, remap_fonts, remap
             
             # Rename the target if it has a numbered suffix and is the youngest
             if get_base_name(target_world.name) != target_world.name:
-                target_world.name = get_base_name(target_world.name)
+                try:
+                    target_world.name = get_base_name(target_world.name)
+                except AttributeError:
+                    # Skip if the target is linked and can't be renamed
+                    print(f"Warning: Cannot rename linked world {target_world.name}")
+                    continue
             
             # Try to use Blender's built-in functionality for remapping
             try:
                 # First try to use the ID remap functionality directly
                 for world in worlds:
                     if world != target_world:
-                        # Use the low-level ID remap functionality
-                        world.user_remap(target_world)
-                        remapped_count += 1
+                        try:
+                            # Use the low-level ID remap functionality
+                            world.user_remap(target_world)
+                            remapped_count += 1
+                        except AttributeError:
+                            # Skip if the world is linked and can't be remapped
+                            print(f"Warning: Cannot remap linked world {world.name}")
             except Exception as e:
                 print(f"Error using built-in remap for worlds: {e}")
                 # Fall back to manual remapping
@@ -377,15 +491,23 @@ def remap_data_blocks(context, remap_images, remap_materials, remap_fonts, remap
                         # Check scenes
                         for scene in bpy.data.scenes:
                             if scene.world == world:
-                                scene.world = target_world
-                                remapped_count += 1
+                                try:
+                                    scene.world = target_world
+                                    remapped_count += 1
+                                except AttributeError:
+                                    # Skip if the scene is linked
+                                    print(f"Warning: Cannot modify linked scene {scene.name}")
                         
                         # Check world node groups
                         for node_group in bpy.data.node_groups:
                             for node in node_group.nodes:
                                 if hasattr(node, 'world') and node.world == world:
-                                    node.world = target_world
-                                    remapped_count += 1
+                                    try:
+                                        node.world = target_world
+                                        remapped_count += 1
+                                    except AttributeError:
+                                        # Skip if the node group is linked
+                                        print(f"Warning: Cannot modify linked node group {node_group.name}")
             
             # Keep duplicates with 0 users (don't remove them)
             # This matches Blender's Remap Users behavior
@@ -411,6 +533,30 @@ class DATAREMAP_OT_RemapData(bpy.types.Operator):
         remap_materials = context.scene.dataremap_materials
         remap_fonts = context.scene.dataremap_fonts
         remap_worlds = context.scene.dataremap_worlds
+        
+        # Check for linked datablocks
+        linked_datablocks_found = False
+        linked_types = []
+        
+        if remap_images and has_linked_datablocks(bpy.data.images):
+            linked_datablocks_found = True
+            linked_types.append("images")
+            
+        if remap_materials and has_linked_datablocks(bpy.data.materials):
+            linked_datablocks_found = True
+            linked_types.append("materials")
+            
+        if remap_fonts and has_linked_datablocks(bpy.data.fonts):
+            linked_datablocks_found = True
+            linked_types.append("fonts")
+            
+        if remap_worlds and has_linked_datablocks(bpy.data.worlds):
+            linked_datablocks_found = True
+            linked_types.append("worlds")
+        
+        if linked_datablocks_found:
+            self.report({'ERROR'}, f"Cannot remap linked datablocks: {', '.join(linked_types)}. Edit the source file directly.")
+            return {'CANCELLED'}
         
         # Count duplicates before remapping
         image_groups = find_data_groups(bpy.data.images) if remap_images else {}
@@ -478,13 +624,13 @@ class DATAREMAP_OT_ToggleGroupExclusion(bpy.types.Operator):
     bl_label = "Toggle Group"
     bl_options = {'REGISTER', 'UNDO'}
     
-    group_key: bpy.props.StringProperty(
+    group_key: bpy.props.StringProperty(  # type: ignore
         name="Group Key",
         description="Unique identifier for the group",
         default=""
     )
     
-    data_type: bpy.props.StringProperty(
+    data_type: bpy.props.StringProperty(  # type: ignore
         name="Data Type",
         description="Type of data (images, materials, fonts)",
         default=""
@@ -512,13 +658,13 @@ class DATAREMAP_OT_SelectAllGroups(bpy.types.Operator):
     bl_label = "Select All Groups"
     bl_options = {'REGISTER', 'UNDO'}
     
-    data_type: bpy.props.StringProperty(
+    data_type: bpy.props.StringProperty(  # type: ignore
         name="Data Type",
         description="Type of data (images, materials, fonts, worlds)",
         default=""
     )
     
-    select_all: bpy.props.BoolProperty(
+    select_all: bpy.props.BoolProperty(  # type: ignore
         name="Select All",
         description="True to select all, False to deselect all",
         default=True
@@ -562,13 +708,13 @@ class DATAREMAP_OT_ToggleGroupSelection(bpy.types.Operator):
     bl_label = "Toggle Group Selection"
     bl_options = {'REGISTER', 'UNDO'}
     
-    group_key: bpy.props.StringProperty(
+    group_key: bpy.props.StringProperty(  # type: ignore
         name="Group Key",
         description="Unique identifier for the group",
         default=""
     )
     
-    data_type: bpy.props.StringProperty(
+    data_type: bpy.props.StringProperty(  # type: ignore
         name="Data Type",
         description="Type of data (images, materials, fonts, worlds)",
         default=""
@@ -795,6 +941,50 @@ class VIEW3D_PT_BulkDataRemap(bpy.types.Panel):
         box = layout.box()
         box.label(text="Data Remapper")
         
+        # Check for linked datablocks
+        linked_datablocks_found = False
+        linked_types = []
+        linked_paths = set()
+        
+        if context.scene.dataremap_images and has_linked_datablocks(bpy.data.images):
+            linked_datablocks_found = True
+            linked_types.append("images")
+            linked_paths.update(get_linked_file_paths(bpy.data.images))
+            
+        if context.scene.dataremap_materials and has_linked_datablocks(bpy.data.materials):
+            linked_datablocks_found = True
+            linked_types.append("materials")
+            linked_paths.update(get_linked_file_paths(bpy.data.materials))
+            
+        if context.scene.dataremap_fonts and has_linked_datablocks(bpy.data.fonts):
+            linked_datablocks_found = True
+            linked_types.append("fonts")
+            linked_paths.update(get_linked_file_paths(bpy.data.fonts))
+            
+        if context.scene.dataremap_worlds and has_linked_datablocks(bpy.data.worlds):
+            linked_datablocks_found = True
+            linked_types.append("worlds")
+            linked_paths.update(get_linked_file_paths(bpy.data.worlds))
+        
+        # Display warning if linked datablocks are found
+        if linked_datablocks_found:
+            warning_box = box.box()
+            warning_box.alert = True
+            warning_box.label(text="Warning: Linked datablocks detected", icon='ERROR')
+            warning_box.label(text=f"Types: {', '.join(linked_types)}")
+            warning_box.label(text="Cannot remap linked datablocks.")
+            warning_box.label(text="Edit the source file directly.")
+            
+            # Add buttons to open linked files
+            if linked_paths:
+                warning_box.separator()
+                warning_box.label(text="Linked files:")
+                for path in linked_paths:
+                    row = warning_box.row()
+                    row.label(text=os.path.basename(path))
+                    op = row.operator("scene.open_linked_file", text="Open", icon='FILE_BLEND')
+                    op.filepath = path
+        
         # Add description
         col = box.column()
         col.label(text="Find and remap redundant datablocks,")
@@ -978,7 +1168,7 @@ class DATAREMAP_OT_ToggleDataType(bpy.types.Operator):
     bl_label = "Toggle Data Type"
     bl_options = {'REGISTER', 'UNDO'}
     
-    data_type: bpy.props.StringProperty(
+    data_type: bpy.props.StringProperty(  # type: ignore
         name="Data Type",
         description="Type of data (images, materials, fonts)",
         default=""
@@ -1003,13 +1193,13 @@ class DATAREMAP_OT_ToggleGroupExpansion(bpy.types.Operator):
     bl_label = "Toggle Group Expansion"
     bl_options = {'REGISTER', 'UNDO'}
     
-    group_key: bpy.props.StringProperty(
+    group_key: bpy.props.StringProperty(  # type: ignore
         name="Group Key",
         description="Unique identifier for the group",
         default=""
     )
     
-    data_type: bpy.props.StringProperty(
+    data_type: bpy.props.StringProperty(  # type: ignore
         name="Data Type",
         description="Type of data (images, materials, fonts)",
         default=""
@@ -1031,6 +1221,46 @@ class DATAREMAP_OT_ToggleGroupExpansion(bpy.types.Operator):
         
         return {'FINISHED'}
 
+# Function to get unique linked file paths from datablocks
+def get_linked_file_paths(data_collection):
+    """Get unique file paths of linked libraries from datablocks"""
+    linked_paths = set()
+    
+    for data in data_collection:
+        if data.users > 0 and hasattr(data, 'library') and data.library is not None:
+            if hasattr(data.library, 'filepath') and data.library.filepath:
+                linked_paths.add(data.library.filepath)
+    
+    return linked_paths
+
+class DATAREMAP_OT_OpenLinkedFile(bpy.types.Operator):
+    """Open the linked file in a new Blender instance"""
+    bl_idname = "scene.open_linked_file"
+    bl_label = "Open Linked File"
+    bl_options = {'REGISTER'}
+    
+    filepath: bpy.props.StringProperty(  # type: ignore
+        name="File Path",
+        description="Path to the linked file",
+        default=""
+    )
+    
+    def execute(self, context):
+        if not self.filepath:
+            self.report({'ERROR'}, "No file path specified")
+            return {'CANCELLED'}
+        
+        # Try to open the linked file in a new Blender instance
+        try:
+            # Use Blender's built-in file browser to open the file
+            bpy.ops.wm.path_open(filepath=self.filepath)
+            self.report({'INFO'}, f"Opening linked file: {self.filepath}")
+        except Exception as e:
+            self.report({'ERROR'}, f"Failed to open linked file: {e}")
+            return {'CANCELLED'}
+        
+        return {'FINISHED'}
+
 # List of all classes in this module
 classes = (
     DATAREMAP_OT_RemapData,
@@ -1041,6 +1271,7 @@ classes = (
     VIEW3D_PT_BulkDataRemap,
     DATAREMAP_OT_ToggleGroupExpansion,
     DATAREMAP_OT_ToggleGroupSelection,
+    DATAREMAP_OT_OpenLinkedFile,
 )
 
 # Registration
