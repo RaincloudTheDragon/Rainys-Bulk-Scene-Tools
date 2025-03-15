@@ -1,8 +1,12 @@
 name: Create Release
 
 on:
-  release:
-    types: [published, created, edited]
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: 'Release tag (e.g., v0.2.0)'
+        required: true
+        type: string
 
 jobs:
   build:
@@ -35,4 +39,5 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           files: ${{ steps.get_version.outputs.zip_name }}
-          tag_name: ${{ github.ref }} 
+          tag_name: ${{ inputs.release_tag }}
+          draft: true 
