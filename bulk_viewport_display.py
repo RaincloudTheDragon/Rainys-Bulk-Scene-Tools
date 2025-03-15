@@ -46,11 +46,20 @@ def register_viewport_properties():
         default=True
     )
     
-    bpy.types.Scene.viewport_colors_saturation_boost = bpy.props.FloatProperty(  # type: ignore
-        name="Saturation Boost",
-        description="Amount to boost saturation of viewport colors",
-        default=0.1,
-        min=0.0,
+    bpy.types.Scene.viewport_colors_darken_amount = bpy.props.FloatProperty(  # type: ignore
+        name="Color Adjustment",
+        description="Adjust viewport colors by ±10% (+1 = +10% lighter, 0 = no change, -1 = -10% darker)",
+        default=-1.0,
+        min=-1.0,
+        max=1.0,
+        subtype='FACTOR'
+    )
+    
+    bpy.types.Scene.viewport_colors_value_amount = bpy.props.FloatProperty(  # type: ignore
+        name="Saturation Adjustment",
+        description="Adjust color saturation by ±10% (+1 = +10% more saturated, 0 = no change, -1 = -10% less saturated)",
+        default=1.0,
+        min=-1.0,
         max=1.0,
         subtype='FACTOR'
     )
@@ -110,7 +119,8 @@ def unregister_viewport_properties():
     del bpy.types.Scene.viewport_colors_use_preview
     del bpy.types.Scene.viewport_colors_default_white_only
     del bpy.types.Scene.viewport_colors_progress
-    del bpy.types.Scene.viewport_colors_saturation_boost
+    del bpy.types.Scene.viewport_colors_value_amount
+    del bpy.types.Scene.viewport_colors_darken_amount
     del bpy.types.Scene.viewport_colors_use_vectorized
     del bpy.types.Scene.viewport_colors_batch_size
     del bpy.types.Scene.viewport_colors_selected_only
@@ -172,7 +182,6 @@ class VIEWPORT_OT_SetViewportColors(bpy.types.Operator):
         # Get the batch size from scene properties
         batch_size = bpy.context.scene.viewport_colors_batch_size
         use_vectorized = bpy.context.scene.viewport_colors_use_vectorized
-        saturation_boost = bpy.context.scene.viewport_colors_saturation_boost
         
         # Process a batch of materials
         batch_end = min(current_index + batch_size, len(material_queue))
@@ -187,7 +196,7 @@ class VIEWPORT_OT_SetViewportColors(bpy.types.Operator):
             current_material = material.name
             
             # Process the material
-            color, status = process_material(material, use_vectorized, saturation_boost)
+            color, status = process_material(material, use_vectorized)
             
             # Apply the color to the material
             if color:
@@ -252,18 +261,41 @@ class VIEWPORT_OT_SetViewportColors(bpy.types.Operator):
         
         bpy.context.window_manager.popup_menu(draw_popup, title="Processing Complete", icon='INFO')
 
-def boost_saturation(color, saturation_boost=0.2):
-    """Boost the saturation of a color by converting to HSV, increasing saturation, and converting back to RGB"""
-    # Convert RGB to HSV
-    h, s, v = colorsys.rgb_to_hsv(*color)
+def correct_viewport_color(color):
+    """Adjust viewport colors by color intensity and saturation"""
+    r, g, b = color
     
-    # Increase saturation (clamping to 1.0 maximum)
-    s = min(s + saturation_boost, 1.0)
+    # Get the color adjustment amount (-1 to +1) and scale it to ±10%
+    color_adjustment = bpy.context.scene.viewport_colors_darken_amount * 0.1
     
-    # Convert back to RGB
-    return colorsys.hsv_to_rgb(h, s, v)
+    # Get the saturation adjustment amount (-1 to +1) and scale it to ±10%
+    saturation_adjustment = bpy.context.scene.viewport_colors_value_amount * 0.1
+    
+    # First apply the color adjustment (RGB)
+    r = r + color_adjustment
+    g = g + color_adjustment
+    b = b + color_adjustment
+    
+    # Clamp RGB values after color adjustment
+    r = max(0.0, min(1.0, r))
+    g = max(0.0, min(1.0, g))
+    b = max(0.0, min(1.0, b))
+    
+    # Then apply the saturation adjustment using HSV
+    if saturation_adjustment != 0:
+        # Convert to HSV
+        h, s, v = colorsys.rgb_to_hsv(r, g, b)
+        
+        # Adjust saturation while preserving hue and value
+        s = s + saturation_adjustment
+        s = max(0.0, min(1.0, s))
+        
+        # Convert back to RGB
+        r, g, b = colorsys.hsv_to_rgb(h, s, v)
+    
+    return (r, g, b)
 
-def process_material(material, use_vectorized=True, saturation_boost=0.2):
+def process_material(material, use_vectorized=True):
     """Process a material to determine its viewport color"""
     if not material:
         print(f"Material is None, using default white")
@@ -285,11 +317,11 @@ def process_material(material, use_vectorized=True, saturation_boost=0.2):
             if color:
                 print(f"Material {material.name}: Thumbnail color = {color}")
                 
-                # Boost saturation to make colors more vibrant
-                boosted_color = boost_saturation(color, saturation_boost)
-                print(f"Material {material.name}: Boosted thumbnail color = {boosted_color}")
+                # Correct color for viewport display
+                corrected_color = correct_viewport_color(color)
+                print(f"Material {material.name}: Corrected thumbnail color = {corrected_color}")
                 
-                return boosted_color, MaterialStatus.PREVIEW_BASED
+                return corrected_color, MaterialStatus.PREVIEW_BASED
             else:
                 print(f"Material {material.name}: Could not extract color from thumbnail")
                 
@@ -316,11 +348,11 @@ def process_material(material, use_vectorized=True, saturation_boost=0.2):
                 print(f"Material {material.name}: No color found in nodes, using default white")
                 return (1, 1, 1), MaterialStatus.DEFAULT_WHITE
             
-            # Boost saturation to make colors more vibrant
-            boosted_color = boost_saturation(color, saturation_boost)
-            print(f"Material {material.name}: Boosted node-based color = {boosted_color}")
+            # Correct color for viewport display
+            corrected_color = correct_viewport_color(color)
+            print(f"Material {material.name}: Corrected node-based color = {corrected_color}")
             
-            return boosted_color, MaterialStatus.COMPLETED
+            return corrected_color, MaterialStatus.COMPLETED
         
         # If we get here, both methods failed
         print(f"Material {material.name}: All color extraction methods failed, using default white")
@@ -720,7 +752,8 @@ class VIEW3D_PT_BulkViewportDisplay(bpy.types.Panel):
             adv_col = box.column(align=True)
             adv_col.prop(context.scene, "viewport_colors_batch_size")
             adv_col.prop(context.scene, "viewport_colors_use_vectorized")
-            adv_col.prop(context.scene, "viewport_colors_saturation_boost")
+            adv_col.prop(context.scene, "viewport_colors_darken_amount")
+            adv_col.prop(context.scene, "viewport_colors_value_amount")
         
         # Add the operator button
         row = box.row()
