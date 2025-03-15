@@ -21,7 +21,13 @@ jobs:
       
       - name: Create ZIP
         run: |
-          zip -r "${{ steps.get_version.outputs.zip_name }}" . -x "*.git*" "*.github*"
+          # Create a temporary directory for the addon
+          mkdir -p addon_files
+          # Copy only the required files
+          cp __init__.py bulk_data_remap.py bulk_viewport_display.py bl_info.json addon_files/
+          # Create the zip from the temporary directory
+          cd addon_files
+          zip -r "../${{ steps.get_version.outputs.zip_name }}" ./*
       
       - name: Upload Release Asset
         env:
