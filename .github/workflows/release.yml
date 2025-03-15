@@ -1,0 +1,32 @@
+name: Create Release
+
+on:
+  release:
+    types: [created]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Get Version
+        id: get_version
+        run: |
+          VERSION=$(python -c "import json; v=json.load(open('bl_info.json'))['version']; print(f'{v[0]}.{v[1]}.{v[2]}')")
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "zip_name=Rainys-Bulk-Scene-Tools.v$VERSION.zip" >> $GITHUB_OUTPUT
+      
+      - name: Create ZIP
+        run: |
+          zip -r "${{ steps.get_version.outputs.zip_name }}" . -x "*.git*" "*.github*"
+      
+      - name: Upload Release Asset
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: softprops/action-gh-release@v1
+        with:
+          files: ${{ steps.get_version.outputs.zip_name }}
+          tag_name: ${{ github.ref }} 
