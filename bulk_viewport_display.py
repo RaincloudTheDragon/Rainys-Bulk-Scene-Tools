@@ -1,4 +1,4 @@
-import bpy
+import bpy # type: ignore
 import numpy as np
 from time import time
 import os
@@ -49,7 +49,7 @@ def register_viewport_properties():
     bpy.types.Scene.viewport_colors_darken_amount = bpy.props.FloatProperty(  # type: ignore
         name="Color Adjustment",
         description="Adjust viewport colors by ±10% (+1 = +10% lighter, 0 = no change, -1 = -10% darker)",
-        default=-1.0,
+        default=0.0,
         min=-1.0,
         max=1.0,
         subtype='FACTOR'
@@ -73,6 +73,12 @@ def register_viewport_properties():
         subtype='PERCENTAGE'
     )
     
+    bpy.types.Scene.viewport_colors_show_advanced = bpy.props.BoolProperty(  # type: ignore
+        name="Show Advanced Options",
+        description="Show advanced options for viewport color extraction",
+        default=False
+    )
+    
     bpy.types.Scene.viewport_colors_default_white_only = bpy.props.BoolProperty(  # type: ignore
         name="Default White Only",
         description="Show only materials that weren't able to be processed",
@@ -85,37 +91,8 @@ def register_viewport_properties():
         description="Use Blender's material thumbnails for color extraction (faster and more reliable)",
         default=True
     )
-    
-    bpy.types.Scene.viewport_colors_fallback_to_nodes = bpy.props.BoolProperty(  # type: ignore
-        name="Fallback to Node Analysis",
-        description="If thumbnail extraction fails, fall back to node-based color extraction",
-        default=True
-    )
-    
-    bpy.types.Scene.viewport_colors_show_advanced = bpy.props.BoolProperty(  # type: ignore
-        name="Show Advanced Options",
-        description="Show advanced options for viewport color extraction",
-        default=False
-    )
-    
-    # Filter options for results
-    bpy.types.Scene.viewport_colors_filter_method = bpy.props.EnumProperty(  # type: ignore
-        name="Filter by Method",
-        description="Filter materials by the method used to extract colors",
-        items=[
-            ('ALL', "All Methods", "Show all materials"),
-            ('PREVIEW', "Thumbnail-based", "Show only materials processed with thumbnail-based method"),
-            ('NODE', "Node-based", "Show only materials processed with node-based method"),
-            ('DEFAULT', "Default White", "Show only materials that defaulted to white"),
-            ('FAILED', "Failed", "Show only materials that failed processing")
-        ],
-        default='ALL'
-    )
 
 def unregister_viewport_properties():
-    del bpy.types.Scene.viewport_colors_filter_method
-    del bpy.types.Scene.viewport_colors_show_advanced
-    del bpy.types.Scene.viewport_colors_fallback_to_nodes
     del bpy.types.Scene.viewport_colors_use_preview
     del bpy.types.Scene.viewport_colors_default_white_only
     del bpy.types.Scene.viewport_colors_progress
@@ -124,6 +101,7 @@ def unregister_viewport_properties():
     del bpy.types.Scene.viewport_colors_use_vectorized
     del bpy.types.Scene.viewport_colors_batch_size
     del bpy.types.Scene.viewport_colors_selected_only
+    del bpy.types.Scene.viewport_colors_show_advanced
 
 class VIEWPORT_OT_SetViewportColors(bpy.types.Operator):
     """Set Viewport Display colors from BSDF base color or texture"""
@@ -306,57 +284,23 @@ def process_material(material, use_vectorized=True):
         return (1, 1, 1), MaterialStatus.DEFAULT_WHITE
     
     try:
-        # Check if we should use thumbnail-based extraction
-        if bpy.context.scene.viewport_colors_use_preview:
-            # Try to get color from material thumbnail
-            print(f"Material {material.name}: Attempting to extract color from thumbnail")
-            
-            # Get color from the material thumbnail
-            color = get_color_from_preview(material, use_vectorized)
-            
-            if color:
-                print(f"Material {material.name}: Thumbnail color = {color}")
-                
-                # Correct color for viewport display
-                corrected_color = correct_viewport_color(color)
-                print(f"Material {material.name}: Corrected thumbnail color = {corrected_color}")
-                
-                return corrected_color, MaterialStatus.PREVIEW_BASED
-            else:
-                print(f"Material {material.name}: Could not extract color from thumbnail")
-                
-                # If fallback is disabled, return default white
-                if not bpy.context.scene.viewport_colors_fallback_to_nodes:
-                    print(f"Material {material.name}: Fallback disabled, using default white")
-                    return (1, 1, 1), MaterialStatus.DEFAULT_WHITE
+        # Get color from material thumbnail
+        print(f"Material {material.name}: Attempting to extract color from thumbnail")
         
-        # Fallback to node-based extraction or primary method if thumbnail extraction is disabled
-        if not bpy.context.scene.viewport_colors_use_preview or bpy.context.scene.viewport_colors_fallback_to_nodes:
-            print(f"Material {material.name}: Attempting node-based color extraction")
-            
-            # Check if material has nodes
-            if not material.use_nodes:
-                print(f"Material {material.name}: No nodes, using default white")
-                return (1, 1, 1), MaterialStatus.DEFAULT_WHITE
-            
-            # Get the final color from the material nodes
-            color = get_final_color(material)
-            
-            print(f"Material {material.name}: Node-based color = {color}")
-            
-            if color is None:
-                print(f"Material {material.name}: No color found in nodes, using default white")
-                return (1, 1, 1), MaterialStatus.DEFAULT_WHITE
+        # Get color from the material thumbnail
+        color = get_color_from_preview(material, use_vectorized)
+        
+        if color:
+            print(f"Material {material.name}: Thumbnail color = {color}")
             
             # Correct color for viewport display
             corrected_color = correct_viewport_color(color)
-            print(f"Material {material.name}: Corrected node-based color = {corrected_color}")
+            print(f"Material {material.name}: Corrected thumbnail color = {corrected_color}")
             
-            return corrected_color, MaterialStatus.COMPLETED
-        
-        # If we get here, both methods failed
-        print(f"Material {material.name}: All color extraction methods failed, using default white")
-        return (1, 1, 1), MaterialStatus.DEFAULT_WHITE
+            return corrected_color, MaterialStatus.PREVIEW_BASED
+        else:
+            print(f"Material {material.name}: Could not extract color from thumbnail, using default white")
+            return (1, 1, 1), MaterialStatus.DEFAULT_WHITE
         
     except Exception as e:
         print(f"Error processing material {material.name}: {e}")
@@ -735,11 +679,6 @@ class VIEW3D_PT_BulkViewportDisplay(bpy.types.Panel):
         # Add primary settings
         col = box.column(align=True)
         col.prop(context.scene, "viewport_colors_selected_only")
-        col.prop(context.scene, "viewport_colors_use_preview")
-        
-        # Add fallback option if thumbnail method is enabled
-        if context.scene.viewport_colors_use_preview:
-            col.prop(context.scene, "viewport_colors_fallback_to_nodes")
         
         # Add advanced options in a collapsible section
         row = box.row()
@@ -774,10 +713,6 @@ class VIEW3D_PT_BulkViewportDisplay(bpy.types.Panel):
             box.separator()
             box.label(text="Material Results:")
             
-            # Add filter options
-            row = box.row(align=True)
-            row.prop(context.scene, "viewport_colors_filter_method", text="")
-            
             # Create a scrollable list
             row = box.row()
             col = row.column()
@@ -787,7 +722,6 @@ class VIEW3D_PT_BulkViewportDisplay(bpy.types.Panel):
             
             # Count materials by status
             preview_count = 0
-            node_count = 0
             default_count = 0
             failed_count = 0
             
@@ -798,22 +732,10 @@ class VIEW3D_PT_BulkViewportDisplay(bpy.types.Panel):
                 # Update counts
                 if status == MaterialStatus.PREVIEW_BASED:
                     preview_count += 1
-                elif status == MaterialStatus.COMPLETED:
-                    node_count += 1
                 elif status == MaterialStatus.DEFAULT_WHITE:
                     default_count += 1
                 elif status == MaterialStatus.FAILED:
                     failed_count += 1
-                
-                # Filter based on selected method
-                if context.scene.viewport_colors_filter_method == 'PREVIEW' and status != MaterialStatus.PREVIEW_BASED:
-                    continue
-                elif context.scene.viewport_colors_filter_method == 'NODE' and status != MaterialStatus.COMPLETED:
-                    continue
-                elif context.scene.viewport_colors_filter_method == 'DEFAULT' and status != MaterialStatus.DEFAULT_WHITE:
-                    continue
-                elif context.scene.viewport_colors_filter_method == 'FAILED' and status != MaterialStatus.FAILED:
-                    continue
                 
                 row = col.row(align=True)
                 
@@ -844,7 +766,7 @@ class VIEW3D_PT_BulkViewportDisplay(bpy.types.Panel):
                 box.separator()
                 stats_col = box.column(align=True)
                 stats_col.label(text=f"Total: {len(material_results)} materials")
-                stats_col.label(text=f"Thumbnail-based: {preview_count}, Node-based: {node_count}")
+                stats_col.label(text=f"Thumbnail-based: {preview_count}")
                 stats_col.label(text=f"Default white: {default_count}, Failed: {failed_count}")
 
 class MATERIAL_OT_SelectInEditor(bpy.types.Operator):
