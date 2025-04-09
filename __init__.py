@@ -12,7 +12,7 @@ bl_info = {
     "support": "COMMUNITY",
 }
 
-import bpy
+import bpy # type: ignore
 from . import bulk_viewport_display
 from . import bulk_data_remap
 

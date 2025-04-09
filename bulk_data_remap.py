@@ -1,4 +1,4 @@
-import bpy
+import bpy # type: ignore
 import re
 import os
 import sys
@@ -115,12 +115,16 @@ def find_data_groups(data_collection):
             continue
             
         base_name = get_base_name(data.name)
+        
+        # Only group local datablocks
         if base_name not in groups:
             groups[base_name] = []
         groups[base_name].append(data)
     
     # Filter out groups with only one item (no duplicates)
-    return {name: items for name, items in groups.items() if len(items) > 1}
+    # Also filter out groups where all items are linked
+    return {name: items for name, items in groups.items() 
+            if len(items) > 1 and any(not (hasattr(item, 'library') and item.library is not None) for item in items)}
 
 def find_target_data(data_group):
     """Find the target data block to remap to"""
@@ -534,31 +538,7 @@ class DATAREMAP_OT_RemapData(bpy.types.Operator):
         remap_fonts = context.scene.dataremap_fonts
         remap_worlds = context.scene.dataremap_worlds
         
-        # Check for linked datablocks
-        linked_datablocks_found = False
-        linked_types = []
-        
-        if remap_images and has_linked_datablocks(bpy.data.images):
-            linked_datablocks_found = True
-            linked_types.append("images")
-            
-        if remap_materials and has_linked_datablocks(bpy.data.materials):
-            linked_datablocks_found = True
-            linked_types.append("materials")
-            
-        if remap_fonts and has_linked_datablocks(bpy.data.fonts):
-            linked_datablocks_found = True
-            linked_types.append("fonts")
-            
-        if remap_worlds and has_linked_datablocks(bpy.data.worlds):
-            linked_datablocks_found = True
-            linked_types.append("worlds")
-        
-        if linked_datablocks_found:
-            self.report({'ERROR'}, f"Cannot remap linked datablocks: {', '.join(linked_types)}. Edit the source file directly.")
-            return {'CANCELLED'}
-        
-        # Count duplicates before remapping
+        # Count duplicates before remapping (only for local datablocks)
         image_groups = find_data_groups(bpy.data.images) if remap_images else {}
         material_groups = find_data_groups(bpy.data.materials) if remap_materials else {}
         font_groups = find_data_groups(bpy.data.fonts) if remap_fonts else {}
@@ -566,19 +546,31 @@ class DATAREMAP_OT_RemapData(bpy.types.Operator):
         
         total_duplicates = sum(len(group) - 1 for groups in [image_groups, material_groups, font_groups, world_groups] for group in groups.values())
         
-        # Count data blocks with numbered suffixes
+        # Count data blocks with numbered suffixes (only for local datablocks)
         total_numbered = 0
         if remap_images:
-            total_numbered += sum(1 for img in bpy.data.images if img.users > 0 and get_base_name(img.name) != img.name)
+            total_numbered += sum(1 for img in bpy.data.images 
+                                if img.users > 0 
+                                and not (hasattr(img, 'library') and img.library is not None)
+                                and get_base_name(img.name) != img.name)
         if remap_materials:
-            total_numbered += sum(1 for mat in bpy.data.materials if mat.users > 0 and get_base_name(mat.name) != mat.name)
+            total_numbered += sum(1 for mat in bpy.data.materials 
+                                if mat.users > 0 
+                                and not (hasattr(mat, 'library') and mat.library is not None)
+                                and get_base_name(mat.name) != mat.name)
         if remap_fonts:
-            total_numbered += sum(1 for font in bpy.data.fonts if font.users > 0 and get_base_name(font.name) != font.name)
+            total_numbered += sum(1 for font in bpy.data.fonts 
+                                if font.users > 0 
+                                and not (hasattr(font, 'library') and font.library is not None)
+                                and get_base_name(font.name) != font.name)
         if remap_worlds:
-            total_numbered += sum(1 for world in bpy.data.worlds if world.users > 0 and get_base_name(world.name) != world.name)
+            total_numbered += sum(1 for world in bpy.data.worlds 
+                                if world.users > 0 
+                                and not (hasattr(world, 'library') and world.library is not None)
+                                and get_base_name(world.name) != world.name)
         
         if total_duplicates == 0 and total_numbered == 0:
-            self.report({'INFO'}, "No data blocks to process")
+            self.report({'INFO'}, "No local data blocks to process")
             return {'CANCELLED'}
         
         # Perform the remapping and cleaning
@@ -827,7 +819,7 @@ def draw_drag_selectable_checkbox(layout, context, data_type, group_key):
 
 # Update the UI code to use the custom draw function
 def draw_data_duplicates(layout, context, data_type, data_groups):
-    """Draw the list of duplicate data items with drag-selectable checkboxes"""
+    """Draw the list of duplicate data items with drag-selectable checkboxes and double-click renaming"""
     box_dup = layout.box()
     
     # Add Select All / Deselect All buttons
@@ -892,7 +884,10 @@ def draw_data_duplicates(layout, context, data_type, data_groups):
                 else:
                     row.label(text="", icon='WORLD')
             
-            row.label(text=f"{base_name}: {len(items)} versions")
+            # Add rename operator for the group name
+            rename_op = row.operator("scene.rename_datablock", text=f"{base_name}: {len(items)} versions", emboss=False)
+            rename_op.data_type = data_type
+            rename_op.old_name = target_item.name
             
             # Only show details if expanded
             if is_expanded:
@@ -922,7 +917,10 @@ def draw_data_duplicates(layout, context, data_type, data_groups):
                         else:
                             sub_row.label(text="", icon='WORLD')
                     
-                    sub_row.label(text=f"{item.name}")
+                    # Add rename operator for each item
+                    rename_op = sub_row.operator("scene.rename_datablock", text=f"{item.name}", emboss=False)
+                    rename_op.data_type = data_type
+                    rename_op.old_name = item.name
 
 class VIEW3D_PT_BulkDataRemap(bpy.types.Panel):
     """Bulk Data Remap Panel"""
@@ -941,7 +939,7 @@ class VIEW3D_PT_BulkDataRemap(bpy.types.Panel):
         box = layout.box()
         box.label(text="Data Remapper")
         
-        # Check for linked datablocks
+        # Check for linked datablocks and create a separate warning section if found
         linked_datablocks_found = False
         linked_types = []
         linked_paths = set()
@@ -966,9 +964,9 @@ class VIEW3D_PT_BulkDataRemap(bpy.types.Panel):
             linked_types.append("worlds")
             linked_paths.update(get_linked_file_paths(bpy.data.worlds))
         
-        # Display warning if linked datablocks are found
+        # Display warning about linked datablocks in a separate section if found
         if linked_datablocks_found:
-            warning_box = box.box()
+            warning_box = layout.box()
             warning_box.alert = True
             warning_box.label(text="Warning: Linked datablocks detected", icon='ERROR')
             warning_box.label(text=f"Types: {', '.join(linked_types)}")
@@ -989,7 +987,7 @@ class VIEW3D_PT_BulkDataRemap(bpy.types.Panel):
         col = box.column()
         col.label(text="Find and remap redundant datablocks,")
         col.label(text="e.g. .001, .002 duplicates")
-        
+        col.label(text="SAVE OFTEN! Bulk Data Processing can cause instability.", icon='ERROR')
         # Add data type options with checkboxes
         col = box.column(align=True)
         
@@ -1261,6 +1259,75 @@ class DATAREMAP_OT_OpenLinkedFile(bpy.types.Operator):
         
         return {'FINISHED'}
 
+# Add a new operator for renaming datablocks
+class DATAREMAP_OT_RenameDatablock(bpy.types.Operator):
+    """Double-click to rename datablock"""
+    bl_idname = "scene.rename_datablock"
+    bl_label = "Rename Datablock"
+    bl_options = {'REGISTER', 'UNDO'}
+    
+    data_type: bpy.props.StringProperty(  # type: ignore
+        name="Data Type",
+        description="Type of data (images, materials, fonts, worlds)",
+        default=""
+    )
+    
+    old_name: bpy.props.StringProperty(  # type: ignore
+        name="Old Name",
+        description="Current name of the datablock",
+        default=""
+    )
+    
+    new_name: bpy.props.StringProperty(  # type: ignore
+        name="New Name",
+        description="New name for the datablock",
+        default=""
+    )
+    
+    def invoke(self, context, event):
+        self.new_name = self.old_name
+        return context.window_manager.invoke_props_dialog(self)
+    
+    def draw(self, context):
+        layout = self.layout
+        layout.prop(self, "new_name", text="Name")
+    
+    def execute(self, context):
+        # Get the appropriate data collection
+        data_collection = None
+        if self.data_type == "images":
+            data_collection = bpy.data.images
+        elif self.data_type == "materials":
+            data_collection = bpy.data.materials
+        elif self.data_type == "fonts":
+            data_collection = bpy.data.fonts
+        elif self.data_type == "worlds":
+            data_collection = bpy.data.worlds
+        
+        if not data_collection:
+            self.report({'ERROR'}, "Invalid data type")
+            return {'CANCELLED'}
+        
+        # Find the datablock
+        datablock = data_collection.get(self.old_name)
+        if not datablock:
+            self.report({'ERROR'}, f"Could not find {self.data_type} with name {self.old_name}")
+            return {'CANCELLED'}
+        
+        # Check if the datablock is linked
+        if hasattr(datablock, 'library') and datablock.library is not None:
+            self.report({'ERROR'}, f"Cannot rename linked {self.data_type}")
+            return {'CANCELLED'}
+        
+        # Rename the datablock
+        try:
+            datablock.name = self.new_name
+            self.report({'INFO'}, f"Renamed {self.data_type} to {self.new_name}")
+            return {'FINISHED'}
+        except Exception as e:
+            self.report({'ERROR'}, f"Failed to rename {self.data_type}: {str(e)}")
+            return {'CANCELLED'}
+
 # List of all classes in this module
 classes = (
     DATAREMAP_OT_RemapData,
@@ -1272,6 +1339,7 @@ classes = (
     DATAREMAP_OT_ToggleGroupExpansion,
     DATAREMAP_OT_ToggleGroupSelection,
     DATAREMAP_OT_OpenLinkedFile,
+    DATAREMAP_OT_RenameDatablock,
 )
 
 # Registration
