@@ -6,10 +6,9 @@ A couple Blender tools to help me automate some tedious tasks in scene optimizat
 
 - Bulk Data Remap
 - Bulk Viewport Display
+- Automatic update checking and one-click updates from GitHub releases
 
-## Requirements
-
-Blender 4.3.2
+Officially supports Blender 4.4.1, but may still work on older versions.
 
 ## Installation
 
@@ -29,6 +28,15 @@ Blender 4.3.2
 7. Recommend activating Solid viewport shading mode so you can see what the Material Viewport function is doing. Change color from Material to Texture if you prefer; the function should find the diffuse texture if one exists.
 8. Apply material calculation to selected objects if preferred.
 9. Manually set display color for objects that couldn't be calculated, or weren't calculated to your preference.
+
+### Updating the addon
+
+The addon will automatically check for updates when Blender starts. You can also:
+
+1. Go to Edit > Preferences > Add-ons
+2. Find "Raincloud's Bulk Scene Tools" in the list
+3. In the addon preferences, click "Check Now" to check for updates
+4. If an update is available, click "Install Update" to download and install it
 
 ## Author
 
