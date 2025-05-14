@@ -42,6 +42,35 @@ class BST_AddonPreferences(AddonPreferences):
         max=168  # 1 week max
     )
 
+    updater_interval_months: IntProperty(
+        name="Months",
+        description="Number of months between update checks",
+        default=0,
+        min=0,
+        max=12
+    )
+    updater_interval_days: IntProperty(
+        name="Days",
+        description="Number of days between update checks",
+        default=0,
+        min=0,
+        max=31
+    )
+    updater_interval_hours: IntProperty(
+        name="Hours",
+        description="Number of hours between update checks",
+        default=24,
+        min=0,
+        max=23
+    )
+    updater_interval_minutes: IntProperty(
+        name="Minutes",
+        description="Number of minutes between update checks",
+        default=0,
+        min=0,
+        max=59
+    )
+
     def draw(self, context):
         layout = self.layout
 
