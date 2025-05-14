@@ -429,6 +429,46 @@ class BST_OT_toggle_image_selection(Operator):
             
         return {'FINISHED'}
 
+# Add new operator for reusing material name in path
+class BST_OT_reuse_material_path(Operator):
+    """Use the active material's name in the path"""
+    bl_idname = "bst.reuse_material_path"
+    bl_label = "Use Material Path"
+    bl_description = "Set the path to use the active material's name"
+    bl_options = {'REGISTER', 'UNDO'}
+    
+    def execute(self, context):
+        material_name = None
+        # Try to get the active material from the active object
+        obj = getattr(context, 'active_object', None)
+        if obj and hasattr(obj, 'active_material') and obj.active_material:
+            material_name = obj.active_material.name
+        # Fallback: try to get from node editor's node tree (may be 'Shader Nodetree')
+        elif (context.space_data and context.space_data.type == 'NODE_EDITOR' and
+              hasattr(context.space_data, 'tree_type') and 
+              context.space_data.tree_type == 'ShaderNodeTree' and
+              context.space_data.node_tree):
+            # Try to find a material with the same name as the node tree
+            node_tree_name = context.space_data.node_tree.name
+            if node_tree_name in bpy.data.materials:
+                material_name = bpy.data.materials[node_tree_name].name
+            else:
+                material_name = node_tree_name
+        
+        if material_name:
+            # Get current path and ensure it ends with a separator
+            current_path = context.scene.bst_path_props.new_path
+            if not current_path.endswith(('\\', '/')):
+                current_path += '\\'
+            # Set the new path with material name
+            new_path = current_path + material_name + '\\'
+            context.scene.bst_path_props.new_path = new_path
+            self.report({'INFO'}, f"Set path to {new_path}")
+            return {'FINISHED'}
+        else:
+            self.report({'WARNING'}, "No active material found on the active object or in the node editor")
+            return {'CANCELLED'}
+
 # Panel for Shader Editor sidebar
 class NODE_PT_bulk_path_tools(Panel):
     bl_label = "Bulk Pathing"
@@ -470,9 +510,10 @@ class NODE_PT_bulk_path_tools(Panel):
             row.operator("bst.select_material_images", text="Material Images")
             row.operator("bst.select_active_images", text="Active Images")
             
-            # Add the path remap UI in the main interface
-            row = box.row()
+            # Add the path remap UI in the main interface with reuse button
+            row = box.row(align=True)
             row.prop(path_props, "new_path", text="New Path")
+            reuse_op = row.operator("bst.reuse_material_path", text="", icon='FILE_REFRESH')
             
             # Sorting option
             row = box.row()
@@ -563,9 +604,10 @@ class VIEW3D_PT_bulk_path_subpanel(Panel):
             row.operator("bst.select_material_images", text="Material Images")
             row.operator("bst.select_active_images", text="Active Images")
             
-            # Add the path remap UI in the main interface
-            row = box.row()
+            # Add the path remap UI in the main interface with reuse button
+            row = box.row(align=True)
             row.prop(path_props, "new_path", text="New Path")
+            reuse_op = row.operator("bst.reuse_material_path", text="", icon='FILE_REFRESH')
             
             # Sorting option
             row = box.row()
@@ -626,6 +668,7 @@ classes = (
     BST_OT_select_active_images,
     BST_OT_rename_datablock,
     BST_OT_toggle_image_selection,
+    BST_OT_reuse_material_path,
     NODE_PT_bulk_path_tools,
     VIEW3D_PT_bulk_path_subpanel,
 )
