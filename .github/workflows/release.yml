@@ -27,13 +27,12 @@ jobs:
         run: |
           # Create a temporary directory structure
           mkdir -p addon_files/rainys_bulk_scene_tools
-          # Create the updater_cgc directory in the addon directory
-          mkdir -p addon_files/rainys_bulk_scene_tools/updater_cgc
+          # Create the updater directory in the addon directory
+          mkdir -p addon_files/rainys_bulk_scene_tools/updater
           # Copy main addon files
           cp __init__.py bulk_data_remap.py bulk_viewport_display.py bulk_path_management.py bl_info.json requirements.txt readme.md addon_files/rainys_bulk_scene_tools/
-          # Copy the updater modules
-          cp addon_updater.py addon_updater_ops.py addon_files/rainys_bulk_scene_tools/
-          cp updater_cgc/__init__.py addon_files/rainys_bulk_scene_tools/updater_cgc/
+          # Copy the updater module
+          cp -r updater/* addon_files/rainys_bulk_scene_tools/updater/
           # Create the zip from the temporary directory
           cd addon_files
           zip -r "../${{ steps.get_version.outputs.zip_name }}" ./*
