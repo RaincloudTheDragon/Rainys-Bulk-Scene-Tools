@@ -69,9 +69,9 @@ class BST_PathProperties(PropertyGroup):
     
     new_path: StringProperty(
         name="New Path",
-        description="New path for the datablock",
-        default="//textures",
-        subtype='FILE_PATH'
+        description="Base path for datablocks (datablock name will be appended)",
+        default="//textures/",
+        subtype='DIR_PATH'
     )
     
     show_bulk_operations: BoolProperty(
@@ -130,17 +130,23 @@ class BST_OT_remap_path(Operator):
     
     new_path: StringProperty(
         name="New Path",
-        description="New path for the datablock",
-        default="//textures",
-        subtype='FILE_PATH'
+        description="Base path for datablock (datablock name will be appended)",
+        default="//textures/",
+        subtype='DIR_PATH'
     )
     
     def execute(self, context):
         # Get the active image
         active_image = context.scene.bst_path_props.active_image
         if active_image:
-            active_image.filepath = self.new_path
-            active_image.filepath_raw = self.new_path
+            # Ensure path ends with separator
+            base_path = self.new_path
+            if not base_path.endswith(('\\', '/')):
+                base_path += '/'
+            # Append datablock name
+            full_path = base_path + active_image.name
+            active_image.filepath = full_path
+            active_image.filepath_raw = full_path
             self.report({'INFO'}, f"Successfully remapped {active_image.name}")
             return {'FINISHED'}
         else:
@@ -175,10 +181,11 @@ class BST_OT_toggle_select_all(Operator):
 # Operator to remap multiple paths at once
 class BST_OT_bulk_remap(Operator):
     bl_idname = "bst.bulk_remap"
-    bl_label = "Bulk Remap Paths"
+    bl_label = "Remap Paths"
     bl_description = "Apply the new path to all selected datablocks"
     bl_options = {'REGISTER', 'UNDO'}
     
+    # We'll keep these properties for potential future use, but won't show a dialog for them
     source_dir: StringProperty(
         name="Source Directory",
         description="Directory to replace in paths",
@@ -197,16 +204,19 @@ class BST_OT_bulk_remap(Operator):
         scene = context.scene
         remap_count = 0
         
+        # Get base path from properties
+        base_path = scene.bst_path_props.new_path
+        if not base_path.endswith(('\\', '/')):
+            base_path += '/'
+        
         # Process all the images that are selected
         for img in bpy.data.images:
             if hasattr(img, "bst_selected") and img.bst_selected:
-                if self.source_dir and self.target_dir:
-                    # Replace directory in path
-                    if img.filepath.startswith(self.source_dir):
-                        new_path = img.filepath.replace(self.source_dir, self.target_dir)
-                        success = set_image_paths(img.name, new_path)
-                        if success:
-                            remap_count += 1
+                # Use base path + datablock name
+                full_path = base_path + img.name
+                success = set_image_paths(img.name, full_path)
+                if success:
+                    remap_count += 1
                 
         if remap_count > 0:
             self.report({'INFO'}, f"Successfully remapped {remap_count} paths")
@@ -214,9 +224,6 @@ class BST_OT_bulk_remap(Operator):
         else:
             self.report({'WARNING'}, "No paths were remapped")
             return {'CANCELLED'}
-    
-    def invoke(self, context, event):
-        return context.window_manager.invoke_props_dialog(self)
 
 # Operator to toggle path editing mode
 class BST_OT_toggle_path_edit(Operator):
@@ -434,7 +441,7 @@ class BST_OT_reuse_material_path(Operator):
     """Use the active material's name in the path"""
     bl_idname = "bst.reuse_material_path"
     bl_label = "Use Material Path"
-    bl_description = "Set the path to use the active material's name"
+    bl_description = "Set the base path to use the active material's name"
     bl_options = {'REGISTER', 'UNDO'}
     
     def execute(self, context):
@@ -443,12 +450,11 @@ class BST_OT_reuse_material_path(Operator):
         obj = getattr(context, 'active_object', None)
         if obj and hasattr(obj, 'active_material') and obj.active_material:
             material_name = obj.active_material.name
-        # Fallback: try to get from node editor's node tree (may be 'Shader Nodetree')
+        # Fallback: try to get from node editor's node tree
         elif (context.space_data and context.space_data.type == 'NODE_EDITOR' and
               hasattr(context.space_data, 'tree_type') and 
               context.space_data.tree_type == 'ShaderNodeTree' and
               context.space_data.node_tree):
-            # Try to find a material with the same name as the node tree
             node_tree_name = context.space_data.node_tree.name
             if node_tree_name in bpy.data.materials:
                 material_name = bpy.data.materials[node_tree_name].name
@@ -456,14 +462,10 @@ class BST_OT_reuse_material_path(Operator):
                 material_name = node_tree_name
         
         if material_name:
-            # Get current path and ensure it ends with a separator
-            current_path = context.scene.bst_path_props.new_path
-            if not current_path.endswith(('\\', '/')):
-                current_path += '\\'
-            # Set the new path with material name
-            new_path = current_path + material_name + '\\'
-            context.scene.bst_path_props.new_path = new_path
-            self.report({'INFO'}, f"Set path to {new_path}")
+            # Set the base path with material name
+            base_path = "//textures/" + material_name + "/"
+            context.scene.bst_path_props.new_path = base_path
+            self.report({'INFO'}, f"Set base path to {base_path}")
             return {'FINISHED'}
         else:
             self.report({'WARNING'}, "No active material found on the active object or in the node editor")
@@ -510,20 +512,23 @@ class NODE_PT_bulk_path_tools(Panel):
             row.operator("bst.select_material_images", text="Material Images")
             row.operator("bst.select_active_images", text="Active Images")
             
-            # Add the path remap UI in the main interface with reuse button
+            # Update path UI to clarify behavior
             row = box.row(align=True)
-            row.prop(path_props, "new_path", text="New Path")
+            row.prop(path_props, "new_path", text="Base Path")
             reuse_op = row.operator("bst.reuse_material_path", text="", icon='FILE_REFRESH')
+            # Move the hint to its own row
+            box.label(text="(datablock name will be appended)")
             
             # Sorting option
             row = box.row()
             row.prop(path_props, "sort_by_selected", text="Sort by Selected")
             
-            # Bulk remap button - moved to top
-            if any(hasattr(img, "bst_selected") and img.bst_selected for img in bpy.data.images):
-                row = box.row()
-                row.operator("bst.bulk_remap", text="Bulk Remap Selected", icon='FILE_REFRESH')
-                box.separator()
+            # Bulk remap button - always visible, disabled if none selected
+            row = box.row()
+            any_selected = any(hasattr(img, "bst_selected") and img.bst_selected for img in bpy.data.images)
+            row.enabled = any_selected
+            row.operator("bst.bulk_remap", text="Remap Selected", icon='FILE_REFRESH')
+            box.separator()
             
             # Image selection list with thumbnails
             if len(bpy.data.images) > 0:
@@ -559,10 +564,6 @@ class NODE_PT_bulk_path_tools(Panel):
                     # Image name with rename operator
                     rename_op = row.operator("bst.rename_datablock", text=img.name, emboss=False)
                     rename_op.old_name = img.name
-                    
-                    # Add small remap button
-                    op = row.operator("bst.remap_path", text="", icon='FILE_REFRESH')
-                    op.new_path = path_props.new_path  # Use the path from the UI
             else:
                 box.label(text="No images in blend file")
 
@@ -581,7 +582,7 @@ class VIEW3D_PT_bulk_path_subpanel(Panel):
         scene = context.scene
         path_props = scene.bst_path_props
         
-        # Bulk selection section
+        # Bulk operations section
         box = layout.box()
         row = box.row()
         row.prop(path_props, "show_bulk_operations", 
@@ -604,20 +605,23 @@ class VIEW3D_PT_bulk_path_subpanel(Panel):
             row.operator("bst.select_material_images", text="Material Images")
             row.operator("bst.select_active_images", text="Active Images")
             
-            # Add the path remap UI in the main interface with reuse button
+            # Update path UI to clarify behavior
             row = box.row(align=True)
-            row.prop(path_props, "new_path", text="New Path")
+            row.prop(path_props, "new_path", text="Base Path")
             reuse_op = row.operator("bst.reuse_material_path", text="", icon='FILE_REFRESH')
+            # Move the hint to its own row
+            box.label(text="(datablock name will be appended)")
             
             # Sorting option
             row = box.row()
             row.prop(path_props, "sort_by_selected", text="Sort by Selected")
             
-            # Bulk remap button - moved to top
-            if any(hasattr(img, "bst_selected") and img.bst_selected for img in bpy.data.images):
-                row = box.row()
-                row.operator("bst.bulk_remap", text="Bulk Remap Selected", icon='FILE_REFRESH')
-                box.separator()
+            # Bulk remap button - always visible, disabled if none selected
+            row = box.row()
+            any_selected = any(hasattr(img, "bst_selected") and img.bst_selected for img in bpy.data.images)
+            row.enabled = any_selected
+            row.operator("bst.bulk_remap", text="Remap Selected", icon='FILE_REFRESH')
+            box.separator()
             
             # Image selection list with thumbnails
             if len(bpy.data.images) > 0:
