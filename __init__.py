@@ -18,9 +18,8 @@ from bpy.props import BoolProperty, IntProperty # type: ignore
 from . import bulk_viewport_display
 from . import bulk_data_remap
 from . import bulk_path_management
-# Import updater ops
-from . import addon_updater_ops
-from . import updater_cgc
+# Import updater
+from . import updater
 import datetime
 
 # Addon preferences class for update settings
@@ -74,8 +73,29 @@ class BST_AddonPreferences(AddonPreferences):
     def draw(self, context):
         layout = self.layout
 
-        # Call the updater draw function
-        addon_updater_ops.update_settings_ui(self, context)
+        # Custom updater UI
+        box = layout.box()
+        box.label(text="Update Settings")
+        row = box.row()
+        row.prop(self, "auto_check_update")
+        row = box.row()
+        row.prop(self, "update_check_interval")
+        
+        # Check for updates button
+        row = box.row()
+        row.operator("bst.check_for_updates", icon='FILE_REFRESH')
+        
+        # Show update status if available
+        if updater.UpdaterState.update_available:
+            box.label(text=f"Update available: v{updater.UpdaterState.update_version}")
+            row = box.row()
+            row.operator("bst.install_update", icon='IMPORT')
+            row = box.row()
+            row.operator("wm.url_open", text="Download Update").url = updater.UpdaterState.update_download_url
+        elif updater.UpdaterState.checking_for_updates:
+            box.label(text="Checking for updates...")
+        elif updater.UpdaterState.error_message:
+            box.label(text=f"Error checking for updates: {updater.UpdaterState.error_message}")
 
 # Main panel for Bulk Scene Tools
 class VIEW3D_PT_BulkSceneTools(Panel):
@@ -97,13 +117,27 @@ classes = (
 )
 
 def register():
-    # Configure and register the updater
-    updater_cgc.configure_updater()
-    addon_updater_ops.register(bl_info)
-    
-    # Register classes from this module
+    # Register classes from this module (do this first to ensure preferences are available)
     for cls in classes:
         bpy.utils.register_class(cls)
+    
+    # Print debug info about preferences
+    try:
+        prefs = bpy.context.preferences.addons.get("rainys_bulk_scene_tools")
+        if prefs:
+            print(f"Addon preferences registered successfully: {prefs}")
+        else:
+            print("WARNING: Addon preferences not found after registration!")
+            print(f"Available addons: {', '.join(bpy.context.preferences.addons.keys())}")
+    except Exception as e:
+        print(f"Error accessing preferences: {str(e)}")
+    
+    # Register the updater module
+    updater.register()
+    
+    # Check for updates on startup
+    if hasattr(updater, "check_for_updates"):
+        updater.check_for_updates()
     
     # Register modules
     bulk_viewport_display.register()
@@ -116,12 +150,12 @@ def unregister():
     bulk_data_remap.unregister()
     bulk_viewport_display.unregister()
     
+    # Unregister the updater module
+    updater.unregister()
+    
     # Unregister classes from this module
     for cls in reversed(classes):
         bpy.utils.unregister_class(cls)
-    
-    # Unregister the updater
-    addon_updater_ops.unregister()
 
 if __name__ == "__main__":
     register()

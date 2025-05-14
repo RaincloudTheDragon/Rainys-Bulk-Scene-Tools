@@ -106,7 +106,7 @@ class BST_PathProperties(PropertyGroup):
         default="//textures",
         subtype='FILE_PATH'
     )
-    
+
     # Track last selected image for shift+click behavior
     last_selected_image: StringProperty(
         name="Last Selected Image",
@@ -485,7 +485,7 @@ class NODE_PT_bulk_path_tools(Panel):
     def draw(self, context):
         layout = self.layout
         scene = context.scene
-        path_props = scene.bst_path_props
+        path_props = scene.bst_path_props        
         
         # Bulk operations section
         box = layout.box()
