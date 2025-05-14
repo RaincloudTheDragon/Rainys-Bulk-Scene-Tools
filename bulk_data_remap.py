@@ -66,6 +66,28 @@ def register_dataremap_properties():
         default=False
     )
     
+    # Sort by selected properties for each data type
+    bpy.types.Scene.dataremap_sort_images = bpy.props.BoolProperty(  # type: ignore
+        name="Sort Images by Selected",
+        description="Show selected image groups at the top of the list",
+        default=False
+    )
+    bpy.types.Scene.dataremap_sort_materials = bpy.props.BoolProperty(  # type: ignore
+        name="Sort Materials by Selected",
+        description="Show selected material groups at the top of the list",
+        default=False
+    )
+    bpy.types.Scene.dataremap_sort_fonts = bpy.props.BoolProperty(  # type: ignore
+        name="Sort Fonts by Selected",
+        description="Show selected font groups at the top of the list",
+        default=False
+    )
+    bpy.types.Scene.dataremap_sort_worlds = bpy.props.BoolProperty(  # type: ignore
+        name="Sort Worlds by Selected",
+        description="Show selected world groups at the top of the list",
+        default=False
+    )
+    
     # Dictionary to store excluded groups
     if not hasattr(bpy.types.Scene, "excluded_remap_groups"):
         bpy.types.Scene.excluded_remap_groups = {}
@@ -93,6 +115,12 @@ def unregister_dataremap_properties():
         del bpy.types.Scene.expanded_remap_groups
     if hasattr(bpy.types.Scene, "last_clicked_group"):
         del bpy.types.Scene.last_clicked_group
+    
+    # Delete sort properties
+    del bpy.types.Scene.dataremap_sort_images
+    del bpy.types.Scene.dataremap_sort_materials
+    del bpy.types.Scene.dataremap_sort_fonts
+    del bpy.types.Scene.dataremap_sort_worlds
 
 def get_base_name(name):
     """Extract the base name without numbered suffix"""
@@ -819,7 +847,7 @@ def draw_drag_selectable_checkbox(layout, context, data_type, group_key):
 
 # Update the UI code to use the custom draw function
 def draw_data_duplicates(layout, context, data_type, data_groups):
-    """Draw the list of duplicate data items with drag-selectable checkboxes and double-click renaming"""
+    """Draw the list of duplicate data items with drag-selectable checkboxes and click to rename"""
     box_dup = layout.box()
     
     # Add Select All / Deselect All buttons
@@ -834,13 +862,34 @@ def draw_data_duplicates(layout, context, data_type, data_groups):
     deselect_op.data_type = data_type
     deselect_op.select_all = False
     
+    # Add sort by selected toggle
+    sort_prop_name = f"dataremap_sort_{data_type}"
+    if hasattr(context.scene, sort_prop_name):
+        select_row.prop(context.scene, sort_prop_name, text="Sort by Selected")
+    
     box_dup.separator(factor=0.5)
     
     # Initialize the expanded groups dictionary if it doesn't exist
     if not hasattr(context.scene, "expanded_remap_groups"):
         context.scene.expanded_remap_groups = {}
     
-    for base_name, items in data_groups.items():
+    # Get the groups and possibly sort them
+    group_items = list(data_groups.items())
+    
+    # Sort by selection if enabled
+    sort_prop_name = f"dataremap_sort_{data_type}"
+    if hasattr(context.scene, sort_prop_name) and getattr(context.scene, sort_prop_name):
+        # Check if groups are excluded
+        def is_group_selected(group_key):
+            base_name, items = group_key
+            group_id = f"{data_type}:{base_name}"
+            # A group is "selected" if it's not excluded
+            return group_id not in context.scene.excluded_remap_groups
+        
+        # Sort groups so that selected groups appear first
+        group_items.sort(key=lambda x: not is_group_selected(x))
+    
+    for base_name, items in group_items:
         if len(items) > 1:
             row = box_dup.row()
             
@@ -891,6 +940,10 @@ def draw_data_duplicates(layout, context, data_type, data_groups):
             
             # Only show details if expanded
             if is_expanded:
+                # Sort subgroup items if sort by selected is enabled
+                if hasattr(context.scene, sort_prop_name) and getattr(context.scene, sort_prop_name):
+                    items = sorted(items, key=lambda item: item != target_item)  # Keep target at top
+                
                 for item in items:
                     sub_row = box_dup.row()
                     sub_row.label(text="", icon='BLANK1')  # Indent
@@ -1261,7 +1314,7 @@ class DATAREMAP_OT_OpenLinkedFile(bpy.types.Operator):
 
 # Add a new operator for renaming datablocks
 class DATAREMAP_OT_RenameDatablock(bpy.types.Operator):
-    """Double-click to rename datablock"""
+    """Click to rename datablock"""
     bl_idname = "scene.rename_datablock"
     bl_label = "Rename Datablock"
     bl_options = {'REGISTER', 'UNDO'}
