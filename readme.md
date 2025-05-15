@@ -29,6 +29,14 @@ Officially supports Blender 4.4.1, but may still work on older versions.
 8. Apply material calculation to selected objects if preferred.
 9. Manually set display color for objects that couldn't be calculated, or weren't calculated to your preference.
 
+## Workflow for unpacking and organizing all textures
+
+1. Pack all images (File > external data > pack resources, or BST > Bulk Path Management > Workflow > Pack)
+2. Rename all image (datablocks) as preferred (can be easily done within the Bulk Operations dropdown, but I also recommend the Simple Renaming extension available from the Blender community)
+3. Remap all image paths as preferred (Bulk Operations)
+4. Bulk Path Management > Save All (If selected, will save selected, if none are selected, will save all images in file)
+5. Remove pack
+
 ### Updating the addon
 
 The addon will automatically check for updates when Blender starts. You can also:
