@@ -198,430 +198,462 @@ class VIEWPORT_OT_SetViewportColors(bpy.types.Operator):
         # Update the current index
         current_index = batch_end
         
-        # Continue if there are more materials to process
-        if current_index < len(material_queue):
-            return 0.01  # Schedule the next batch in 0.01 seconds
-        else:
+        # Force a redraw of the UI
+        for area in bpy.context.screen.areas:
+            area.tag_redraw()
+        
+        # Check if we're done
+        if current_index >= len(material_queue):
             is_processing = False
             self.report_info()
             return None
+        
+        # Continue processing
+        return 0.1  # Check again in 0.1 seconds
     
     def report_info(self):
+        global processed_count, start_time
         elapsed_time = time() - start_time
-        mins = int(elapsed_time // 60)
-        secs = int(elapsed_time % 60)
         
-        default_white_count = sum(1 for _, status in material_results.values() if status == MaterialStatus.DEFAULT_WHITE)
-        success_count = sum(1 for _, status in material_results.values() if status == MaterialStatus.COMPLETED or status == MaterialStatus.PREVIEW_BASED)
+        # Count materials by status
+        preview_count = 0
+        node_count = 0
+        default_count = 0
+        failed_count = 0
         
-        message = f"Processed {processed_count} materials in {mins}m {secs}s. Successfully colored: {success_count}, Default white: {default_white_count}"
-        self.report({'INFO'}, message)
+        for _, status in material_results.values():
+            if status == MaterialStatus.PREVIEW_BASED:
+                preview_count += 1
+            elif status == MaterialStatus.COMPLETED:
+                node_count += 1
+            elif status == MaterialStatus.DEFAULT_WHITE:
+                default_count += 1
+            elif status == MaterialStatus.FAILED:
+                failed_count += 1
         
-        # Show a popup with the results
-        bpy.context.window_manager.popup_menu(self.draw_popup, title="Viewport Color Results", icon='INFO')
+        # Use a popup menu instead of self.report since this might be called from a timer
+        def draw_popup(self, context):
+            self.layout.label(text=f"Processed {processed_count} materials in {elapsed_time:.2f} seconds")
+            self.layout.label(text=f"Thumbnail-based: {preview_count}, Node-based: {node_count}")
+            self.layout.label(text=f"Default white: {default_count}, Failed: {failed_count}")
         
-    def draw_popup(self, menu, context):
-        layout = menu.layout
-        layout.label(text=f"Processed {processed_count} materials")
-        
-        default_white_count = sum(1 for _, status in material_results.values() if status == MaterialStatus.DEFAULT_WHITE)
-        if default_white_count > 0:
-            layout.label(text=f"{default_white_count} materials could not be processed and are set to default white")
-            layout.label(text="Use the list below to view and select these materials")
+        bpy.context.window_manager.popup_menu(draw_popup, title="Processing Complete", icon='INFO')
 
 def correct_viewport_color(color):
-    """Apply color adjustment settings to the viewport color"""
-    if not color:
-        return None
+    """Adjust viewport colors by color intensity and saturation"""
+    r, g, b = color
+    
+    # Get the color adjustment amount (-1 to +1) and scale it to ±10%
+    color_adjustment = bpy.context.scene.viewport_colors_darken_amount * 0.1
+    
+    # Get the saturation adjustment amount (-1 to +1) and scale it to ±10%
+    saturation_adjustment = bpy.context.scene.viewport_colors_value_amount * 0.1
+    
+    # First apply the color adjustment (RGB)
+    r = r + color_adjustment
+    g = g + color_adjustment
+    b = b + color_adjustment
+    
+    # Clamp RGB values after color adjustment
+    r = max(0.0, min(1.0, r))
+    g = max(0.0, min(1.0, g))
+    b = max(0.0, min(1.0, b))
+    
+    # Then apply the saturation adjustment using HSV
+    if saturation_adjustment != 0:
+        # Convert to HSV
+        h, s, v = colorsys.rgb_to_hsv(r, g, b)
         
-    # Get the adjustment values
-    darken_factor = bpy.context.scene.viewport_colors_darken_amount
-    saturation_factor = bpy.context.scene.viewport_colors_value_amount
+        # Adjust saturation while preserving hue and value
+        s = s + saturation_adjustment
+        s = max(0.0, min(1.0, s))
+        
+        # Convert back to RGB
+        r, g, b = colorsys.hsv_to_rgb(h, s, v)
     
-    if darken_factor == 0.0 and saturation_factor == 0.0:
-        return color
-    
-    # Convert RGB to HSV
-    h, s, v = colorsys.rgb_to_hsv(*color)
-    
-    # Apply saturation adjustment (±10% per unit)
-    if saturation_factor > 0:
-        s = min(1.0, s * (1.0 + (saturation_factor * 0.5)))
-    elif saturation_factor < 0:
-        s = max(0.0, s * (1.0 + (saturation_factor * 0.5)))
-    
-    # Apply value adjustment (±10% per unit)
-    if darken_factor > 0:
-        v = min(1.0, v * (1.0 + (darken_factor * 0.1)))
-    elif darken_factor < 0:
-        v = max(0.0, v * (1.0 + (darken_factor * 0.1)))
-    
-    # Convert back to RGB
-    return colorsys.hsv_to_rgb(h, s, v)
+    return (r, g, b)
 
 def process_material(material, use_vectorized=True):
-    """Process a material to get its viewport color"""
-    # Use material preview image if enabled
-    if bpy.context.scene.viewport_colors_use_preview:
-        color = get_color_from_preview(material, use_vectorized)
-        if color:
-            return correct_viewport_color(color), MaterialStatus.PREVIEW_BASED
+    """Process a material to determine its viewport color"""
+    if not material:
+        print(f"Material is None, using default white")
+        return (1, 1, 1), MaterialStatus.DEFAULT_WHITE
     
-    # Fallback to node-based detection
+    if material.is_grease_pencil:
+        print(f"Material {material.name}: is a grease pencil material, using default white")
+        return (1, 1, 1), MaterialStatus.DEFAULT_WHITE
+    
     try:
-        # Try to get the color from BSDF nodes
-        color = get_final_color(material)
+        # Get color from material thumbnail
+        print(f"Material {material.name}: Attempting to extract color from thumbnail")
+        
+        # Get color from the material thumbnail
+        color = get_color_from_preview(material, use_vectorized)
+        
         if color:
-            return correct_viewport_color(color), MaterialStatus.COMPLETED
+            print(f"Material {material.name}: Thumbnail color = {color}")
+            
+            # Correct color for viewport display
+            corrected_color = correct_viewport_color(color)
+            print(f"Material {material.name}: Corrected thumbnail color = {corrected_color}")
+            
+            return corrected_color, MaterialStatus.PREVIEW_BASED
+        else:
+            print(f"Material {material.name}: Could not extract color from thumbnail, using default white")
+            return (1, 1, 1), MaterialStatus.DEFAULT_WHITE
+        
     except Exception as e:
         print(f"Error processing material {material.name}: {e}")
         return (1, 1, 1), MaterialStatus.FAILED
-    
-    # Default to white if no color found
-    return (1, 1, 1), MaterialStatus.DEFAULT_WHITE
 
 def get_average_color(image, use_vectorized=True):
-    """Get the average color of an image, with optional vectorized processing"""
-    if not image or not image.pixels:
+    """Calculate the average color of an image"""
+    if not image or not image.has_data:
         return None
     
-    width, height = image.size
-    pixel_count = width * height
+    # Get image pixels
+    pixels = list(image.pixels)
     
-    if pixel_count == 0:
-        return None
-    
-    if use_vectorized:
-        try:
-            # Vectorized approach for speed
-            pixels = np.array(image.pixels).reshape(pixel_count, 4)
-            mask = pixels[:, 3] > 0.1  # Only consider pixels with alpha > 0.1
-            if not np.any(mask):
-                return None
-            
-            # Get RGB values of non-transparent pixels and average them
-            rgb = pixels[mask, :3]
-            avg_color = np.mean(rgb, axis=0)
-            return tuple(avg_color)
-        except:
-            # Fallback to non-vectorized approach if numpy fails
-            pass
-    
-    # Non-vectorized approach
-    r_total, g_total, b_total = 0, 0, 0
-    valid_pixels = 0
-    
-    for i in range(0, len(image.pixels), 4):
-        alpha = image.pixels[i+3]
-        if alpha > 0.1:
-            r_total += image.pixels[i]
-            g_total += image.pixels[i+1]
-            b_total += image.pixels[i+2]
-            valid_pixels += 1
-    
-    if valid_pixels == 0:
-        return None
+    if use_vectorized and np is not None:
+        # Use NumPy for faster processing
+        pixels_np = np.array(pixels)
         
-    return (r_total / valid_pixels, g_total / valid_pixels, b_total / valid_pixels)
+        # Reshape to RGBA format
+        pixels_np = pixels_np.reshape(-1, 4)
+        
+        # Calculate average color (ignoring alpha)
+        avg_color = pixels_np[:, :3].mean(axis=0)
+        
+        return avg_color.tolist()
+    else:
+        # Fallback to pure Python
+        total_r, total_g, total_b = 0, 0, 0
+        pixel_count = len(pixels) // 4
+        
+        for i in range(0, len(pixels), 4):
+            total_r += pixels[i]
+            total_g += pixels[i+1]
+            total_b += pixels[i+2]
+        
+        if pixel_count > 0:
+            return [total_r / pixel_count, total_g / pixel_count, total_b / pixel_count]
+        else:
+            return None
 
 def find_image_node(node, visited=None):
-    """Find the first image texture node in a node tree starting from the given node"""
+    """Find the first image node connected to the given node"""
     if visited is None:
         visited = set()
     
-    if node is None or node in visited:
+    if node in visited:
         return None
     
     visited.add(node)
     
     # Check if this is an image node
-    if node.type == 'TEX_IMAGE' and node.image is not None:
+    if node.type == 'TEX_IMAGE' and node.image:
         return node
     
-    # Check input nodes recursively
+    # Check input connections
     for input_socket in node.inputs:
         for link in input_socket.links:
-            result = find_image_node(link.from_node, visited)
+            from_node = link.from_node
+            result = find_image_node(from_node, visited)
             if result:
                 return result
     
     return None
 
 def find_color_source(node, socket_name=None, visited=None):
-    """Find the color source (either a value or image texture) for a given node"""
+    """
+    Recursively trace color data through nodes to find the source
+    This is an enhanced version that handles mix nodes and node groups
+    """
     if visited is None:
         visited = set()
     
-    if node is None or node in visited:
+    # Avoid infinite recursion
+    node_id = (node, socket_name)
+    if node_id in visited:
         return None, None
     
-    visited.add(node)
+    visited.add(node_id)
     
-    # Check if the input is connected
-    if socket_name and socket_name in node.inputs:
-        socket = node.inputs[socket_name]
+    # Handle different node types
+    if node.type == 'TEX_IMAGE' and node.image:
+        # Direct image texture
+        return node, 'Color'
+    
+    elif node.type == 'RGB':
+        # Direct RGB color
+        return node, 'Color'
+    
+    elif node.type == 'VALTORGB':  # Color Ramp
+        return node, 'Color'
+    
+    elif node.type == 'MIX_RGB' or node.type == 'MIX':
+        # For mix nodes, check the factor to determine which input to prioritize
+        factor = 0.5  # Default to equal mix
         
-        # If socket is not connected, check for a default value
-        if not socket.links:
-            # Return default value if the socket has it
-            if hasattr(socket, "default_value"):
-                if len(socket.default_value) >= 3:  # Color socket
-                    return socket.default_value[:3], None
-                else:  # Value socket
-                    val = socket.default_value
-                    return (val, val, val), None
-            return None, None
+        # Try to get the factor value
+        if len(node.inputs) >= 1:
+            if hasattr(node.inputs[0], 'default_value'):
+                factor = node.inputs[0].default_value
         
-        # Follow the connection
-        from_node = socket.links[0].from_node
+        # If factor is close to 0, prioritize the first color input
+        # If factor is close to 1, prioritize the second color input
+        # Otherwise, check both with second having slightly higher priority
         
-        # Check node type to determine how to process
-        if from_node.type == 'TEX_IMAGE' and from_node.image:
-            return None, from_node
-        elif from_node.type == 'MIX_RGB':
-            # Get the factor 
-            factor = 0.5  # Default factor
-            if not from_node.inputs['Fac'].links and hasattr(from_node.inputs['Fac'], "default_value"):
-                factor = from_node.inputs['Fac'].default_value
-            
-            # Get colors from both inputs
-            color1, image1 = find_color_source(from_node, 'Color1', visited)
-            color2, image2 = find_color_source(from_node, 'Color2', visited)
-            
-            # Choose based on factor and mix mode
-            if from_node.blend_type == 'MIX':
-                if factor < 0.5 and (color1 or image1):
-                    return color1, image1
-                else:
-                    return color2, image2
-            else:
-                # For other blend modes, prefer an image source if available
-                if image1:
-                    return None, image1
-                elif image2:
-                    return None, image2
-                elif color1 and color2:
-                    # Approximate mix for simple blend modes
-                    if from_node.blend_type == 'ADD':
-                        r = min(1.0, color1[0] + color2[0] * factor)
-                        g = min(1.0, color1[1] + color2[1] * factor)
-                        b = min(1.0, color1[2] + color2[2] * factor)
-                        return (r, g, b), None
-                    else:
-                        # Default to color with higher magnitude
-                        mag1 = sum(color1)
-                        mag2 = sum(color2)
-                        return color1 if mag1 > mag2 else color2, None
-                else:
-                    return color1 or color2, None
-        elif from_node.type == 'MAPPING':
-            # Pass through mapping node
-            return find_color_source(from_node, 'Vector', visited)
-        elif from_node.type == 'TEX_COORD':
-            # Texture coordinate node doesn't provide color info
-            return None, None
-        elif from_node.type == 'RGB':
-            # Get color from RGB node
-            if hasattr(from_node.outputs[0], "default_value"):
-                return from_node.outputs[0].default_value[:3], None
-        elif from_node.type == 'NORMAL_MAP':
-            # Pass through normal map node
-            return find_color_source(from_node, 'Color', visited)
-        elif from_node.type == 'SEPARATE_RGB' or from_node.type == 'COMBINE_RGB':
-            # These nodes manipulate individual channels, too complex for this function
-            return None, None
+        if factor < 0.1:  # Strongly favor first input
+            if len(node.inputs) >= 2 and node.inputs[1].links:
+                color1_node = node.inputs[1].links[0].from_node
+                result_node, result_socket = find_color_source(color1_node, None, visited)
+                if result_node:
+                    return result_node, result_socket
+                    
+            # Fallback to second input
+            if len(node.inputs) >= 3 and node.inputs[2].links:
+                color2_node = node.inputs[2].links[0].from_node
+                result_node, result_socket = find_color_source(color2_node, None, visited)
+                if result_node:
+                    return result_node, result_socket
+                    
+        elif factor > 0.9:  # Strongly favor second input
+            if len(node.inputs) >= 3 and node.inputs[2].links:
+                color2_node = node.inputs[2].links[0].from_node
+                result_node, result_socket = find_color_source(color2_node, None, visited)
+                if result_node:
+                    return result_node, result_socket
+                    
+            # Fallback to first input
+            if len(node.inputs) >= 2 and node.inputs[1].links:
+                color1_node = node.inputs[1].links[0].from_node
+                result_node, result_socket = find_color_source(color1_node, None, visited)
+                if result_node:
+                    return result_node, result_socket
         else:
-            # For other node types, try to find an output that might connect to our input
-            for output in from_node.outputs:
-                for link in output.links:
-                    if link.to_node == node and link.to_socket == socket:
-                        # Found the right output, check if it has a default value
-                        if hasattr(output, "default_value"):
-                            if len(output.default_value) >= 3:  # Color socket
-                                return output.default_value[:3], None
-                            else:  # Value socket
-                                val = output.default_value
-                                return (val, val, val), None
+            # Check both inputs with slight preference for the second input (usually the main color)
+            # First try Color2 (second input)
+            if len(node.inputs) >= 3 and node.inputs[2].links:
+                color2_node = node.inputs[2].links[0].from_node
+                result_node, result_socket = find_color_source(color2_node, None, visited)
+                if result_node:
+                    return result_node, result_socket
             
-            # If we didn't find a direct connection, check inputs to the from_node
-            for input_name in ['Color', 'Base Color', 'Diffuse Color', 'Emission Color', 'Color1', 'Color2']:
-                if input_name in from_node.inputs:
-                    result_color, result_image = find_color_source(from_node, input_name, visited)
-                    if result_color or result_image:
-                        return result_color, result_image
-                        
-    # If no socket name specified, check common color inputs
-    else:
-        for input_name in ['Color', 'Base Color', 'Diffuse Color', 'Emission Color']:
-            if input_name in node.inputs:
-                result_color, result_image = find_color_source(node, input_name, visited)
-                if result_color or result_image:
-                    return result_color, result_image
+            # Then try Color1 (first input)
+            if len(node.inputs) >= 2 and node.inputs[1].links:
+                color1_node = node.inputs[1].links[0].from_node
+                result_node, result_socket = find_color_source(color1_node, None, visited)
+                if result_node:
+                    return result_node, result_socket
     
-    # No color source found
+    elif node.type == 'GROUP':
+        # Handle node groups by finding the group output node and tracing back
+        if node.node_tree:
+            # Find output node in the group
+            for group_node in node.node_tree.nodes:
+                if group_node.type == 'GROUP_OUTPUT':
+                    # Find which input socket corresponds to the color output
+                    for i, output in enumerate(node.outputs):
+                        if output.links and (socket_name is None or output.name == socket_name):
+                            # Find the corresponding input in the group output node
+                            if i < len(group_node.inputs) and group_node.inputs[i].links:
+                                input_link = group_node.inputs[i].links[0]
+                                source_node = input_link.from_node
+                                source_socket = input_link.from_socket.name
+                                return find_color_source(source_node, source_socket, visited)
+    
+    elif node.type == 'BSDF_PRINCIPLED':
+        # If we somehow got to a principled BSDF node, check its base color input
+        base_color_input = node.inputs.get('Base Color')
+        if base_color_input and base_color_input.links:
+            connected_node = base_color_input.links[0].from_node
+            return find_color_source(connected_node, None, visited)
+    
+    # For shader nodes, try to find color inputs
+    elif 'BSDF' in node.type or 'SHADER' in node.type:
+        # Look for color inputs in shader nodes
+        color_input_names = ['Color', 'Base Color', 'Diffuse Color', 'Tint']
+        for name in color_input_names:
+            input_socket = node.inputs.get(name)
+            if input_socket and input_socket.links:
+                connected_node = input_socket.links[0].from_node
+                result_node, result_socket = find_color_source(connected_node, None, visited)
+                if result_node:
+                    return result_node, result_socket
+    
+    # For other node types, check all inputs
+    for input_socket in node.inputs:
+        if input_socket.links:
+            from_node = input_socket.links[0].from_node
+            result_node, result_socket = find_color_source(from_node, None, visited)
+            if result_node:
+                return result_node, result_socket
+    
+    # If we get here, no color source was found
     return None, None
 
 def get_final_color(material):
-    """Get the viewport color for a material by analyzing its node tree"""
-    # Check if material has nodes
-    if not material or not material.use_nodes or not material.node_tree:
-        # For non-node materials, return the diffuse color
-        if hasattr(material, "diffuse_color"):
-            return material.diffuse_color[:3]
+    """Get the final color for a material"""
+    if not material or not material.use_nodes:
+        print(f"Material {material.name if material else 'None'} has no nodes")
         return None
     
-    # Get the output node
-    output_node = None
-    for node in material.node_tree.nodes:
-        if node.type == 'OUTPUT_MATERIAL' and node.is_active_output:
-            output_node = node
-            break
-    
-    if not output_node:
-        for node in material.node_tree.nodes:
-            if node.type == 'OUTPUT_MATERIAL':
-                output_node = node
-                break
-    
-    if not output_node:
-        return None
-    
-    # Get the Surface input
-    if 'Surface' not in output_node.inputs or not output_node.inputs['Surface'].links:
-        return None
-    
-    # Get the shader node connected to Surface
-    shader_node = output_node.inputs['Surface'].links[0].from_node
-    
-    # Check shader node type
-    if shader_node.type == 'BSDF_PRINCIPLED':
-        # Try to get base color from Principled BSDF
-        base_color, image_node = find_color_source(shader_node, 'Base Color')
-        
-        if base_color:
-            return base_color
-            
-        if image_node:
-            # Extract average color from image
-            if image_node.image:
-                avg_color = get_average_color(image_node.image)
-                if avg_color:
-                    return avg_color
-    
-    elif shader_node.type in ['BSDF_DIFFUSE', 'BSDF_GLOSSY', 'EMISSION']:
-        # Get color from other shader types
-        color_input = 'Color'
-        if shader_node.type == 'EMISSION':
-            color_input = 'Color'
-        
-        base_color, image_node = find_color_source(shader_node, color_input)
-        
-        if base_color:
-            return base_color
-            
-        if image_node:
-            # Extract average color from image
-            if image_node.image:
-                avg_color = get_average_color(image_node.image)
-                if avg_color:
-                    return avg_color
-    
-    elif shader_node.type == 'MIX_SHADER':
-        # Try both shader inputs
-        shader1 = shader_node.inputs[1].links[0].from_node if shader_node.inputs[1].links else None
-        shader2 = shader_node.inputs[2].links[0].from_node if shader_node.inputs[2].links else None
-        
-        factor = 0.5  # Default mix factor
-        if not shader_node.inputs[0].links:
-            factor = shader_node.inputs[0].default_value
-        
-        # Try the dominant shader based on factor
-        dominant_shader = shader2 if factor > 0.5 else shader1
-        secondary_shader = shader1 if factor > 0.5 else shader2
-        
-        if dominant_shader:
-            result = get_final_color({"use_nodes": True, "node_tree": {"nodes": [dominant_shader]}})
-            if result:
-                return result
-                
-        if secondary_shader:
-            result = get_final_color({"use_nodes": True, "node_tree": {"nodes": [secondary_shader]}})
-            if result:
-                return result
-    
-    # Fallback: search for any image texture node in the material
-    image_texture = find_diffuse_texture(material)
-    if image_texture and image_texture.image:
-        avg_color = get_average_color(image_texture.image)
-        if avg_color:
-            return avg_color
-    
-    return None
-
-def find_diffuse_texture(material):
-    """Find a diffuse texture in a material by searching all nodes"""
-    if not material or not material.use_nodes or not material.node_tree:
-        return None
-    
-    # First look for Principled BSDF nodes
+    # Find the Principled BSDF node
+    principled_node = None
     for node in material.node_tree.nodes:
         if node.type == 'BSDF_PRINCIPLED':
-            # Check if Base Color is connected to an image
-            if node.inputs['Base Color'].links:
-                from_node = node.inputs['Base Color'].links[0].from_node
-                if from_node.type == 'TEX_IMAGE' and from_node.image:
-                    return from_node
-                
-                # Search deeper for an image node connected to this input
-                image_node = find_image_node(from_node)
-                if image_node:
-                    return image_node
+            principled_node = node
+            break
     
-    # Look for other shader nodes
-    for node in material.node_tree.nodes:
-        if node.type in ['BSDF_DIFFUSE', 'BSDF_GLOSSY', 'EMISSION']:
-            if node.inputs['Color'].links:
-                from_node = node.inputs['Color'].links[0].from_node
-                if from_node.type == 'TEX_IMAGE' and from_node.image:
-                    return from_node
-                
-                # Search deeper for an image node connected to this input
-                image_node = find_image_node(from_node)
-                if image_node:
-                    return image_node
+    if not principled_node:
+        print(f"Material {material.name}: No Principled BSDF node found")
+        return None
     
-    # Last resort: look for any image texture node
+    # Get the Base Color input
+    base_color_input = principled_node.inputs.get('Base Color')
+    if not base_color_input:
+        print(f"Material {material.name}: No Base Color input found")
+        return None
+    
+    # Check if there's a texture connected to the Base Color input
+    if base_color_input.links:
+        connected_node = base_color_input.links[0].from_node
+        print(f"Material {material.name}: Base Color connected to {connected_node.name} of type {connected_node.type}")
+        
+        # Use the enhanced color source finding function
+        source_node, source_socket = find_color_source(connected_node)
+        
+        if source_node:
+            print(f"Material {material.name}: Found color source node {source_node.name} of type {source_node.type}")
+            
+            # Handle different source node types
+            if source_node.type == 'TEX_IMAGE' and source_node.image:
+                print(f"Material {material.name}: Using image texture {source_node.image.name}")
+                color = get_average_color(source_node.image)
+                if color:
+                    print(f"Material {material.name}: Image average color = {color}")
+                    return color
+                else:
+                    print(f"Material {material.name}: Could not calculate image average color")
+            
+            # If it's a color ramp, get the average color from the ramp
+            elif source_node.type == 'VALTORGB':  # Color Ramp node
+                print(f"Material {material.name}: Using color ramp")
+                # Get the average of the color stops
+                elements = source_node.color_ramp.elements
+                if elements:
+                    avg_color = [0, 0, 0]
+                    for element in elements:
+                        color = element.color[:3]  # Ignore alpha
+                        avg_color[0] += color[0]
+                        avg_color[1] += color[1]
+                        avg_color[2] += color[2]
+                    
+                    avg_color[0] /= len(elements)
+                    avg_color[1] /= len(elements)
+                    avg_color[2] /= len(elements)
+                    
+                    print(f"Material {material.name}: Color ramp average = {avg_color}")
+                    return avg_color
+            
+            # If it's an RGB node, use its color
+            elif source_node.type == 'RGB':
+                color = list(source_node.outputs[0].default_value)[:3]
+                print(f"Material {material.name}: RGB node color = {color}")
+                return color
+            
+            # For other node types, try to get color from the output socket
+            elif source_socket and hasattr(source_node.outputs, '__getitem__'):
+                for output in source_node.outputs:
+                    if output.name == source_socket:
+                        if hasattr(output, 'default_value') and len(output.default_value) >= 3:
+                            color = list(output.default_value)[:3]
+                            print(f"Material {material.name}: Node output socket color = {color}")
+                            return color
+            
+            print(f"Material {material.name}: Could not extract color from source node {source_node.name} of type {source_node.type}")
+        else:
+            print(f"Material {material.name}: Could not find color source node in the node tree")
+            
+            # Debug: Print the node tree structure to help diagnose the issue
+            print(f"Material {material.name}: Node tree structure:")
+            for node in material.node_tree.nodes:
+                print(f"  - Node: {node.name}, Type: {node.type}")
+                for input_socket in node.inputs:
+                    if input_socket.links:
+                        print(f"    - Input: {input_socket.name} connected to {input_socket.links[0].from_node.name}")
+    
+    # If no texture or couldn't get texture color, use the base color value
+    color = list(base_color_input.default_value)[:3]
+    print(f"Material {material.name}: Using base color value = {color}")
+    return color
+
+def find_diffuse_texture(material):
+    """Find the diffuse texture in a material"""
+    if not material or not material.use_nodes:
+        return None
+    
+    # Find the principled BSDF node
+    principled_node = None
     for node in material.node_tree.nodes:
-        if node.type == 'TEX_IMAGE' and node.image:
-            return node
+        if node.type == 'BSDF_PRINCIPLED':
+            principled_node = node
+            break
+    
+    if not principled_node:
+        return None
+    
+    # Find the base color input
+    base_color_input = principled_node.inputs.get('Base Color')
+    if not base_color_input or not base_color_input.links:
+        return None
+    
+    # Get the connected node
+    connected_node = base_color_input.links[0].from_node
+    
+    # Use the enhanced color source finding function
+    source_node, _ = find_color_source(connected_node)
+    
+    # Check if we found an image texture
+    if source_node and source_node.type == 'TEX_IMAGE' and source_node.image:
+        return source_node.image
     
     return None
 
 def get_status_icon(status):
-    """Get an icon for a material status"""
-    if status == MaterialStatus.COMPLETED:
+    """Get the icon for a material status"""
+    if status == MaterialStatus.PENDING:
+        return 'TRIA_RIGHT'
+    elif status == MaterialStatus.PROCESSING:
+        return 'SORTTIME'
+    elif status == MaterialStatus.COMPLETED:
         return 'CHECKMARK'
+    elif status == MaterialStatus.PREVIEW_BASED:
+        return 'IMAGE_DATA'
     elif status == MaterialStatus.FAILED:
         return 'ERROR'
     elif status == MaterialStatus.DEFAULT_WHITE:
-        return 'QUESTION'
-    elif status == MaterialStatus.PREVIEW_BASED:
-        return 'IMAGE_PLANE'
+        return 'RADIOBUT_OFF'
     else:
-        return 'NONE'
+        return 'QUESTION'
 
 def get_status_text(status):
-    """Get text representation of material status"""
-    if status == MaterialStatus.COMPLETED:
-        return "Processed from nodes"
-    elif status == MaterialStatus.FAILED:
-        return "Failed to process"
-    elif status == MaterialStatus.DEFAULT_WHITE:
-        return "Default white (no color found)"
+    """Get the text for a material status"""
+    if status == MaterialStatus.PENDING:
+        return "Pending"
+    elif status == MaterialStatus.PROCESSING:
+        return "Processing"
+    elif status == MaterialStatus.COMPLETED:
+        return "Node-based"
     elif status == MaterialStatus.PREVIEW_BASED:
-        return "From preview image"
+        return "Thumbnail-based"
+    elif status == MaterialStatus.FAILED:
+        return "Failed"
+    elif status == MaterialStatus.DEFAULT_WHITE:
+        return "Default White"
     else:
-        return "Unknown status"
+        return "Unknown"
 
 class VIEW3D_PT_BulkViewportDisplay(bpy.types.Panel):
     """Bulk Viewport Display Panel"""
@@ -635,84 +667,107 @@ class VIEW3D_PT_BulkViewportDisplay(bpy.types.Panel):
     
     def draw(self, context):
         layout = self.layout
-        scene = context.scene
         
-        # Main operator
+        # Viewport Colors section
         box = layout.box()
+        box.label(text="Viewport Colors")
+        
+        # Add description
+        col = box.column()
+        col.label(text="Set viewport colors from material thumbnails")
+        
+        # Add primary settings
         col = box.column(align=True)
-        col.operator("material.set_viewport_colors", icon='MATERIAL')
+        col.prop(context.scene, "viewport_colors_selected_only")
         
-        # Selection settings
-        col.prop(scene, "viewport_colors_selected_only")
+        # Add advanced options in a collapsible section
+        row = box.row()
+        row.prop(context.scene, "viewport_colors_show_advanced", 
+                 icon='DISCLOSURE_TRI_DOWN' if context.scene.viewport_colors_show_advanced else 'DISCLOSURE_TRI_RIGHT',
+                 emboss=False)
+        row.label(text="Advanced Options")
         
-        # Advanced settings toggle
-        box.prop(scene, "viewport_colors_show_advanced", toggle=True)
+        if context.scene.viewport_colors_show_advanced:
+            adv_col = box.column(align=True)
+            adv_col.prop(context.scene, "viewport_colors_batch_size")
+            adv_col.prop(context.scene, "viewport_colors_use_vectorized")
+            adv_col.prop(context.scene, "viewport_colors_darken_amount")
+            adv_col.prop(context.scene, "viewport_colors_value_amount")
         
-        if scene.viewport_colors_show_advanced:
-            # Advanced settings
-            adv_box = box.box()
-            col = adv_box.column(align=True)
-            col.label(text="Processing Settings:")
-            col.prop(scene, "viewport_colors_use_preview")
-            col.prop(scene, "viewport_colors_batch_size")
-            col.prop(scene, "viewport_colors_use_vectorized")
-            
-            adv_box.separator()
-            
-            # Color adjustments
-            col = adv_box.column(align=True)
-            col.label(text="Color Adjustments:")
-            col.prop(scene, "viewport_colors_darken_amount")
-            col.prop(scene, "viewport_colors_value_amount")
+        # Add the operator button
+        row = box.row()
+        row.scale_y = 1.5
+        row.operator("material.set_viewport_colors")
         
-        # Show progress bar if processing
+        # Show progress if processing
         if is_processing:
-            box = layout.box()
-            box.label(text=f"Processing: {current_material}")
-            box.prop(scene, "viewport_colors_progress")
+            row = box.row()
+            row.label(text=f"Processing: {processed_count}/{total_materials}")
+            
+            # Add a progress bar
+            row = box.row()
+            row.prop(context.scene, "viewport_colors_progress", text="")
         
-        # Results section
+        # Show material results if available
         if material_results:
-            box = layout.box()
-            box.label(text="Material Colors:", icon='MATERIAL')
+            box.separator()
+            box.label(text="Material Results:")
             
-            # Toggle to show only white/default materials
-            box.prop(scene, "viewport_colors_default_white_only")
+            # Create a scrollable list
+            row = box.row()
+            col = row.column()
             
-            # Add scrollable region for materials
-            rows = min(len(material_results), 10)  # Show up to 10 rows, scrollable after that
+            # Collect materials to remove
+            materials_to_remove = []
             
-            box = box.box()
-            col = box.column_flow(columns=1)
+            # Count materials by status
+            preview_count = 0
+            default_count = 0
+            failed_count = 0
             
-            # Add material entries
-            count = 0
-            for mat_name, (color, status) in material_results.items():
-                # Skip if not showing all and this isn't a default white
-                if scene.viewport_colors_default_white_only and status != MaterialStatus.DEFAULT_WHITE:
-                    continue
+            # Display material results - use a copy of the keys to avoid modification during iteration
+            for material_name in list(material_results.keys()):
+                color, status = material_results[material_name]
                 
-                # Create row for this material
+                # Update counts
+                if status == MaterialStatus.PREVIEW_BASED:
+                    preview_count += 1
+                elif status == MaterialStatus.DEFAULT_WHITE:
+                    default_count += 1
+                elif status == MaterialStatus.FAILED:
+                    failed_count += 1
+                
                 row = col.row(align=True)
                 
-                # Material color preview
-                if color:
-                    row.prop(bpy.data.materials.get(mat_name) if mat_name in bpy.data.materials else None, 
-                             "diffuse_color", text="")
-                else:
-                    row.label(text="", icon='MATERIAL')
-                
-                # Material name as button to select it
-                op = row.operator("material.select_in_editor", text=mat_name)
-                op.material_name = mat_name
-                
-                # Status icon
+                # Add status icon
                 row.label(text="", icon=get_status_icon(status))
                 
-                count += 1
+                # Add material name with operator to select it
+                op = row.operator("material.select_in_editor", text=material_name)
+                op.material_name = material_name
                 
-            if count == 0:
-                col.label(text="No matching materials")
+                # Add color preview
+                if color:
+                    material = bpy.data.materials.get(material_name)
+                    if material:  # Check if material still exists
+                        row.prop(material, "diffuse_color", text="")
+                    else:
+                        # Material no longer exists, show a placeholder color
+                        row.label(text="", icon='ERROR')
+                        # Mark for removal
+                        materials_to_remove.append(material_name)
+            
+            # Remove materials that no longer exist
+            for material_name in materials_to_remove:
+                material_results.pop(material_name, None)
+            
+            # Show statistics
+            if len(material_results) > 0:
+                box.separator()
+                stats_col = box.column(align=True)
+                stats_col.label(text=f"Total: {len(material_results)} materials")
+                stats_col.label(text=f"Thumbnail-based: {preview_count}")
+                stats_col.label(text=f"Default white: {default_count}, Failed: {failed_count}")
 
 class MATERIAL_OT_SelectInEditor(bpy.types.Operator):
     """Select this material in the editor"""
@@ -722,145 +777,138 @@ class MATERIAL_OT_SelectInEditor(bpy.types.Operator):
     
     material_name: bpy.props.StringProperty(  # type: ignore
         name="Material Name",
-        description="Name of the material to select"
+        description="Name of the material to select",
+        default=""
     )
     
     def execute(self, context):
         # Find the material
         material = bpy.data.materials.get(self.material_name)
         if not material:
+            # Remove this entry from material_results to avoid future errors
+            if self.material_name in material_results:
+                material_results.pop(self.material_name, None)
+                # Force a redraw of the UI
+                for area in context.screen.areas:
+                    area.tag_redraw()
             self.report({'ERROR'}, f"Material '{self.material_name}' not found")
             return {'CANCELLED'}
         
-        # Try to find an object using this material
-        found_obj = None
-        found_slot = -1
-        
+        # Find an object using this material
         for obj in bpy.data.objects:
-            if obj.type != 'MESH':
-                continue
-                
-            for i, slot in enumerate(obj.material_slots):
-                if slot.material == material:
-                    found_obj = obj
-                    found_slot = i
-                    break
-                    
-            if found_obj:
-                break
+            if obj.type == 'MESH' and obj.data.materials:
+                for i, mat in enumerate(obj.data.materials):
+                    if mat == material:
+                        # Select the object
+                        bpy.ops.object.select_all(action='DESELECT')
+                        obj.select_set(True)
+                        context.view_layer.objects.active = obj
+                        
+                        # Set the active material index
+                        obj.active_material_index = i
+                        
+                        # Switch to material properties
+                        for area in context.screen.areas:
+                            if area.type == 'PROPERTIES':
+                                for space in area.spaces:
+                                    if space.type == 'PROPERTIES':
+                                        space.context = 'MATERIAL'
+                        
+                        return {'FINISHED'}
         
-        if found_obj:
-            # Select the object and make it active
-            bpy.ops.object.select_all(action='DESELECT')
-            found_obj.select_set(True)
-            context.view_layer.objects.active = found_obj
-            
-            # Set the active material slot
-            if found_slot >= 0:
-                found_obj.active_material_index = found_slot
-                
-            # Try to set up a reasonable material editor view
-            # Find or create a shader editor area
-            for area in context.screen.areas:
-                if area.type == 'NODE_EDITOR':
-                    for space in area.spaces:
-                        if space.type == 'NODE_EDITOR':
-                            space.tree_type = 'ShaderNodeTree'
-                            space.shader_type = 'OBJECT'
-                            space.node_tree = material.node_tree
-                            break
-                    break
-            
-            self.report({'INFO'}, f"Selected material '{self.material_name}'")
-            return {'FINISHED'}
-        else:
-            self.report({'WARNING'}, f"No objects using material '{self.material_name}' found")
-            return {'CANCELLED'}
+        self.report({'WARNING'}, f"No object using material '{self.material_name}' found")
+        return {'CANCELLED'}
 
 def get_color_from_preview(material, use_vectorized=True):
-    """Extract the dominant color from a material's preview image"""
+    """Extract the average color from a material thumbnail"""
     if not material:
         return None
+    
+    # Force Blender to generate the material preview if it doesn't exist
+    # This uses Blender's internal preview generation system
+    preview = material.preview
+    if not preview:
+        return None
+    
+    # Ensure the preview is generated (this should be very fast as Blender maintains these)
+    if preview.icon_id == 0:
+        # Use Blender's standard preview size
+        preview.icon_size = (128, 128)
+        # This triggers Blender's internal preview generation
+        icon_id = preview.icon_id  # Store in variable instead of just accessing
+    
+    # Access the preview image data - these are the same thumbnails shown in the material panel
+    preview_image = preview.icon_pixels_float
+    
+    if not preview_image or len(preview_image) == 0:
+        return None
+    
+    if use_vectorized and np is not None:
+        # Use NumPy for faster processing
+        pixels_np = np.array(preview_image)
         
-    # Get preview image
-    try:
-        preview = material.preview
-        if not preview:
-            return None
-            
-        image = preview.icon_id
-        if not image:
-            return None
-            
-        # Get pixels from preview
-        preview_image = preview.image_pixels_float
-        if not preview_image or len(preview_image) == 0:
-            return None
-            
-        # Convert to numpy array for processing if vectorized
-        if use_vectorized:
-            try:
-                # The image is 256x256 in RGBA format
-                pixels = np.array(preview_image).reshape(256*256, 4)
-                
-                # Filter out transparent pixels and background (which is usually dark)
-                mask = (pixels[:, 3] > 0.5) & (pixels[:, 0] + pixels[:, 1] + pixels[:, 2] > 0.2)
-                if not np.any(mask):
-                    return None
-                
-                # Get RGB values of valid pixels
-                rgb = pixels[mask, :3]
-                
-                # Sort by brightness and take the top 20% of pixels
-                brightness = np.sum(rgb, axis=1)
-                sorted_indices = np.argsort(brightness)
-                top_indices = sorted_indices[-int(len(sorted_indices)*0.2):]
-                
-                # Take the average of these bright pixels
-                avg_color = np.mean(rgb[top_indices], axis=0)
-                return tuple(avg_color)
-            except:
-                # Fallback if numpy approach fails
-                pass
+        # Reshape to RGBA format (preview is stored as a flat RGBA array)
+        pixels_np = pixels_np.reshape(-1, 4)
         
-        # Non-vectorized approach
-        valid_pixels = []
+        # Calculate average color (ignoring alpha and any pure black pixels which are often the background)
+        # Filter out black pixels (background) by checking if R+G+B is very small
+        non_black_mask = np.sum(pixels_np[:, :3], axis=1) > 0.05
+        
+        if np.any(non_black_mask):
+            # Only use non-black pixels for the average
+            avg_color = pixels_np[non_black_mask][:, :3].mean(axis=0)
+            return avg_color.tolist()
+        else:
+            # If all pixels are black, return the average of all pixels
+            avg_color = pixels_np[:, :3].mean(axis=0)
+            return avg_color.tolist()
+    else:
+        # Fallback to pure Python
+        total_r, total_g, total_b = 0, 0, 0
+        pixel_count = 0
+        non_black_count = 0
+        
+        # Process pixels in groups of 4 (RGBA)
         for i in range(0, len(preview_image), 4):
             r, g, b, a = preview_image[i:i+4]
-            if a > 0.5 and r + g + b > 0.2:  # Non-transparent and not too dark
-                valid_pixels.append((r, g, b))
-        
-        if not valid_pixels:
-            return None
             
-        # Sort by brightness and take the top 20%
-        valid_pixels.sort(key=lambda p: sum(p))
-        top_pixels = valid_pixels[-int(len(valid_pixels)*0.2):]
+            # Skip black pixels (background)
+            if r + g + b > 0.05:
+                total_r += r
+                total_g += g
+                total_b += b
+                non_black_count += 1
+            
+            pixel_count += 1
         
-        # Calculate average
-        avg_r = sum(p[0] for p in top_pixels) / len(top_pixels)
-        avg_g = sum(p[1] for p in top_pixels) / len(top_pixels)
-        avg_b = sum(p[2] for p in top_pixels) / len(top_pixels)
-        
-        return (avg_r, avg_g, avg_b)
-    except:
-        # If anything goes wrong, just return None
-        return None
+        # If we found non-black pixels, use their average
+        if non_black_count > 0:
+            return [total_r / non_black_count, total_g / non_black_count, total_b / non_black_count]
+        # Otherwise, use the average of all pixels
+        elif pixel_count > 0:
+            return [total_r / pixel_count, total_g / pixel_count, total_b / pixel_count]
+        else:
+            return None
 
-# The list of all classes in this module
+# List of all classes in this module
 classes = (
     VIEWPORT_OT_SetViewportColors,
     VIEW3D_PT_BulkViewportDisplay,
-    MATERIAL_OT_SelectInEditor
+    MATERIAL_OT_SelectInEditor,
 )
 
+# Registration
 def register():
-    register_viewport_properties()
     for cls in classes:
         bpy.utils.register_class(cls)
+    
+    # Register properties
+    register_viewport_properties()
 
 def unregister():
     # Unregister properties
+    unregister_viewport_properties()
+    
+    # Unregister classes
     for cls in reversed(classes):
-        bpy.utils.unregister_class(cls)
-    unregister_viewport_properties() 
+        bpy.utils.unregister_class(cls) 
