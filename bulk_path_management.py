@@ -2,6 +2,7 @@ import bpy
 from bpy.types import Panel, Operator, PropertyGroup
 from bpy.props import StringProperty, BoolProperty, EnumProperty, PointerProperty, CollectionProperty
 import os.path
+import re
 
 def get_image_paths(image_name):
     """
@@ -718,6 +719,58 @@ class BST_OT_save_all_images(Operator):
         
         return {'FINISHED'}
 
+# Remove Extensions Operator
+class BST_OT_remove_extensions(Operator):
+    bl_idname = "bst.remove_extensions"
+    bl_label = "Remove Extensions"
+    bl_description = "Remove common file extensions from selected image names"
+    bl_options = {'REGISTER', 'UNDO'}
+    
+    def execute(self, context):
+        renamed_count = 0
+        failed_count = 0
+        
+        # Common image extensions to remove
+        extensions = ['.png', '.jpg', '.jpeg', '.tif', '.tiff', '.bmp', 
+                      '.exr', '.hdr', '.tga', '.jp2', '.webp']
+        
+        # Get all selected images or all images if none selected
+        selected_images = [img for img in bpy.data.images if hasattr(img, "bst_selected") and img.bst_selected]
+        if not selected_images:
+            selected_images = list(bpy.data.images)
+        
+        for img in selected_images:
+            # Skip linked images
+            if hasattr(img, 'library') and img.library is not None:
+                print(f"DEBUG: Skipping linked image: {img.name}")
+                failed_count += 1
+                continue
+                
+            original_name = img.name
+            
+            # Check for any of the extensions at the end of the name
+            for ext in extensions:
+                if img.name.lower().endswith(ext.lower()):
+                    # Remove the extension
+                    new_name = img.name[:-len(ext)]
+                    try:
+                        print(f"DEBUG: Renaming {img.name} to {new_name}")
+                        img.name = new_name
+                        renamed_count += 1
+                        break  # Stop after finding the first matching extension
+                    except Exception as e:
+                        print(f"DEBUG: Failed to rename {img.name}: {str(e)}")
+                        failed_count += 1
+        
+        if renamed_count > 0:
+            self.report({'INFO'}, f"Successfully renamed {renamed_count} images" + 
+                       (f", {failed_count} failed" if failed_count > 0 else ""))
+        else:
+            self.report({'WARNING'}, "No images were renamed" +
+                        (f", {failed_count} failed" if failed_count > 0 else ""))
+        
+        return {'FINISHED'}
+
 # Panel for Shader Editor sidebar
 class NODE_PT_bulk_path_tools(Panel):
     bl_label = "Bulk Pathing"
@@ -749,6 +802,7 @@ class NODE_PT_bulk_path_tools(Panel):
         # Remove packed/Save row
         row = box.row(align=True)
         row.operator("bst.remove_packed_images", text="Remove Pack", icon='TRASH')
+        row.operator("bst.remove_extensions", text="Remove Extensions", icon='FILE_TICK')
         
         # Save images row
         row = box.row(align=True)
@@ -866,6 +920,7 @@ class VIEW3D_PT_bulk_path_subpanel(Panel):
         # Remove packed/Save row
         row = box.row(align=True)
         row.operator("bst.remove_packed_images", text="Remove Pack", icon='TRASH')
+        row.operator("bst.remove_extensions", text="Remove Extensions", icon='FILE_TICK')
         
         # Save images row
         row = box.row(align=True)
@@ -973,6 +1028,7 @@ classes = (
     BST_OT_unpack_images,
     BST_OT_remove_packed_images,
     BST_OT_save_all_images,
+    BST_OT_remove_extensions,
     NODE_PT_bulk_path_tools,
     VIEW3D_PT_bulk_path_subpanel,
 )
