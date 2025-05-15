@@ -1,6 +1,7 @@
 import bpy
 from bpy.types import Panel, Operator, PropertyGroup
 from bpy.props import StringProperty, BoolProperty, EnumProperty, PointerProperty, CollectionProperty
+import os.path
 
 def get_image_paths(image_name):
     """
@@ -18,9 +19,47 @@ def get_image_paths(image_name):
     else:
         return (None, None)
 
+def get_image_extension(image):
+    """
+    Get the file extension from an image
+
+    Args:
+        image: The image datablock
+
+    Returns:
+        str: The file extension including the dot (e.g. '.png') or empty string if not found
+    """
+    # Debug print statements
+    print(f"DEBUG: Getting extension for image: {image.name}")
+    print(f"DEBUG: Image file_format is: {image.file_format}")
+    
+    # Use the file_format property
+    format_map = {
+        'PNG': '.png',
+        'JPEG': '.jpg',
+        'JPEG2000': '.jp2',
+        'TARGA': '.tga',
+        'TARGA_RAW': '.tga',
+        'BMP': '.bmp',
+        'OPEN_EXR': '.exr',
+        'OPEN_EXR_MULTILAYER': '.exr',
+        'HDR': '.hdr',
+        'TIFF': '.tif',
+    }
+    
+    if image.file_format in format_map:
+        ext = format_map[image.file_format]
+        print(f"DEBUG: Matched format, using extension: {ext}")
+        return ext
+    
+    # Default to no extension if we can't determine it
+    print(f"DEBUG: No matching format found, returning empty extension")
+    return ''
+
 def set_image_paths(image_name, new_path):
     """
-    Set both filepath and filepath_raw for an image using its datablock name
+    Set filepath and filepath_raw for an image using its datablock name
+    Also update packed_file.filepath if the file is packed
     
     Args:
         image_name (str): The name of the image datablock
@@ -31,8 +70,25 @@ def set_image_paths(image_name, new_path):
     """
     if image_name in bpy.data.images:
         img = bpy.data.images[image_name]
+        
+        # Set the filepath properties
         img.filepath = new_path
         img.filepath_raw = new_path
+        
+        # For packed files, set the packed_file.filepath too
+        # This is the property shown in the UI and is what we need to set
+        # for proper handling of packed files
+        if img.packed_file:
+            try:
+                # Try setting the property directly
+                # This might be read-only in some versions of Blender, 
+                # but we attempt it anyway based on the UI showing this property
+                img.packed_file.filepath = new_path
+            except Exception as e:
+                # If it fails, the original filepaths (img.filepath and img.filepath_raw)
+                # are still set, which is better than nothing
+                pass
+            
         return True
     else:
         return False
@@ -114,11 +170,11 @@ class BST_PathProperties(PropertyGroup):
         default=""
     )
     
-    # Sort by selected images
+    # Whether to sort by selected in the UI
     sort_by_selected: BoolProperty(
         name="Sort by Selected",
         description="Show selected images at the top of the list",
-        default=False
+        default=True
     )
 
 # Operator to remap a single datablock path
@@ -143,12 +199,22 @@ class BST_OT_remap_path(Operator):
             base_path = self.new_path
             if not base_path.endswith(('\\', '/')):
                 base_path += '/'
-            # Append datablock name
-            full_path = base_path + active_image.name
-            active_image.filepath = full_path
-            active_image.filepath_raw = full_path
-            self.report({'INFO'}, f"Successfully remapped {active_image.name}")
-            return {'FINISHED'}
+            
+            # Get file extension from the image
+            extension = get_image_extension(active_image)
+            
+            # Append datablock name and extension
+            full_path = base_path + active_image.name + extension
+            
+            # Use the set_image_paths function to ensure proper handling of packed files
+            success = set_image_paths(active_image.name, full_path)
+            
+            if success:
+                self.report({'INFO'}, f"Successfully remapped {active_image.name}")
+                return {'FINISHED'}
+            else:
+                self.report({'ERROR'}, f"Failed to remap {active_image.name}")
+                return {'CANCELLED'}
         else:
             self.report({'ERROR'}, "No active datablock selected")
             return {'CANCELLED'}
@@ -212,8 +278,11 @@ class BST_OT_bulk_remap(Operator):
         # Process all the images that are selected
         for img in bpy.data.images:
             if hasattr(img, "bst_selected") and img.bst_selected:
-                # Use base path + datablock name
-                full_path = base_path + img.name
+                # Get file extension for this image
+                extension = get_image_extension(img)
+                
+                # Use base path + datablock name + extension
+                full_path = base_path + img.name + extension
                 success = set_image_paths(img.name, full_path)
                 if success:
                     remap_count += 1
@@ -471,6 +540,18 @@ class BST_OT_reuse_material_path(Operator):
             self.report({'WARNING'}, "No active material found on the active object or in the node editor")
             return {'CANCELLED'}
 
+# Make Paths Relative Operator
+class BST_OT_make_paths_relative(Operator):
+    bl_idname = "bst.make_paths_relative"
+    bl_label = "Make Paths Relative"
+    bl_description = "Convert absolute paths to relative paths for all datablocks"
+    bl_options = {'REGISTER', 'UNDO'}
+    
+    def execute(self, context):
+        bpy.ops.file.make_paths_relative()
+        self.report({'INFO'}, "Converted absolute paths to relative paths")
+        return {'FINISHED'}
+
 # Panel for Shader Editor sidebar
 class NODE_PT_bulk_path_tools(Panel):
     bl_label = "Bulk Pathing"
@@ -528,6 +609,11 @@ class NODE_PT_bulk_path_tools(Panel):
             any_selected = any(hasattr(img, "bst_selected") and img.bst_selected for img in bpy.data.images)
             row.enabled = any_selected
             row.operator("bst.bulk_remap", text="Remap Selected", icon='FILE_REFRESH')
+            
+            # Make paths relative button
+            row = box.row()
+            row.operator("bst.make_paths_relative", text="Make Paths Relative", icon='FILE_FOLDER')
+            
             box.separator()
             
             # Image selection list with thumbnails
@@ -621,6 +707,11 @@ class VIEW3D_PT_bulk_path_subpanel(Panel):
             any_selected = any(hasattr(img, "bst_selected") and img.bst_selected for img in bpy.data.images)
             row.enabled = any_selected
             row.operator("bst.bulk_remap", text="Remap Selected", icon='FILE_REFRESH')
+            
+            # Make paths relative button
+            row = box.row()
+            row.operator("bst.make_paths_relative", text="Make Paths Relative", icon='FILE_FOLDER')
+            
             box.separator()
             
             # Image selection list with thumbnails
@@ -673,6 +764,7 @@ classes = (
     BST_OT_rename_datablock,
     BST_OT_toggle_image_selection,
     BST_OT_reuse_material_path,
+    BST_OT_make_paths_relative,
     NODE_PT_bulk_path_tools,
     VIEW3D_PT_bulk_path_subpanel,
 )

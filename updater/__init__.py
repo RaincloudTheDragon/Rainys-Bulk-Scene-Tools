@@ -185,7 +185,7 @@ def check_for_updates_handler(dummy):
 
 # Add handler to check for updates on Blender startup
 if check_for_updates_handler not in bpy.app.handlers.load_post:
-    bpy.app.handlers.load_post.append(check_for_updates_handler)
+    bpy.app.handlers.load_post.append(check_for_updates_handler) 
 
 # Updater operators
 class BST_OT_CheckForUpdates(bpy.types.Operator):
