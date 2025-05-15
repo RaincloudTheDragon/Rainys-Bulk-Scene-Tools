@@ -552,6 +552,172 @@ class BST_OT_make_paths_relative(Operator):
         self.report({'INFO'}, "Converted absolute paths to relative paths")
         return {'FINISHED'}
 
+# Pack Images Operator
+class BST_OT_pack_images(Operator):
+    bl_idname = "bst.pack_images"
+    bl_label = "Pack Images"
+    bl_description = "Pack selected images into the .blend file"
+    bl_options = {'REGISTER', 'UNDO'}
+    
+    def execute(self, context):
+        packed_count = 0
+        failed_count = 0
+        
+        # Get all selected images or all images if none selected
+        selected_images = [img for img in bpy.data.images if hasattr(img, "bst_selected") and img.bst_selected]
+        if not selected_images:
+            selected_images = list(bpy.data.images)
+        
+        for img in selected_images:
+            if not img.packed_file and not img.is_generated:
+                try:
+                    print(f"DEBUG: Packing image: {img.name}")
+                    img.pack()
+                    packed_count += 1
+                except Exception as e:
+                    print(f"DEBUG: Failed to pack {img.name}: {str(e)}")
+                    failed_count += 1
+        
+        if packed_count > 0:
+            self.report({'INFO'}, f"Successfully packed {packed_count} images" + 
+                       (f", {failed_count} failed" if failed_count > 0 else ""))
+        else:
+            self.report({'WARNING'}, "No images were packed" +
+                        (f", {failed_count} failed" if failed_count > 0 else ""))
+        
+        return {'FINISHED'}
+
+# Unpack Images Operator
+class BST_OT_unpack_images(Operator):
+    bl_idname = "bst.unpack_images"
+    bl_label = "Unpack Images (Use Local)"
+    bl_description = "Unpack selected images to their file paths using the 'USE_LOCAL' option"
+    bl_options = {'REGISTER', 'UNDO'}
+    
+    def execute(self, context):
+        unpacked_count = 0
+        failed_count = 0
+        
+        # Get all selected images or all images if none selected
+        selected_images = [img for img in bpy.data.images if hasattr(img, "bst_selected") and img.bst_selected]
+        if not selected_images:
+            selected_images = list(bpy.data.images)
+        
+        for img in selected_images:
+            if img.packed_file:
+                try:
+                    print(f"DEBUG: Unpacking image: {img.name} (USE_LOCAL)")
+                    img.unpack(method='USE_LOCAL')
+                    unpacked_count += 1
+                except Exception as e:
+                    print(f"DEBUG: Failed to unpack {img.name}: {str(e)}")
+                    failed_count += 1
+        
+        if unpacked_count > 0:
+            self.report({'INFO'}, f"Successfully unpacked {unpacked_count} images" + 
+                       (f", {failed_count} failed" if failed_count > 0 else ""))
+        else:
+            self.report({'WARNING'}, "No images were unpacked" +
+                        (f", {failed_count} failed" if failed_count > 0 else ""))
+        
+        return {'FINISHED'}
+
+# Remove Packed Images Operator
+class BST_OT_remove_packed_images(Operator):
+    bl_idname = "bst.remove_packed_images"
+    bl_label = "Remove Packed Data"
+    bl_description = "Remove packed image data without saving to disk"
+    bl_options = {'REGISTER', 'UNDO'}
+    
+    def execute(self, context):
+        removed_count = 0
+        failed_count = 0
+        
+        # Get all selected images or all images if none selected
+        selected_images = [img for img in bpy.data.images if hasattr(img, "bst_selected") and img.bst_selected]
+        if not selected_images:
+            selected_images = list(bpy.data.images)
+        
+        for img in selected_images:
+            if img.packed_file:
+                try:
+                    print(f"DEBUG: Removing packed data for image: {img.name}")
+                    img.unpack(method='REMOVE')
+                    removed_count += 1
+                except Exception as e:
+                    print(f"DEBUG: Failed to remove packed data for {img.name}: {str(e)}")
+                    failed_count += 1
+        
+        if removed_count > 0:
+            self.report({'INFO'}, f"Successfully removed packed data from {removed_count} images" + 
+                       (f", {failed_count} failed" if failed_count > 0 else ""))
+        else:
+            self.report({'WARNING'}, "No packed data was removed" +
+                        (f", {failed_count} failed" if failed_count > 0 else ""))
+        
+        return {'FINISHED'}
+
+# Save All Images Operator
+class BST_OT_save_all_images(Operator):
+    bl_idname = "bst.save_all_images"
+    bl_label = "Save All Images"
+    bl_description = "Save all selected images within Blender using the internal save operation"
+    bl_options = {'REGISTER', 'UNDO'}
+    
+    def execute(self, context):
+        saved_count = 0
+        failed_count = 0
+        
+        # Get all selected images or all images if none selected
+        selected_images = [img for img in bpy.data.images if hasattr(img, "bst_selected") and img.bst_selected]
+        if not selected_images:
+            selected_images = list(bpy.data.images)
+        
+        for img in selected_images:
+            try:
+                print(f"DEBUG: Attempting to save image: {img.name}")
+                
+                # Try to save using available methods
+                if hasattr(img, 'save'):
+                    # Try direct save method first
+                    img.save()
+                    saved_count += 1
+                    print(f"DEBUG: Saved using img.save()")
+                else:
+                    # Alternative method - try to find an image editor space
+                    for area in context.screen.areas:
+                        if area.type == 'IMAGE_EDITOR':
+                            # Found an image editor, use it to save the image
+                            override = context.copy()
+                            override['area'] = area
+                            override['space_data'] = area.spaces.active
+                            override['region'] = area.regions[0]
+                            
+                            # Set the active image
+                            area.spaces.active.image = img
+                            
+                            # Try to save with override
+                            bpy.ops.image.save(override)
+                            saved_count += 1
+                            print(f"DEBUG: Saved using image editor override")
+                            break
+                    else:
+                        # No image editor found
+                        print(f"DEBUG: No image editor found, skipping {img.name}")
+                        failed_count += 1
+            except Exception as e:
+                print(f"DEBUG: Failed to save {img.name}: {str(e)}")
+                failed_count += 1
+        
+        if saved_count > 0:
+            self.report({'INFO'}, f"Successfully saved {saved_count} images" + 
+                       (f", {failed_count} failed" if failed_count > 0 else ""))
+        else:
+            self.report({'WARNING'}, "No images were saved" +
+                        (f", {failed_count} failed" if failed_count > 0 else ""))
+        
+        return {'FINISHED'}
+
 # Panel for Shader Editor sidebar
 class NODE_PT_bulk_path_tools(Panel):
     bl_label = "Bulk Pathing"
@@ -569,6 +735,25 @@ class NODE_PT_bulk_path_tools(Panel):
         layout = self.layout
         scene = context.scene
         path_props = scene.bst_path_props        
+        
+        # Workflow section
+        box = layout.box()
+        row = box.row()
+        row.label(text="Workflow")
+        
+        # Pack/Unpack row
+        row = box.row(align=True)
+        row.operator("bst.pack_images", text="Pack", icon='PACKAGE')
+        row.operator("bst.unpack_images", text="Unpack Local", icon='UNPINNED')
+        
+        # Remove packed/Save row
+        row = box.row(align=True)
+        row.operator("bst.remove_packed_images", text="Remove Pack", icon='TRASH')
+        
+        # Save images row
+        row = box.row(align=True)
+        row.operator("bst.save_all_images", text="Save All", icon='FILE_TICK')
+        row.operator("bst.save_images_as", text="Save to Paths", icon='EXPORT')
         
         # Bulk operations section
         box = layout.box()
@@ -668,6 +853,25 @@ class VIEW3D_PT_bulk_path_subpanel(Panel):
         scene = context.scene
         path_props = scene.bst_path_props
         
+        # Workflow section
+        box = layout.box()
+        row = box.row()
+        row.label(text="Workflow")
+        
+        # Pack/Unpack row
+        row = box.row(align=True)
+        row.operator("bst.pack_images", text="Pack", icon='PACKAGE')
+        row.operator("bst.unpack_images", text="Unpack Local", icon='UNPINNED')
+        
+        # Remove packed/Save row
+        row = box.row(align=True)
+        row.operator("bst.remove_packed_images", text="Remove Pack", icon='TRASH')
+        
+        # Save images row
+        row = box.row(align=True)
+        row.operator("bst.save_all_images", text="Save All", icon='FILE_TICK')
+        row.operator("bst.save_images_as", text="Save to Paths", icon='EXPORT')
+        
         # Bulk operations section
         box = layout.box()
         row = box.row()
@@ -765,6 +969,10 @@ classes = (
     BST_OT_toggle_image_selection,
     BST_OT_reuse_material_path,
     BST_OT_make_paths_relative,
+    BST_OT_pack_images,
+    BST_OT_unpack_images,
+    BST_OT_remove_packed_images,
+    BST_OT_save_all_images,
     NODE_PT_bulk_path_tools,
     VIEW3D_PT_bulk_path_subpanel,
 )
