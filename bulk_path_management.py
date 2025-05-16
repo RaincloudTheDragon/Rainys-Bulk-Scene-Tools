@@ -124,13 +124,6 @@ class BST_PathProperties(PropertyGroup):
         type=bpy.types.Image
     )
     
-    new_path: StringProperty(
-        name="New Path",
-        description="Base path for datablocks (datablock name will be appended)",
-        default="//textures/",
-        subtype='DIR_PATH'
-    )
-    
     show_bulk_operations: BoolProperty(
         name="Show Bulk Operations",
         description="Expand to show bulk operations interface",
@@ -177,6 +170,40 @@ class BST_PathProperties(PropertyGroup):
         description="Show selected images at the top of the list",
         default=True
     )
+    
+    # Smart pathing properties
+    smart_base_path: StringProperty(
+        name="Base Path",
+        description="Base path for image textures",
+        default="//textures/",
+        subtype='DIR_PATH'
+    )
+    
+    use_blend_subfolder: BoolProperty(
+        name="Use Blend Subfolder",
+        description="Include blend file name as a subfolder",
+        default=True
+    )
+    
+    blend_subfolder: StringProperty(
+        name="Blend Subfolder",
+        description="Custom subfolder name (leave empty to use blend file name)",
+        default="",
+        subtype='FILE_NAME'
+    )
+    
+    use_material_subfolder: BoolProperty(
+        name="Use Material Subfolder",
+        description="Include material name as a subfolder",
+        default=True
+    )
+    
+    material_subfolder: StringProperty(
+        name="Material Subfolder",
+        description="Custom subfolder name (leave empty to use active material name)",
+        default="",
+        subtype='FILE_NAME'
+    )
 
 # Operator to remap a single datablock path
 class BST_OT_remap_path(Operator):
@@ -196,16 +223,11 @@ class BST_OT_remap_path(Operator):
         # Get the active image
         active_image = context.scene.bst_path_props.active_image
         if active_image:
-            # Ensure path ends with separator
-            base_path = self.new_path
-            if not base_path.endswith(('\\', '/')):
-                base_path += '/'
-            
             # Get file extension from the image
             extension = get_image_extension(active_image)
             
-            # Append datablock name and extension
-            full_path = base_path + active_image.name + extension
+            # Get the combined path
+            full_path = get_combined_path(context, active_image.name, extension)
             
             # Use the set_image_paths function to ensure proper handling of packed files
             success = set_image_paths(active_image.name, full_path)
@@ -222,7 +244,11 @@ class BST_OT_remap_path(Operator):
     
     def invoke(self, context, event):
         # Use the path from properties
-        self.new_path = context.scene.bst_path_props.new_path
+        props = context.scene.bst_path_props
+        if props.use_smart_pathing:
+            self.new_path = props.smart_base_path
+        else:
+            self.new_path = props.new_path
         return context.window_manager.invoke_props_dialog(self)
 
 # Operator to toggle all image selections
@@ -271,19 +297,15 @@ class BST_OT_bulk_remap(Operator):
         scene = context.scene
         remap_count = 0
         
-        # Get base path from properties
-        base_path = scene.bst_path_props.new_path
-        if not base_path.endswith(('\\', '/')):
-            base_path += '/'
-        
         # Process all the images that are selected
         for img in bpy.data.images:
             if hasattr(img, "bst_selected") and img.bst_selected:
                 # Get file extension for this image
                 extension = get_image_extension(img)
                 
-                # Use base path + datablock name + extension
-                full_path = base_path + img.name + extension
+                # Get the combined path
+                full_path = get_combined_path(context, img.name, extension)
+                
                 success = set_image_paths(img.name, full_path)
                 if success:
                     remap_count += 1
@@ -511,7 +533,7 @@ class BST_OT_reuse_material_path(Operator):
     """Use the active material's name in the path"""
     bl_idname = "bst.reuse_material_path"
     bl_label = "Use Material Path"
-    bl_description = "Set the base path to use the active material's name"
+    bl_description = "Set the path to use the active material's name"
     bl_options = {'REGISTER', 'UNDO'}
     
     def execute(self, context):
@@ -532,13 +554,36 @@ class BST_OT_reuse_material_path(Operator):
                 material_name = node_tree_name
         
         if material_name:
-            # Set the base path with material name
-            base_path = "//textures/" + material_name + "/"
-            context.scene.bst_path_props.new_path = base_path
-            self.report({'INFO'}, f"Set base path to {base_path}")
+            # Update the material subfolder field
+            context.scene.bst_path_props.material_subfolder = material_name
+            self.report({'INFO'}, f"Set material subfolder to {material_name}")
             return {'FINISHED'}
         else:
             self.report({'WARNING'}, "No active material found on the active object or in the node editor")
+            return {'CANCELLED'}
+
+# Add new operator for reusing blend file name in path
+class BST_OT_reuse_blend_name(Operator):
+    """Use the current blend file name in the path"""
+    bl_idname = "bst.reuse_blend_name"
+    bl_label = "Use Blend Name"
+    bl_description = "Set the subfolder to the current blend file name"
+    bl_options = {'REGISTER', 'UNDO'}
+    
+    def execute(self, context):
+        blend_name = None
+        # Try to get the current blend filename without extension
+        blend_path = bpy.data.filepath
+        if blend_path:
+            blend_name = os.path.splitext(os.path.basename(blend_path))[0]
+        
+        if blend_name:
+            # Set the blend subfolder
+            context.scene.bst_path_props.blend_subfolder = blend_name
+            self.report({'INFO'}, f"Set blend subfolder to {blend_name}")
+            return {'FINISHED'}
+        else:
+            self.report({'WARNING'}, "Could not determine blend file name (file not saved?)")
             return {'CANCELLED'}
 
 # Make Paths Relative Operator
@@ -662,7 +707,7 @@ class BST_OT_remove_packed_images(Operator):
 class BST_OT_save_all_images(Operator):
     bl_idname = "bst.save_all_images"
     bl_label = "Save All Images"
-    bl_description = "Save all selected images within Blender using the internal save operation"
+    bl_description = "Save all selected images to image paths"
     bl_options = {'REGISTER', 'UNDO'}
     
     def execute(self, context):
@@ -771,6 +816,70 @@ class BST_OT_remove_extensions(Operator):
         
         return {'FINISHED'}
 
+# Update get_combined_path function for path construction
+def get_combined_path(context, datablock_name, extension=""):
+    """
+    Get the combined path based on pathing settings.
+    
+    Args:
+        context: The current context
+        datablock_name: Name of the datablock to append
+        extension: Optional file extension to append
+        
+    Returns:
+        str: The combined path
+    """
+    props = context.scene.bst_path_props
+    
+    # Start with base path
+    path = props.smart_base_path
+    if not path.endswith(('\\', '/')):
+        path += '/'
+        
+    # Add blend subfolder if enabled
+    if props.use_blend_subfolder:
+        subfolder = props.blend_subfolder
+        if not subfolder:
+            # Try to get blend name if not specified
+            blend_path = bpy.data.filepath
+            if blend_path:
+                subfolder = os.path.splitext(os.path.basename(blend_path))[0]
+            else:
+                subfolder = "untitled"
+        
+        path += subfolder + '/'
+        
+    # Add material subfolder if enabled
+    if props.use_material_subfolder:
+        subfolder = props.material_subfolder
+        if not subfolder:
+            # Try to get material name if not specified
+            material_name = None
+            # Try to get from active object
+            obj = getattr(context, 'active_object', None)
+            if obj and hasattr(obj, 'active_material') and obj.active_material:
+                material_name = obj.active_material.name
+            # Fallback: try to get from node editor's node tree
+            elif (context.space_data and context.space_data.type == 'NODE_EDITOR' and
+                  hasattr(context.space_data, 'tree_type') and 
+                  context.space_data.tree_type == 'ShaderNodeTree' and
+                  context.space_data.node_tree):
+                node_tree_name = context.space_data.node_tree.name
+                if node_tree_name in bpy.data.materials:
+                    material_name = bpy.data.materials[node_tree_name].name
+                else:
+                    material_name = node_tree_name
+            
+            if material_name:
+                subfolder = material_name
+            else:
+                subfolder = "material"
+        
+        path += subfolder + '/'
+    
+    # Append datablock name and extension
+    return path + datablock_name + extension
+
 # Panel for Shader Editor sidebar
 class NODE_PT_bulk_path_tools(Panel):
     bl_label = "Bulk Pathing"
@@ -797,17 +906,47 @@ class NODE_PT_bulk_path_tools(Panel):
         # Pack/Unpack row
         row = box.row(align=True)
         row.operator("bst.pack_images", text="Pack", icon='PACKAGE')
-        row.operator("bst.unpack_images", text="Unpack Local", icon='UNPINNED')
+        row.operator("bst.unpack_images", text="Unpack Local", icon='UGLYPACKAGE')
         
         # Remove packed/Save row
         row = box.row(align=True)
         row.operator("bst.remove_packed_images", text="Remove Pack", icon='TRASH')
-        row.operator("bst.remove_extensions", text="Remove Extensions", icon='FILE_TICK')
+        row.operator("bst.remove_extensions", text="Remove Extensions", icon='X')
         
         # Save images row
         row = box.row(align=True)
-        row.operator("bst.save_all_images", text="Save All", icon='FILE_TICK')
-        row.operator("bst.save_images_as", text="Save to Paths", icon='EXPORT')
+        row.operator("bst.save_all_images", text="Save All", icon='EXPORT')
+        
+        # Path Settings UI
+        box.separator()
+        
+        # Base path
+        row = box.row(align=True)
+        row.prop(path_props, "smart_base_path", text="Base Path")
+        
+        # Blend subfolder
+        row = box.row()
+        subrow = row.row()
+        subrow.prop(path_props, "use_blend_subfolder", text="")
+        subrow = row.row()
+        subrow.enabled = path_props.use_blend_subfolder
+        subrow.prop(path_props, "blend_subfolder", text="Blend Subfolder")
+        reuse_blend = subrow.operator("bst.reuse_blend_name", text="", icon='FILE_REFRESH')
+        
+        # Material subfolder
+        row = box.row()
+        subrow = row.row()
+        subrow.prop(path_props, "use_material_subfolder", text="")
+        subrow = row.row()
+        subrow.enabled = path_props.use_material_subfolder
+        subrow.prop(path_props, "material_subfolder", text="Material Subfolder")
+        reuse_material = subrow.operator("bst.reuse_material_path", text="", icon='FILE_REFRESH')
+        
+        # Example path
+        example_path = get_combined_path(context, "texture_name", ".png")
+        row = box.row()
+        row.alignment = 'RIGHT'
+        row.label(text=f"Preview: {example_path}")
         
         # Bulk operations section
         box = layout.box()
@@ -815,7 +954,7 @@ class NODE_PT_bulk_path_tools(Panel):
         row.prop(path_props, "show_bulk_operations", 
                  icon="TRIA_DOWN" if path_props.show_bulk_operations else "TRIA_RIGHT",
                  icon_only=True, emboss=False)
-        row.label(text="Bulk Operations")
+        row.label(text="Image Selection")
         
         # Show bulk operations UI only when expanded
         if path_props.show_bulk_operations:
@@ -831,13 +970,6 @@ class NODE_PT_bulk_path_tools(Panel):
             row = box.row(align=True)
             row.operator("bst.select_material_images", text="Material Images")
             row.operator("bst.select_active_images", text="Active Images")
-            
-            # Update path UI to clarify behavior
-            row = box.row(align=True)
-            row.prop(path_props, "new_path", text="Base Path")
-            reuse_op = row.operator("bst.reuse_material_path", text="", icon='FILE_REFRESH')
-            # Move the hint to its own row
-            box.label(text="(datablock name will be appended)")
             
             # Sorting option
             row = box.row()
@@ -925,7 +1057,37 @@ class VIEW3D_PT_bulk_path_subpanel(Panel):
         # Save images row
         row = box.row(align=True)
         row.operator("bst.save_all_images", text="Save All", icon='FILE_TICK')
-        row.operator("bst.save_images_as", text="Save to Paths", icon='EXPORT')
+        
+        # Path Settings UI
+        box.separator()
+        
+        # Base path
+        row = box.row(align=True)
+        row.prop(path_props, "smart_base_path", text="Base Path")
+        
+        # Blend subfolder
+        row = box.row()
+        subrow = row.row()
+        subrow.prop(path_props, "use_blend_subfolder", text="")
+        subrow = row.row()
+        subrow.enabled = path_props.use_blend_subfolder
+        subrow.prop(path_props, "blend_subfolder", text="Blend Subfolder")
+        reuse_blend = subrow.operator("bst.reuse_blend_name", text="", icon='FILE_REFRESH')
+        
+        # Material subfolder
+        row = box.row()
+        subrow = row.row()
+        subrow.prop(path_props, "use_material_subfolder", text="")
+        subrow = row.row()
+        subrow.enabled = path_props.use_material_subfolder
+        subrow.prop(path_props, "material_subfolder", text="Material Subfolder")
+        reuse_material = subrow.operator("bst.reuse_material_path", text="", icon='FILE_REFRESH')
+        
+        # Example path
+        example_path = get_combined_path(context, "texture_name", ".png")
+        row = box.row()
+        row.alignment = 'RIGHT'
+        row.label(text=f"Preview: {example_path}")
         
         # Bulk operations section
         box = layout.box()
@@ -933,7 +1095,7 @@ class VIEW3D_PT_bulk_path_subpanel(Panel):
         row.prop(path_props, "show_bulk_operations", 
                  icon="TRIA_DOWN" if path_props.show_bulk_operations else "TRIA_RIGHT",
                  icon_only=True, emboss=False)
-        row.label(text="Bulk Operations")
+        row.label(text="Image Selection")
         
         # Show bulk operations UI only when expanded
         if path_props.show_bulk_operations:
@@ -949,13 +1111,6 @@ class VIEW3D_PT_bulk_path_subpanel(Panel):
             row = box.row(align=True)
             row.operator("bst.select_material_images", text="Material Images")
             row.operator("bst.select_active_images", text="Active Images")
-            
-            # Update path UI to clarify behavior
-            row = box.row(align=True)
-            row.prop(path_props, "new_path", text="Base Path")
-            reuse_op = row.operator("bst.reuse_material_path", text="", icon='FILE_REFRESH')
-            # Move the hint to its own row
-            box.label(text="(datablock name will be appended)")
             
             # Sorting option
             row = box.row()
@@ -1023,6 +1178,7 @@ classes = (
     BST_OT_rename_datablock,
     BST_OT_toggle_image_selection,
     BST_OT_reuse_material_path,
+    BST_OT_reuse_blend_name,
     BST_OT_make_paths_relative,
     BST_OT_pack_images,
     BST_OT_unpack_images,
