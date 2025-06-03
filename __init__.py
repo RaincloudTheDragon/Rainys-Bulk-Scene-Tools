@@ -1,7 +1,7 @@
 bl_info = {
     "name": "Raincloud's Bulk Scene Tools",
     "author": "RaincloudTheDragon",
-    "version": (0, 3, 5),
+    "version": (0, 4, 0),
     "blender": (4, 4, 1),
     "location": "View3D > Sidebar > Edit Tab",
     "description": "Tools for bulk operations on scene data",
@@ -15,12 +15,13 @@ bl_info = {
 import bpy # type: ignore
 from bpy.types import AddonPreferences, Operator, Panel # type: ignore
 from bpy.props import BoolProperty, IntProperty # type: ignore
-from . import bulk_viewport_display
-from . import bulk_data_remap
-from .scripts import bulk_path_management
+from .panels import bulk_viewport_display
+from .panels import bulk_data_remap
+from .panels import bulk_path_management
 # Import updater
 from . import updater
 import datetime
+from .scripts import select_diffuse_nodes
 
 # Addon preferences class for update settings
 class BST_AddonPreferences(AddonPreferences):
