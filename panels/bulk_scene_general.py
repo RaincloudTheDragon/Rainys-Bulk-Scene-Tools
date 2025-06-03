@@ -1,5 +1,6 @@
 import bpy
 from ..scripts.NoSubdiv import NoSubdiv
+from ..scripts.remove_custom_split_normals import RemoveCustomSplitNormals
 
 class VIEW3D_PT_BulkSceneGeneral(bpy.types.Panel):
     """Bulk Scene General Panel"""
@@ -17,13 +18,15 @@ class VIEW3D_PT_BulkSceneGeneral(bpy.types.Panel):
         # Add NoSubdiv button
         box = layout.box()
         box.label(text="Mesh")
-        row = box.row()
+        row = box.row(align=True)
         row.operator("bst.no_subdiv", text="No Subdiv", icon='MOD_SUBSURF')
+        row.operator("bst.remove_custom_split_normals", text="Remove Custom Split Normals", icon='X')
 
 # List of all classes in this module
 classes = (
     VIEW3D_PT_BulkSceneGeneral,
     NoSubdiv,  # Add NoSubdiv operator class
+    RemoveCustomSplitNormals,
 )
 
 # Registration
