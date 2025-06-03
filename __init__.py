@@ -17,7 +17,7 @@ from bpy.types import AddonPreferences, Operator, Panel # type: ignore
 from bpy.props import BoolProperty, IntProperty # type: ignore
 from . import bulk_viewport_display
 from . import bulk_data_remap
-from . import bulk_path_management
+from .scripts import bulk_path_management
 # Import updater
 from . import updater
 import datetime
@@ -47,28 +47,28 @@ class BST_AddonPreferences(AddonPreferences):
         default=0,
         min=0,
         max=12
-    )
+    ) # type: ignore
     updater_interval_days: IntProperty(
         name="Days",
         description="Number of days between update checks",
         default=0,
         min=0,
         max=31
-    )
+    ) # type: ignore
     updater_interval_hours: IntProperty(
         name="Hours",
         description="Number of hours between update checks",
         default=24,
         min=0,
         max=23
-    )
+    ) # type: ignore
     updater_interval_minutes: IntProperty(
         name="Minutes",
         description="Number of minutes between update checks",
         default=0,
         min=0,
         max=59
-    )
+    ) # type: ignore
 
     def draw(self, context):
         layout = self.layout

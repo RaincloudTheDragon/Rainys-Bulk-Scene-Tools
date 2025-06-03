@@ -1,6 +1,6 @@
-import bpy
-from bpy.types import Panel, Operator, PropertyGroup
-from bpy.props import StringProperty, BoolProperty, EnumProperty, PointerProperty, CollectionProperty
+import bpy # type: ignore
+from bpy.types import Panel, Operator, PropertyGroup # type: ignore
+from bpy.props import StringProperty, BoolProperty, EnumProperty, PointerProperty, CollectionProperty # type: ignore
 import os.path
 import re
 
@@ -122,54 +122,54 @@ class BST_PathProperties(PropertyGroup):
     active_image: PointerProperty(
         name="Image",
         type=bpy.types.Image
-    )
+    ) # type: ignore
     
     show_bulk_operations: BoolProperty(
         name="Show Bulk Operations",
         description="Expand to show bulk operations interface",
         default=False
-    )
+    ) # type: ignore
     
     # Properties for inline editing
     edit_filepath: BoolProperty(
         name="Edit Path",
         description="Toggle editing mode for filepath",
         default=False
-    )
+    ) # type: ignore
     
     edit_filepath_raw: BoolProperty(
         name="Edit Raw Path",
         description="Toggle editing mode for filepath_raw",
         default=False
-    )
+    ) # type: ignore
     
     temp_filepath: StringProperty(
         name="Temporary Path",
         description="Temporary storage for editing filepath",
         default="//textures",
         subtype='FILE_PATH'
-    )
+    ) # type: ignore
     
     temp_filepath_raw: StringProperty(
         name="Temporary Raw Path",
         description="Temporary storage for editing filepath_raw",
         default="//textures",
         subtype='FILE_PATH'
-    )
+    ) # type: ignore
 
     # Track last selected image for shift+click behavior
     last_selected_image: StringProperty(
         name="Last Selected Image",
         description="Name of the last selected image for shift+click behavior",
         default=""
-    )
+    ) # type: ignore
     
     # Whether to sort by selected in the UI
     sort_by_selected: BoolProperty(
         name="Sort by Selected",
         description="Show selected images at the top of the list",
         default=True
-    )
+    ) # type: ignore
     
     # Smart pathing properties
     smart_base_path: StringProperty(
@@ -177,33 +177,33 @@ class BST_PathProperties(PropertyGroup):
         description="Base path for image textures",
         default="//textures/",
         subtype='DIR_PATH'
-    )
+    ) # type: ignore
     
     use_blend_subfolder: BoolProperty(
         name="Use Blend Subfolder",
         description="Include blend file name as a subfolder",
         default=True
-    )
+    ) # type: ignore
     
     blend_subfolder: StringProperty(
         name="Blend Subfolder",
         description="Custom subfolder name (leave empty to use blend file name)",
         default="",
         subtype='FILE_NAME'
-    )
+    ) # type: ignore
     
     use_material_subfolder: BoolProperty(
         name="Use Material Subfolder",
         description="Include material name as a subfolder",
         default=True
-    )
+    ) # type: ignore
     
     material_subfolder: StringProperty(
         name="Material Subfolder",
         description="Custom subfolder name (leave empty to use active material name)",
         default="",
         subtype='FILE_NAME'
-    )
+    ) # type: ignore
 
 # Operator to remap a single datablock path
 class BST_OT_remap_path(Operator):
@@ -217,7 +217,7 @@ class BST_OT_remap_path(Operator):
         description="Base path for datablock (datablock name will be appended)",
         default="//textures/",
         subtype='DIR_PATH'
-    )
+    ) # type: ignore
     
     def execute(self, context):
         # Get the active image
@@ -262,7 +262,7 @@ class BST_OT_toggle_select_all(Operator):
         name="Select State",
         description="Whether to select or deselect all",
         default=True
-    )
+    ) # type: ignore
     
     def execute(self, context):
         # Apply the selection state to all images
@@ -284,14 +284,14 @@ class BST_OT_bulk_remap(Operator):
         description="Directory to replace in paths",
         default="",
         subtype='DIR_PATH'
-    )
+    ) # type: ignore
     
     target_dir: StringProperty(
         name="Target Directory",
         description="New directory to use",
         default="",
         subtype='DIR_PATH'
-    )
+    ) # type: ignore
     
     def execute(self, context):
         scene = context.scene
@@ -328,7 +328,7 @@ class BST_OT_toggle_path_edit(Operator):
         name="Is Raw Path",
         description="Whether toggling filepath_raw instead of filepath",
         default=False
-    )
+    ) # type: ignore
     
     def execute(self, context):
         scene = context.scene
@@ -438,13 +438,13 @@ class BST_OT_rename_datablock(Operator):
         name="Old Name",
         description="Current name of the datablock",
         default=""
-    )
+    ) # type: ignore
     
     new_name: StringProperty(
         name="New Name",
         description="New name for the datablock",
         default=""
-    )
+    ) # type: ignore
     
     def invoke(self, context, event):
         self.new_name = self.old_name
@@ -486,7 +486,7 @@ class BST_OT_toggle_image_selection(Operator):
         name="Image Name",
         description="Name of the image to toggle",
         default=""
-    )
+    ) # type: ignore
     
     def invoke(self, context, event):
         # Get the image
