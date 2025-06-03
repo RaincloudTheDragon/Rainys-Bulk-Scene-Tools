@@ -921,7 +921,7 @@ class NODE_PT_bulk_path_tools(Panel):
         path_props = scene.bst_path_props        
         
         # Workflow section
-        box = layout.box()
+        box = layout.box(align=True)
         row = box.row()
         row.label(text="Workflow")
         
