@@ -18,6 +18,7 @@ from bpy.props import BoolProperty, IntProperty # type: ignore
 from .panels import bulk_viewport_display
 from .panels import bulk_data_remap
 from .panels import bulk_path_management
+from .panels import bulk_scene_general
 # Import updater
 from . import updater
 import datetime
@@ -141,6 +142,7 @@ def register():
         updater.check_for_updates()
     
     # Register modules
+    bulk_scene_general.register()
     bulk_viewport_display.register()
     bulk_data_remap.register()
     bulk_path_management.register()
@@ -150,6 +152,7 @@ def unregister():
     bulk_path_management.unregister()
     bulk_data_remap.unregister()
     bulk_viewport_display.unregister()
+    bulk_scene_general.unregister()
     
     # Unregister the updater module
     updater.unregister()

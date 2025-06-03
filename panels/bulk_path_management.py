@@ -1033,6 +1033,7 @@ class VIEW3D_PT_bulk_path_subpanel(Panel):
     bl_category = 'Edit'
     bl_parent_id = "VIEW3D_PT_bulk_scene_tools"
     bl_options = {'DEFAULT_CLOSED'}
+    bl_order = 3  # Appear after Viewport Display
     
     def draw(self, context):
         layout = self.layout

@@ -555,7 +555,7 @@ def remap_data_blocks(context, remap_images, remap_materials, remap_fonts, remap
 
 class DATAREMAP_OT_RemapData(bpy.types.Operator):
     """Remap redundant data blocks to reduce duplicates"""
-    bl_idname = "scene.bulk_data_remap"
+    bl_idname = "bst.bulk_data_remap"
     bl_label = "Remap Data"
     bl_options = {'REGISTER', 'UNDO'}
     
@@ -625,7 +625,7 @@ class DATAREMAP_OT_RemapData(bpy.types.Operator):
 # Add a new operator for purging unused data
 class DATAREMAP_OT_PurgeUnused(bpy.types.Operator):
     """Purge all unused data-blocks from the file (equivalent to File > Clean Up > Purge Unused Data)"""
-    bl_idname = "scene.purge_unused_data"
+    bl_idname = "bst.purge_unused_data"
     bl_label = "Purge Unused Data"
     bl_options = {'REGISTER', 'UNDO'}
     
@@ -640,7 +640,7 @@ class DATAREMAP_OT_PurgeUnused(bpy.types.Operator):
 # Add a new operator for toggling group exclusion
 class DATAREMAP_OT_ToggleGroupExclusion(bpy.types.Operator):
     """Toggle whether this group should be included in remapping"""
-    bl_idname = "scene.toggle_group_exclusion"
+    bl_idname = "bst.toggle_group_exclusion"
     bl_label = "Toggle Group"
     bl_options = {'REGISTER', 'UNDO'}
     
@@ -674,7 +674,7 @@ class DATAREMAP_OT_ToggleGroupExclusion(bpy.types.Operator):
 
 class DATAREMAP_OT_SelectAllGroups(bpy.types.Operator):
     """Select or deselect all groups of a specific data type"""
-    bl_idname = "scene.select_all_data_groups"
+    bl_idname = "bst.select_all_data_groups"
     bl_label = "Select All Groups"
     bl_options = {'REGISTER', 'UNDO'}
     
@@ -724,7 +724,7 @@ class DATAREMAP_OT_SelectAllGroups(bpy.types.Operator):
 # Update the toggle group selection operator to handle shift-click range selection
 class DATAREMAP_OT_ToggleGroupSelection(bpy.types.Operator):
     """Toggle whether this group should be included in remapping"""
-    bl_idname = "scene.toggle_group_selection"
+    bl_idname = "bst.toggle_group_selection"
     bl_label = "Toggle Group Selection"
     bl_options = {'REGISTER', 'UNDO'}
     
@@ -838,7 +838,7 @@ def draw_drag_selectable_checkbox(layout, context, data_type, group_key):
     is_excluded = key in context.scene.excluded_remap_groups
     
     # Draw the checkbox
-    op = layout.operator("scene.toggle_group_selection", 
+    op = layout.operator("bst.toggle_group_selection", 
                          text="", 
                          icon='CHECKBOX_HLT' if not is_excluded else 'CHECKBOX_DEHLT',
                          emboss=False)
@@ -854,11 +854,11 @@ def draw_data_duplicates(layout, context, data_type, data_groups):
     select_row = box_dup.row(align=True)
     select_row.scale_y = 0.8
     
-    select_op = select_row.operator("scene.select_all_data_groups", text="Select All")
+    select_op = select_row.operator("bst.select_all_data_groups", text="Select All")
     select_op.data_type = data_type
     select_op.select_all = True
     
-    deselect_op = select_row.operator("scene.select_all_data_groups", text="Deselect All")
+    deselect_op = select_row.operator("bst.select_all_data_groups", text="Deselect All")
     deselect_op.data_type = data_type
     deselect_op.select_all = False
     
@@ -900,7 +900,7 @@ def draw_data_duplicates(layout, context, data_type, data_groups):
             group_key = f"{data_type}:{base_name}"
             is_expanded = group_key in context.scene.expanded_remap_groups
             
-            exp_op = row.operator("scene.toggle_group_expansion",
+            exp_op = row.operator("bst.toggle_group_expansion",
                                  text="",
                                  icon='DISCLOSURE_TRI_DOWN' if is_expanded else 'DISCLOSURE_TRI_RIGHT',
                                  emboss=False)
@@ -934,7 +934,7 @@ def draw_data_duplicates(layout, context, data_type, data_groups):
                     row.label(text="", icon='WORLD')
             
             # Add rename operator for the group name
-            rename_op = row.operator("scene.rename_datablock", text=f"{base_name}: {len(items)} versions", emboss=False)
+            rename_op = row.operator("bst.rename_datablock", text=f"{base_name}: {len(items)} versions", emboss=False)
             rename_op.data_type = data_type
             rename_op.old_name = target_item.name
             
@@ -971,7 +971,7 @@ def draw_data_duplicates(layout, context, data_type, data_groups):
                             sub_row.label(text="", icon='WORLD')
                     
                     # Add rename operator for each item
-                    rename_op = sub_row.operator("scene.rename_datablock", text=f"{item.name}", emboss=False)
+                    rename_op = sub_row.operator("bst.rename_datablock", text=f"{item.name}", emboss=False)
                     rename_op.data_type = data_type
                     rename_op.old_name = item.name
 
@@ -983,7 +983,7 @@ class VIEW3D_PT_BulkDataRemap(bpy.types.Panel):
     bl_region_type = 'UI'
     bl_category = 'Edit'
     bl_parent_id = "VIEW3D_PT_bulk_scene_tools"
-    bl_order = 1  # Lower number means higher in the list
+    bl_order = 1  # Appear after Scene General
     
     def draw(self, context):
         layout = self.layout
@@ -1033,7 +1033,7 @@ class VIEW3D_PT_BulkDataRemap(bpy.types.Panel):
                 for path in linked_paths:
                     row = warning_box.row()
                     row.label(text=os.path.basename(path))
-                    op = row.operator("scene.open_linked_file", text="Open", icon='FILE_BLEND')
+                    op = row.operator("bst.open_linked_file", text="Open", icon='FILE_BLEND')
                     op.filepath = path
         
         # Add description
@@ -1071,7 +1071,7 @@ class VIEW3D_PT_BulkDataRemap(bpy.types.Panel):
         sub_row = split.row()
         
         # Use depress parameter to show button as pressed when active
-        op = sub_row.operator("scene.toggle_data_type", text="", icon='IMAGE_DATA', depress=context.scene.dataremap_images)
+        op = sub_row.operator("bst.toggle_data_type", text="", icon='IMAGE_DATA', depress=context.scene.dataremap_images)
         op.data_type = "images"
         
         # Use different text color based on activation
@@ -1102,7 +1102,7 @@ class VIEW3D_PT_BulkDataRemap(bpy.types.Panel):
         sub_row = split.row()
         
         # Use depress parameter to show button as pressed when active
-        op = sub_row.operator("scene.toggle_data_type", text="", icon='MATERIAL', depress=context.scene.dataremap_materials)
+        op = sub_row.operator("bst.toggle_data_type", text="", icon='MATERIAL', depress=context.scene.dataremap_materials)
         op.data_type = "materials"
         
         # Use different text color based on activation
@@ -1133,7 +1133,7 @@ class VIEW3D_PT_BulkDataRemap(bpy.types.Panel):
         sub_row = split.row()
         
         # Use depress parameter to show button as pressed when active
-        op = sub_row.operator("scene.toggle_data_type", text="", icon='FONT_DATA', depress=context.scene.dataremap_fonts)
+        op = sub_row.operator("bst.toggle_data_type", text="", icon='FONT_DATA', depress=context.scene.dataremap_fonts)
         op.data_type = "fonts"
         
         # Use different text color based on activation
@@ -1164,7 +1164,7 @@ class VIEW3D_PT_BulkDataRemap(bpy.types.Panel):
         sub_row = split.row()
         
         # Use depress parameter to show button as pressed when active
-        op = sub_row.operator("scene.toggle_data_type", text="", icon='WORLD', depress=context.scene.dataremap_worlds)
+        op = sub_row.operator("bst.toggle_data_type", text="", icon='WORLD', depress=context.scene.dataremap_worlds)
         op.data_type = "worlds"
         
         # Use different text color based on activation
@@ -1192,7 +1192,7 @@ class VIEW3D_PT_BulkDataRemap(bpy.types.Panel):
         # Add the operator button
         row = box.row()
         row.scale_y = 1.5
-        row.operator("scene.bulk_data_remap")
+        row.operator("bst.bulk_data_remap")
         
         # Show total counts
         total_duplicates = image_duplicates + material_duplicates + font_duplicates + world_duplicates
@@ -1210,12 +1210,12 @@ class VIEW3D_PT_BulkDataRemap(bpy.types.Panel):
         # Add a separator and purge button
         box.separator()
         row = box.row()
-        row.operator("scene.purge_unused_data", icon='TRASH')
+        row.operator("bst.purge_unused_data", icon='TRASH')
 
 # Add a new operator for toggling data types
 class DATAREMAP_OT_ToggleDataType(bpy.types.Operator):
     """Toggle whether this data type should be included in remapping"""
-    bl_idname = "scene.toggle_data_type"
+    bl_idname = "bst.toggle_data_type"
     bl_label = "Toggle Data Type"
     bl_options = {'REGISTER', 'UNDO'}
     
@@ -1240,7 +1240,7 @@ class DATAREMAP_OT_ToggleDataType(bpy.types.Operator):
 # Add a new operator for toggling group expansion
 class DATAREMAP_OT_ToggleGroupExpansion(bpy.types.Operator):
     """Toggle whether this group should be expanded to show details"""
-    bl_idname = "scene.toggle_group_expansion"
+    bl_idname = "bst.toggle_group_expansion"
     bl_label = "Toggle Group Expansion"
     bl_options = {'REGISTER', 'UNDO'}
     
@@ -1286,7 +1286,7 @@ def get_linked_file_paths(data_collection):
 
 class DATAREMAP_OT_OpenLinkedFile(bpy.types.Operator):
     """Open the linked file in a new Blender instance"""
-    bl_idname = "scene.open_linked_file"
+    bl_idname = "bst.open_linked_file"
     bl_label = "Open Linked File"
     bl_options = {'REGISTER'}
     
@@ -1315,7 +1315,7 @@ class DATAREMAP_OT_OpenLinkedFile(bpy.types.Operator):
 # Add a new operator for renaming datablocks
 class DATAREMAP_OT_RenameDatablock(bpy.types.Operator):
     """Click to rename datablock"""
-    bl_idname = "scene.rename_datablock"
+    bl_idname = "bst.rename_datablock"
     bl_label = "Rename Datablock"
     bl_options = {'REGISTER', 'UNDO'}
     

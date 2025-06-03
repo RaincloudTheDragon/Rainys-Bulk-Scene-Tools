@@ -113,7 +113,7 @@ def unregister_viewport_properties():
 
 class VIEWPORT_OT_SetViewportColors(bpy.types.Operator):
     """Set Viewport Display colors from BSDF base color or texture"""
-    bl_idname = "material.set_viewport_colors"
+    bl_idname = "bst.set_viewport_colors"
     bl_label = "Set Viewport Colors"
     bl_options = {'REGISTER', 'UNDO'}
     
@@ -671,7 +671,7 @@ class VIEW3D_PT_BulkViewportDisplay(bpy.types.Panel):
     bl_region_type = 'UI'
     bl_category = 'Edit'
     bl_parent_id = "VIEW3D_PT_bulk_scene_tools"
-    bl_order = 2  # Higher number means lower in the list
+    bl_order = 2  # Appear after Data Remap
     
     def draw(self, context):
         layout = self.layout
@@ -705,7 +705,7 @@ class VIEW3D_PT_BulkViewportDisplay(bpy.types.Panel):
         # Add the operator button
         row = box.row()
         row.scale_y = 1.5
-        row.operator("material.set_viewport_colors")
+        row.operator("bst.set_viewport_colors")
         
         # Show progress if processing
         if is_processing:
@@ -756,7 +756,7 @@ class VIEW3D_PT_BulkViewportDisplay(bpy.types.Panel):
                     row.label(text="", icon=get_status_icon(status))
                     
                     # Add material name with operator to select it
-                    op = row.operator("material.select_in_editor", text=material_name)
+                    op = row.operator("bst.select_in_editor", text=material_name)
                     op.material_name = material_name
                     
                     # Add color preview
@@ -784,11 +784,11 @@ class VIEW3D_PT_BulkViewportDisplay(bpy.types.Panel):
 
         # Add the select diffuse nodes button at the bottom
         layout.separator()
-        layout.operator("material.select_diffuse_nodes", icon='NODE_TEXTURE')
+        layout.operator("bst.select_diffuse_nodes", icon='NODE_TEXTURE')
 
 class MATERIAL_OT_SelectInEditor(bpy.types.Operator):
     """Select this material in the editor"""
-    bl_idname = "material.select_in_editor"
+    bl_idname = "bst.select_in_editor"
     bl_label = "Select Material"
     bl_options = {'REGISTER', 'UNDO'}
     
@@ -908,7 +908,7 @@ def get_color_from_preview(material, use_vectorized=True):
             return None
 
 class VIEWPORT_OT_SelectDiffuseNodes(bpy.types.Operator):
-    bl_idname = "material.select_diffuse_nodes"
+    bl_idname = "bst.select_diffuse_nodes"
     bl_label = "Set Texture Display"
     bl_description = "Select the most relevant diffuse/base color image texture node in each material"
     bl_options = {'REGISTER', 'UNDO'}
