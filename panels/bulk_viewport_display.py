@@ -671,7 +671,7 @@ class VIEW3D_PT_BulkViewportDisplay(bpy.types.Panel):
     bl_region_type = 'UI'
     bl_category = 'Edit'
     bl_parent_id = "VIEW3D_PT_bulk_scene_tools"
-    bl_order = 2  # Appear after Data Remap
+    bl_order = 3
     
     def draw(self, context):
         layout = self.layout
@@ -939,8 +939,13 @@ def register():
 
 def unregister():
     # Unregister properties
-    unregister_viewport_properties()
-    
+    try:
+        unregister_viewport_properties()
+    except Exception:
+        pass
     # Unregister classes
     for cls in reversed(classes):
-        bpy.utils.unregister_class(cls) 
+        try:
+            bpy.utils.unregister_class(cls)
+        except RuntimeError:
+            pass 

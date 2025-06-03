@@ -983,7 +983,7 @@ class VIEW3D_PT_BulkDataRemap(bpy.types.Panel):
     bl_region_type = 'UI'
     bl_category = 'Edit'
     bl_parent_id = "VIEW3D_PT_bulk_scene_tools"
-    bl_order = 1  # Appear after Scene General
+    bl_order = 2
     
     def draw(self, context):
         layout = self.layout
@@ -1404,6 +1404,12 @@ def register():
 
 def unregister():
     for cls in reversed(classes):
-        bpy.utils.unregister_class(cls)
-    
-    unregister_dataremap_properties() 
+        try:
+            bpy.utils.unregister_class(cls)
+        except RuntimeError:
+            pass
+    # Unregister properties
+    try:
+        unregister_dataremap_properties()
+    except Exception:
+        pass 

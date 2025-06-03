@@ -19,10 +19,7 @@ from .panels import bulk_viewport_display
 from .panels import bulk_data_remap
 from .panels import bulk_path_management
 from .panels import bulk_scene_general
-# Import updater
 from . import updater
-import datetime
-from .scripts import select_diffuse_nodes
 
 # Addon preferences class for update settings
 class BST_AddonPreferences(AddonPreferences):
@@ -149,17 +146,33 @@ def register():
 
 def unregister():
     # Unregister modules
-    bulk_path_management.unregister()
-    bulk_data_remap.unregister()
-    bulk_viewport_display.unregister()
-    bulk_scene_general.unregister()
-    
+    try:
+        bulk_path_management.unregister()
+    except Exception:
+        pass
+    try:
+        bulk_data_remap.unregister()
+    except Exception:
+        pass
+    try:
+        bulk_viewport_display.unregister()
+    except Exception:
+        pass
+    try:
+        bulk_scene_general.unregister()
+    except Exception:
+        pass
     # Unregister the updater module
-    updater.unregister()
-    
+    try:
+        updater.unregister()
+    except Exception:
+        pass
     # Unregister classes from this module
     for cls in reversed(classes):
-        bpy.utils.unregister_class(cls)
+        try:
+            bpy.utils.unregister_class(cls)
+        except RuntimeError:
+            pass
 
 if __name__ == "__main__":
     register()

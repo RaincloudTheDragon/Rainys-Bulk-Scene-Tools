@@ -816,6 +816,28 @@ class BST_OT_remove_extensions(Operator):
         
         return {'FINISHED'}
 
+# Add new operator for flat color texture renaming
+class BST_OT_rename_flat_colors(Operator):
+    """Rename flat color textures to their hex color values"""
+    bl_idname = "bst.rename_flat_colors"
+    bl_label = "Rename Flat Colors"
+    bl_description = "Find and rename flat color textures to their hex color values"
+    bl_options = {'REGISTER', 'UNDO'}
+    
+    def execute(self, context):
+        from ..scripts.flat_color_texture_renamer import rename_flat_color_textures
+        
+        try:
+            renamed_count = rename_flat_color_textures()
+            if renamed_count > 0:
+                self.report({'INFO'}, f"Successfully renamed {renamed_count} flat color textures")
+            else:
+                self.report({'INFO'}, "No flat color textures found to rename")
+            return {'FINISHED'}
+        except Exception as e:
+            self.report({'ERROR'}, f"Failed to rename textures: {str(e)}")
+            return {'CANCELLED'}
+
 # Update get_combined_path function for path construction
 def get_combined_path(context, datablock_name, extension=""):
     """
@@ -912,6 +934,10 @@ class NODE_PT_bulk_path_tools(Panel):
         row = box.row(align=True)
         row.operator("bst.remove_packed_images", text="Remove Pack", icon='TRASH')
         row.operator("bst.remove_extensions", text="Remove Extensions", icon='X')
+        
+        # Flat color renaming row
+        row = box.row(align=True)
+        row.operator("bst.rename_flat_colors", text="Rename Flat Colors", icon='COLOR')
         
         # Save images row
         row = box.row(align=True)
@@ -1033,7 +1059,7 @@ class VIEW3D_PT_bulk_path_subpanel(Panel):
     bl_category = 'Edit'
     bl_parent_id = "VIEW3D_PT_bulk_scene_tools"
     bl_options = {'DEFAULT_CLOSED'}
-    bl_order = 3  # Appear after Viewport Display
+    bl_order = 1
     
     def draw(self, context):
         layout = self.layout
@@ -1054,6 +1080,10 @@ class VIEW3D_PT_bulk_path_subpanel(Panel):
         row = box.row(align=True)
         row.operator("bst.remove_packed_images", text="Remove Pack", icon='TRASH')
         row.operator("bst.remove_extensions", text="Remove Extensions", icon='FILE_TICK')
+        
+        # Flat color renaming row
+        row = box.row(align=True)
+        row.operator("bst.rename_flat_colors", text="Rename Flat Colors", icon='COLOR')
         
         # Save images row
         row = box.row(align=True)
@@ -1186,6 +1216,7 @@ classes = (
     BST_OT_remove_packed_images,
     BST_OT_save_all_images,
     BST_OT_remove_extensions,
+    BST_OT_rename_flat_colors,
     NODE_PT_bulk_path_tools,
     VIEW3D_PT_bulk_path_subpanel,
 )
