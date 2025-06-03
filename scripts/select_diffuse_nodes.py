@@ -95,5 +95,6 @@ def select_diffuse_nodes():
     
     print(f"\nTotal texture nodes selected: {found_nodes}")
 
-# Run the function
-select_diffuse_nodes() 
+# Only run if this script is run directly
+if __name__ == "__main__":
+    select_diffuse_nodes() 

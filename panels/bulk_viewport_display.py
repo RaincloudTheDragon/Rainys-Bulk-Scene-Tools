@@ -4,6 +4,7 @@ from time import time
 import os
 from enum import Enum
 import colorsys  # Add colorsys for RGB to HSV conversion
+from ..scripts.select_diffuse_nodes import select_diffuse_nodes  # Import the specific function
 
 # Material processing status enum
 class MaterialStatus(Enum):
@@ -92,6 +93,12 @@ def register_viewport_properties():
         default=True
     )
 
+    bpy.types.Scene.show_material_results = bpy.props.BoolProperty(
+        name="",
+        description="Show material results in the viewport display panel",
+        default=True
+    )
+
 def unregister_viewport_properties():
     del bpy.types.Scene.viewport_colors_use_preview
     del bpy.types.Scene.viewport_colors_default_white_only
@@ -102,6 +109,7 @@ def unregister_viewport_properties():
     del bpy.types.Scene.viewport_colors_batch_size
     del bpy.types.Scene.viewport_colors_selected_only
     del bpy.types.Scene.viewport_colors_show_advanced
+    del bpy.types.Scene.show_material_results
 
 class VIEWPORT_OT_SetViewportColors(bpy.types.Operator):
     """Set Viewport Display colors from BSDF base color or texture"""
@@ -711,63 +719,72 @@ class VIEW3D_PT_BulkViewportDisplay(bpy.types.Panel):
         # Show material results if available
         if material_results:
             box.separator()
-            box.label(text="Material Results:")
-            
-            # Create a scrollable list
             row = box.row()
-            col = row.column()
-            
-            # Collect materials to remove
-            materials_to_remove = []
-            
-            # Count materials by status
-            preview_count = 0
-            default_count = 0
-            failed_count = 0
-            
-            # Display material results - use a copy of the keys to avoid modification during iteration
-            for material_name in list(material_results.keys()):
-                color, status = material_results[material_name]
+            row.prop(context.scene, "show_material_results", 
+                     icon='DISCLOSURE_TRI_DOWN' if context.scene.show_material_results else 'DISCLOSURE_TRI_RIGHT',
+                     emboss=False)
+            row.label(text="Material Results:")
+            if context.scene.show_material_results:
+                # Create a scrollable list
+                material_box = box.box()
+                row = material_box.row()
+                col = row.column()
                 
-                # Update counts
-                if status == MaterialStatus.PREVIEW_BASED:
-                    preview_count += 1
-                elif status == MaterialStatus.DEFAULT_WHITE:
-                    default_count += 1
-                elif status == MaterialStatus.FAILED:
-                    failed_count += 1
+                # Collect materials to remove
+                materials_to_remove = []
                 
-                row = col.row(align=True)
+                # Count materials by status
+                preview_count = 0
+                default_count = 0
+                failed_count = 0
                 
-                # Add status icon
-                row.label(text="", icon=get_status_icon(status))
+                # Display material results - use a copy of the keys to avoid modification during iteration
+                for material_name in list(material_results.keys()):
+                    color, status = material_results[material_name]
+                    
+                    # Update counts
+                    if status == MaterialStatus.PREVIEW_BASED:
+                        preview_count += 1
+                    elif status == MaterialStatus.DEFAULT_WHITE:
+                        default_count += 1
+                    elif status == MaterialStatus.FAILED:
+                        failed_count += 1
+                    
+                    row = col.row(align=True)
+                    
+                    # Add status icon
+                    row.label(text="", icon=get_status_icon(status))
+                    
+                    # Add material name with operator to select it
+                    op = row.operator("material.select_in_editor", text=material_name)
+                    op.material_name = material_name
+                    
+                    # Add color preview
+                    if color:
+                        material = bpy.data.materials.get(material_name)
+                        if material:  # Check if material still exists
+                            row.prop(material, "diffuse_color", text="")
+                        else:
+                            # Material no longer exists, show a placeholder color
+                            row.label(text="", icon='ERROR')
+                            # Mark for removal
+                            materials_to_remove.append(material_name)
                 
-                # Add material name with operator to select it
-                op = row.operator("material.select_in_editor", text=material_name)
-                op.material_name = material_name
+                # Remove materials that no longer exist
+                for material_name in materials_to_remove:
+                    material_results.pop(material_name, None)
                 
-                # Add color preview
-                if color:
-                    material = bpy.data.materials.get(material_name)
-                    if material:  # Check if material still exists
-                        row.prop(material, "diffuse_color", text="")
-                    else:
-                        # Material no longer exists, show a placeholder color
-                        row.label(text="", icon='ERROR')
-                        # Mark for removal
-                        materials_to_remove.append(material_name)
-            
-            # Remove materials that no longer exist
-            for material_name in materials_to_remove:
-                material_results.pop(material_name, None)
-            
-            # Show statistics
-            if len(material_results) > 0:
-                box.separator()
-                stats_col = box.column(align=True)
-                stats_col.label(text=f"Total: {len(material_results)} materials")
-                stats_col.label(text=f"Thumbnail-based: {preview_count}")
-                stats_col.label(text=f"Default white: {default_count}, Failed: {failed_count}")
+                # Show statistics
+                if len(material_results) > 0:
+                    material_box.separator()
+                    stats_col = material_box.column(align=True)
+                    stats_col.label(text=f"Total: {len(material_results)} materials")
+                    stats_col.label(text=f"Thumbnail-based: {preview_count}")
+                    stats_col.label(text=f"Default white: {default_count}, Failed: {failed_count}")
+
+        # Add the select diffuse nodes button at the bottom
+        layout.separator()
+        layout.operator("material.select_diffuse_nodes", icon='NODE_TEXTURE')
 
 class MATERIAL_OT_SelectInEditor(bpy.types.Operator):
     """Select this material in the editor"""
@@ -890,11 +907,26 @@ def get_color_from_preview(material, use_vectorized=True):
         else:
             return None
 
+class VIEWPORT_OT_SelectDiffuseNodes(bpy.types.Operator):
+    bl_idname = "material.select_diffuse_nodes"
+    bl_label = "Set Texture Display"
+    bl_description = "Select the most relevant diffuse/base color image texture node in each material"
+    bl_options = {'REGISTER', 'UNDO'}
+
+    def execute(self, context):
+        if select_diffuse_nodes:
+            select_diffuse_nodes()
+            self.report({'INFO'}, "Diffuse/BaseColor image nodes selected.")
+        else:
+            self.report({'ERROR'}, "select_diffuse_nodes function not found.")
+        return {'FINISHED'}
+
 # List of all classes in this module
 classes = (
     VIEWPORT_OT_SetViewportColors,
     VIEW3D_PT_BulkViewportDisplay,
     MATERIAL_OT_SelectInEditor,
+    VIEWPORT_OT_SelectDiffuseNodes,
 )
 
 # Registration
