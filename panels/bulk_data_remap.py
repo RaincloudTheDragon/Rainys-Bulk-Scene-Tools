@@ -934,7 +934,7 @@ def draw_data_duplicates(layout, context, data_type, data_groups):
                     row.label(text="", icon='WORLD')
             
             # Add rename operator for the group name
-            rename_op = row.operator("bst.rename_datablock", text=f"{base_name}: {len(items)} versions", emboss=False)
+            rename_op = row.operator("bst.rename_datablock_remap", text=f"{base_name}: {len(items)} versions", emboss=False)
             rename_op.data_type = data_type
             rename_op.old_name = target_item.name
             
@@ -971,7 +971,7 @@ def draw_data_duplicates(layout, context, data_type, data_groups):
                             sub_row.label(text="", icon='WORLD')
                     
                     # Add rename operator for each item
-                    rename_op = sub_row.operator("bst.rename_datablock", text=f"{item.name}", emboss=False)
+                    rename_op = sub_row.operator("bst.rename_datablock_remap", text=f"{item.name}", emboss=False)
                     rename_op.data_type = data_type
                     rename_op.old_name = item.name
 
@@ -1315,7 +1315,7 @@ class DATAREMAP_OT_OpenLinkedFile(bpy.types.Operator):
 # Add a new operator for renaming datablocks
 class DATAREMAP_OT_RenameDatablock(bpy.types.Operator):
     """Click to rename datablock"""
-    bl_idname = "bst.rename_datablock"
+    bl_idname = "bst.rename_datablock_remap"
     bl_label = "Rename Datablock"
     bl_options = {'REGISTER', 'UNDO'}
     
