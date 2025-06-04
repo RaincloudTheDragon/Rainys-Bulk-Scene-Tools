@@ -18,9 +18,12 @@ class VIEW3D_PT_BulkSceneGeneral(bpy.types.Panel):
         # Add NoSubdiv button
         box = layout.box()
         box.label(text="Mesh")
+        # Add checkbox for only_selected property
+        row = box.row()
+        row.prop(context.window_manager, "bst_no_subdiv_only_selected", text="Only Selected Objects")
         row = box.row(align=True)
-        row.operator("bst.no_subdiv", text="No Subdiv", icon='MOD_SUBSURF')
-        row.operator("bst.remove_custom_split_normals", text="Remove Custom Split Normals", icon='X')
+        row.operator("bst.no_subdiv", text="No Subdiv", icon='MOD_SUBSURF').only_selected = context.window_manager.bst_no_subdiv_only_selected
+        row.operator("bst.remove_custom_split_normals", text="Remove Custom Split Normals", icon='X').only_selected = context.window_manager.bst_no_subdiv_only_selected
 
 # List of all classes in this module
 classes = (
@@ -33,6 +36,12 @@ classes = (
 def register():
     for cls in classes:
         bpy.utils.register_class(cls)
+    # Register the window manager property for the checkbox
+    bpy.types.WindowManager.bst_no_subdiv_only_selected = bpy.props.BoolProperty(
+        name="Selected Only",
+        description="Apply only to selected objects",
+        default=True
+    )
 
 def unregister():
     for cls in reversed(classes):
@@ -40,3 +49,6 @@ def unregister():
             bpy.utils.unregister_class(cls)
         except RuntimeError:
             pass
+    # Unregister the window manager property
+    if hasattr(bpy.types.WindowManager, "bst_no_subdiv_only_selected"):
+        del bpy.types.WindowManager.bst_no_subdiv_only_selected
