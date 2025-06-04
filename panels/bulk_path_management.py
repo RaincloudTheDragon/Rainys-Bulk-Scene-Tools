@@ -598,6 +598,18 @@ class BST_OT_make_paths_relative(Operator):
         self.report({'INFO'}, "Converted absolute paths to relative paths")
         return {'FINISHED'}
 
+# Make Paths Absolute Operator
+class BST_OT_make_paths_absolute(Operator):
+    bl_idname = "bst.make_paths_absolute"
+    bl_label = "Make Paths Absolute"
+    bl_description = "Convert relative paths to absolute paths for all datablocks"
+    bl_options = {'REGISTER', 'UNDO'}
+    
+    def execute(self, context):
+        bpy.ops.file.make_paths_absolute()
+        self.report({'INFO'}, "Converted relative paths to absolute paths")
+        return {'FINISHED'}
+
 # Pack Images Operator
 class BST_OT_pack_images(Operator):
     bl_idname = "bst.pack_images"
@@ -922,26 +934,24 @@ class NODE_PT_bulk_path_tools(Panel):
         
         # Workflow section
         box = layout.box(align=True)
-        row = box.row()
-        row.label(text="Workflow")
+        box.label(text="Workflow", icon_value=0)
+        col = box.column(heading='', align=True)
         
-        # Pack/Unpack row
-        row = box.row(align=True)
-        row.operator("bst.pack_images", text="Pack", icon='PACKAGE')
-        row.operator("bst.unpack_images", text="Unpack Local", icon='UGLYPACKAGE')
+        # Pack/Unpack split
+        split = col.split(factor=0.5, align=True)
+        split.operator("bst.pack_images", text="Pack", icon='PACKAGE')
+        split.operator("bst.unpack_images", text="Unpack Local", icon='UGLYPACKAGE')
         
-        # Remove packed/Save row
-        row = box.row(align=True)
-        row.operator("bst.remove_packed_images", text="Remove Pack", icon='TRASH')
-        row.operator("bst.remove_extensions", text="Remove Extensions", icon='X')
+        # Remove packed/Extensions split
+        split = col.split(factor=0.5, align=True)
+        split.operator("bst.remove_packed_images", text="Remove Pack", icon='TRASH')
+        split.operator("bst.remove_extensions", text="Remove Ext", icon='X')
         
-        # Flat color renaming row
-        row = box.row(align=True)
-        row.operator("bst.rename_flat_colors", text="Rename Flat Colors", icon='COLOR')
+        # Flat color renaming (full width)
+        col.operator("bst.rename_flat_colors", text="Rename Flat Colors", icon='COLOR')
         
-        # Save images row
-        row = box.row(align=True)
-        row.operator("bst.save_all_images", text="Save All", icon='EXPORT')
+        # Save images (full width)
+        col.operator("bst.save_all_images", text="Save All", icon='EXPORT')
         
         # Path Settings UI
         box.separator()
@@ -1007,10 +1017,11 @@ class NODE_PT_bulk_path_tools(Panel):
             row.enabled = any_selected
             row.operator("bst.bulk_remap", text="Remap Selected", icon='FILE_REFRESH')
             
-            # Make paths relative button
-            row = box.row()
+            # Path relative/absolute
+            row = box.row(align=True)
             row.operator("bst.make_paths_relative", text="Make Paths Relative", icon='FILE_FOLDER')
-            
+            row.operator("bst.make_paths_absolute", text="Make Paths Absolute", icon='FILE_FOLDER')
+
             box.separator()
             
             # Image selection list with thumbnails
@@ -1156,6 +1167,7 @@ class VIEW3D_PT_bulk_path_subpanel(Panel):
             # Make paths relative button
             row = box.row()
             row.operator("bst.make_paths_relative", text="Make Paths Relative", icon='FILE_FOLDER')
+            row.operator("bst.make_paths_absolute", text="Make Paths Absolute", icon='FILE_FOLDER')
             
             box.separator()
             
@@ -1211,6 +1223,7 @@ classes = (
     BST_OT_reuse_material_path,
     BST_OT_reuse_blend_name,
     BST_OT_make_paths_relative,
+    BST_OT_make_paths_absolute,
     BST_OT_pack_images,
     BST_OT_unpack_images,
     BST_OT_remove_packed_images,
