@@ -26,19 +26,19 @@ jobs:
       - name: Create ZIP
         run: |
           # Create a temporary directory structure
-          mkdir -p addon_files/rainys_bulk_scene_tools
-          # Create the updater directory in the addon directory
-          mkdir -p addon_files/rainys_bulk_scene_tools/updater
-          mkdir -p addon_files/rainys_bulk_scene_tools/panels
-          mkdir -p addon_files/rainys_bulk_scene_tools/scripts
+          mkdir -p addon_files/Rainys-Bulk-Scene-Tools
+          # Create the subdirectories in the addon directory
+          mkdir -p addon_files/Rainys-Bulk-Scene-Tools/updater
+          mkdir -p addon_files/Rainys-Bulk-Scene-Tools/panels
+          mkdir -p addon_files/Rainys-Bulk-Scene-Tools/scripts
           # Copy main addon files
-          cp __init__.py bl_info.json requirements.txt readme.md addon_files/rainys_bulk_scene_tools/
+          cp __init__.py bl_info.json requirements.txt readme.md addon_files/Rainys-Bulk-Scene-Tools/
           # Copy the panels module
-          cp -r panels/* addon_files/rainys_bulk_scene_tools/panels/
+          cp -r panels/* addon_files/Rainys-Bulk-Scene-Tools/panels/
           # Copy the scripts module
-          cp -r scripts/* addon_files/rainys_bulk_scene_tools/scripts/
+          cp -r scripts/* addon_files/Rainys-Bulk-Scene-Tools/scripts/
           # Copy the updater module
-          cp -r updater/* addon_files/rainys_bulk_scene_tools/updater/
+          cp -r updater/* addon_files/Rainys-Bulk-Scene-Tools/updater/
           # Create the zip from the temporary directory
           cd addon_files
           zip -r "../${{ steps.get_version.outputs.zip_name }}" ./*
