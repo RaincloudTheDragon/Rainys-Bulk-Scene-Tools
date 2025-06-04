@@ -1,8 +1,9 @@
 import bpy
 from ..scripts.NoSubdiv import NoSubdiv
 from ..scripts.remove_custom_split_normals import RemoveCustomSplitNormals
+from ..scripts.create_ortho_camera import CreateOrthoCamera
 
-class VIEW3D_PT_BulkSceneGeneral(bpy.types.Panel):
+class BulkSceneGeneral(bpy.types.Panel):
     """Bulk Scene General Panel"""
     bl_label = "Scene General"
     bl_idname = "VIEW3D_PT_bulk_scene_general"
@@ -20,16 +21,20 @@ class VIEW3D_PT_BulkSceneGeneral(bpy.types.Panel):
         box.label(text="Mesh")
         # Add checkbox for only_selected property
         row = box.row()
-        row.prop(context.window_manager, "bst_no_subdiv_only_selected", text="Only Selected Objects")
+        row.prop(context.window_manager, "bst_no_subdiv_only_selected", text="Selected Only")
         row = box.row(align=True)
         row.operator("bst.no_subdiv", text="No Subdiv", icon='MOD_SUBSURF').only_selected = context.window_manager.bst_no_subdiv_only_selected
         row.operator("bst.remove_custom_split_normals", text="Remove Custom Split Normals", icon='X').only_selected = context.window_manager.bst_no_subdiv_only_selected
 
+        row = box.row(align=True)
+        row.operator("bst.create_ortho_camera", text="Create Ortho Camera", icon='OUTLINER_DATA_CAMERA')
+
 # List of all classes in this module
 classes = (
-    VIEW3D_PT_BulkSceneGeneral,
+    BulkSceneGeneral,
     NoSubdiv,  # Add NoSubdiv operator class
     RemoveCustomSplitNormals,
+    CreateOrthoCamera,
 )
 
 # Registration
