@@ -15,6 +15,7 @@ class RENAME_OT_summary_dialog(bpy.types.Operator):
     cc3iid_count: bpy.props.IntProperty(default=0)
     flatcolor_count: bpy.props.IntProperty(default=0)
     already_correct_count: bpy.props.IntProperty(default=0)
+    unrecognized_suffix_count: bpy.props.IntProperty(default=0)
     rename_details: bpy.props.StringProperty(default="")
     
     def draw(self, context):
@@ -40,21 +41,23 @@ class RENAME_OT_summary_dialog(bpy.types.Operator):
             col.label(text=f"CC3 ID textures skipped: {self.cc3iid_count}", icon='RADIOBUT_OFF')
         if self.flatcolor_count > 0:
             col.label(text=f"Flat colors skipped: {self.flatcolor_count}", icon='RADIOBUT_OFF')
+        if self.unrecognized_suffix_count > 0:
+            col.label(text=f"Unrecognized suffixes skipped: {self.unrecognized_suffix_count}", icon='RADIOBUT_OFF')
         
-        # Detailed results if any renames occurred
-        if self.renamed_count > 0 and self.rename_details:
+        # Show detailed rename information if available
+        if self.rename_details:
             layout.separator()
-            layout.label(text="Renamed Images:", icon='OUTLINER_DATA_FONT')
+            box = layout.box()
+            box.label(text="Renamed Images:", icon='FILE_TEXT')
             
-            details_box = layout.box()
-            details_col = details_box.column(align=True)
-            
-            # Parse and display rename details
-            for line in self.rename_details.split('\n'):
+            # Split the details by lines and show each one
+            lines = self.rename_details.split('\n')
+            for line in lines[:10]:  # Limit to first 10 to avoid overly long dialogs
                 if line.strip():
-                    details_col.label(text=line, icon='RIGHTARROW_THIN')
-        
-        layout.separator()
+                    box.label(text=line)
+            
+            if len(lines) > 10:
+                box.label(text=f"... and {len(lines) - 10} more")
 
     def execute(self, context):
         return {'FINISHED'}
@@ -85,7 +88,9 @@ class Rename_images_by_mat(bpy.types.Operator):
         cc3iid_count = 0  # Track CC3 ID textures
         flatcolor_count = 0  # Track flat color textures
         already_correct_count = 0  # Track images already correctly named
+        unrecognized_suffix_count = 0  # Track images with unrecognized suffixes
         renamed_list = []  # Track renamed images for debug
+        unrecognized_list = []  # Track images with unrecognized suffixes
         
         for img in selected_images:
             # Skip CC3 ID textures (ignore case)
@@ -108,16 +113,24 @@ class Rename_images_by_mat(bpy.types.Operator):
                 print(f"DEBUG: Skipped unused image: {img.name}")
                 continue
             elif len(materials) == 1:
-                # Single material usage - check if already correctly named
+                # Single material usage - check suffix recognition
                 material_name = materials[0]
                 suffix = self.extract_texture_suffix(img.name)
                 original_name = img.name
+                
+                # Skip images with unrecognized suffixes (only if they have a potential suffix pattern)
+                if suffix is None and self.has_potential_suffix(img.name):
+                    unrecognized_suffix_count += 1
+                    unrecognized_list.append(img.name)
+                    print(f"DEBUG: Skipped image with unrecognized suffix: {img.name}")
+                    continue
                 
                 if suffix:
                     # Capitalize the suffix properly
                     capitalized_suffix = self.capitalize_suffix(suffix)
                     expected_name = f"{material_name}_{capitalized_suffix}"
                 else:
+                    # No suffix detected, use material name only
                     expected_name = material_name
                 
                 # Check if the image is already correctly named
@@ -147,6 +160,7 @@ class Rename_images_by_mat(bpy.types.Operator):
         print(f"Unused (skipped): {unused_count}")
         print(f"CC3 ID textures (skipped): {cc3iid_count}")
         print(f"Flat colors (skipped): {flatcolor_count}")
+        print(f"Unrecognized suffixes (skipped): {unrecognized_suffix_count}")
         
         if renamed_list:
             print(f"\nDetailed rename log:")
@@ -154,14 +168,19 @@ class Rename_images_by_mat(bpy.types.Operator):
                 suffix_info = f" (suffix: {suffix})" if suffix else " (no suffix)"
                 print(f"  '{original}' → '{new}' for material '{material}'{suffix_info}")
         
+        if unrecognized_list:
+            print(f"\nImages with unrecognized suffixes:")
+            for img_name in unrecognized_list:
+                print(f"  '{img_name}'")
+        
         print(f"===================================\n")
         
         # Show popup summary dialog
-        self.show_summary_dialog(context, len(selected_images), renamed_count, shared_count, unused_count, cc3iid_count, flatcolor_count, already_correct_count, renamed_list)
+        self.show_summary_dialog(context, len(selected_images), renamed_count, shared_count, unused_count, cc3iid_count, flatcolor_count, already_correct_count, unrecognized_suffix_count, renamed_list)
         
         return {'FINISHED'}
     
-    def show_summary_dialog(self, context, total_selected, renamed_count, shared_count, unused_count, cc3iid_count, flatcolor_count, already_correct_count, renamed_list):
+    def show_summary_dialog(self, context, total_selected, renamed_count, shared_count, unused_count, cc3iid_count, flatcolor_count, already_correct_count, unrecognized_suffix_count, renamed_list):
         """Show a popup dialog with the rename summary"""
         # Prepare detailed rename information for display
         details_text = ""
@@ -179,6 +198,7 @@ class Rename_images_by_mat(bpy.types.Operator):
                                               cc3iid_count=cc3iid_count,
                                               flatcolor_count=flatcolor_count,
                                               already_correct_count=already_correct_count,
+                                              unrecognized_suffix_count=unrecognized_suffix_count,
                                               rename_details=details_text.strip())
     
     def get_image_material_mapping(self, images):
@@ -230,6 +250,20 @@ class Rename_images_by_mat(bpy.types.Operator):
             'detail_normal', 'detail_diffuse', 'detail_mask',
             'blend', 'id', 'cavity', 'curvature', 'transmap', 'rgbamask', 'sssmap', 'micronmask',
             'bcbmap', 'mnaomask', 'specmask', 'micron', 'cfulcmask', 'nmuilmask', 'nbmap', 'enmask', 'blend_multiply',
+            
+            # Hair-related compound suffixes (no spaces)
+            'hairflowmap', 'hairidmap', 'hairrootmap', 'hairdepthmap',
+            'flowmap', 'idmap', 'rootmap', 'depthmap',
+            
+            # Wrinkle map suffixes (Character Creator)
+            'wrinkle_normal1', 'wrinkle_normal2', 'wrinkle_normal3',
+            'wrinkle_roughness1', 'wrinkle_roughness2', 'wrinkle_roughness3',
+            'wrinkle_diffuse1', 'wrinkle_diffuse2', 'wrinkle_diffuse3',
+            'wrinkle_mask1', 'wrinkle_mask2', 'wrinkle_mask3',
+            'wrinkle_flow1', 'wrinkle_flow2', 'wrinkle_flow3',
+            
+            # Character Creator pack suffixes (with spaces)
+            'flow pack', 'msmnao pack', 'roughness pack', 'sstm pack',
             
             # Hair-related multi-word suffixes (spaces)
             'hair flow map', 'hair id map', 'hair root map', 'hair depth map',
@@ -378,6 +412,39 @@ class Rename_images_by_mat(bpy.types.Operator):
             'enmask': 'ENMask',
             'blend_multiply': 'Blend_Multiply',
             
+            # Hair-related compound suffixes (no spaces)
+            'hairflowmap': 'HairFlowMap',
+            'hairidmap': 'HairIDMap',
+            'hairrootmap': 'HairRootMap',
+            'hairdepthmap': 'HairDepthMap',
+            'flowmap': 'FlowMap',
+            'idmap': 'IDMap',
+            'rootmap': 'RootMap',
+            'depthmap': 'DepthMap',
+            
+            # Wrinkle map suffixes (Character Creator)
+            'wrinkle_normal1': 'Wrinkle_Normal1',
+            'wrinkle_normal2': 'Wrinkle_Normal2',
+            'wrinkle_normal3': 'Wrinkle_Normal3',
+            'wrinkle_roughness1': 'Wrinkle_Roughness1',
+            'wrinkle_roughness2': 'Wrinkle_Roughness2',
+            'wrinkle_roughness3': 'Wrinkle_Roughness3',
+            'wrinkle_diffuse1': 'Wrinkle_Diffuse1',
+            'wrinkle_diffuse2': 'Wrinkle_Diffuse2',
+            'wrinkle_diffuse3': 'Wrinkle_Diffuse3',
+            'wrinkle_mask1': 'Wrinkle_Mask1',
+            'wrinkle_mask2': 'Wrinkle_Mask2',
+            'wrinkle_mask3': 'Wrinkle_Mask3',
+            'wrinkle_flow1': 'Wrinkle_Flow1',
+            'wrinkle_flow2': 'Wrinkle_Flow2',
+            'wrinkle_flow3': 'Wrinkle_Flow3',
+            
+            # Character Creator pack suffixes (with spaces)
+            'flow pack': 'FlowPack',
+            'msmnao pack': 'MSMNAOPack',
+            'roughness pack': 'RoughnessPack',
+            'sstm pack': 'SSTMPack',
+            
             # Hair-related multi-word suffixes
             'hair flow map': 'HairFlowMap',
             'hair id map': 'HairIDMap',
@@ -408,6 +475,23 @@ class Rename_images_by_mat(bpy.types.Operator):
         
         # Get the proper capitalization from mapping, or capitalize first letter as fallback
         return suffix_mapping.get(suffix.lower(), suffix.capitalize())
+    
+    def has_potential_suffix(self, name):
+        """Check if the image name has a potential suffix pattern that we should try to recognize"""
+        # Remove file extension first
+        base_name = re.sub(r'\.[^.]+$', '', name)
+        
+        # Check for common suffix patterns: _something, -something, .something, or space something
+        suffix_patterns = [
+            r'[._-][a-zA-Z0-9]+$',  # Underscore, dot, or dash followed by alphanumeric
+            r'\s+[a-zA-Z0-9\s]+$',  # Space followed by alphanumeric (for multi-word suffixes)
+        ]
+        
+        for pattern in suffix_patterns:
+            if re.search(pattern, base_name):
+                return True
+        
+        return False
 
 
 # Registration classes - need to register both operators
