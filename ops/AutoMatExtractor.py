@@ -3,8 +3,8 @@ import os
 import re
 from ..panels.bulk_path_management import get_image_extension, bulk_remap_paths
 
-class AutoMatExtractorOperator(bpy.types.Operator):
-    bl_idname = "object.automatextractor"
+class AutoMatExtractor(bpy.types.Operator):
+    bl_idname = "bst.automatextractor"
     bl_label = "AutoMatExtractor"
     bl_description = "Pack selected images and extract them with organized paths by blend file and material"
     bl_options = {'REGISTER', 'UNDO'}

@@ -1025,12 +1025,12 @@ class NODE_PT_bulk_path_tools(Panel):
         any_selected = any(hasattr(img, "bst_selected") and img.bst_selected for img in bpy.data.images)
         row = layout.row()
         row.enabled = any_selected
-        row.operator("object.rename_images_by_mat", text="Rename by Material", icon='OUTLINER_DATA_FONT')
+        row.operator("bst.rename_images_by_mat", text="Rename by Material", icon='OUTLINER_DATA_FONT')
         
         # AutoMatExtractor button
         row = layout.row()
         row.enabled = any_selected
-        row.operator("object.automatextractor", text="AutoMat Extractor", icon='PACKAGE')
+        row.operator("bst.automatextractor", text="AutoMat Extractor", icon='PACKAGE')
         
         layout.separator()
         
@@ -1183,12 +1183,12 @@ class VIEW3D_PT_bulk_path_subpanel(Panel):
         any_selected = any(hasattr(img, "bst_selected") and img.bst_selected for img in bpy.data.images)
         row = layout.row()
         row.enabled = any_selected
-        row.operator("object.rename_images_by_mat", text="Rename by Material", icon='OUTLINER_DATA_FONT')
+        row.operator("bst.rename_images_by_mat", text="Rename by Material", icon='OUTLINER_DATA_FONT')
         
         # AutoMatExtractor button
         row = layout.row()
         row.enabled = any_selected
-        row.operator("object.automatextractor", text="AutoMat Extractor", icon='PACKAGE')
+        row.operator("bst.automatextractor", text="AutoMat Extractor", icon='PACKAGE')
         
         layout.separator()
         

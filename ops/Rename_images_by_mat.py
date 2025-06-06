@@ -3,7 +3,7 @@ import re
 
 class RENAME_OT_summary_dialog(bpy.types.Operator):
     """Show rename operation summary"""
-    bl_idname = "rename.summary_dialog"
+    bl_idname = "bst.rename_summary_dialog"
     bl_label = "Rename Summary"
     bl_options = {'REGISTER', 'INTERNAL'}
     
@@ -62,8 +62,8 @@ class RENAME_OT_summary_dialog(bpy.types.Operator):
     def invoke(self, context, event):
         return context.window_manager.invoke_popup(self, width=500)
 
-class Rename_images_by_matOperator(bpy.types.Operator):
-    bl_idname = "object.rename_images_by_mat"
+class Rename_images_by_mat(bpy.types.Operator):
+    bl_idname = "bst.rename_images_by_mat"
     bl_label = "Rename Images by Material"
     bl_description = "Rename selected images based on their material usage, preserving texture type suffixes"
     bl_options = {'REGISTER', 'UNDO'}
@@ -171,7 +171,7 @@ class Rename_images_by_matOperator(bpy.types.Operator):
                 details_text += f"'{original}' → '{new}'{suffix_info}\n"
         
         # Invoke the summary dialog
-        dialog = bpy.ops.rename.summary_dialog('INVOKE_DEFAULT',
+        dialog = bpy.ops.bst.rename_summary_dialog('INVOKE_DEFAULT',
                                               total_selected=total_selected,
                                               renamed_count=renamed_count,
                                               shared_count=shared_count,
@@ -402,7 +402,7 @@ class Rename_images_by_matOperator(bpy.types.Operator):
 # Registration classes - need to register both operators
 classes = (
     RENAME_OT_summary_dialog,
-    Rename_images_by_matOperator,
+    Rename_images_by_mat,
 )
 
 def register():
