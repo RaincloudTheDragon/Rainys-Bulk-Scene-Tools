@@ -21,6 +21,7 @@ from .panels import bulk_path_management
 from .panels import bulk_scene_general
 from .ops.AutoMatExtractor import AutoMatExtractor
 from .ops.Rename_images_by_mat import Rename_images_by_mat, RENAME_OT_summary_dialog
+from .ops.FreeGPU import BST_FreeGPU
 from . import updater
 
 # Addon preferences class for update settings
@@ -118,6 +119,7 @@ classes = (
     AutoMatExtractor,
     Rename_images_by_mat,
     RENAME_OT_summary_dialog,
+    BST_FreeGPU,
 )
 
 def register():
@@ -148,8 +150,31 @@ def register():
     bulk_viewport_display.register()
     bulk_data_remap.register()
     bulk_path_management.register()
+    
+    # Add keybind for Free GPU (global context)
+    wm = bpy.context.window_manager
+    kc = wm.keyconfigs.addon
+    if kc:
+        # Use Screen keymap for global shortcuts that work everywhere
+        km = kc.keymaps.new(name='Screen', space_type='EMPTY')
+        kmi = km.keymap_items.new('bst.free_gpu', 'M', 'PRESS', ctrl=True, alt=True, shift=True)
+        # Store keymap for cleanup
+        addon_keymaps = getattr(bpy.types.Scene, '_bst_keymaps', [])
+        addon_keymaps.append((km, kmi))
+        bpy.types.Scene._bst_keymaps = addon_keymaps
 
 def unregister():
+    # Remove keybinds
+    addon_keymaps = getattr(bpy.types.Scene, '_bst_keymaps', [])
+    for km, kmi in addon_keymaps:
+        try:
+            km.keymap_items.remove(kmi)
+        except:
+            pass
+    addon_keymaps.clear()
+    if hasattr(bpy.types.Scene, '_bst_keymaps'):
+        delattr(bpy.types.Scene, '_bst_keymaps')
+    
     # Unregister modules
     try:
         bulk_path_management.unregister()

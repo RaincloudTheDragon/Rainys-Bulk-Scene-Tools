@@ -28,6 +28,8 @@ class BulkSceneGeneral(bpy.types.Panel):
 
         row = box.row(align=True)
         row.operator("bst.create_ortho_camera", text="Create Ortho Camera", icon='OUTLINER_DATA_CAMERA')
+        row = box.row(align=True)
+        row.operator("bst.free_gpu", text="Free GPU", icon='MEMORY')
 
 # List of all classes in this module
 classes = (
