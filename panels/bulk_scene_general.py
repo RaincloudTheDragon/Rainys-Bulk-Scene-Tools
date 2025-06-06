@@ -1,7 +1,7 @@
 import bpy
-from ..scripts.NoSubdiv import NoSubdiv
-from ..scripts.remove_custom_split_normals import RemoveCustomSplitNormals
-from ..scripts.create_ortho_camera import CreateOrthoCamera
+from ..ops.NoSubdiv import NoSubdiv
+from ..ops.remove_custom_split_normals import RemoveCustomSplitNormals
+from ..ops.create_ortho_camera import CreateOrthoCamera
 
 class BulkSceneGeneral(bpy.types.Panel):
     """Bulk Scene General Panel"""

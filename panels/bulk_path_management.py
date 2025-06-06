@@ -837,7 +837,7 @@ class BST_OT_rename_flat_colors(Operator):
     bl_options = {'REGISTER', 'UNDO'}
     
     def execute(self, context):
-        from ..scripts.flat_color_texture_renamer import rename_flat_color_textures
+        from ..ops.flat_color_texture_renamer import rename_flat_color_textures
         
         try:
             renamed_count = rename_flat_color_textures()
@@ -931,6 +931,14 @@ class NODE_PT_bulk_path_tools(Panel):
         layout = self.layout
         scene = context.scene
         path_props = scene.bst_path_props        
+        
+        # AutoMatExtractor button
+        any_selected = any(hasattr(img, "bst_selected") and img.bst_selected for img in bpy.data.images)
+        row = layout.row()
+        row.enabled = any_selected
+        row.operator("object.automatextractor", text="AutoMat Extractor", icon='PACKAGE')
+        
+        layout.separator()
         
         # Workflow section
         box = layout.box()
@@ -1076,6 +1084,14 @@ class VIEW3D_PT_bulk_path_subpanel(Panel):
         layout = self.layout
         scene = context.scene
         path_props = scene.bst_path_props
+        
+        # AutoMatExtractor button
+        any_selected = any(hasattr(img, "bst_selected") and img.bst_selected for img in bpy.data.images)
+        row = layout.row()
+        row.enabled = any_selected
+        row.operator("object.automatextractor", text="AutoMat Extractor", icon='PACKAGE')
+        
+        layout.separator()
         
         # Workflow section
         box = layout.box()

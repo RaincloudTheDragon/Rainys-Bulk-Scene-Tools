@@ -19,6 +19,7 @@ from .panels import bulk_viewport_display
 from .panels import bulk_data_remap
 from .panels import bulk_path_management
 from .panels import bulk_scene_general
+from .ops.AutoMatExtractor import AutoMatExtractorOperator
 from . import updater
 
 # Addon preferences class for update settings
@@ -113,6 +114,7 @@ class VIEW3D_PT_BulkSceneTools(Panel):
 classes = (
     VIEW3D_PT_BulkSceneTools,
     BST_AddonPreferences,
+    AutoMatExtractorOperator,
 )
 
 def register():

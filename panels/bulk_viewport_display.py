@@ -4,7 +4,7 @@ from time import time
 import os
 from enum import Enum
 import colorsys  # Add colorsys for RGB to HSV conversion
-from ..scripts.select_diffuse_nodes import select_diffuse_nodes  # Import the specific function
+from ..ops.select_diffuse_nodes import select_diffuse_nodes  # Import the specific function
 
 # Material processing status enum
 class MaterialStatus(Enum):
