@@ -30,13 +30,13 @@ jobs:
           # Create the subdirectories in the addon directory
           mkdir -p addon_files/Rainys-Bulk-Scene-Tools/updater
           mkdir -p addon_files/Rainys-Bulk-Scene-Tools/panels
-          mkdir -p addon_files/Rainys-Bulk-Scene-Tools/scripts
+          mkdir -p addon_files/Rainys-Bulk-Scene-Tools/ops
           # Copy main addon files
-          cp __init__.py bl_info.json requirements.txt readme.md addon_files/Rainys-Bulk-Scene-Tools/
+          cp __init__.py bl_info.json requirements.txt readme.md changelog.md addon_files/Rainys-Bulk-Scene-Tools/
           # Copy the panels module
           cp -r panels/* addon_files/Rainys-Bulk-Scene-Tools/panels/
-          # Copy the scripts module
-          cp -r scripts/* addon_files/Rainys-Bulk-Scene-Tools/scripts/
+          # Copy the ops module
+          cp -r ops/* addon_files/Rainys-Bulk-Scene-Tools/ops/
           # Copy the updater module
           cp -r updater/* addon_files/Rainys-Bulk-Scene-Tools/updater/
           # Create the zip from the temporary directory
