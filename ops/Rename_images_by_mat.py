@@ -239,6 +239,7 @@ class Rename_images_by_mat(bpy.types.Operator):
             'metallic', 'metal', 'mtl',
             'specular', 'spec', 'spc',
             'ao', 'ambient_occlusion', 'ambientocclusion', 'occlusion',
+            'gradao',
             'height', 'displacement', 'disp', 'displace',
             'opacity', 'alpha', 'mask',
             'emission', 'emissive', 'emit',
@@ -361,6 +362,7 @@ class Rename_images_by_mat(bpy.types.Operator):
             'ambient_occlusion': 'AmbientOcclusion',
             'ambientocclusion': 'AmbientOcclusion',
             'occlusion': 'Occlusion',
+            'gradao': 'GradAO',
             
             'height': 'Height',
             'displacement': 'Displacement',
