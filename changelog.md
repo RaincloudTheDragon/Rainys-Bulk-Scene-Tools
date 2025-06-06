@@ -1,4 +1,6 @@
 # v 0.5.0
+- **Integrated Scene General: Free GPU VRAM**
+- **Integrated PathMan: Automatic Material Extractor**
 - **Integrated PathMan: Rename Image Textures by Material**: Added comprehensive texture suffix recognition
   - Recognizes many Character Creator suffixes
   - Recognizes most standard material suffixes
