@@ -55,7 +55,7 @@ class RENAME_OT_summary_dialog(bpy.types.Operator):
                     details_col.label(text=line, icon='RIGHTARROW_THIN')
         
         layout.separator()
-    
+
     def execute(self, context):
         return {'FINISHED'}
     
@@ -228,7 +228,8 @@ class Rename_images_by_mat(bpy.types.Operator):
             'base', 'diffusemap', 'normalmap', 'roughnessmap', 'metallicmap',
             'aomap', 'opacitymap', 'emissionmap', 'heightmap', 'displacementmap',
             'detail_normal', 'detail_diffuse', 'detail_mask',
-            'blend', 'id', 'cavity', 'curvature', 'transmap', 'rgbamask', 'sssmap',
+            'blend', 'id', 'cavity', 'curvature', 'transmap', 'rgbamask', 'sssmap', 'micronmask',
+            'bcbmap', 'mnaomask', 'specmask', 'micron', 'cfulcmask', 'nmuilmask', 'nbmap', 'enmask', 'blend_multiply',
             
             # Hair-related multi-word suffixes (spaces)
             'hair flow map', 'hair id map', 'hair root map', 'hair depth map',
@@ -366,6 +367,16 @@ class Rename_images_by_mat(bpy.types.Operator):
             'transmap': 'TransMap',
             'rgbamask': 'RGBAMask',
             'sssmap': 'SSSMap',
+            'micronmask': 'MicroNMask',
+            'bcbmap': 'BCBMap',
+            'mnaomask': 'MNAOMask',
+            'specmask': 'SpecMask',
+            'micron': 'MicroN',
+            'cfulcmask': 'CFULCMask',
+            'nmuilmask': 'NMUILMask',
+            'nbmap': 'NBMap',
+            'enmask': 'ENMask',
+            'blend_multiply': 'Blend_Multiply',
             
             # Hair-related multi-word suffixes
             'hair flow map': 'HairFlowMap',

@@ -1021,23 +1021,15 @@ class NODE_PT_bulk_path_tools(Panel):
         scene = context.scene
         path_props = scene.bst_path_props        
         
-        # Rename by Material button
-        any_selected = any(hasattr(img, "bst_selected") and img.bst_selected for img in bpy.data.images)
-        row = layout.row()
-        row.enabled = any_selected
-        row.operator("bst.rename_images_by_mat", text="Rename by Material", icon='OUTLINER_DATA_FONT')
-        
-        # AutoMatExtractor button
-        row = layout.row()
-        row.enabled = any_selected
-        row.operator("bst.automatextractor", text="AutoMat Extractor", icon='PACKAGE')
-        
         layout.separator()
         
         # Workflow section
         box = layout.box()
         box.label(text="Workflow", icon_value=0)
         col = box.column(heading='', align=True)
+        
+        # Autopack toggle (full width)
+        col.prop(bpy.data, "use_autopack", text="Autopack", icon='PACKAGE')
         
         # Pack/Unpack split
         split = col.split(factor=0.5, align=True)
@@ -1049,6 +1041,11 @@ class NODE_PT_bulk_path_tools(Panel):
         split.operator("bst.remove_packed_images", text="Remove Pack", icon='TRASH')
         split.operator("bst.remove_extensions", text="Remove Ext", icon='X')
         
+        # Make paths relative/absolute split
+        split = col.split(factor=0.5, align=True)
+        split.operator("bst.make_paths_relative", text="Make Relative", icon='FILE_FOLDER')
+        split.operator("bst.make_paths_absolute", text="Make Absolute", icon='FILE_FOLDER')
+
         # Flat color renaming (full width)
         col.operator("bst.rename_flat_colors", text="Rename Flat Colors", icon='COLOR')
         
@@ -1086,6 +1083,21 @@ class NODE_PT_bulk_path_tools(Panel):
         row.alignment = 'RIGHT'
         row.label(text=f"Preview: {example_path}")
         
+        # Remap selected button - placed right under the preview
+        any_selected = any(hasattr(img, "bst_selected") and img.bst_selected for img in bpy.data.images)
+        row = box.row()
+        row.enabled = any_selected
+        row.operator("bst.bulk_remap", text="Remap Selected", icon='FILE_REFRESH')
+        
+        # Rename by Material and AutoMat buttons - placed right after remap selected
+        row = box.row()
+        row.enabled = any_selected
+        row.operator("bst.rename_images_by_mat", text="Rename by Material", icon='OUTLINER_DATA_FONT')
+        
+        row = box.row()
+        row.enabled = any_selected
+        row.operator("bst.automatextractor", text="AutoMat Extractor", icon='PACKAGE')
+        
         # Bulk operations section
         box = layout.box()
         row = box.row()
@@ -1112,17 +1124,6 @@ class NODE_PT_bulk_path_tools(Panel):
             # Sorting option
             row = box.row()
             row.prop(path_props, "sort_by_selected", text="Sort by Selected")
-            
-            # Bulk remap button - always visible, disabled if none selected
-            row = box.row()
-            any_selected = any(hasattr(img, "bst_selected") and img.bst_selected for img in bpy.data.images)
-            row.enabled = any_selected
-            row.operator("bst.bulk_remap", text="Remap Selected", icon='FILE_REFRESH')
-            
-            # Path relative/absolute
-            row = box.row(align=True)
-            row.operator("bst.make_paths_relative", text="Make Paths Relative", icon='FILE_FOLDER')
-            row.operator("bst.make_paths_absolute", text="Make Paths Absolute", icon='FILE_FOLDER')
 
             box.separator()
             
@@ -1175,154 +1176,8 @@ class VIEW3D_PT_bulk_path_subpanel(Panel):
     bl_order = 1
     
     def draw(self, context):
-        layout = self.layout
-        scene = context.scene
-        path_props = scene.bst_path_props
-        
-        # Rename by Material button
-        any_selected = any(hasattr(img, "bst_selected") and img.bst_selected for img in bpy.data.images)
-        row = layout.row()
-        row.enabled = any_selected
-        row.operator("bst.rename_images_by_mat", text="Rename by Material", icon='OUTLINER_DATA_FONT')
-        
-        # AutoMatExtractor button
-        row = layout.row()
-        row.enabled = any_selected
-        row.operator("bst.automatextractor", text="AutoMat Extractor", icon='PACKAGE')
-        
-        layout.separator()
-        
-        # Workflow section
-        box = layout.box()
-        row = box.row()
-        row.label(text="Workflow")
-        
-        # Pack/Unpack row
-        row = box.row(align=True)
-        row.operator("bst.pack_images", text="Pack", icon='PACKAGE')
-        row.operator("bst.unpack_images", text="Unpack Local", icon='UNPINNED')
-        
-        # Remove packed/Save row
-        row = box.row(align=True)
-        row.operator("bst.remove_packed_images", text="Remove Pack", icon='TRASH')
-        row.operator("bst.remove_extensions", text="Remove Extensions", icon='FILE_TICK')
-        
-        # Flat color renaming row
-        row = box.row(align=True)
-        row.operator("bst.rename_flat_colors", text="Rename Flat Colors", icon='COLOR')
-        
-        # Save images row
-        row = box.row(align=True)
-        row.operator("bst.save_all_images", text="Save All", icon='FILE_TICK')
-        
-        # Path Settings UI
-        box.separator()
-        
-        # Base path
-        row = box.row(align=True)
-        row.prop(path_props, "smart_base_path", text="Base Path")
-        
-        # Blend subfolder
-        row = box.row()
-        subrow = row.row()
-        subrow.prop(path_props, "use_blend_subfolder", text="")
-        subrow = row.row()
-        subrow.enabled = path_props.use_blend_subfolder
-        subrow.prop(path_props, "blend_subfolder", text="Blend Subfolder")
-        reuse_blend = subrow.operator("bst.reuse_blend_name", text="", icon='FILE_REFRESH')
-        
-        # Material subfolder
-        row = box.row()
-        subrow = row.row()
-        subrow.prop(path_props, "use_material_subfolder", text="")
-        subrow = row.row()
-        subrow.enabled = path_props.use_material_subfolder
-        subrow.prop(path_props, "material_subfolder", text="Material Subfolder")
-        reuse_material = subrow.operator("bst.reuse_material_path", text="", icon='FILE_REFRESH')
-        
-        # Example path
-        example_path = get_combined_path(context, "texture_name", ".png")
-        row = box.row()
-        row.alignment = 'RIGHT'
-        row.label(text=f"Preview: {example_path}")
-        
-        # Bulk operations section
-        box = layout.box()
-        row = box.row()
-        row.prop(path_props, "show_bulk_operations", 
-                 icon="TRIA_DOWN" if path_props.show_bulk_operations else "TRIA_RIGHT",
-                 icon_only=True, emboss=False)
-        row.label(text="Image Selection")
-        
-        # Show bulk operations UI only when expanded
-        if path_props.show_bulk_operations:
-            # Select all row
-            row = box.row()
-            row.label(text="Select:")
-            select_all = row.operator("bst.toggle_select_all", text="All")
-            select_all.select_state = True
-            deselect_all = row.operator("bst.toggle_select_all", text="None")
-            deselect_all.select_state = False
-            
-            # Node editor selection buttons
-            row = box.row(align=True)
-            row.operator("bst.select_material_images", text="Material Images")
-            row.operator("bst.select_active_images", text="Active Images")
-            
-            # Sorting option
-            row = box.row()
-            row.prop(path_props, "sort_by_selected", text="Sort by Selected")
-            
-            # Bulk remap button - always visible, disabled if none selected
-            row = box.row()
-            any_selected = any(hasattr(img, "bst_selected") and img.bst_selected for img in bpy.data.images)
-            row.enabled = any_selected
-            row.operator("bst.bulk_remap", text="Remap Selected", icon='FILE_REFRESH')
-            
-            # Make paths relative button
-            row = box.row()
-            row.operator("bst.make_paths_relative", text="Make Paths Relative", icon='FILE_FOLDER')
-            row.operator("bst.make_paths_absolute", text="Make Paths Absolute", icon='FILE_FOLDER')
-            
-            box.separator()
-            
-            # Image selection list with thumbnails
-            if len(bpy.data.images) > 0:
-                # Sort images if enabled
-                if path_props.sort_by_selected:
-                    # Create a sorted list with selected images first
-                    sorted_images = sorted(bpy.data.images, 
-                                           key=lambda img: not getattr(img, "bst_selected", False))
-                else:
-                    # Use original order
-                    sorted_images = bpy.data.images
-                
-                col = box.column(align=True)
-                for img in sorted_images:
-                    # Add bst_selected attribute if it doesn't exist
-                    if not hasattr(img, "bst_selected"):
-                        img.bst_selected = False
-                    
-                    row = col.row(align=True)
-                    
-                    # Checkbox for selection - use operator for shift+click support
-                    op = row.operator("bst.toggle_image_selection", text="", 
-                                    icon='CHECKBOX_HLT' if img.bst_selected else 'CHECKBOX_DEHLT',
-                                    emboss=False)
-                    op.image_name = img.name
-                    
-                    # Image thumbnail
-                    if hasattr(img, 'preview'):
-                        # Use the actual image thumbnail
-                        row.template_icon(icon_value=img.preview_ensure().icon_id, scale=1.0)
-                    else:
-                        row.label(text="", icon='IMAGE_DATA')
-                    
-                    # Image name with rename operator
-                    rename_op = row.operator("bst.rename_datablock", text=img.name, emboss=False)
-                    rename_op.old_name = img.name
-            else:
-                box.label(text="No images in blend file")
+        # Use the same draw function as the NODE_EDITOR panel
+        NODE_PT_bulk_path_tools.draw(self, context)
 
 # Registration function for this module
 classes = (
