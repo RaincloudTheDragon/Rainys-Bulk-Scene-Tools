@@ -305,10 +305,6 @@ class Rename_images_by_mat(bpy.types.Operator):
                 match = re.search(pattern, base_name, re.IGNORECASE)
                 if match:
                     return match.group(1).lower()
-                
-                # Pattern: ends with suffix (no separator)
-                if base_name.lower().endswith(suffix.lower()) and len(base_name) > len(suffix):
-                    return suffix.lower()
         
         # Check for numeric suffixes (like _01, _02, etc.)
         numeric_match = re.search(r'[._-](\d+)$', base_name)
