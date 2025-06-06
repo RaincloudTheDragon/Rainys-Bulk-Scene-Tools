@@ -4,6 +4,58 @@ from bpy.props import StringProperty, BoolProperty, EnumProperty, PointerPropert
 import os.path
 import re
 
+class REMOVE_EXT_OT_summary_dialog(bpy.types.Operator):
+    """Show remove extensions operation summary"""
+    bl_idname = "remove_ext.summary_dialog"
+    bl_label = "Remove Extensions Summary"
+    bl_options = {'REGISTER', 'INTERNAL'}
+    
+    # Properties to store summary data
+    total_selected: bpy.props.IntProperty(default=0)
+    removed_count: bpy.props.IntProperty(default=0)
+    no_extension_count: bpy.props.IntProperty(default=0)
+    linked_count: bpy.props.IntProperty(default=0)
+    removal_details: bpy.props.StringProperty(default="")
+    
+    def draw(self, context):
+        layout = self.layout
+        
+        # Title
+        layout.label(text="Remove Extensions - Summary", icon='INFO')
+        layout.separator()
+        
+        # Statistics box
+        box = layout.box()
+        col = box.column(align=True)
+        col.label(text=f"Total selected images: {self.total_selected}")
+        col.label(text=f"Extensions removed: {self.removed_count}", icon='CHECKMARK')
+        
+        if self.no_extension_count > 0:
+            col.label(text=f"No extension found: {self.no_extension_count}", icon='RADIOBUT_OFF')
+        if self.linked_count > 0:
+            col.label(text=f"Linked images skipped: {self.linked_count}", icon='RADIOBUT_OFF')
+        
+        # Detailed results if any removals occurred
+        if self.removed_count > 0 and self.removal_details:
+            layout.separator()
+            layout.label(text="Processed Images:", icon='OUTLINER_DATA_FONT')
+            
+            details_box = layout.box()
+            details_col = details_box.column(align=True)
+            
+            # Parse and display removal details
+            for line in self.removal_details.split('\n'):
+                if line.strip():
+                    details_col.label(text=line, icon='RIGHTARROW_THIN')
+        
+        layout.separator()
+    
+    def execute(self, context):
+        return {'FINISHED'}
+    
+    def invoke(self, context, event):
+        return context.window_manager.invoke_popup(self, width=500)
+
 def get_image_paths(image_name):
     """
     Get both filepath and filepath_raw for an image using its datablock name
@@ -784,11 +836,13 @@ class BST_OT_remove_extensions(Operator):
     bl_options = {'REGISTER', 'UNDO'}
     
     def execute(self, context):
-        renamed_count = 0
-        failed_count = 0
+        removed_count = 0
+        no_extension_count = 0
+        linked_count = 0
+        removal_list = []  # Track removed extensions for debug
         
-        # Common image extensions to remove
-        extensions = ['.png', '.jpg', '.jpeg', '.tif', '.tiff', '.bmp', 
+        # Common image extensions to remove (ordered by specificity)
+        extensions = ['.jpeg', '.jpg', '.png', '.tiff', '.tif', '.bmp', 
                       '.exr', '.hdr', '.tga', '.jp2', '.webp']
         
         # Get all selected images or all images if none selected
@@ -799,34 +853,69 @@ class BST_OT_remove_extensions(Operator):
         for img in selected_images:
             # Skip linked images
             if hasattr(img, 'library') and img.library is not None:
-                print(f"DEBUG: Skipping linked image: {img.name}")
-                failed_count += 1
+                linked_count += 1
+                print(f"DEBUG: Skipped linked image: {img.name}")
                 continue
                 
             original_name = img.name
+            extension_removed = None
             
-            # Check for any of the extensions at the end of the name
+            # Look for extensions anywhere in the filename, not just at the end
             for ext in extensions:
-                if img.name.lower().endswith(ext.lower()):
-                    # Remove the extension
-                    new_name = img.name[:-len(ext)]
+                # Use regex to find extension followed by optional additional content
+                pattern = rf'({re.escape(ext)})(?=\.|$|\.[\d]+$)'
+                match = re.search(pattern, img.name, re.IGNORECASE)
+                if match:
+                    # Remove the extension but keep anything after it
+                    new_name = img.name[:match.start(1)] + img.name[match.end(1):]
                     try:
-                        print(f"DEBUG: Renaming {img.name} to {new_name}")
+                        print(f"DEBUG: Removing extension {ext} from {img.name} → {new_name}")
                         img.name = new_name
-                        renamed_count += 1
+                        removed_count += 1
+                        extension_removed = ext
+                        removal_list.append((original_name, new_name, ext))
                         break  # Stop after finding the first matching extension
                     except Exception as e:
                         print(f"DEBUG: Failed to rename {img.name}: {str(e)}")
-                        failed_count += 1
+            
+            if not extension_removed:
+                no_extension_count += 1
+                print(f"DEBUG: No extension found in: {img.name}")
         
-        if renamed_count > 0:
-            self.report({'INFO'}, f"Successfully renamed {renamed_count} images" + 
-                       (f", {failed_count} failed" if failed_count > 0 else ""))
-        else:
-            self.report({'WARNING'}, "No images were renamed" +
-                        (f", {failed_count} failed" if failed_count > 0 else ""))
+        # Console debug summary (keep for development)
+        print(f"\n=== REMOVE EXTENSIONS SUMMARY ===")
+        print(f"Total selected: {len(selected_images)}")
+        print(f"Extensions removed: {removed_count}")
+        print(f"No extension found: {no_extension_count}")
+        print(f"Linked images (skipped): {linked_count}")
+        
+        if removal_list:
+            print(f"\nDetailed removal log:")
+            for original, new, ext in removal_list:
+                print(f"  '{original}' → '{new}' (removed {ext})")
+        
+        print(f"==================================\n")
+        
+        # Show popup summary dialog
+        self.show_summary_dialog(context, len(selected_images), removed_count, no_extension_count, linked_count, removal_list)
         
         return {'FINISHED'}
+    
+    def show_summary_dialog(self, context, total_selected, removed_count, no_extension_count, linked_count, removal_list):
+        """Show a popup dialog with the removal summary"""
+        # Prepare detailed removal information for display
+        details_text = ""
+        if removal_list:
+            for original, new, ext in removal_list:
+                details_text += f"'{original}' → '{new}' (removed {ext})\n"
+        
+        # Invoke the summary dialog
+        dialog = bpy.ops.remove_ext.summary_dialog('INVOKE_DEFAULT',
+                                                  total_selected=total_selected,
+                                                  removed_count=removed_count,
+                                                  no_extension_count=no_extension_count,
+                                                  linked_count=linked_count,
+                                                  removal_details=details_text.strip())
 
 # Add new operator for flat color texture renaming
 class BST_OT_rename_flat_colors(Operator):
@@ -932,8 +1021,13 @@ class NODE_PT_bulk_path_tools(Panel):
         scene = context.scene
         path_props = scene.bst_path_props        
         
-        # AutoMatExtractor button
+        # Rename by Material button
         any_selected = any(hasattr(img, "bst_selected") and img.bst_selected for img in bpy.data.images)
+        row = layout.row()
+        row.enabled = any_selected
+        row.operator("object.rename_images_by_mat", text="Rename by Material", icon='OUTLINER_DATA_FONT')
+        
+        # AutoMatExtractor button
         row = layout.row()
         row.enabled = any_selected
         row.operator("object.automatextractor", text="AutoMat Extractor", icon='PACKAGE')
@@ -1085,8 +1179,13 @@ class VIEW3D_PT_bulk_path_subpanel(Panel):
         scene = context.scene
         path_props = scene.bst_path_props
         
-        # AutoMatExtractor button
+        # Rename by Material button
         any_selected = any(hasattr(img, "bst_selected") and img.bst_selected for img in bpy.data.images)
+        row = layout.row()
+        row.enabled = any_selected
+        row.operator("object.rename_images_by_mat", text="Rename by Material", icon='OUTLINER_DATA_FONT')
+        
+        # AutoMatExtractor button
         row = layout.row()
         row.enabled = any_selected
         row.operator("object.automatextractor", text="AutoMat Extractor", icon='PACKAGE')
@@ -1227,6 +1326,7 @@ class VIEW3D_PT_bulk_path_subpanel(Panel):
 
 # Registration function for this module
 classes = (
+    REMOVE_EXT_OT_summary_dialog,
     BST_PathProperties,
     BST_OT_remap_path,
     BST_OT_toggle_select_all,

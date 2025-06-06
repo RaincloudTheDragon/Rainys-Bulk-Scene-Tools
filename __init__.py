@@ -20,6 +20,7 @@ from .panels import bulk_data_remap
 from .panels import bulk_path_management
 from .panels import bulk_scene_general
 from .ops.AutoMatExtractor import AutoMatExtractorOperator
+from .ops.Rename_images_by_mat import Rename_images_by_matOperator, RENAME_OT_summary_dialog
 from . import updater
 
 # Addon preferences class for update settings
@@ -115,6 +116,8 @@ classes = (
     VIEW3D_PT_BulkSceneTools,
     BST_AddonPreferences,
     AutoMatExtractorOperator,
+    Rename_images_by_matOperator,
+    RENAME_OT_summary_dialog,
 )
 
 def register():
