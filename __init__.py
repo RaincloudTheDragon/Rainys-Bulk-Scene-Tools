@@ -26,15 +26,15 @@ from . import updater
 
 # Addon preferences class for update settings
 class BST_AddonPreferences(AddonPreferences):
-    bl_idname = __name__
+    bl_idname = __package__
 
-    # Updater preferences
-    auto_check_update: BoolProperty(  # type: ignore
-        name="Auto-check for Updates",
-        description="Automatically check for updates when Blender starts",
-        default=True
+    # Auto Updater settings
+    check_for_updates: BoolProperty(
+        name="Check for Updates on Startup",
+        description="Automatically check for new versions of the addon when Blender starts",
+        default=True,
     )
-
+    
     update_check_interval: IntProperty(  # type: ignore
         name="Update check interval (hours)",
         description="How often to check for updates (in hours)",
@@ -43,34 +43,12 @@ class BST_AddonPreferences(AddonPreferences):
         max=168  # 1 week max
     )
 
-    updater_interval_months: IntProperty(
-        name="Months",
-        description="Number of months between update checks",
-        default=0,
-        min=0,
-        max=12
-    ) # type: ignore
-    updater_interval_days: IntProperty(
-        name="Days",
-        description="Number of days between update checks",
-        default=0,
-        min=0,
-        max=31
-    ) # type: ignore
-    updater_interval_hours: IntProperty(
-        name="Hours",
-        description="Number of hours between update checks",
-        default=24,
-        min=0,
-        max=23
-    ) # type: ignore
-    updater_interval_minutes: IntProperty(
-        name="Minutes",
-        description="Number of minutes between update checks",
-        default=0,
-        min=0,
-        max=59
-    ) # type: ignore
+    # AutoMat Extractor settings
+    automat_common_outside_blend: BoolProperty(
+        name="Place 'common' folder outside 'blend' folder",
+        description="If enabled, the 'common' folder for shared textures will be placed directly in 'textures/'. If disabled, it will be placed inside 'textures/<blend_name>/'",
+        default=False,
+    )
 
     def draw(self, context):
         layout = self.layout
@@ -79,7 +57,7 @@ class BST_AddonPreferences(AddonPreferences):
         box = layout.box()
         box.label(text="Update Settings")
         row = box.row()
-        row.prop(self, "auto_check_update")
+        row.prop(self, "check_for_updates")
         row = box.row()
         row.prop(self, "update_check_interval")
         
@@ -98,6 +76,12 @@ class BST_AddonPreferences(AddonPreferences):
             box.label(text="Checking for updates...")
         elif updater.UpdaterState.error_message:
             box.label(text=f"Error checking for updates: {updater.UpdaterState.error_message}")
+
+        # AutoMat Extractor settings
+        box = layout.box()
+        box.label(text="AutoMat Extractor Settings")
+        row = box.row()
+        row.prop(self, "automat_common_outside_blend")
 
 # Main panel for Bulk Scene Tools
 class VIEW3D_PT_BulkSceneTools(Panel):
@@ -129,7 +113,7 @@ def register():
     
     # Print debug info about preferences
     try:
-        prefs = bpy.context.preferences.addons.get("rainys_bulk_scene_tools")
+        prefs = bpy.context.preferences.addons.get(__package__)
         if prefs:
             print(f"Addon preferences registered successfully: {prefs}")
         else:

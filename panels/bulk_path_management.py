@@ -1094,14 +1094,29 @@ class NODE_PT_bulk_path_tools(Panel):
         row.enabled = any_selected
         row.operator("bst.rename_images_by_mat", text="Rename by Material", icon='OUTLINER_DATA_FONT')
         
-        row = box.row()
+        # Get addon preferences
+        addon_name = __package__.split('.')[0]
+        prefs = context.preferences.addons.get(addon_name).preferences
+        
+        row = box.row(align=True)
         row.enabled = any_selected
-        row.operator("bst.automatextractor", text="AutoMat Extractor", icon='PACKAGE')
+        
+        # Split row for button and checkbox
+        split = row.split(factor=0.8)
+        
+        # Left side: button
+        split.operator("bst.automatextractor", text="AutoMat Extractor", icon='PACKAGE')
+        
+        # Right side: checkbox
+        col = split.column()
+        col.prop(prefs, "automat_common_outside_blend", text="", icon='FOLDER_REDIRECT')
         
         # Bulk operations section
         box = layout.box()
+        box.label(text="Bulk Operations", icon='MODIFIER')
         row = box.row()
         row.prop(path_props, "show_bulk_operations", 
+                 text="Show Bulk Operations", 
                  icon="TRIA_DOWN" if path_props.show_bulk_operations else "TRIA_RIGHT",
                  icon_only=True, emboss=False)
         row.label(text="Image Selection")

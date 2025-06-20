@@ -265,6 +265,7 @@ class Rename_images_by_mat(bpy.types.Operator):
             
             # Character Creator pack suffixes (with spaces)
             'flow pack', 'msmnao pack', 'roughness pack', 'sstm pack',
+            'flow_pack', 'msmnao_pack', 'roughness_pack', 'sstm_pack',
             
             # Hair-related multi-word suffixes (spaces)
             'hair flow map', 'hair id map', 'hair root map', 'hair depth map',
@@ -438,10 +439,14 @@ class Rename_images_by_mat(bpy.types.Operator):
             'wrinkle_flow3': 'Wrinkle_Flow3',
             
             # Character Creator pack suffixes (with spaces)
-            'flow pack': 'FlowPack',
-            'msmnao pack': 'MSMNAOPack',
-            'roughness pack': 'RoughnessPack',
-            'sstm pack': 'SSTMPack',
+            'flow pack': 'Flow Pack',
+            'msmnao pack': 'MSMNAO Pack',
+            'roughness pack': 'Roughness Pack',
+            'sstm pack': 'SSTM Pack',
+            'flow_pack': 'Flow_Pack',
+            'msmnao_pack': 'MSMNAO_Pack',
+            'roughness_pack': 'Roughness_Pack',
+            'sstm_pack': 'SSTM_Pack',
             
             # Hair-related multi-word suffixes
             'hair flow map': 'HairFlowMap',
