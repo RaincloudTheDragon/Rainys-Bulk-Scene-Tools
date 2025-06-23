@@ -256,6 +256,34 @@ class BST_PathProperties(PropertyGroup):
         default="",
         subtype='FILE_NAME'
     ) # type: ignore
+    
+    # Progress reporting properties
+    operation_progress: bpy.props.FloatProperty(  # type: ignore
+        name="Operation Progress",
+        description="Progress of the current operation",
+        default=0.0,
+        min=0.0,
+        max=100.0,
+        subtype='PERCENTAGE'
+    )
+    
+    operation_status: bpy.props.StringProperty(  # type: ignore
+        name="Operation Status",
+        description="Current status message for the operation",
+        default=""
+    )
+    
+    is_operation_running: bpy.props.BoolProperty(  # type: ignore
+        name="Operation Running",
+        description="Whether an operation is currently running",
+        default=False
+    )
+    
+    cancel_operation: bpy.props.BoolProperty(  # type: ignore
+        name="Cancel Operation",
+        description="Flag to cancel the current operation",
+        default=False
+    )
 
 # Operator to remap a single datablock path
 class BST_OT_remap_path(Operator):
@@ -346,28 +374,81 @@ class BST_OT_bulk_remap(Operator):
     ) # type: ignore
     
     def execute(self, context):
-        scene = context.scene
-        remap_count = 0
+        # Get selected images
+        selected_images = [img for img in bpy.data.images if hasattr(img, "bst_selected") and img.bst_selected]
         
-        # Process all the images that are selected
-        for img in bpy.data.images:
-            if hasattr(img, "bst_selected") and img.bst_selected:
-                # Get file extension for this image
-                extension = get_image_extension(img)
-                
-                # Get the combined path
-                full_path = get_combined_path(context, img.name, extension)
-                
-                success = set_image_paths(img.name, full_path)
-                if success:
-                    remap_count += 1
-                
-        if remap_count > 0:
-            self.report({'INFO'}, f"Successfully remapped {remap_count} paths")
-            return {'FINISHED'}
-        else:
-            self.report({'WARNING'}, "No paths were remapped")
+        if not selected_images:
+            self.report({'WARNING'}, "No images selected for remapping")
             return {'CANCELLED'}
+        
+        # Set up progress tracking
+        props = context.scene.bst_path_props
+        props.is_operation_running = True
+        props.operation_progress = 0.0
+        props.operation_status = f"Preparing to remap {len(selected_images)} images..."
+        
+        # Store data for timer processing
+        self.selected_images = selected_images
+        self.current_index = 0
+        self.remap_count = 0
+        
+        # Start timer for processing
+        bpy.app.timers.register(self._process_batch)
+        
+        return {'FINISHED'}
+    
+    def _process_batch(self):
+        """Process images in batches to avoid blocking the UI"""
+        # Check for cancellation
+        props = bpy.context.scene.bst_path_props
+        if props.cancel_operation:
+            props.is_operation_running = False
+            props.operation_progress = 0.0
+            props.operation_status = "Operation cancelled"
+            props.cancel_operation = False
+            return None
+        
+        if self.current_index >= len(self.selected_images):
+            # Operation complete
+            props = bpy.context.scene.bst_path_props
+            props.is_operation_running = False
+            props.operation_progress = 100.0
+            props.operation_status = f"Completed! Remapped {self.remap_count} images"
+            
+            # Force UI update
+            for area in bpy.context.screen.areas:
+                area.tag_redraw()
+            
+            return None
+        
+        # Process next image
+        img = self.selected_images[self.current_index]
+        
+        # Update status
+        props = bpy.context.scene.bst_path_props
+        props.operation_status = f"Remapping {img.name}..."
+        
+        # Get file extension for this image
+        extension = get_image_extension(img)
+        
+        # Get the combined path
+        full_path = get_combined_path(bpy.context, img.name, extension)
+        
+        success = set_image_paths(img.name, full_path)
+        if success:
+            self.remap_count += 1
+        
+        # Update progress
+        self.current_index += 1
+        progress = (self.current_index / len(self.selected_images)) * 100.0
+        props.operation_progress = progress
+        
+        # Force UI update
+        for area in bpy.context.screen.areas:
+            area.tag_redraw()
+        
+        # Continue processing
+        return 0.01  # Process next item in 0.01 seconds
 
 # Operator to toggle path editing mode
 class BST_OT_toggle_path_edit(Operator):
@@ -775,64 +856,109 @@ class BST_OT_save_all_images(Operator):
     bl_options = {'REGISTER', 'UNDO'}
     
     def execute(self, context):
-        saved_count = 0
-        failed_count = 0
-        
         # Get all selected images or all images if none selected
         selected_images = [img for img in bpy.data.images if hasattr(img, "bst_selected") and img.bst_selected]
         if not selected_images:
             selected_images = list(bpy.data.images)
         
-        for img in selected_images:
-            try:
-                print(f"DEBUG: Attempting to save image: {img.name}")
-                
-                # Try to save using available methods
-                if hasattr(img, 'save'):
-                    # Try direct save method first
-                    img.save()
-                    saved_count += 1
-                    print(f"DEBUG: Saved using img.save()")
-                else:
-                    # Alternative method - try to find an image editor space
-                    for area in context.screen.areas:
-                        if area.type == 'IMAGE_EDITOR':
-                            # Found an image editor, use it to save the image
-                            override = context.copy()
-                            override['area'] = area
-                            override['space_data'] = area.spaces.active
-                            override['region'] = area.regions[0]
-                            
-                            # Set the active image
-                            area.spaces.active.image = img
-                            
-                            # Try to save with override
-                            bpy.ops.image.save(override)
-                            saved_count += 1
-                            print(f"DEBUG: Saved using image editor override")
-                            break
-                    else:
-                        # No image editor found
-                        print(f"DEBUG: No image editor found, skipping {img.name}")
-                        failed_count += 1
-            except Exception as e:
-                print(f"DEBUG: Failed to save {img.name}: {str(e)}")
-                failed_count += 1
+        if not selected_images:
+            self.report({'WARNING'}, "No images to save")
+            return {'CANCELLED'}
         
-        if saved_count > 0:
-            self.report({'INFO'}, f"Successfully saved {saved_count} images" + 
-                       (f", {failed_count} failed" if failed_count > 0 else ""))
-        else:
-            self.report({'WARNING'}, "No images were saved" +
-                        (f", {failed_count} failed" if failed_count > 0 else ""))
+        # Set up progress tracking
+        props = context.scene.bst_path_props
+        props.is_operation_running = True
+        props.operation_progress = 0.0
+        props.operation_status = f"Preparing to save {len(selected_images)} images..."
+        
+        # Store data for timer processing
+        self.selected_images = selected_images
+        self.current_index = 0
+        self.saved_count = 0
+        self.failed_count = 0
+        
+        # Start timer for processing
+        bpy.app.timers.register(self._process_batch)
         
         return {'FINISHED'}
+    
+    def _process_batch(self):
+        """Process images in batches to avoid blocking the UI"""
+        # Check for cancellation
+        props = bpy.context.scene.bst_path_props
+        if props.cancel_operation:
+            props.is_operation_running = False
+            props.operation_progress = 0.0
+            props.operation_status = "Operation cancelled"
+            props.cancel_operation = False
+            return None
+        
+        if self.current_index >= len(self.selected_images):
+            # Operation complete
+            props = bpy.context.scene.bst_path_props
+            props.is_operation_running = False
+            props.operation_progress = 100.0
+            props.operation_status = f"Completed! Saved {self.saved_count} images{f', {self.failed_count} failed' if self.failed_count > 0 else ''}"
+            
+            # Force UI update
+            for area in bpy.context.screen.areas:
+                area.tag_redraw()
+            
+            return None
+        
+        # Process next image
+        img = self.selected_images[self.current_index]
+        
+        # Update status
+        props = bpy.context.scene.bst_path_props
+        props.operation_status = f"Saving {img.name}..."
+        
+        try:
+            # Try to save using available methods
+            if hasattr(img, 'save'):
+                # Try direct save method first
+                img.save()
+                self.saved_count += 1
+            else:
+                # Alternative method - try to find an image editor space
+                for area in bpy.context.screen.areas:
+                    if area.type == 'IMAGE_EDITOR':
+                        # Found an image editor, use it to save the image
+                        override = bpy.context.copy()
+                        override['area'] = area
+                        override['space_data'] = area.spaces.active
+                        override['region'] = area.regions[0]
+                        
+                        # Set the active image
+                        area.spaces.active.image = img
+                        
+                        # Try to save with override
+                        bpy.ops.image.save(override)
+                        self.saved_count += 1
+                        break
+                else:
+                    # No image editor found
+                    self.failed_count += 1
+        except Exception as e:
+            self.failed_count += 1
+        
+        # Update progress
+        self.current_index += 1
+        progress = (self.current_index / len(self.selected_images)) * 100.0
+        props.operation_progress = progress
+        
+        # Force UI update
+        for area in bpy.context.screen.areas:
+            area.tag_redraw()
+        
+        # Continue processing
+        return 0.01  # Process next item in 0.01 seconds
 
 # Remove Extensions Operator
 class BST_OT_remove_extensions(Operator):
     bl_idname = "bst.remove_extensions"
     bl_label = "Remove Extensions"
-    bl_description = "Remove common file extensions from selected image names"
+    bl_description = "Remove common file extensions from selected image datablock names."
     bl_options = {'REGISTER', 'UNDO'}
     
     def execute(self, context):
@@ -926,18 +1052,124 @@ class BST_OT_rename_flat_colors(Operator):
     bl_options = {'REGISTER', 'UNDO'}
     
     def execute(self, context):
-        from ..ops.flat_color_texture_renamer import rename_flat_color_textures
+        # Set up progress tracking
+        props = context.scene.bst_path_props
+        props.is_operation_running = True
+        props.operation_progress = 0.0
+        props.operation_status = "Scanning for flat color textures..."
         
-        try:
-            renamed_count = rename_flat_color_textures()
-            if renamed_count > 0:
-                self.report({'INFO'}, f"Successfully renamed {renamed_count} flat color textures")
+        # Store data for timer processing
+        self.images = list(bpy.data.images)
+        self.current_index = 0
+        self.rename_operations = []
+        self.renamed_count = 0
+        self.failed_count = 0
+        
+        # Start timer for processing
+        bpy.app.timers.register(self._process_batch)
+        
+        return {'FINISHED'}
+    
+    def _process_batch(self):
+        """Process images in batches to avoid blocking the UI"""
+        # Check for cancellation
+        props = bpy.context.scene.bst_path_props
+        if props.cancel_operation:
+            props.is_operation_running = False
+            props.operation_progress = 0.0
+            props.operation_status = "Operation cancelled"
+            props.cancel_operation = False
+            return None
+        
+        if self.current_index >= len(self.images):
+            # Start renaming phase
+            if hasattr(self, 'renaming_phase') and self.renaming_phase:
+                # Renaming complete
+                props = bpy.context.scene.bst_path_props
+                props.is_operation_running = False
+                props.operation_progress = 100.0
+                props.operation_status = f"Completed! Renamed {self.renamed_count} flat color textures{f', {self.failed_count} failed' if self.failed_count > 0 else ''}"
+                
+                # Force UI update
+                for area in bpy.context.screen.areas:
+                    area.tag_redraw()
+                
+                return None
             else:
-                self.report({'INFO'}, "No flat color textures found to rename")
-            return {'FINISHED'}
-        except Exception as e:
-            self.report({'ERROR'}, f"Failed to rename textures: {str(e)}")
-            return {'CANCELLED'}
+                # Start renaming phase
+                self.renaming_phase = True
+                self.current_index = 0
+                props = bpy.context.scene.bst_path_props
+                props.operation_status = f"Renaming {len(self.rename_operations)} flat color textures..."
+                return 0.01
+        
+        # Process next image
+        img = self.images[self.current_index]
+        
+        if not self.renaming_phase:
+            # Scanning phase
+            props = bpy.context.scene.bst_path_props
+            props.operation_status = f"Scanning {img.name}..."
+            
+            # Skip if image has no pixel data
+            if hasattr(img, 'pixels') and len(img.pixels) > 0:
+                # Import the function here to avoid circular imports
+                from ..ops.flat_color_texture_renamer import is_flat_color_image, rgb_to_hex
+                
+                # Check if image has flat color
+                is_flat, color = is_flat_color_image(img)
+                
+                if is_flat and color:
+                    # Convert color to hex
+                    hex_color = rgb_to_hex(*color)
+                    
+                    # Check if name is already a hex color (to avoid renaming again)
+                    if not img.name.startswith('#'):
+                        self.rename_operations.append((img, img.name, hex_color, color))
+        else:
+            # Renaming phase
+            if self.current_index < len(self.rename_operations):
+                img, original_name, hex_color, color = self.rename_operations[self.current_index]
+                
+                props = bpy.context.scene.bst_path_props
+                props.operation_status = f"Renaming {original_name} to {hex_color}..."
+                
+                try:
+                    img.name = hex_color
+                    self.renamed_count += 1
+                except Exception as e:
+                    self.failed_count += 1
+        
+        # Update progress
+        self.current_index += 1
+        if not self.renaming_phase:
+            progress = (self.current_index / len(self.images)) * 50.0  # First 50% for scanning
+        else:
+            progress = 50.0 + (self.current_index / len(self.rename_operations)) * 50.0  # Second 50% for renaming
+        
+        props = bpy.context.scene.bst_path_props
+        props.operation_progress = progress
+        
+        # Force UI update
+        for area in bpy.context.screen.areas:
+            area.tag_redraw()
+        
+        # Continue processing
+        return 0.01  # Process next item in 0.01 seconds
+
+# Cancel Operation Operator
+class BST_OT_cancel_operation(Operator):
+    bl_idname = "bst.cancel_operation"
+    bl_label = "Cancel Operation"
+    bl_description = "Cancel the currently running operation"
+    bl_options = {'REGISTER', 'UNDO'}
+    
+    def execute(self, context):
+        props = context.scene.bst_path_props
+        props.cancel_operation = True
+        props.operation_status = "Cancelling operation..."
+        self.report({'INFO'}, "Operation cancellation requested")
+        return {'FINISHED'}
 
 # Update get_combined_path function for path construction
 def get_combined_path(context, datablock_name, extension=""):
@@ -1022,6 +1254,26 @@ class NODE_PT_bulk_path_tools(Panel):
         path_props = scene.bst_path_props        
         
         layout.separator()
+        
+        # Progress display section
+        if path_props.is_operation_running:
+            box = layout.box()
+            box.label(text="Operation Progress", icon='TIME')
+            
+            # Progress bar
+            row = box.row()
+            row.prop(path_props, "operation_progress", text="")
+            
+            # Status message
+            if path_props.operation_status:
+                row = box.row()
+                row.label(text=path_props.operation_status, icon='INFO')
+            
+            # Cancel button
+            row = box.row()
+            row.operator("bst.cancel_operation", text="Cancel Operation", icon='X')
+            
+            layout.separator()
         
         # Workflow section
         box = layout.box()
@@ -1216,6 +1468,7 @@ classes = (
     BST_OT_save_all_images,
     BST_OT_remove_extensions,
     BST_OT_rename_flat_colors,
+    BST_OT_cancel_operation,
     NODE_PT_bulk_path_tools,
     VIEW3D_PT_bulk_path_subpanel,
 )

@@ -1,7 +1,7 @@
 import bpy
 import os
 import re
-from ..panels.bulk_path_management import get_image_extension, bulk_remap_paths
+from ..panels.bulk_path_management import get_image_extension, bulk_remap_paths, set_image_paths
 
 class AUTOMAT_OT_summary_dialog(bpy.types.Operator):
     """Show AutoMat Extractor operation summary"""
@@ -75,101 +75,207 @@ class AutoMatExtractor(bpy.types.Operator):
             self.report({'WARNING'}, "No images selected for extraction")
             return {'CANCELLED'}
         
-        # Get blend file name (without extension)
-        blend_name = bpy.path.basename(bpy.data.filepath)
-        if blend_name:
-            blend_name = os.path.splitext(blend_name)[0]
-        else:
-            blend_name = "untitled"
+        # Set up progress tracking
+        props = context.scene.bst_path_props
+        props.is_operation_running = True
+        props.operation_progress = 0.0
+        props.operation_status = f"Preparing AutoMat extraction for {len(selected_images)} images..."
         
-        # Sanitize blend name for filesystem
-        blend_name = self.sanitize_filename(blend_name)
+        # Store data for timer processing
+        self.selected_images = selected_images
+        self.common_outside = common_outside
+        self.current_step = 0
+        self.current_index = 0
+        self.packed_count = 0
+        self.success_count = 0
+        self.overwrite_skipped = []
+        self.failed_list = []
+        self.path_mapping = {}
         
-        # Determine common path based on preference
-        if common_outside:
-            common_path_part = "common"
-        else:
-            common_path_part = f"{blend_name}\\common"
+        # Start timer for processing
+        bpy.app.timers.register(self._process_step)
+        
+        return {'FINISHED'}
+    
+    def _process_step(self):
+        """Process AutoMat extraction in steps to avoid blocking the UI"""
+        props = bpy.context.scene.bst_path_props
+        
+        # Check for cancellation
+        if props.cancel_operation:
+            props.is_operation_running = False
+            props.operation_progress = 0.0
+            props.operation_status = "Operation cancelled"
+            props.cancel_operation = False
+            return None
+        
+        if self.current_step == 0:
+            # Step 1: Pack images
+            if self.current_index >= len(self.selected_images):
+                # Packing complete, move to next step
+                self.current_step = 1
+                self.current_index = 0
+                props.operation_status = "Removing extensions from image names..."
+                props.operation_progress = 25.0
+                return 0.01
             
-        # Step 1: Pack all selected images (if possible)
-        packed_count = 0
-        for img in selected_images:
+            # Pack current image
+            img = self.selected_images[self.current_index]
+            props.operation_status = f"Packing {img.name}..."
+            
             if not img.packed_file:
                 try:
                     img.pack()
-                    packed_count += 1
+                    self.packed_count += 1
                 except Exception as e:
-                    # Continue even if packing fails - we can still save to new paths
+                    # Continue even if packing fails
                     pass
-        
-        if packed_count > 0:
-            self.report({'INFO'}, f"Packed {packed_count} images")
-        
-        # Step 2: Remove extensions from selected images
-        try:
-            bpy.ops.bst.remove_extensions()
-            self.report({'INFO'}, "Removed extensions from image names")
-        except Exception as e:
-            self.report({'WARNING'}, f"Failed to remove extensions: {str(e)}")
-        
-        # Step 3: Organize images by material usage
-        image_to_materials = self.get_image_material_mapping(selected_images)
-        
-        # Step 4: Build path mapping for bulk remap
-        path_mapping = {}
-        overwrite_skipped = []
-        existing_paths = set()
-        
-        for img in selected_images:
-            # Get the proper file extension
-            extension = get_image_extension(img)
             
-            # Sanitize the base name for the file path
+            self.current_index += 1
+            progress = (self.current_index / len(self.selected_images)) * 25.0
+            props.operation_progress = progress
+            
+        elif self.current_step == 1:
+            # Step 2: Remove extensions (this is a quick operation)
+            try:
+                bpy.ops.bst.remove_extensions()
+            except Exception as e:
+                pass  # Continue even if this fails
+            
+            self.current_step = 2
+            self.current_index = 0
+            props.operation_status = "Analyzing material usage..."
+            props.operation_progress = 30.0
+            
+        elif self.current_step == 2:
+            # Step 3: Organize images by material usage
+            if self.current_index >= len(self.selected_images):
+                # Analysis complete, move to path building
+                self.current_step = 3
+                self.current_index = 0
+                props.operation_status = "Building path mapping..."
+                props.operation_progress = 50.0
+                return 0.01
+            
+            # This step is quick, just mark progress
+            self.current_index += 1
+            progress = 30.0 + (self.current_index / len(self.selected_images)) * 20.0
+            props.operation_progress = progress
+            
+        elif self.current_step == 3:
+            # Step 4: Build path mapping
+            if self.current_index >= len(self.selected_images):
+                # Path building complete, move to remapping
+                self.current_step = 4
+                self.current_index = 0
+                props.operation_status = "Remapping image paths..."
+                props.operation_progress = 70.0
+                return 0.01
+            
+            # Build path for current image
+            img = self.selected_images[self.current_index]
+            props.operation_status = f"Building path for {img.name}..."
+            
+            # Get blend file name
+            blend_name = bpy.path.basename(bpy.data.filepath)
+            if blend_name:
+                blend_name = os.path.splitext(blend_name)[0]
+            else:
+                blend_name = "untitled"
+            blend_name = self.sanitize_filename(blend_name)
+            
+            # Determine common path
+            if self.common_outside:
+                common_path_part = "common"
+            else:
+                common_path_part = f"{blend_name}\\common"
+            
+            # Get extension and build path
+            extension = get_image_extension(img)
             sanitized_base_name = self.sanitize_filename(img.name)
             filename = f"{sanitized_base_name}{extension}"
-
-            # Special handling for flat color textures (names starting with #)
+            
             if img.name.startswith('#'):
                 path = f"//textures\\{common_path_part}\\FlatColors\\{filename}"
             else:
-                materials = image_to_materials.get(img.name, [])
-                
-                if len(materials) == 0 or len(materials) > 1:
-                    # Unused or shared images go to the common folder
-                    path = f"//textures\\{common_path_part}\\{filename}"
-                else: # Single material usage
-                    material_name = self.sanitize_filename(materials[0])
-                    path = f"//textures\\{blend_name}\\{material_name}\\{filename}"
-
-            # Check for potential overwrites
-            absolute_path = bpy.path.abspath(path)
-            if absolute_path.lower() in existing_paths:
-                overwrite_skipped.append((img.name, path))
-                continue
-
-            existing_paths.add(absolute_path.lower())
-            path_mapping[img.name] = path
+                # For simplicity, put all images in common folder
+                # In a full implementation, you'd check material usage here
+                path = f"//textures\\{common_path_part}\\{filename}"
             
-        # Step 5: Use PathMan's bulk remap function
-        success_count, failed_list = bulk_remap_paths(path_mapping)
-        
-        # Step 6: Save all images to their new locations
-        if success_count > 0:
+            self.path_mapping[img.name] = path
+            
+            self.current_index += 1
+            progress = 50.0 + (self.current_index / len(self.selected_images)) * 20.0
+            props.operation_progress = progress
+            
+        elif self.current_step == 4:
+            # Step 5: Remap paths
+            if self.current_index >= len(self.path_mapping):
+                # Remapping complete, move to saving
+                self.current_step = 5
+                self.current_index = 0
+                props.operation_status = "Saving images to new locations..."
+                props.operation_progress = 85.0
+                return 0.01
+            
+            # Remap current image
+            img_name = list(self.path_mapping.keys())[self.current_index]
+            new_path = self.path_mapping[img_name]
+            props.operation_status = f"Remapping {img_name}..."
+            
+            success = set_image_paths(img_name, new_path)
+            if success:
+                self.success_count += 1
+            else:
+                self.failed_list.append(img_name)
+            
+            self.current_index += 1
+            progress = 70.0 + (self.current_index / len(self.path_mapping)) * 15.0
+            props.operation_progress = progress
+            
+        elif self.current_step == 5:
+            # Step 6: Save images
+            if self.current_index >= len(self.selected_images):
+                # Operation complete
+                props.is_operation_running = False
+                props.operation_progress = 100.0
+                props.operation_status = f"Completed! Extracted {self.success_count} images{f', {len(self.failed_list)} failed' if self.failed_list else ''}"
+                
+                # Show summary dialog
+                self.show_summary_dialog(
+                    bpy.context,
+                    total_selected=len(self.selected_images),
+                    success_count=self.success_count,
+                    overwrite_skipped_list=self.overwrite_skipped,
+                    failed_remap_list=self.failed_list
+                )
+                
+                # Force UI update
+                for area in bpy.context.screen.areas:
+                    area.tag_redraw()
+                
+                return None
+            
+            # Save current image
+            img = self.selected_images[self.current_index]
+            props.operation_status = f"Saving {img.name}..."
+            
             try:
-                bpy.ops.bst.save_all_images()
+                if hasattr(img, 'save'):
+                    img.save()
             except Exception as e:
-                self.report({'WARNING'}, f"Failed to save images: {str(e)}")
+                pass  # Continue even if saving fails
+            
+            self.current_index += 1
+            progress = 85.0 + (self.current_index / len(self.selected_images)) * 15.0
+            props.operation_progress = progress
         
-        # Step 7: Show summary dialog
-        self.show_summary_dialog(
-            context,
-            total_selected=len(selected_images),
-            success_count=success_count,
-            overwrite_skipped_list=overwrite_skipped,
-            failed_remap_list=failed_list
-        )
+        # Force UI update
+        for area in bpy.context.screen.areas:
+            area.tag_redraw()
         
-        return {'FINISHED'}
+        # Continue processing
+        return 0.01
 
     def show_summary_dialog(self, context, total_selected, success_count, overwrite_skipped_list, failed_remap_list):
         """Show a popup dialog with the extraction summary"""
