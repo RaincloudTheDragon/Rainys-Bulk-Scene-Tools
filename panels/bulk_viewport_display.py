@@ -12,8 +12,7 @@ class MaterialStatus(Enum):
     PROCESSING = 1
     COMPLETED = 2
     FAILED = 3
-    DEFAULT_WHITE = 4
-    PREVIEW_BASED = 5
+    PREVIEW_BASED = 4
 
 # Global variables to store results and track progress
 material_results = {}  # {material_name: (color, status)}
@@ -80,12 +79,6 @@ def register_viewport_properties():
         default=False
     )
     
-    bpy.types.Scene.viewport_colors_default_white_only = bpy.props.BoolProperty(  # type: ignore
-        name="Default White Only",
-        description="Show only materials that weren't able to be processed",
-        default=False
-    )
-    
     # New properties for thumbnail-based color extraction
     bpy.types.Scene.viewport_colors_use_preview = bpy.props.BoolProperty(  # type: ignore
         name="Use Material Thumbnails",
@@ -101,12 +94,11 @@ def register_viewport_properties():
 
 def unregister_viewport_properties():
     del bpy.types.Scene.viewport_colors_use_preview
-    del bpy.types.Scene.viewport_colors_default_white_only
-    del bpy.types.Scene.viewport_colors_progress
-    del bpy.types.Scene.viewport_colors_value_amount
-    del bpy.types.Scene.viewport_colors_darken_amount
-    del bpy.types.Scene.viewport_colors_use_vectorized
     del bpy.types.Scene.viewport_colors_batch_size
+    del bpy.types.Scene.viewport_colors_use_vectorized
+    del bpy.types.Scene.viewport_colors_darken_amount
+    del bpy.types.Scene.viewport_colors_value_amount
+    del bpy.types.Scene.viewport_colors_progress
     del bpy.types.Scene.viewport_colors_selected_only
     del bpy.types.Scene.viewport_colors_show_advanced
     del bpy.types.Scene.show_material_results
@@ -226,7 +218,6 @@ class VIEWPORT_OT_SetViewportColors(bpy.types.Operator):
         # Count materials by status
         preview_count = 0
         node_count = 0
-        default_count = 0
         failed_count = 0
         
         for _, status in material_results.values():
@@ -234,8 +225,6 @@ class VIEWPORT_OT_SetViewportColors(bpy.types.Operator):
                 preview_count += 1
             elif status == MaterialStatus.COMPLETED:
                 node_count += 1
-            elif status == MaterialStatus.DEFAULT_WHITE:
-                default_count += 1
             elif status == MaterialStatus.FAILED:
                 failed_count += 1
         
@@ -243,7 +232,7 @@ class VIEWPORT_OT_SetViewportColors(bpy.types.Operator):
         def draw_popup(self, context):
             self.layout.label(text=f"Processed {processed_count} materials in {elapsed_time:.2f} seconds")
             self.layout.label(text=f"Thumbnail-based: {preview_count}, Node-based: {node_count}")
-            self.layout.label(text=f"Default white: {default_count}, Failed: {failed_count}")
+            self.layout.label(text=f"Failed: {failed_count}")
         
         bpy.context.window_manager.popup_menu(draw_popup, title="Processing Complete", icon='INFO')
 
@@ -284,12 +273,12 @@ def correct_viewport_color(color):
 def process_material(material, use_vectorized=True):
     """Process a material to determine its viewport color"""
     if not material:
-        print(f"Material is None, using default white")
-        return (1, 1, 1), MaterialStatus.DEFAULT_WHITE
+        print(f"Material is None, using fallback color")
+        return (1, 1, 1), MaterialStatus.PREVIEW_BASED
     
     if material.is_grease_pencil:
-        print(f"Material {material.name}: is a grease pencil material, using default white")
-        return (1, 1, 1), MaterialStatus.DEFAULT_WHITE
+        print(f"Material {material.name}: is a grease pencil material, using fallback color")
+        return (1, 1, 1), MaterialStatus.PREVIEW_BASED
     
     try:
         # Get color from material thumbnail
@@ -307,8 +296,8 @@ def process_material(material, use_vectorized=True):
             
             return corrected_color, MaterialStatus.PREVIEW_BASED
         else:
-            print(f"Material {material.name}: Could not extract color from thumbnail, using default white")
-            return (1, 1, 1), MaterialStatus.DEFAULT_WHITE
+            print(f"Material {material.name}: Could not extract color from thumbnail, using fallback color")
+            return (1, 1, 1), MaterialStatus.PREVIEW_BASED
         
     except Exception as e:
         print(f"Error processing material {material.name}: {e}")
@@ -641,8 +630,6 @@ def get_status_icon(status):
         return 'IMAGE_DATA'
     elif status == MaterialStatus.FAILED:
         return 'ERROR'
-    elif status == MaterialStatus.DEFAULT_WHITE:
-        return 'RADIOBUT_OFF'
     else:
         return 'QUESTION'
 
@@ -658,8 +645,6 @@ def get_status_text(status):
         return "Thumbnail-based"
     elif status == MaterialStatus.FAILED:
         return "Failed"
-    elif status == MaterialStatus.DEFAULT_WHITE:
-        return "Default White"
     else:
         return "Unknown"
 
@@ -735,7 +720,6 @@ class VIEW3D_PT_BulkViewportDisplay(bpy.types.Panel):
                 
                 # Count materials by status
                 preview_count = 0
-                default_count = 0
                 failed_count = 0
                 
                 # Display material results - use a copy of the keys to avoid modification during iteration
@@ -745,8 +729,6 @@ class VIEW3D_PT_BulkViewportDisplay(bpy.types.Panel):
                     # Update counts
                     if status == MaterialStatus.PREVIEW_BASED:
                         preview_count += 1
-                    elif status == MaterialStatus.DEFAULT_WHITE:
-                        default_count += 1
                     elif status == MaterialStatus.FAILED:
                         failed_count += 1
                     
@@ -780,7 +762,7 @@ class VIEW3D_PT_BulkViewportDisplay(bpy.types.Panel):
                     stats_col = material_box.column(align=True)
                     stats_col.label(text=f"Total: {len(material_results)} materials")
                     stats_col.label(text=f"Thumbnail-based: {preview_count}")
-                    stats_col.label(text=f"Default white: {default_count}, Failed: {failed_count}")
+                    stats_col.label(text=f"Failed: {failed_count}")
 
         # Add the select diffuse nodes button at the bottom
         layout.separator()
