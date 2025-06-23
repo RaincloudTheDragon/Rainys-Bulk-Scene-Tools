@@ -16,8 +16,17 @@ def rgb_to_hex(r, g, b, a=1.0):
     else:
         return f"#{r_int:02X}{g_int:02X}{b_int:02X}{a_int:02X}"
 
-def is_flat_color_image(image):
-    """Check if an image has all pixels of the same color."""
+def is_flat_color_image_optimized(image, sample_rate=0.1):
+    """
+    Check if an image has all pixels of the same color using sampling.
+    
+    Args:
+        image: The image to check
+        sample_rate: Fraction of pixels to sample (0.1 = 10% of pixels)
+    
+    Returns:
+        tuple: (is_flat, color) where is_flat is bool and color is RGBA tuple
+    """
     if not image or not image.pixels:
         return False, None
     
@@ -35,21 +44,43 @@ def is_flat_color_image(image):
     # Get the first pixel color
     first_pixel = pixels[:channels]
     
-    # Check if all pixels have the same color
-    for i in range(0, len(pixels), channels):
-        current_pixel = pixels[i:i+channels]
+    # Calculate how many pixels to sample
+    total_pixels = len(pixels) // channels
+    
+    # Adjust sample rate based on image size for better performance
+    if total_pixels > 1000000:  # Very large images (>1M pixels)
+        sample_rate = min(sample_rate, 0.01)  # Max 1% sampling
+    elif total_pixels > 100000:  # Large images (>100K pixels)
+        sample_rate = min(sample_rate, 0.02)  # Max 2% sampling
+    elif total_pixels > 10000:  # Medium images (>10K pixels)
+        sample_rate = min(sample_rate, 0.05)  # Max 5% sampling
+    
+    sample_count = max(1, int(total_pixels * sample_rate))
+    
+    # Sample pixels at regular intervals
+    step = max(1, total_pixels // sample_count)
+    
+    # Check sampled pixels
+    tolerance = 1e-6
+    for i in range(0, total_pixels, step):
+        pixel_start = i * channels
+        current_pixel = pixels[pixel_start:pixel_start + channels]
         
-        # Compare with first pixel (with small tolerance for floating point precision)
-        tolerance = 1e-6
+        # Compare with first pixel
         for j in range(channels):
             if abs(current_pixel[j] - first_pixel[j]) > tolerance:
                 return False, None
     
-    # If we get here, all pixels are the same color
+    # If we get here, all sampled pixels are the same color
     if channels == 3:
         return True, (first_pixel[0], first_pixel[1], first_pixel[2], 1.0)
     else:
         return True, tuple(first_pixel)
+
+def is_flat_color_image(image):
+    """Check if an image has all pixels of the same color."""
+    # Use the optimized version by default
+    return is_flat_color_image_optimized(image, sample_rate=0.1)
 
 def safe_rename_image(image, new_name):
     """Safely rename an image datablock using context override."""
