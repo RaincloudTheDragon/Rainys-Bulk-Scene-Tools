@@ -157,6 +157,11 @@ class AutoMatExtractor(bpy.types.Operator):
                 props.operation_progress = 50.0
                 return 0.01
             
+            # Get material mapping for all selected images
+            if self.current_index == 0:
+                self.material_mapping = self.get_image_material_mapping(self.selected_images)
+                print(f"DEBUG: Material mapping created for {len(self.selected_images)} images")
+            
             # This step is quick, just mark progress
             self.current_index += 1
             progress = 30.0 + (self.current_index / len(self.selected_images)) * 20.0
@@ -196,11 +201,25 @@ class AutoMatExtractor(bpy.types.Operator):
             filename = f"{sanitized_base_name}{extension}"
             
             if img.name.startswith('#'):
+                # Flat colors go to FlatColors subfolder
                 path = f"//textures\\{common_path_part}\\FlatColors\\{filename}"
             else:
-                # For simplicity, put all images in common folder
-                # In a full implementation, you'd check material usage here
-                path = f"//textures\\{common_path_part}\\{filename}"
+                # Check material usage for this image
+                materials_using_image = self.material_mapping.get(img.name, [])
+                
+                if not materials_using_image:
+                    # No materials found, put in common folder
+                    path = f"//textures\\{common_path_part}\\{filename}"
+                    print(f"DEBUG: {img.name} - No materials found, using common folder")
+                elif len(materials_using_image) == 1:
+                    # Used by exactly one material, organize by material name
+                    material_name = self.sanitize_filename(materials_using_image[0])
+                    path = f"//textures\\{blend_name}\\{material_name}\\{filename}"
+                    print(f"DEBUG: {img.name} - Used by {material_name}, organizing by material")
+                else:
+                    # Used by multiple materials, put in common folder
+                    path = f"//textures\\{common_path_part}\\{filename}"
+                    print(f"DEBUG: {img.name} - Used by multiple materials: {materials_using_image}, using common folder")
             
             self.path_mapping[img.name] = path
             
@@ -249,6 +268,49 @@ class AutoMatExtractor(bpy.types.Operator):
                     overwrite_skipped_list=self.overwrite_skipped,
                     failed_remap_list=self.failed_list
                 )
+                
+                # Console summary
+                print(f"\n=== AUTOMAT EXTRACTION SUMMARY ===")
+                print(f"Total images processed: {len(self.selected_images)}")
+                print(f"Successfully extracted: {self.success_count}")
+                print(f"Failed to remap: {len(self.failed_list)}")
+                
+                # Show organization breakdown
+                material_organized = 0
+                common_organized = 0
+                flat_colors = 0
+                
+                for img_name, path in self.path_mapping.items():
+                    if "FlatColors" in path:
+                        flat_colors += 1
+                    elif "common" in path:
+                        common_organized += 1
+                    else:
+                        material_organized += 1
+                
+                print(f"\nOrganization breakdown:")
+                print(f"  Material-specific folders: {material_organized}")
+                print(f"  Common folder: {common_organized}")
+                print(f"  Flat colors: {flat_colors}")
+                
+                # Show material organization details
+                if material_organized > 0:
+                    print(f"\nMaterial organization details:")
+                    material_folders = {}
+                    for img_name, path in self.path_mapping.items():
+                        if "FlatColors" not in path and "common" not in path:
+                            # Extract material name from path
+                            path_parts = path.split('\\')
+                            if len(path_parts) >= 3:
+                                material_name = path_parts[-2]
+                                if material_name not in material_folders:
+                                    material_folders[material_name] = []
+                                material_folders[material_name].append(img_name)
+                    
+                    for material_name, images in material_folders.items():
+                        print(f"  {material_name}: {len(images)} images")
+                
+                print(f"=====================================\n")
                 
                 # Force UI update
                 for area in bpy.context.screen.areas:
