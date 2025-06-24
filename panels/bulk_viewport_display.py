@@ -178,15 +178,15 @@ class VIEWPORT_OT_SetViewportColors(bpy.types.Operator):
             
             # Apply the color to the material
             if color:
-                # Check if material is still valid
-                try:
-                    material.diffuse_color = (*color, 1.0)
-                except ReferenceError:
-                    # Material was deleted or remapped during processing
-                    continue
-            
-            # Store the result
-            material_results[material.name] = (color, status)
+                # Store the color change to apply later in main thread
+                material_results[material.name] = (color, status)
+                # Mark this material for color application
+                if not hasattr(self, 'pending_color_changes'):
+                    self.pending_color_changes = []
+                self.pending_color_changes.append((material, color))
+            else:
+                # Store the result without color change
+                material_results[material.name] = (None, status)
             
             # Update processed count
             processed_count += 1
@@ -205,11 +205,41 @@ class VIEWPORT_OT_SetViewportColors(bpy.types.Operator):
         # Check if we're done
         if current_index >= len(material_queue):
             is_processing = False
+            # Apply pending color changes in main thread
+            if hasattr(self, 'pending_color_changes') and self.pending_color_changes:
+                bpy.app.timers.register(self._apply_color_changes)
             self.report_info()
             return None
         
         # Continue processing
         return 0.1  # Check again in 0.1 seconds
+    
+    def _apply_color_changes(self):
+        """Apply pending color changes in the main thread"""
+        if not hasattr(self, 'pending_color_changes') or not self.pending_color_changes:
+            return None
+        
+        # Apply a batch of color changes
+        batch_size = 10  # Process 10 materials at a time
+        batch = self.pending_color_changes[:batch_size]
+        
+        for material, color in batch:
+            try:
+                if material and material.name in bpy.data.materials:
+                    material.diffuse_color = (*color, 1.0)
+            except Exception as e:
+                print(f"Could not set diffuse_color for {material.name if material else 'Unknown'}: {e}")
+        
+        # Remove processed items
+        self.pending_color_changes = self.pending_color_changes[batch_size:]
+        
+        # Continue if there are more to process
+        if self.pending_color_changes:
+            return 0.01  # Process next batch in 0.01 seconds
+        
+        # All done
+        print(f"Applied viewport colors to {len(batch)} materials")
+        return None
     
     def report_info(self):
         global processed_count, start_time
