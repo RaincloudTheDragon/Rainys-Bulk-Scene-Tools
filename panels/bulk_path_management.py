@@ -447,8 +447,8 @@ class BST_OT_bulk_remap(Operator):
         for area in bpy.context.screen.areas:
             area.tag_redraw()
         
-        # Continue processing
-        return 0.01  # Process next item in 0.01 seconds
+        # Continue processing with shorter intervals for better responsiveness
+        return 0.05  # Process next item in 0.05 seconds (50ms) for better stability
 
 # Operator to toggle path editing mode
 class BST_OT_toggle_path_edit(Operator):
@@ -951,8 +951,8 @@ class BST_OT_save_all_images(Operator):
         for area in bpy.context.screen.areas:
             area.tag_redraw()
         
-        # Continue processing
-        return 0.01  # Process next item in 0.01 seconds
+        # Continue processing with shorter intervals for better responsiveness
+        return 0.05  # Process next item in 0.05 seconds (50ms) for better stability
 
 # Remove Extensions Operator
 class BST_OT_remove_extensions(Operator):
@@ -1066,6 +1066,7 @@ class BST_OT_rename_flat_colors(Operator):
         self.failed_count = 0
         self.renaming_phase = False  # Initialize the renaming_phase attribute
         self.skipped_count = 0  # Track skipped images
+        self._cancelled = False  # Internal cancellation flag
         
         # Processing settings for better performance
         self.chunk_size = 1  # Process one image at a time
@@ -1082,14 +1083,25 @@ class BST_OT_rename_flat_colors(Operator):
     
     def _process_batch(self):
         """Process images in batches to avoid blocking the UI"""
-        # Check for cancellation
-        props = bpy.context.scene.bst_path_props
-        if props.cancel_operation:
-            props.is_operation_running = False
-            props.operation_progress = 0.0
-            props.operation_status = "Operation cancelled"
-            props.cancel_operation = False
-            print("=== FLAT COLOR DETECTION CANCELLED ===")
+        # Check for cancellation - do this first and frequently
+        if self._cancelled:
+            print("=== FLAT COLOR DETECTION CANCELLED (internal flag) ===")
+            return None
+            
+        try:
+            props = bpy.context.scene.bst_path_props
+            if props.cancel_operation:
+                self._cancelled = True
+                props.is_operation_running = False
+                props.operation_progress = 0.0
+                props.operation_status = "Operation cancelled"
+                props.cancel_operation = False
+                print("=== FLAT COLOR DETECTION CANCELLED ===")
+                return None
+        except Exception as e:
+            # If we can't access the context, assume we should stop
+            print(f"Cancellation check failed: {e}")
+            self._cancelled = True
             return None
         
         if self.current_index >= len(self.images):
@@ -1235,7 +1247,7 @@ class BST_OT_rename_flat_colors(Operator):
             area.tag_redraw()
         
         # Continue processing with shorter intervals for better responsiveness
-        return 0.005  # Process next item in 0.005 seconds (5ms) for better responsiveness
+        return 0.05  # Process next item in 0.05 seconds (50ms) for better stability
 
 # Cancel Operation Operator
 class BST_OT_cancel_operation(Operator):
@@ -1248,6 +1260,13 @@ class BST_OT_cancel_operation(Operator):
         props = context.scene.bst_path_props
         props.cancel_operation = True
         props.operation_status = "Cancelling operation..."
+        
+        # Also set internal cancellation flags for any running operations
+        # This helps with operations that might be in restricted contexts
+        for timer in bpy.app.timers:
+            if hasattr(timer, '_cancelled'):
+                timer._cancelled = True
+        
         self.report({'INFO'}, "Operation cancellation requested")
         return {'FINISHED'}
 
