@@ -16,62 +16,71 @@ def rgb_to_hex(r, g, b, a=1.0):
     else:
         return f"#{r_int:02X}{g_int:02X}{b_int:02X}{a_int:02X}"
 
-def is_flat_color_image_optimized(image, sample_rate=0.1):
+def is_flat_color_image_efficient(image, max_pixels_to_check=10000):
     """
-    Check if an image has all pixels of the same color using sampling.
+    Efficiently check if an image has all pixels of the same color.
     
     Args:
         image: The image to check
-        sample_rate: Fraction of pixels to sample (0.1 = 10% of pixels)
+        max_pixels_to_check: Maximum number of pixels to check (for performance)
     
     Returns:
         tuple: (is_flat, color) where is_flat is bool and color is RGBA tuple
     """
     if not image or not image.pixels:
+        print(f"    DEBUG: No image or no pixels")
         return False, None
     
     # Get pixel data
     pixels = image.pixels[:]
     
     if len(pixels) == 0:
+        print(f"    DEBUG: Empty pixel array")
         return False, None
     
     # Images in Blender are typically RGBA, so 4 values per pixel
     channels = image.channels
     if channels not in [3, 4]:  # RGB or RGBA
+        print(f"    DEBUG: Unsupported channels: {channels}")
         return False, None
     
-    # Get the first pixel color
+    # Get the first pixel color as reference
     first_pixel = pixels[:channels]
+    print(f"    DEBUG: Reference color: {first_pixel}")
     
-    # Calculate how many pixels to sample
+    # Calculate total pixels
     total_pixels = len(pixels) // channels
+    print(f"    DEBUG: Total pixels: {total_pixels}")
     
-    # Adjust sample rate based on image size for better performance
-    if total_pixels > 1000000:  # Very large images (>1M pixels)
-        sample_rate = min(sample_rate, 0.01)  # Max 1% sampling
-    elif total_pixels > 100000:  # Large images (>100K pixels)
-        sample_rate = min(sample_rate, 0.02)  # Max 2% sampling
-    elif total_pixels > 10000:  # Medium images (>10K pixels)
-        sample_rate = min(sample_rate, 0.05)  # Max 5% sampling
+    # Determine how many pixels to check
+    pixels_to_check = min(total_pixels, max_pixels_to_check)
     
-    sample_count = max(1, int(total_pixels * sample_rate))
+    # For small images, check every pixel
+    if total_pixels <= max_pixels_to_check:
+        step = 1
+        print(f"    DEBUG: Checking all {total_pixels} pixels")
+    else:
+        # For large images, sample evenly across the image
+        step = total_pixels // pixels_to_check
+        print(f"    DEBUG: Sampling {pixels_to_check} pixels with step {step}")
     
-    # Sample pixels at regular intervals
-    step = max(1, total_pixels // sample_count)
-    
-    # Check sampled pixels
-    tolerance = 1e-6
+    # Check pixels
+    checked_count = 0
     for i in range(0, total_pixels, step):
         pixel_start = i * channels
         current_pixel = pixels[pixel_start:pixel_start + channels]
+        checked_count += 1
         
-        # Compare with first pixel
+        # Compare with reference pixel (exact match)
         for j in range(channels):
-            if abs(current_pixel[j] - first_pixel[j]) > tolerance:
+            if current_pixel[j] != first_pixel[j]:
+                print(f"    DEBUG: Pixel {i} differs at channel {j}: {current_pixel[j]} vs {first_pixel[j]}")
+                print(f"    DEBUG: Checked {checked_count} pixels before finding difference")
                 return False, None
     
-    # If we get here, all sampled pixels are the same color
+    print(f"    DEBUG: All {checked_count} checked pixels are identical")
+    
+    # If we get here, all checked pixels are the same color
     if channels == 3:
         return True, (first_pixel[0], first_pixel[1], first_pixel[2], 1.0)
     else:
@@ -79,8 +88,8 @@ def is_flat_color_image_optimized(image, sample_rate=0.1):
 
 def is_flat_color_image(image):
     """Check if an image has all pixels of the same color."""
-    # Use the optimized version by default
-    return is_flat_color_image_optimized(image, sample_rate=0.1)
+    # Use the efficient version by default
+    return is_flat_color_image_efficient(image, max_pixels_to_check=10000)
 
 def safe_rename_image(image, new_name):
     """Safely rename an image datablock using context override."""

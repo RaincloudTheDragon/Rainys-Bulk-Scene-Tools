@@ -1071,6 +1071,10 @@ class BST_OT_rename_flat_colors(Operator):
         self.chunk_size = 1  # Process one image at a time
         self.images_processed_this_chunk = 0
         
+        # Console reporting for debugging
+        print(f"\n=== FLAT COLOR DETECTION STARTED ===")
+        print(f"Total images to scan: {len(self.images)}")
+        
         # Start timer for processing
         bpy.app.timers.register(self._process_batch)
         
@@ -1085,6 +1089,7 @@ class BST_OT_rename_flat_colors(Operator):
             props.operation_progress = 0.0
             props.operation_status = "Operation cancelled"
             props.cancel_operation = False
+            print("=== FLAT COLOR DETECTION CANCELLED ===")
             return None
         
         if self.current_index >= len(self.images):
@@ -1095,6 +1100,15 @@ class BST_OT_rename_flat_colors(Operator):
                 props.is_operation_running = False
                 props.operation_progress = 100.0
                 props.operation_status = f"Completed! Scanned {len(self.images)} images, found {len(self.rename_operations)} flat colors, renamed {self.renamed_count}{f', {self.failed_count} failed' if self.failed_count > 0 else ''}, skipped {self.skipped_count}"
+                
+                # Console summary
+                print(f"\n=== FLAT COLOR DETECTION SUMMARY ===")
+                print(f"Total images scanned: {len(self.images)}")
+                print(f"Flat colors found: {len(self.rename_operations)}")
+                print(f"Successfully renamed: {self.renamed_count}")
+                print(f"Failed to rename: {self.failed_count}")
+                print(f"Skipped images: {self.skipped_count}")
+                print(f"=====================================\n")
                 
                 # Force UI update
                 for area in bpy.context.screen.areas:
@@ -1108,11 +1122,17 @@ class BST_OT_rename_flat_colors(Operator):
                 props = bpy.context.scene.bst_path_props
                 if len(self.rename_operations) > 0:
                     props.operation_status = f"Renaming {len(self.rename_operations)} flat color textures..."
+                    print(f"\n=== STARTING RENAME PHASE ===")
+                    print(f"Found {len(self.rename_operations)} flat colors to rename:")
+                    for img, original_name, hex_color, color in self.rename_operations:
+                        print(f"  '{original_name}' -> '{hex_color}' (RGBA{color})")
                 else:
                     # No flat color textures found
                     props.is_operation_running = False
                     props.operation_progress = 100.0
                     props.operation_status = f"Completed! Scanned {len(self.images)} images, found 0 flat colors, skipped {self.skipped_count}"
+                    print(f"\n=== NO FLAT COLORS FOUND ===")
+                    print(f"Scanned {len(self.images)} images but found no flat color textures to rename.")
                     return None
                 return 0.01
         
@@ -1123,6 +1143,20 @@ class BST_OT_rename_flat_colors(Operator):
             # Scanning phase
             props = bpy.context.scene.bst_path_props
             props.operation_status = f"Scanning {img.name} ({self.current_index + 1}/{len(self.images)}) - Found: {len(self.rename_operations)}, Skipped: {self.skipped_count}"
+            
+            # Console reporting for each image
+            print(f"\nScanning image {self.current_index + 1}/{len(self.images)}: '{img.name}'")
+            
+            # Debug image properties
+            print(f"  Image properties:")
+            print(f"    Size: {img.size if hasattr(img, 'size') else 'N/A'}")
+            print(f"    Channels: {img.channels if hasattr(img, 'channels') else 'N/A'}")
+            print(f"    Source: {img.source if hasattr(img, 'source') else 'N/A'}")
+            print(f"    Filepath: {img.filepath if hasattr(img, 'filepath') else 'N/A'}")
+            print(f"    Has pixels: {hasattr(img, 'pixels') and len(img.pixels) > 0}")
+            if hasattr(img, 'pixels') and len(img.pixels) > 0:
+                print(f"    Pixel count: {len(img.pixels)}")
+                print(f"    Total pixels: {len(img.pixels) // img.channels if hasattr(img, 'channels') else 'N/A'}")
             
             # Quick pre-check: skip images that are unlikely to be flat colors
             skip_reasons = []
@@ -1139,21 +1173,20 @@ class BST_OT_rename_flat_colors(Operator):
             elif hasattr(img, 'size') and img.size[0] * img.size[1] < 16:
                 skip_reasons.append("too small")
             
-            # Skip if image name suggests it's not a flat color
-            elif any(keyword in img.name.lower() for keyword in ['normal', 'roughness', 'metallic', 'ao', 'height', 'displacement', 'bump']):
-                skip_reasons.append("texture type")
-            
             if skip_reasons:
                 # Skip this image
                 self.skipped_count += 1
+                print(f"  SKIPPED: {', '.join(skip_reasons)}")
             else:
                 # Process the image
                 try:
                     # Import the function here to avoid circular imports
-                    from ..ops.flat_color_texture_renamer import is_flat_color_image_optimized, rgb_to_hex
+                    from ..ops.flat_color_texture_renamer import is_flat_color_image_efficient, rgb_to_hex
                     
-                    # Use optimized sampling with lower sample rate for speed
-                    is_flat, color = is_flat_color_image_optimized(img, sample_rate=0.05)  # Only sample 5% of pixels
+                    print(f"  Processing image...")
+                    
+                    # Use the new efficient detection function
+                    is_flat, color = is_flat_color_image_efficient(img, max_pixels_to_check=10000)
                     
                     if is_flat and color:
                         # Convert color to hex
@@ -1162,9 +1195,14 @@ class BST_OT_rename_flat_colors(Operator):
                         # Check if name is already a hex color (to avoid renaming again)
                         if not img.name.startswith('#'):
                             self.rename_operations.append((img, img.name, hex_color, color))
+                            print(f"  FOUND FLAT COLOR: '{img.name}' -> '{hex_color}' (RGBA{color})")
+                        else:
+                            print(f"  SKIPPED: already hex-named")
+                    else:
+                        print(f"  NOT A FLAT COLOR: {img.name}")
                 except Exception as e:
                     # Skip this image if there's an error
-                    print(f"Error processing {img.name}: {str(e)}")
+                    print(f"  ERROR processing {img.name}: {str(e)}")
                     pass
         else:
             # Renaming phase
@@ -1177,8 +1215,10 @@ class BST_OT_rename_flat_colors(Operator):
                 try:
                     img.name = hex_color
                     self.renamed_count += 1
+                    print(f"  RENAMED: '{original_name}' -> '{hex_color}'")
                 except Exception as e:
                     self.failed_count += 1
+                    print(f"  FAILED to rename '{original_name}': {str(e)}")
         
         # Update progress
         self.current_index += 1
