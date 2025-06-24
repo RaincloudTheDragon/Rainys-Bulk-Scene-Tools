@@ -1,3 +1,17 @@
+# v 0.6.1
+
+## Bug Fixes
+- **Fixed flat color detection**: Redesigned algorithm with exact pixel matching and smart sampling
+- **Fixed AutoMat Extractor**: Now properly organizes images by material instead of dumping everything to common folder
+- **Fixed viewport color setting**: Resolved context restriction errors with deferred color application
+- **Fixed timer performance**: Reduced timer frequency and improved cancellation reliability
+- **Enhanced debugging**: Added comprehensive console reporting for all bulk operations
+
+## Improvements
+- Better performance with optimized sampling
+- More reliable cancellation system
+- Context-safe operations that don't interfere with Blender's drawing state
+
 # v 0.6.0
 
 - **Enhancement: Progress Reporting & Cancellation**
