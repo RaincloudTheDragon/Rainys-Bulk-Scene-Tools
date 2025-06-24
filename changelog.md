@@ -1,4 +1,16 @@
+# v 0.6.0
+
+- **Enhancement: Progress Reporting & Cancellation**
+  - Some of the PathMan's operators are pretty resource-intense. Due to Python's GIL, I haven't been able to figure out how to run some of these more efficiently. Without the console window, you're flying blind, so I've integrated a loading bar with progress reporting for the following operators:
+    - Flat Color Texture Renamer
+    - Remove Extensions
+    - Save All to image Paths
+    - Remap Selected
+    - Rename by Material
+    - AutoMat Extractor
+
 # v 0.5.1
+
 - **Enhanced AutoMat Extractor:**
   - Added a crucial safety check to prevent textures from overwriting each other if they resolve to the same filename (e.g., `Image.001.png` and `Image.002.png` both becoming `Image.png`).
   - The operator now correctly sanitizes names with numerical suffixes before saving.
@@ -11,6 +23,7 @@
   - Resolved multiple `AttributeError` and `TypeError` exceptions that occurred due to incorrect addon name lookups and invalid icon names, making the UI and addon registration more robust.
 
 # v 0.5.0
+
 - **Integrated Scene General: Free GPU VRAM**
 - **Integrated PathMan: Automatic Material Extractor**
 - **Integrated PathMan: Rename Image Textures by Material**: Added comprehensive texture suffix recognition
@@ -26,10 +39,13 @@
   - Consolidated draw functions: Node Editor panel now serves as master template for both panels
 
 # v 0.4.1
+
 - Fixed traceback error causing remap to fail to draw buttons
 
 # v 0.4.0
+
 Overhaul! Added new Scene General panel, major enhancements to all panels and functions.
 
 # v0.3.0
+
 - Added image path remapping for unpacked images, keeping them organized.
