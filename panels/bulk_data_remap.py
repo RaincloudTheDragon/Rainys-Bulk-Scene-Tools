@@ -4,6 +4,9 @@ import os
 import sys
 import subprocess
 
+# Import ghost buster functionality
+from ..ops.ghost_buster import GhostBuster, GhostDetector
+
 # Regular expression to match numbered suffixes like .001, .002, _001, _0001, etc.
 NUMBERED_SUFFIX_PATTERN = re.compile(r'(.*?)[._](\d{3,})$')
 
@@ -1211,6 +1214,23 @@ class VIEW3D_PT_BulkDataRemap(bpy.types.Panel):
         box.separator()
         row = box.row()
         row.operator("bst.purge_unused_data", icon='TRASH')
+        
+        # Ghost Buster section
+        layout.separator()
+        ghost_box = layout.box()
+        ghost_box.label(text="Ghost Buster")
+        
+        col = ghost_box.column()
+        col.label(text="Conservative cleanup of ghost data:")
+        col.label(text="• Unused WGT widget objects")
+        col.label(text="• Empty unlinked collections")
+        col.label(text="• Shows CC object analysis")
+        
+        # Two button layout
+        row = ghost_box.row(align=True)
+        row.scale_y = 1.5
+        row.operator("bst.ghost_detector", text="Analyze", icon='ZOOM_IN')
+        row.operator("bst.ghost_buster", text="Clean Up", icon='GHOST_ENABLED')
 
 # Add a new operator for toggling data types
 class DATAREMAP_OT_ToggleDataType(bpy.types.Operator):
@@ -1380,6 +1400,8 @@ class DATAREMAP_OT_RenameDatablock(bpy.types.Operator):
         except Exception as e:
             self.report({'ERROR'}, f"Failed to rename {self.data_type}: {str(e)}")
             return {'CANCELLED'}
+
+
 
 # List of all classes in this module
 classes = (

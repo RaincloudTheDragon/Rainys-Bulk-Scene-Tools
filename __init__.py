@@ -22,6 +22,7 @@ from .panels import bulk_scene_general
 from .ops.AutoMatExtractor import AutoMatExtractor
 from .ops.Rename_images_by_mat import Rename_images_by_mat, RENAME_OT_summary_dialog
 from .ops.FreeGPU import BST_FreeGPU
+from .ops import ghost_buster
 from . import updater
 
 # Addon preferences class for update settings
@@ -134,6 +135,7 @@ def register():
     bulk_viewport_display.register()
     bulk_data_remap.register()
     bulk_path_management.register()
+    ghost_buster.register()
     
     # Add keybind for Free GPU (global context)
     wm = bpy.context.window_manager
@@ -160,6 +162,10 @@ def unregister():
         delattr(bpy.types.Scene, '_bst_keymaps')
     
     # Unregister modules
+    try:
+        ghost_buster.unregister()
+    except Exception:
+        pass
     try:
         bulk_path_management.unregister()
     except Exception:
