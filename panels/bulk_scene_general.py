@@ -2,6 +2,7 @@ import bpy
 from ..ops.NoSubdiv import NoSubdiv
 from ..ops.remove_custom_split_normals import RemoveCustomSplitNormals
 from ..ops.create_ortho_camera import CreateOrthoCamera
+from ..ops.spawn_scene_structure import SpawnSceneStructure
 
 class BulkSceneGeneral(bpy.types.Panel):
     """Bulk Scene General Panel"""
@@ -16,7 +17,14 @@ class BulkSceneGeneral(bpy.types.Panel):
     def draw(self, context):
         layout = self.layout
         
-        # Add NoSubdiv button
+        # Scene Structure section
+        box = layout.box()
+        box.label(text="Scene Structure")
+        row = box.row()
+        row.scale_y = 1.2
+        row.operator("bst.spawn_scene_structure", text="Spawn Scene Structure", icon='OUTLINER_COLLECTION')
+        
+        # Mesh section
         box = layout.box()
         box.label(text="Mesh")
         # Add checkbox for only_selected property
@@ -37,6 +45,7 @@ classes = (
     NoSubdiv,  # Add NoSubdiv operator class
     RemoveCustomSplitNormals,
     CreateOrthoCamera,
+    SpawnSceneStructure,
 )
 
 # Registration
