@@ -1,3 +1,21 @@
+# v 0.7.0
+
+## New: Ghost Detection System
+- **Universal Object Analysis**: Expanded ghost detection from CC-objects only to all object types (meshes, empties, curves, etc.)
+- **Enhanced Safety Framework**: Added comprehensive protection for legitimate objects outside scenes:
+  - WGT rig widgets (`WGT-*` objects)
+  - Modifier targets (curve modifiers, constraints)
+  - Constraint targets and references
+  - Particle system objects
+  - Collection instance objects (linked collection references)
+- **Smart Classification**: Objects not in scenes now categorized as:
+  - `LEGITIMATE`: Has valid use outside scenes (protected)
+  - `LOW PRIORITY`: Only collection reference (preserved)
+  - `GHOST`: Multiple users but not in scenes (removed)
+- **Conservative Cleanup Logic**: Only removes objects with 2+ users that have no legitimate purpose
+- **Updated UI**: Ghost Detector popup now shows "Ghost Objects Analysis" with enhanced categorization and object type details
+- **Improved Safety**: All linked/library content automatically protected from ghost detection
+
 # v 0.6.1
 
 ## Bug Fixes
