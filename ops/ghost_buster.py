@@ -379,12 +379,77 @@ class GhostDetector(bpy.types.Operator):
         self.analyze_ghost_data()
         return context.window_manager.invoke_popup(self, width=500)
 
+class ResyncEnforce(bpy.types.Operator):
+    """Resync Enforce: Fix broken library override hierarchies by rebuilding from linked references"""
+    bl_idname = "bst.resync_enforce"
+    bl_label = "Resync Enforce"
+    bl_options = {'REGISTER', 'UNDO'}
+    
+    @classmethod
+    def poll(cls, context):
+        # Only available if there are selected objects
+        return context.selected_objects
+    
+    def execute(self, context):
+        # Get selected objects
+        selected_objects = context.selected_objects.copy()
+        
+        if not selected_objects:
+            self.report({'WARNING'}, "No objects selected for resync enforce")
+            return {'CANCELLED'}
+        
+        # Count library override objects
+        override_objects = []
+        for obj in selected_objects:
+            if obj.override_library:
+                override_objects.append(obj)
+        
+        if not override_objects:
+            self.report({'WARNING'}, "No library override objects found in selection")
+            return {'CANCELLED'}
+        
+        try:
+            # Store the current selection
+            original_selection = set(context.selected_objects)
+            
+            # Select only the override objects
+            bpy.ops.object.select_all(action='DESELECT')
+            for obj in override_objects:
+                obj.select_set(True)
+            
+            # Call Blender's resync enforce operation
+            result = bpy.ops.object.library_override_operation(
+                'INVOKE_DEFAULT',
+                type='OVERRIDE_LIBRARY_RESYNC_HIERARCHY_ENFORCE',
+                selection_set='SELECTED'
+            )
+            
+            if result == {'FINISHED'}:
+                self.report({'INFO'}, f"Resync enforce completed on {len(override_objects)} override objects")
+                return_code = {'FINISHED'}
+            else:
+                self.report({'WARNING'}, "Resync enforce operation was cancelled or failed")
+                return_code = {'CANCELLED'}
+            
+            # Restore original selection
+            bpy.ops.object.select_all(action='DESELECT')
+            for obj in original_selection:
+                if obj.name in bpy.data.objects:  # Check if object still exists
+                    obj.select_set(True)
+            
+            return return_code
+            
+        except Exception as e:
+            self.report({'ERROR'}, f"Resync enforce failed: {str(e)}")
+            return {'CANCELLED'}
+
 # Note: main() is called by the operator, not automatically
 
 # List of classes to register
 classes = (
     GhostBuster,
     GhostDetector,
+    ResyncEnforce,
 )
 
 def register():

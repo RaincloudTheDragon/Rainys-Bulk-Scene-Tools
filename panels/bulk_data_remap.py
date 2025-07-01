@@ -5,7 +5,7 @@ import sys
 import subprocess
 
 # Import ghost buster functionality
-from ..ops.ghost_buster import GhostBuster, GhostDetector
+from ..ops.ghost_buster import GhostBuster, GhostDetector, ResyncEnforce
 
 # Regular expression to match numbered suffixes like .001, .002, _001, _0001, etc.
 NUMBERED_SUFFIX_PATTERN = re.compile(r'(.*?)[._](\d{3,})$')
@@ -1221,16 +1221,23 @@ class VIEW3D_PT_BulkDataRemap(bpy.types.Panel):
         ghost_box.label(text="Ghost Buster")
         
         col = ghost_box.column()
-        col.label(text="Conservative cleanup of ghost data:")
+        col.label(text="Ghost data cleanup & library override fixes:")
         col.label(text="• Unused WGT widget objects")
         col.label(text="• Empty unlinked collections")
-        col.label(text="• Shows CC object analysis")
+        col.label(text="• CC object analysis")
+        col.label(text="• Fix broken library override hierarchies")
         
         # Two button layout
         row = ghost_box.row(align=True)
         row.scale_y = 1.5
-        row.operator("bst.ghost_detector", text="Analyze", icon='ZOOM_IN')
-        row.operator("bst.ghost_buster", text="Clean Up", icon='GHOST_ENABLED')
+        row.operator("bst.ghost_detector", text="Ghost Detector", icon='ZOOM_IN')
+        row.operator("bst.ghost_buster", text="Ghost Buster", icon='GHOST_ENABLED')
+        
+        # Resync Enforce button
+        ghost_box.separator()
+        row = ghost_box.row()
+        row.scale_y = 1.2
+        row.operator("bst.resync_enforce", text="Resync Enforce", icon='FILE_REFRESH')
 
 # Add a new operator for toggling data types
 class DATAREMAP_OT_ToggleDataType(bpy.types.Operator):
