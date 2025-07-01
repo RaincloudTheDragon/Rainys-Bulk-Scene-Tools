@@ -1218,13 +1218,13 @@ class VIEW3D_PT_BulkDataRemap(bpy.types.Panel):
         # Ghost Buster section
         layout.separator()
         ghost_box = layout.box()
-        ghost_box.label(text="Ghost Buster")
+        ghost_box.label(text="Ghost Buster - Experimental")
         
         col = ghost_box.column()
         col.label(text="Ghost data cleanup & library override fixes:")
-        col.label(text="• Unused WGT widget objects")
+        col.label(text="• Unused local WGT widget objects")
         col.label(text="• Empty unlinked collections")
-        col.label(text="• CC object analysis")
+        col.label(text="• CC objects not in any scene")
         col.label(text="• Fix broken library override hierarchies")
         
         # Two button layout

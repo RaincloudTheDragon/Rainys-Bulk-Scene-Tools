@@ -6,6 +6,17 @@ class SpawnSceneStructure(bpy.types.Operator):
     bl_label = "Spawn Scene Structure"
     bl_options = {'REGISTER', 'UNDO'}
     
+    def find_layer_collection(self, layer_collection, collection_name):
+        """Recursively find a layer collection by name"""
+        if layer_collection.collection.name == collection_name:
+            return layer_collection
+        
+        for child in layer_collection.children:
+            result = self.find_layer_collection(child, collection_name)
+            if result:
+                return result
+        return None
+    
     def execute(self, context):
         scene = context.scene
         scene_collection = scene.collection
@@ -40,9 +51,11 @@ class SpawnSceneStructure(bpy.types.Operator):
                 for subcollection_name in subcollections:
                     # Check if subcollection already exists
                     subcollection_exists = False
-                    for existing_subcollection in main_collection.children:
-                        if existing_subcollection.name == subcollection_name:
+                    existing_subcollection = None
+                    for sub in main_collection.children:
+                        if sub.name == subcollection_name:
                             subcollection_exists = True
+                            existing_subcollection = sub
                             skipped_collections.append(f"{main_collection_name}/{subcollection_name}")
                             break
                     
@@ -51,6 +64,23 @@ class SpawnSceneStructure(bpy.types.Operator):
                         subcollection = bpy.data.collections.new(subcollection_name)
                         main_collection.children.link(subcollection)
                         created_collections.append(f"{main_collection_name}/{subcollection_name}")
+                        
+                        # Apply special settings to ROOTS collection
+                        if subcollection_name == "ROOTS":
+                            subcollection.hide_viewport = True  # Hide in all viewports
+                            # Exclude from view layer
+                            view_layer = context.view_layer
+                            layer_collection = self.find_layer_collection(view_layer.layer_collection, subcollection_name)
+                            if layer_collection:
+                                layer_collection.exclude = True
+                    else:
+                        # Apply settings to existing ROOTS collection if it wasn't properly configured
+                        if subcollection_name == "ROOTS" and existing_subcollection:
+                            existing_subcollection.hide_viewport = True
+                            view_layer = context.view_layer
+                            layer_collection = self.find_layer_collection(view_layer.layer_collection, subcollection_name)
+                            if layer_collection:
+                                layer_collection.exclude = True
             
             # Report results
             if created_collections:
