@@ -104,6 +104,32 @@ def clean_empty_collections():
     print(f"Removed {removed_collections} empty collections")
     return removed_collections
 
+def is_object_used_by_scene_instance_collections(obj):
+    """Check if object is in a collection that's being instanced by objects in scenes"""
+    
+    # Find all collections that contain this object
+    obj_collections = []
+    for collection in bpy.data.collections:
+        if obj in collection.objects.values():
+            obj_collections.append(collection)
+    
+    if not obj_collections:
+        return False
+    
+    # Check if any of these collections are being instanced by objects in scenes
+    for collection in obj_collections:
+        # Find objects that instance this collection
+        for other_obj in bpy.data.objects:
+            if (other_obj.instance_type == 'COLLECTION' and 
+                other_obj.instance_collection == collection):
+                
+                # Check if the instancing object is in any scene
+                for scene in bpy.data.scenes:
+                    if other_obj in scene.objects.values():
+                        return True
+    
+    return False
+
 def is_object_legitimate_outside_scene(obj):
     """Check if an object has legitimate reasons to exist outside scenes"""
     
@@ -115,36 +141,64 @@ def is_object_legitimate_outside_scene(obj):
     if obj.instance_type == 'COLLECTION' and obj.instance_collection is not None:
         return True
     
+    # Objects that are being used by instance collections in scenes are legitimate
+    if is_object_used_by_scene_instance_collections(obj):
+        return True
+    
     # Objects used as curve modifiers, constraints targets, etc.
-    # Check if object is used by modifiers on other objects
+    # Check if object is used by modifiers on other objects that are in scenes
     for other_obj in bpy.data.objects:
-        for modifier in other_obj.modifiers:
-            if hasattr(modifier, 'object') and modifier.object == obj:
-                return True
-            if hasattr(modifier, 'target') and modifier.target == obj:
-                return True
-    
-    # Check if object is used by constraints on other objects
-    for other_obj in bpy.data.objects:
-        for constraint in other_obj.constraints:
-            if hasattr(constraint, 'target') and constraint.target == obj:
-                return True
-            if hasattr(constraint, 'subtarget') and constraint.subtarget == obj.name:
-                return True
-    
-    # Check if object is used in particle systems
-    for other_obj in bpy.data.objects:
-        for modifier in other_obj.modifiers:
-            if modifier.type == 'PARTICLE_SYSTEM':
-                settings = modifier.particle_system.settings
-                if hasattr(settings, 'object') and settings.object == obj:
+        # Check if the other object is in any scene
+        in_scene = False
+        for scene in bpy.data.scenes:
+            if other_obj in scene.objects.values():
+                in_scene = True
+                break
+        
+        if in_scene:
+            for modifier in other_obj.modifiers:
+                if hasattr(modifier, 'object') and modifier.object == obj:
                     return True
-                if hasattr(settings, 'instance_object') and settings.instance_object == obj:
+                if hasattr(modifier, 'target') and modifier.target == obj:
                     return True
+    
+    # Check if object is used by constraints on other objects that are in scenes
+    for other_obj in bpy.data.objects:
+        # Check if the other object is in any scene
+        in_scene = False
+        for scene in bpy.data.scenes:
+            if other_obj in scene.objects.values():
+                in_scene = True
+                break
+        
+        if in_scene:
+            for constraint in other_obj.constraints:
+                if hasattr(constraint, 'target') and constraint.target == obj:
+                    return True
+                if hasattr(constraint, 'subtarget') and constraint.subtarget == obj.name:
+                    return True
+    
+    # Check if object is used in particle systems on objects that are in scenes
+    for other_obj in bpy.data.objects:
+        # Check if the other object is in any scene
+        in_scene = False
+        for scene in bpy.data.scenes:
+            if other_obj in scene.objects.values():
+                in_scene = True
+                break
+        
+        if in_scene:
+            for modifier in other_obj.modifiers:
+                if modifier.type == 'PARTICLE_SYSTEM':
+                    settings = modifier.particle_system.settings
+                    if hasattr(settings, 'object') and settings.object == obj:
+                        return True
+                    if hasattr(settings, 'instance_object') and settings.instance_object == obj:
+                        return True
     
     return False
 
-def clean_object_ghosts():
+def clean_object_ghosts(delete_low_priority=False):
     """Remove objects that are not in any scene and have no legitimate purpose (potential ghosts)"""
     
     print("\n" + "="*80)
@@ -180,11 +234,24 @@ def clean_object_ghosts():
                 print(f"  Preserving object: {obj.name} (legitimate use outside scene)")
                 continue
             
-            # Additional conservative check - only remove if it seems truly orphaned
-            # Objects with 2+ users might be referenced in ways we don't detect
+            # If not legitimate, it's a ghost - but be conservative with low user count objects
+            should_remove = False
+            removal_reason = ""
+            
             if obj.users >= 2:
+                # Higher user count ghosts are definitely safe to remove
+                should_remove = True
+                removal_reason = "ghost (users >= 2, no legitimate use found)"
+            elif obj.users < 2 and delete_low_priority:
+                # Low user count ghosts only if user enables the option
+                should_remove = True
+                removal_reason = "low priority ghost (users < 2, no legitimate use found)"
+            elif obj.users < 2:
+                print(f"  Skipping low priority object: {obj.name} (users < 2, enable 'Delete Low Priority' to remove)")
+            
+            if should_remove:
                 ghosts_to_remove.append(obj)
-                print(f"  Marking ghost for removal: {obj.name} (type: {obj.type})")
+                print(f"  Marking ghost for removal: {obj.name} (type: {obj.type}) - {removal_reason}")
     
     # Remove the ghost objects
     for obj in ghosts_to_remove:
@@ -245,14 +312,14 @@ def manual_object_analysis():
         # Show recommendation
         if is_object_legitimate_outside_scene(obj):
             print(f"    -> LEGITIMATE: Has valid use outside scenes")
-        elif obj.users < 2:
-            print(f"    -> LOW PRIORITY: Only 1 user (collection reference)")
         elif obj.users >= 2:
-            print(f"    -> GHOST: Multiple users but not in scenes (will be removed)")
+            print(f"    -> GHOST: No legitimate use found, users >= 2 (will be removed)")
+        elif obj.users < 2:
+            print(f"    -> LOW PRIORITY: No legitimate use found, users < 2 (needs option enabled)")
         else:
             print(f"    -> UNCLEAR: Manual review needed")
 
-def main():
+def main(delete_low_priority=False):
     """Main conservative cleanup function"""
     
     print("CONSERVATIVE GHOST DATA CLEANUP")
@@ -260,7 +327,11 @@ def main():
     print("This script removes:")
     print("1. Unused local WGT widget objects")
     print("2. Empty unlinked collections") 
-    print("3. Objects not in any scene (conservative ghost detection)")
+    print("3. Objects not in any scene with no legitimate use")
+    if delete_low_priority:
+        print("   - Including low priority ghosts (no legitimate use, users < 2)")
+    else:
+        print("   - Excluding low priority ghosts (no legitimate use, users < 2)")
     print("="*80)
     
     initial_objects = len(list(bpy.data.objects))
@@ -269,7 +340,7 @@ def main():
     # Safe operations only
     wgts_removed = safe_wgt_removal()
     collections_removed = clean_empty_collections()
-    object_ghosts_removed = clean_object_ghosts()
+    object_ghosts_removed = clean_object_ghosts(delete_low_priority)
     
     # Show remaining object analysis
     manual_object_analysis()
@@ -305,8 +376,11 @@ class GhostBuster(bpy.types.Operator):
     
     def execute(self, context):
         try:
+            # Get the delete low priority setting from scene properties
+            delete_low_priority = getattr(context.scene, "ghost_buster_delete_low_priority", False)
+            
             # Call the main ghost buster function
-            main()
+            main(delete_low_priority)
             self.report({'INFO'}, "Ghost data cleanup completed")
             return {'FINISHED'}
         except Exception as e:
@@ -428,12 +502,12 @@ class GhostDetector(bpy.types.Operator):
                 if is_object_legitimate_outside_scene(obj):
                     legitimate += 1
                     status = "LEGITIMATE (has valid use outside scenes)"
-                elif obj.users < 2:
-                    low_priority += 1
-                    status = "LOW PRIORITY (only collection reference)"
                 elif obj.users >= 2:
                     potential_ghosts += 1
-                    status = "GHOST (will be removed)"
+                    status = "GHOST (no legitimate use found, users >= 2)"
+                elif obj.users < 2:
+                    low_priority += 1
+                    status = "LOW PRIORITY (no legitimate use found, users < 2)"
                 else:
                     status = "UNCLEAR"
                 
@@ -493,11 +567,11 @@ class GhostDetector(bpy.types.Operator):
         col.label(text=f"Objects not in scenes: {self.ghost_objects}")
         if self.ghost_objects > 0:
             if self.ghost_potential > 0:
-                col.label(text=f"Potential ghosts: {self.ghost_potential}", icon='ERROR')
+                col.label(text=f"Ghosts (users >= 2): {self.ghost_potential}", icon='ERROR')
             if self.ghost_legitimate > 0:
                 col.label(text=f"Legitimate objects: {self.ghost_legitimate}", icon='CHECKMARK')
             if self.ghost_low_priority > 0:
-                col.label(text=f"Low priority: {self.ghost_low_priority}", icon='QUESTION')
+                col.label(text=f"Low priority (users < 2): {self.ghost_low_priority}", icon='QUESTION')
             
             if self.ghost_details:
                 box.separator()
@@ -514,10 +588,14 @@ class GhostDetector(bpy.types.Operator):
         summary_box.label(text="Summary", icon='INFO')
         total_issues = self.unused_wgt_objects + self.empty_collections + self.ghost_potential
         if total_issues > 0:
-            summary_box.label(text=f"Found {total_issues} potential ghost data issues", icon='ERROR')
+            summary_box.label(text=f"Found {total_issues} ghost data issues that will be removed", icon='ERROR')
+            if self.ghost_low_priority > 0:
+                summary_box.label(text=f"+ {self.ghost_low_priority} low priority issues (optional)", icon='QUESTION')
             summary_box.label(text="Use Ghost Buster to clean up safely")
         else:
             summary_box.label(text="No ghost data issues detected!", icon='CHECKMARK')
+            if self.ghost_low_priority > 0:
+                summary_box.label(text=f"({self.ghost_low_priority} low priority issues available)", icon='INFO')
     
     def execute(self, context):
         return {'FINISHED'}

@@ -102,6 +102,13 @@ def register_dataremap_properties():
     # Store the last clicked group for shift-click range selection
     if not hasattr(bpy.types.Scene, "last_clicked_group"):
         bpy.types.Scene.last_clicked_group = {}
+    
+    # Ghost Buster properties
+    bpy.types.Scene.ghost_buster_delete_low_priority = bpy.props.BoolProperty(  # type: ignore
+        name="Delete Low Priority Ghosts",
+        description="Delete objects not in scenes with no legitimate use and users < 2",
+        default=False
+    )
 
 def unregister_dataremap_properties():
     del bpy.types.Scene.dataremap_images
@@ -124,6 +131,10 @@ def unregister_dataremap_properties():
     del bpy.types.Scene.dataremap_sort_materials
     del bpy.types.Scene.dataremap_sort_fonts
     del bpy.types.Scene.dataremap_sort_worlds
+    
+    # Delete ghost buster properties
+    if hasattr(bpy.types.Scene, "ghost_buster_delete_low_priority"):
+        del bpy.types.Scene.ghost_buster_delete_low_priority
 
 def get_base_name(name):
     """Extract the base name without numbered suffix"""
@@ -1224,14 +1235,23 @@ class VIEW3D_PT_BulkDataRemap(bpy.types.Panel):
         col.label(text="Ghost data cleanup & library override fixes:")
         col.label(text="• Unused local WGT widget objects")
         col.label(text="• Empty unlinked collections")
-        col.label(text="• CC objects not in any scene")
+        col.label(text="• Objects not in scenes with no legitimate use")
         col.label(text="• Fix broken library override hierarchies")
         
         # Two button layout
         row = ghost_box.row(align=True)
         row.scale_y = 1.5
         row.operator("bst.ghost_detector", text="Ghost Detector", icon='ZOOM_IN')
-        row.operator("bst.ghost_buster", text="Ghost Buster", icon='GHOST_ENABLED')
+        
+        # Ghost Buster with options
+        ghost_col = ghost_box.column(align=True)
+        ghost_col.operator("bst.ghost_buster", text="Ghost Buster", icon='GHOST_ENABLED')
+        
+        # Options for Ghost Buster
+        options_box = ghost_box.box()
+        options_box.label(text="Ghost Buster Options:", icon='SETTINGS')
+        options_box.prop(context.scene, "ghost_buster_delete_low_priority", text="Delete Low Priority Ghosts")
+        options_box.label(text="Low priority: Objects with no legitimate use and users < 2", icon='INFO')
         
         # Resync Enforce button
         ghost_box.separator()
