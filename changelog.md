@@ -1,3 +1,23 @@
+# v 0.7.1
+
+## Ghost Buster Enhancements
+
+### Added
+- **Low Priority Ghost Detection**: New option to delete objects not in scenes with no legitimate use and users < 2
+- **Smart Instance Collection Detection**: Ghost Buster now properly detects when objects are used by instance collections in scenes
+- **Enhanced Legitimacy Checks**: Improved detection of objects with valid uses outside scenes (constraints, modifiers, particle systems only count if the using object is in a scene)
+
+### Improved
+- **More Accurate Ghost Detection**: Eliminated false positives by checking if instance collection targets are actually being used by scene objects
+- **Better Classification**: Objects are now classified as "Legitimate", "Ghosts (users >= 2)", or "Low Priority (users < 2)" with clearer reasoning
+- Cleaned UI
+
+### Technical Changes
+- Added `is_object_used_by_scene_instance_collections()` function for precise instance collection detection
+- Enhanced `is_object_legitimate_outside_scene()` with scene-aware checks for modifiers, constraints, and particle systems
+- Updated ghost analysis and removal logic to use more precise categorization
+- Added scene property `ghost_buster_delete_low_priority` for user preference storage
+
 # v 0.7.0
 
 ## New: Ghost Detection System
