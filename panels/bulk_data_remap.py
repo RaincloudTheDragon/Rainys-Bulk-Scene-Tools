@@ -1242,16 +1242,10 @@ class VIEW3D_PT_BulkDataRemap(bpy.types.Panel):
         row = ghost_box.row(align=True)
         row.scale_y = 1.5
         row.operator("bst.ghost_detector", text="Ghost Detector", icon='ZOOM_IN')
+        row.operator("bst.ghost_buster", text="Ghost Buster", icon='GHOST_ENABLED')
         
-        # Ghost Buster with options
-        ghost_col = ghost_box.column(align=True)
-        ghost_col.operator("bst.ghost_buster", text="Ghost Buster", icon='GHOST_ENABLED')
-        
-        # Options for Ghost Buster
-        options_box = ghost_box.box()
-        options_box.label(text="Ghost Buster Options:", icon='SETTINGS')
-        options_box.prop(context.scene, "ghost_buster_delete_low_priority", text="Delete Low Priority Ghosts")
-        options_box.label(text="Low priority: Objects with no legitimate use and users < 2", icon='INFO')
+        # Ghost Buster option
+        ghost_box.prop(context.scene, "ghost_buster_delete_low_priority", text="Delete Low Priority Ghosts")
         
         # Resync Enforce button
         ghost_box.separator()
