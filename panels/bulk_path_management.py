@@ -1261,12 +1261,6 @@ class BST_OT_cancel_operation(Operator):
         props.cancel_operation = True
         props.operation_status = "Cancelling operation..."
         
-        # Also set internal cancellation flags for any running operations
-        # This helps with operations that might be in restricted contexts
-        for timer in bpy.app.timers:
-            if hasattr(timer, '_cancelled'):
-                timer._cancelled = True
-        
         self.report({'INFO'}, "Operation cancellation requested")
         return {'FINISHED'}
 

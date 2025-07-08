@@ -19,7 +19,7 @@ from .panels import bulk_viewport_display
 from .panels import bulk_data_remap
 from .panels import bulk_path_management
 from .panels import bulk_scene_general
-from .ops.AutoMatExtractor import AutoMatExtractor
+from .ops.AutoMatExtractor import AutoMatExtractor, AUTOMAT_OT_summary_dialog
 from .ops.Rename_images_by_mat import Rename_images_by_mat, RENAME_OT_summary_dialog
 from .ops.FreeGPU import BST_FreeGPU
 from .ops import ghost_buster
@@ -102,6 +102,7 @@ classes = (
     VIEW3D_PT_BulkSceneTools,
     BST_AddonPreferences,
     AutoMatExtractor,
+    AUTOMAT_OT_summary_dialog,
     Rename_images_by_mat,
     RENAME_OT_summary_dialog,
     BST_FreeGPU,
