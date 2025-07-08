@@ -14,7 +14,13 @@
   - All new operators integrated with consistent UI and project formatting standards
 
 ## Fixes
-
+- PathMan
+  - Automat summary no longer gives invoke error
+  - Fixed timing/cancellation error when cancelling Rename Flat Colors operation
+  - Pack files operator no longer throws AttributeError for is_generated (now uses img.source != 'GENERATED')
+  - Pack files operator now properly skips special Blender images like "Render Result" and "Viewer Node" that can't be packed
+- General
+  - Removed debug print statement that was showing "Subdivision Surface modifiers removed from all objects" on every addon load 
 
 # v 0.7.1
 
