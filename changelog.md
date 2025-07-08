@@ -1,4 +1,4 @@
-# v 0.8.1
+# v 0.8.0
 
 ## New Features
 - **Delete Single Keyframe Actions**: New operator to remove unwanted animation actions (no keyframes, single keyframe, or all keyframes on same frame)
