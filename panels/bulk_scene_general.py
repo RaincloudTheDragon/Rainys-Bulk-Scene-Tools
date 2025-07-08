@@ -3,6 +3,9 @@ from ..ops.NoSubdiv import NoSubdiv
 from ..ops.remove_custom_split_normals import RemoveCustomSplitNormals
 from ..ops.create_ortho_camera import CreateOrthoCamera
 from ..ops.spawn_scene_structure import SpawnSceneStructure
+from ..ops.delete_single_keyframe_actions import DeleteSingleKeyframeActions
+from ..ops.find_material_users import FindMaterialUsers
+from ..ops.remove_unused_material_slots import RemoveUnusedMaterialSlots
 
 class BulkSceneGeneral(bpy.types.Panel):
     """Bulk Scene General Panel"""
@@ -39,6 +42,20 @@ class BulkSceneGeneral(bpy.types.Panel):
         row = box.row(align=True)
         row.operator("bst.free_gpu", text="Free GPU", icon='MEMORY')
 
+        # Materials section
+        box = layout.box()
+        box.label(text="Materials")
+        row = box.row(align=True)
+        row.operator("bst.remove_unused_material_slots", text="Remove Unused Material Slots", icon='MATERIAL')
+        row = box.row(align=True)
+        row.operator("bst.find_material_users", text="Find Material Users", icon='VIEWZOOM')
+
+        # Animation Data section
+        box = layout.box()
+        box.label(text="Animation Data")
+        row = box.row(align=True)
+        row.operator("bst.delete_single_keyframe_actions", text="Delete Single Keyframe Actions", icon='ANIM_DATA')
+
 # List of all classes in this module
 classes = (
     BulkSceneGeneral,
@@ -46,6 +63,9 @@ classes = (
     RemoveCustomSplitNormals,
     CreateOrthoCamera,
     SpawnSceneStructure,
+    DeleteSingleKeyframeActions,
+    FindMaterialUsers,
+    RemoveUnusedMaterialSlots,
 )
 
 # Registration
