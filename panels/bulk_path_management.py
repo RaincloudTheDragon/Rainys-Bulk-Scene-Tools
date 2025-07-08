@@ -760,14 +760,21 @@ class BST_OT_pack_images(Operator):
             selected_images = list(bpy.data.images)
         
         for img in selected_images:
-            if not img.packed_file and not img.is_generated:
-                try:
-                    print(f"DEBUG: Packing image: {img.name}")
-                    img.pack()
-                    packed_count += 1
-                except Exception as e:
-                    print(f"DEBUG: Failed to pack {img.name}: {str(e)}")
-                    failed_count += 1
+            # Skip images that can't or shouldn't be packed
+            if (img.packed_file or  # Already packed
+                img.source == 'GENERATED' or  # Procedurally generated
+                img.source == 'VIEWER' or  # Render Result, Viewer Node, etc.
+                not img.filepath or  # No file path
+                img.name in ['Render Result', 'Viewer Node']):  # Special Blender images
+                continue
+                
+            try:
+                print(f"DEBUG: Packing image: {img.name}")
+                img.pack()
+                packed_count += 1
+            except Exception as e:
+                print(f"DEBUG: Failed to pack {img.name}: {str(e)}")
+                failed_count += 1
         
         if packed_count > 0:
             self.report({'INFO'}, f"Successfully packed {packed_count} images" + 
