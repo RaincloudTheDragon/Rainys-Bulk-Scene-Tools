@@ -1,3 +1,21 @@
+# v 0.8.1
+
+## New Features
+- **Delete Single Keyframe Actions**: New operator to remove unwanted animation actions (no keyframes, single keyframe, or all keyframes on same frame)
+- **Find Material Users**: New operator with native material selector interface that displays detailed material usage analysis in a popup dialog, showing:
+  - Object users with material slots
+  - Node tree references  
+  - Material node tree usage
+  - Blender's internal user count and fake user status
+- **Remove Unused Material Slots**: New operator to clean up unused material slots from all mesh objects in the scene
+- **Enhanced Bulk Scene General Panel**: Reorganized panel with new sections:
+  - Materials section containing material analysis and cleanup tools
+  - Animation Data section for keyframe/action management
+  - All new operators integrated with consistent UI and project formatting standards
+
+## Fixes
+
+
 # v 0.7.1
 
 ## Ghost Buster Enhancements
