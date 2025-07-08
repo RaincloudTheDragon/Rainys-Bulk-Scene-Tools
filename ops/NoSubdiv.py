@@ -27,5 +27,3 @@ class NoSubdiv(bpy.types.Operator):
                     removed_count += 1
         self.report({'INFO'}, f"Subdivision Surface modifiers removed from {'selected' if self.only_selected else 'all'} objects. ({removed_count} removed)")
         return {'FINISHED'}
-
-print("Subdivision Surface modifiers removed from all objects.")
