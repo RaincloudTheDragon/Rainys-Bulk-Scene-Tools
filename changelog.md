@@ -1,3 +1,6 @@
+# v 0.8.1
+- Delete Single Keyframe Actions: fixed bug caused by not ignoring linked files
+
 # v 0.8.0
 
 ## New Features
