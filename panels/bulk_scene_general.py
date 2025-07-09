@@ -6,6 +6,7 @@ from ..ops.spawn_scene_structure import SpawnSceneStructure
 from ..ops.delete_single_keyframe_actions import DeleteSingleKeyframeActions
 from ..ops.find_material_users import FindMaterialUsers, MATERIAL_USERS_OT_summary_dialog
 from ..ops.remove_unused_material_slots import RemoveUnusedMaterialSlots
+from ..ops.convert_parenting_to_child_of import ConvertParentingToChildOf
 
 class BulkSceneGeneral(bpy.types.Panel):
     """Bulk Scene General Panel"""
@@ -55,6 +56,8 @@ class BulkSceneGeneral(bpy.types.Panel):
         box.label(text="Animation Data")
         row = box.row(align=True)
         row.operator("bst.delete_single_keyframe_actions", text="Delete Single Keyframe Actions", icon='ANIM_DATA')
+        row = box.row(align=True)
+        row.operator("bst.convert_parenting_to_child_of", text="Convert Parenting to Child Of", icon='CONSTRAINT_DATA')
 
 # List of all classes in this module
 classes = (
@@ -67,6 +70,7 @@ classes = (
     FindMaterialUsers,
     MATERIAL_USERS_OT_summary_dialog,
     RemoveUnusedMaterialSlots,
+    ConvertParentingToChildOf,
 )
 
 # Registration

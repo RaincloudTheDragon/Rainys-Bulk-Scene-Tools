@@ -1,5 +1,20 @@
 import bpy
 
+class ConvertParentingToChildOf(bpy.types.Operator):
+    """Convert regular parenting to Child Of constraints for all selected objects"""
+    bl_idname = "bst.convert_parenting_to_child_of"
+    bl_label = "Convert Parenting to Child Of"
+    bl_description = "Convert regular parenting relationships to Child Of constraints for selected objects"
+    bl_options = {'REGISTER', 'UNDO'}
+
+    def execute(self, context):
+        result = convert_parenting_to_child_of_constraints()
+        if result:
+            self.report({'INFO'}, f"Converted {result} objects to Child Of constraints")
+        else:
+            self.report({'WARNING'}, "No objects with parents found in selection")
+        return {'FINISHED'}
+
 def convert_parenting_to_child_of_constraints():
     """Convert regular parenting to Child Of constraints for all selected objects"""
     
@@ -8,7 +23,7 @@ def convert_parenting_to_child_of_constraints():
     
     if not selected_objects:
         print("No objects selected!")
-        return
+        return 0
     
     print(f"Converting parenting to Child Of constraints for {len(selected_objects)} objects...")
     
@@ -55,6 +70,8 @@ def convert_parenting_to_child_of_constraints():
         print(f"\nObjects that still have parents (not converted):")
         for obj in remaining_parented:
             print(f"  - {obj.name} -> {obj.parent.name}")
+    
+    return converted_count
 
 # Run the conversion
 if __name__ == "__main__":
