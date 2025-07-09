@@ -17,7 +17,7 @@ class RemoveUnusedMaterialSlots(bpy.types.Operator):
         try:
             # Remove unused material slots from all mesh objects
             for obj in bpy.data.objects:
-                if obj.type == 'MESH' and obj.material_slots:
+                if obj.type == 'MESH' and obj.material_slots and obj.library is None:
                     # Temporarily ensure object is in view layer by linking to master collection
                     was_linked = False
                     if obj.name not in context.view_layer.objects:
