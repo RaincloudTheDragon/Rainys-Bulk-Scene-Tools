@@ -1,3 +1,7 @@
+# v 0.8.2
+- **Convert Relations to Constraint**: Operator in Animation Data section that converts regular parenting relationships to Child Of constraints for selected objects, maintaining world position and transform hierarchy
+  - Bugfix: Adapted old operator that wasn't drawing due to using the wrong icon string name.
+
 # v 0.8.1
 - Delete Single Keyframe Actions: fixed bug caused by not ignoring linked files
 
