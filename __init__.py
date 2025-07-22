@@ -1,7 +1,7 @@
 bl_info = {
     "name": "Raincloud's Bulk Scene Tools",
     "author": "RaincloudTheDragon",
-    "version": (0, 9, 0),
+    "version": (0, 9, 1),
     "blender": (4, 5, 0),
     "location": "View3D > Sidebar > Edit Tab",
     "description": "Tools for bulk operations on scene data",
