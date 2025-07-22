@@ -35,7 +35,10 @@ def convert_relations_to_constraint():
             print(f"Skipping {obj.name}: No parent found")
             continue
         
-        print(f"Processing {obj.name} -> {obj.parent.name}")
+        # Store bone information if parented to a bone
+        parent_bone = obj.parent_bone if obj.parent_bone else None
+        bone_info = f" (bone: {parent_bone})" if parent_bone else ""
+        print(f"Processing {obj.name} -> {obj.parent.name}{bone_info}")
         
         # Store original parent and current world matrix
         original_parent = obj.parent
@@ -43,11 +46,17 @@ def convert_relations_to_constraint():
         
         # Remove the parent relationship
         obj.parent = None
+        obj.parent_bone = ""  # Clear the bone reference
         
         # Add Child Of constraint
         child_of_constraint = obj.constraints.new(type='CHILD_OF')
         child_of_constraint.name = f"Child_Of_{original_parent.name}"
         child_of_constraint.target = original_parent
+        
+        # Transfer bone information to constraint subtarget
+        if parent_bone:
+            child_of_constraint.subtarget = parent_bone
+            print(f"  ✓ Transferred bone target: {parent_bone}")
         
         # Set the inverse matrix properly to maintain world position
         # This is equivalent to clicking "Set Inverse" in the UI
