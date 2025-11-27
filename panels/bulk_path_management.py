@@ -1,7 +1,7 @@
 import bpy # type: ignore
 from bpy.types import Panel, Operator, PropertyGroup # type: ignore
 from bpy.props import StringProperty, BoolProperty, EnumProperty, PointerProperty, CollectionProperty # type: ignore
-import os.path
+import os
 import re
 
 class REMOVE_EXT_OT_summary_dialog(bpy.types.Operator):
@@ -72,6 +72,18 @@ def get_image_paths(image_name):
     else:
         return (None, None)
 
+def ensure_directory_for_path(path):
+    """
+    Ensure the directory for the provided path exists.
+    Handles Blender-style relative paths as well.
+    """
+    if not path:
+        return
+    abs_path = bpy.path.abspath(path)
+    directory = os.path.dirname(abs_path)
+    if directory and not os.path.exists(directory):
+        os.makedirs(directory, exist_ok=True)
+
 def get_image_extension(image):
     """
     Get the file extension from an image
@@ -109,7 +121,7 @@ def get_image_extension(image):
     print(f"DEBUG: No matching format found, returning empty extension")
     return ''
 
-def set_image_paths(image_name, new_path):
+def set_image_paths(image_name, new_path, tile_paths=None):
     """
     Set filepath and filepath_raw for an image using its datablock name
     Also update packed_file.filepath if the file is packed
@@ -118,11 +130,15 @@ def set_image_paths(image_name, new_path):
         image_name (str): The name of the image datablock
         new_path (str): The new path to assign
         
+    Args:
+        tile_paths (dict, optional): Mapping of UDIM tile numbers to filepaths
+        
     Returns:
         bool: True if successful, False if image not found
     """
     if image_name in bpy.data.images:
         img = bpy.data.images[image_name]
+        ensure_directory_for_path(new_path)
         
         # Set the filepath properties
         img.filepath = new_path
@@ -141,6 +157,24 @@ def set_image_paths(image_name, new_path):
                 # If it fails, the original filepaths (img.filepath and img.filepath_raw)
                 # are still set, which is better than nothing
                 pass
+
+        # Support UDIM/tiled images
+        if tile_paths and hasattr(img, "tiles"):
+            for tile in img.tiles:
+                tile_number = str(getattr(tile, "number", "1001"))
+                tile_path = tile_paths.get(tile_number)
+                if not tile_path:
+                    continue
+                if not hasattr(tile, "filepath"):
+                    # Blender versions prior to 4.0 don't expose per-tile filepaths;
+                    # rely on the UDIM template instead.
+                    continue
+                ensure_directory_for_path(tile_path)
+                try:
+                    tile.filepath = tile_path
+                except AttributeError:
+                    # Some builds still expose the attribute but keep it read-only.
+                    pass
             
         return True
     else:
