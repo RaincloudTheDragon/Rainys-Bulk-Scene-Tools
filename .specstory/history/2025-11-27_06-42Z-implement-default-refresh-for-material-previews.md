@@ -1183,3 +1183,85 @@ Once Blender can create/remove those extension folders, it will get past the log
 
 ---
 
+_**User (2025-11-27 08:15Z)**_
+
+write this change into the changelog here: @changelog.md:7 
+
+---
+
+_**Agent (model default, mode Agent)**_
+
+<think><details><summary>Thought Process</summary>
+**Determining file format for edit**</details></think>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file">
+<details><summary>Tool use: **read_file** • Read file: changelog.md</summary>
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+**Adding changelog entry**</details></think>
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="apply_patch">
+<details>
+<summary>Tool use: **apply_patch**</summary>
+
+
+Parameters:
+
+```json
+{
+  &quot;relativeWorkspacePath&quot;: &quot;changelog.md&quot;
+}
+```
+Additional data:
+
+```json
+{
+  &quot;codeblockId&quot;: &quot;0a9a6779-1529-4579-80fc-9d3b88571261&quot;
+}
+```
+Result:
+
+```json
+{
+  &quot;diff&quot;: {
+    &quot;chunks&quot;: [
+      {
+        &quot;diffString&quot;: &quot;    - Remapping helper sets tile-level &#96;filepath&#96; values and ensures directories exist before saving.\n    - Saving routine attempts whole-image writes first, then falls back to per-tile saves via the Image Editor context, with summary logs noting UDIM sets processed.\n- - **\n+ - **Viewport Colors**\n+   - Added a Refresh Material Previews button that clears thumbnails, assigns each material to a temporary preview mesh, and forces &#96;preview_ensure()&#96; so stubborn viewport colors now reliably pick up thumbnail data. #7\n  \n  # v 0.9.1&quot;,
+        &quot;oldStart&quot;: 5,
+        &quot;newStart&quot;: 5,
+        &quot;oldLines&quot;: 5,
+        &quot;newLines&quot;: 6,
+        &quot;linesRemoved&quot;: 1,
+        &quot;linesAdded&quot;: 2
+      }
+    ],
+    &quot;editor&quot;: &quot;EDITOR_AI&quot;
+  },
+  &quot;shouldAutoFixLints&quot;: true,
+  &quot;resultForModel&quot;: &quot;Success. Updated the following files:\nM changelog.md&quot;,
+  &quot;contentsAfterEdit&quot;: &quot;# v 0.10.0\n- **AutoMat Extractor**\n  - Added UDIM/tiled image detection so multi-tile textures are organized alongside standard images without errors. #8\n    - Path builder now emits UDIM filename templates (e.g., &#96;name.[UDIM].png&#96;) plus per-tile targets (e.g., &#96;name.1001.png&#96;), preventing collisions during relocation.\n  - Remapping helper sets tile-level &#96;filepath&#96; values and ensures directories exist before saving.\n  - Saving routine attempts whole-image writes first, then falls back to per-tile saves via the Image Editor context, with summary logs noting UDIM sets processed.\n- **Viewport Colors**\n  - Added a Refresh Material Previews button that clears thumbnails, assigns each material to a temporary preview mesh, and forces &#96;preview_ensure()&#96; so stubborn viewport colors now reliably pick up thumbnail data. #7\n\n# v 0.9.1\n- **Convert Relations to Constraint**\n  - Bugfix: Now converts bone parenting as intended\n\n# v 0.9.0\n- **Convert Relations to Constraint**: Operator in Animation Data section that converts regular parenting relationships to Child Of constraints for selected objects, maintaining world position and transform hierarchy\n  - Bugfix: Adapted old operator that wasn&#39;t drawing due to using the wrong icon string name.\n\n# v 0.8.1\n- Delete Single Keyframe Actions: fixed bug caused by not ignoring linked files\n\n# v 0.8.0\n\n## New Features\n- **Delete Single Keyframe Actions**: New operator to remove unwanted animation actions (no keyframes, single keyframe, or all keyframes on same frame)\n- **Find Material Users**: New operator with native material selector interface that displays detailed material usage analysis in a popup dialog, showing:\n  - Object users with material slots\n  - Node tree references  \n  - Material node tree usage\n  - Blender&#39;s internal user count and fake user status\n- **Remove Unused Material Slots**: New operator to clean up unused material slots from all mesh objects in the scene\n- **Enhanced Bulk Scene General Panel**: Reorganized panel with new sections:\n  - Materials section containing material analysis and cleanup tools\n  - Animation Data section for keyframe/action management\n  - All new operators integrated with consistent UI and project formatting standards\n\n## Fixes\n- PathMan\n  - Automat summary no longer gives invoke error\n  - Fixed timing/cancellation error when cancelling Rename Flat Colors operation\n  - Pack files operator no longer throws AttributeError for is_generated (now uses img.source != &#39;GENERATED&#39;)\n  - Pack files operator now properly skips special Blender images like \&quot;Render Result\&quot; and \&quot;Viewer Node\&quot; that can&#39;t be packed\n- General\n  - Removed debug print statement that was showing \&quot;Subdivision Surface modifiers removed from all objects\&quot; on every addon load \n\n# v 0.7.1\n\n## Ghost Buster Enhancements\n\n### Added\n- **Low Priority Ghost Detection**: New option to delete objects not in scenes with no legitimate use and users &lt; 2\n- **Smart Instance Collection Detection**: Ghost Buster now properly detects when objects are used by instance collections in scenes\n- **Enhanced Legitimacy Checks**: Improved detection of objects with valid uses outside scenes (constraints, modifiers, particle systems only count if the using object is in a scene)\n\n### Improved\n- **More Accurate Ghost Detection**: Eliminated false positives by checking if instance collection targets are actually being used by scene objects\n- **Better Classification**: Objects are now classified as \&quot;Legitimate\&quot;, \&quot;Ghosts (users &gt;= 2)\&quot;, or \&quot;Low Priority (users &lt; 2)\&quot; with clearer reasoning\n- Cleaned UI\n\n### Technical Changes\n- Added &#96;is_object_used_by_scene_instance_collections()&#96; function for precise instance collection detection\n- Enhanced &#96;is_object_legitimate_outside_scene()&#96; with scene-aware checks for modifiers, constraints, and particle systems\n- Updated ghost analysis and removal logic to use more precise categorization\n- Added scene property &#96;ghost_buster_delete_low_priority&#96; for user preference storage\n\n# v 0.7.0\n\n## New: Ghost Detection System\n- **Universal Object Analysis**: Expanded ghost detection from CC-objects only to all object types (meshes, empties, curves, etc.)\n- **Enhanced Safety Framework**: Added comprehensive protection for legitimate objects outside scenes:\n  - WGT rig widgets (&#96;WGT-*&#96; objects)\n  - Modifier targets (curve modifiers, constraints)\n  - Constraint targets and references\n  - Particle system objects\n  - Collection instance objects (linked collection references)\n- **Smart Classification**: Objects not in scenes now categorized as:\n  - &#96;LEGITIMATE&#96;: Has valid use outside scenes (protected)\n  - &#96;LOW PRIORITY&#96;: Only collection reference (preserved)\n  - &#96;GHOST&#96;: Multiple users but not in scenes (removed)\n- **Conservative Cleanup Logic**: Only removes objects with 2+ users that have no legitimate purpose\n- **Updated UI**: Ghost Detector popup now shows \&quot;Ghost Objects Analysis\&quot; with enhanced categorization and object type details\n- **Improved Safety**: All linked/library content automatically protected from ghost detection\n\n# v 0.6.1\n\n## Bug Fixes\n- **Fixed flat color detection**: Redesigned algorithm with exact pixel matching and smart sampling\n- **Fixed AutoMat Extractor**: Now properly organizes images by material instead of dumping everything to common folder\n- **Fixed viewport color setting**: Resolved context restriction errors with deferred color application\n- **Fixed timer performance**: Reduced timer frequency and improved cancellation reliability\n- **Enhanced debugging**: Added comprehensive console reporting for all bulk operations\n\n## Improvements\n- Better performance with optimized sampling\n- More reliable cancellation system\n- Context-safe operations that don&#39;t interfere with Blender&#39;s drawing state\n\n# v 0.6.0\n\n- **Enhancement: Progress Reporting &amp; Cancellation**\n  - Some of the PathMan&#39;s operators are pretty resource-intense. Due to Python&#39;s GIL, I haven&#39;t been able to figure out how to run some of these more efficiently. Without the console window, you&#39;re flying blind, so I&#39;ve integrated a loading bar with progress reporting for the following operators:\n    - Flat Color Texture Renamer\n    - Remove Extensions\n    - Save All to image Paths\n    - Remap Selected\n    - Rename by Material\n    - AutoMat Extractor\n\n# v 0.5.1\n\n- **Enhanced AutoMat Extractor:**\n  - Added a crucial safety check to prevent textures from overwriting each other if they resolve to the same filename (e.g., &#96;Image.001.png&#96; and &#96;Image.002.png&#96; both becoming &#96;Image.png&#96;).\n  - The operator now correctly sanitizes names with numerical suffixes before saving.\n  - A new summary dialog now appears after the operation, reporting how many files were extracted successfully and listing any files that were skipped due to naming conflicts.\n  - Added a user preference to control the location of the &#96;common&#96; folder, allowing it to be placed either inside or outside the blend file&#39;s specific texture folder. A checkbox for this setting was added to the UI.\n- **Improved Suffix Handling:**\n  - The \&quot;Rename by Material\&quot; tool now correctly preserves spaces in packed texture names (e.g., &#96;Flow Pack&#96; instead of &#96;FlowPack&#96;).\n  - Added support for underscore-separated packed texture names (e.g., &#96;flow_pack&#96;).\n- **Bug Fixes:**\n  - Resolved multiple &#96;AttributeError&#96; and &#96;TypeError&#96; exceptions that occurred due to incorrect addon name lookups and invalid icon names, making the UI and addon registration more robust.\n\n# v 0.5.0\n\n- **Integrated Scene General: Free GPU VRAM**\n- **Integrated PathMan: Automatic Material Extractor**\n- **Integrated PathMan: Rename Image Textures by Material**: Added comprehensive texture suffix recognition\n  - Recognizes many Character Creator suffixes\n  - Recognizes most standard material suffixes\n  - Images with unrecognized suffixes are skipped instead of renamed, preventing unintended modifications\n  - Enhanced logging: Unrecognized suffix images are listed separately for easy identification\n- **UI Improvements**:\n  - Rearranged workflow layout: Make Paths Relative/Absolute moved to main workflow section\n  - Remap Selected moved under path preview for better workflow progression\n  - Rename by Material and AutoMat Extractor repositioned after Remap Selected\n  - Added Autopack toggle at beginning of workflow sections (both Node Editor and 3D Viewport)\n  - Consolidated draw functions: Node Editor panel now serves as master template for both panels\n\n# v 0.4.1\n\n- Fixed traceback error causing remap to fail to draw buttons\n\n# v 0.4.0\n\nOverhaul! Added new Scene General panel, major enhancements to all panels and functions.\n\n# v0.3.0\n\n- Added image path remapping for unpacked images, keeping them organized.&quot;
+}
+```
+User decision: **accepted**
+
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+Documented the new Refresh Material Previews button in `changelog.md` under v0.10.0, noting that it clears thumbnails, assigns materials to a temporary mesh, and forces `preview_ensure()` so viewport colors have reliable data (#7).
+
+---
+
