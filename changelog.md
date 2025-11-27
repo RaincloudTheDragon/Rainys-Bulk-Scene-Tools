@@ -1,3 +1,10 @@
+# v 0.9.2
+- **AutoMat Extractor**
+  - Added UDIM/tiled image detection so multi-tile textures are organized alongside standard images without errors.
+  - Path builder now emits UDIM filename templates (e.g., `name.[UDIM].png`) plus per-tile targets (e.g., `name.1001.png`), preventing collisions during relocation.
+  - Remapping helper sets tile-level `filepath` values and ensures directories exist before saving.
+  - Saving routine attempts whole-image writes first, then falls back to per-tile saves via the Image Editor context, with summary logs noting UDIM sets processed.
+
 # v 0.9.1
 - **Convert Relations to Constraint**
   - Bugfix: Now converts bone parenting as intended

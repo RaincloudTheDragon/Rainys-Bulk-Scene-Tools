@@ -1,7 +1,12 @@
 import bpy
 import os
 import re
-from ..panels.bulk_path_management import get_image_extension, bulk_remap_paths, set_image_paths
+from ..panels.bulk_path_management import (
+    get_image_extension,
+    bulk_remap_paths,
+    set_image_paths,
+    ensure_directory_for_path,
+)
 
 class AUTOMAT_OT_summary_dialog(bpy.types.Operator):
     """Show AutoMat Extractor operation summary"""
@@ -91,6 +96,10 @@ class AutoMatExtractor(bpy.types.Operator):
         self.overwrite_skipped = []
         self.failed_list = []
         self.path_mapping = {}
+        self.udim_summary = {
+            "found": 0,
+            "saved": 0,
+        }
         
         # Start timer for processing
         bpy.app.timers.register(self._process_step)
@@ -202,26 +211,34 @@ class AutoMatExtractor(bpy.types.Operator):
             
             if img.name.startswith('#'):
                 # Flat colors go to FlatColors subfolder
-                path = f"//textures\\{common_path_part}\\FlatColors\\{filename}"
+                base_folder = f"//textures\\{common_path_part}\\FlatColors"
             else:
                 # Check material usage for this image
                 materials_using_image = self.material_mapping.get(img.name, [])
                 
                 if not materials_using_image:
                     # No materials found, put in common folder
-                    path = f"//textures\\{common_path_part}\\{filename}"
+                    base_folder = f"//textures\\{common_path_part}"
                     print(f"DEBUG: {img.name} - No materials found, using common folder")
                 elif len(materials_using_image) == 1:
                     # Used by exactly one material, organize by material name
                     material_name = self.sanitize_filename(materials_using_image[0])
-                    path = f"//textures\\{blend_name}\\{material_name}\\{filename}"
+                    base_folder = f"//textures\\{blend_name}\\{material_name}"
                     print(f"DEBUG: {img.name} - Used by {material_name}, organizing by material")
                 else:
                     # Used by multiple materials, put in common folder
-                    path = f"//textures\\{common_path_part}\\{filename}"
+                    base_folder = f"//textures\\{common_path_part}"
                     print(f"DEBUG: {img.name} - Used by multiple materials: {materials_using_image}, using common folder")
             
-            self.path_mapping[img.name] = path
+            is_udim = self.is_udim_image(img)
+            if is_udim:
+                udim_mapping = self.build_udim_mapping(base_folder, sanitized_base_name, extension, img)
+                self.path_mapping[img.name] = udim_mapping
+                self.udim_summary["found"] += 1
+                print(f"DEBUG: {img.name} - UDIM detected with {len(udim_mapping.get('tiles', {}))} tiles")
+            else:
+                path = f"{base_folder}\\{filename}"
+                self.path_mapping[img.name] = path
             
             self.current_index += 1
             progress = 50.0 + (self.current_index / len(self.selected_images)) * 20.0
@@ -239,10 +256,17 @@ class AutoMatExtractor(bpy.types.Operator):
             
             # Remap current image
             img_name = list(self.path_mapping.keys())[self.current_index]
-            new_path = self.path_mapping[img_name]
+            mapping_entry = self.path_mapping[img_name]
             props.operation_status = f"Remapping {img_name}..."
             
-            success = set_image_paths(img_name, new_path)
+            if isinstance(mapping_entry, dict) and mapping_entry.get("udim"):
+                success = set_image_paths(
+                    img_name,
+                    mapping_entry.get("template", ""),
+                    tile_paths=mapping_entry.get("tiles", {})
+                )
+            else:
+                success = set_image_paths(img_name, mapping_entry)
             if success:
                 self.success_count += 1
             else:
@@ -281,9 +305,10 @@ class AutoMatExtractor(bpy.types.Operator):
                 flat_colors = 0
                 
                 for img_name, path in self.path_mapping.items():
-                    if "FlatColors" in path:
+                    current_path = path["template"] if isinstance(path, dict) else path
+                    if "FlatColors" in current_path:
                         flat_colors += 1
-                    elif "common" in path:
+                    elif "common" in current_path:
                         common_organized += 1
                     else:
                         material_organized += 1
@@ -300,6 +325,8 @@ class AutoMatExtractor(bpy.types.Operator):
                     for img_name, path in self.path_mapping.items():
                         if "FlatColors" not in path and "common" not in path:
                             # Extract material name from path
+                            if isinstance(path, dict):
+                                continue
                             path_parts = path.split('\\')
                             if len(path_parts) >= 3:
                                 material_name = path_parts[-2]
@@ -311,6 +338,8 @@ class AutoMatExtractor(bpy.types.Operator):
                         print(f"  {material_name}: {len(images)} images")
                 
                 print(f"=====================================\n")
+                if self.udim_summary["found"]:
+                    print(f"UDIM images processed: {self.udim_summary['found']} (saved successfully: {self.udim_summary['saved']})")
                 
                 # Force UI update
                 for area in bpy.context.screen.areas:
@@ -322,11 +351,11 @@ class AutoMatExtractor(bpy.types.Operator):
             img = self.selected_images[self.current_index]
             props.operation_status = f"Saving {img.name}..."
             
-            try:
-                if hasattr(img, 'save'):
-                    img.save()
-            except Exception as e:
-                pass  # Continue even if saving fails
+            mapping_entry = self.path_mapping.get(img.name)
+            if isinstance(mapping_entry, dict) and mapping_entry.get("udim"):
+                self.save_udim_image(img, mapping_entry)
+            else:
+                self.save_standard_image(img)
             
             self.current_index += 1
             progress = 85.0 + (self.current_index / len(self.selected_images)) * 15.0
@@ -401,6 +430,99 @@ class AutoMatExtractor(bpy.types.Operator):
                     image_to_materials[img_name].append(material.name)
         
         return image_to_materials
+
+    def is_udim_image(self, image):
+        """Return True when the image contains UDIM/tiled data"""
+        has_tiles = hasattr(image, "source") and image.source == 'TILED'
+        tiles_attr = getattr(image, "tiles", None)
+        if tiles_attr and len(tiles_attr) > 1:
+            return True
+        return has_tiles
+
+    def build_udim_mapping(self, base_folder, base_name, extension, image):
+        """Create a path mapping structure for UDIM images"""
+        udim_token = "<UDIM>"
+        template_filename = f"{base_name}.{udim_token}{extension}"
+        template_path = f"{base_folder}\\{template_filename}"
+        tile_paths = {}
+
+        tiles = getattr(image, "tiles", [])
+        for tile in tiles:
+            tile_number = str(getattr(tile, "number", "1001"))
+            tile_filename = f"{base_name}.{tile_number}{extension}"
+            tile_paths[tile_number] = f"{base_folder}\\{tile_filename}"
+
+        return {
+            "udim": True,
+            "template": template_path,
+            "tiles": tile_paths,
+        }
+
+    def save_udim_image(self, image, mapping):
+        """Attempt to save each tile for a UDIM image"""
+        success = False
+        try:
+            image.save()
+            success = True
+        except Exception as e:
+            print(f"DEBUG: UDIM bulk save failed for {image.name}: {e}")
+            success = self._save_udim_tiles_individually(image, mapping)
+
+        if success:
+            self.udim_summary["saved"] += 1
+        return success
+
+    def save_standard_image(self, image):
+        """Save a non-UDIM image safely"""
+        try:
+            if hasattr(image, 'save'):
+                image.save()
+                return True
+        except Exception as e:
+            print(f"DEBUG: Failed to save image {image.name}: {e}")
+        return False
+
+    def _save_udim_tiles_individually(self, image, mapping):
+        """Fallback saving routine when image.save() fails on UDIMs"""
+        tile_paths = mapping.get("tiles", {})
+        any_saved = False
+
+        for tile in getattr(image, "tiles", []):
+            tile_number = str(getattr(tile, "number", "1001"))
+            target_path = tile_paths.get(tile_number)
+            if not target_path:
+                continue
+            try:
+                ensure_directory_for_path(target_path)
+                self._save_tile_via_image_editor(image, tile_number, target_path)
+                any_saved = True
+            except Exception as e:
+                print(f"DEBUG: Failed to save UDIM tile {tile_number} for {image.name}: {e}")
+
+        return any_saved
+
+    def _save_tile_via_image_editor(self, image, tile_number, filepath):
+        """Use an IMAGE_EDITOR override to save a specific tile"""
+        # Try to find an existing image editor to reuse Blender UI context
+        for area in bpy.context.screen.areas:
+            if area.type != 'IMAGE_EDITOR':
+                continue
+            override = bpy.context.copy()
+            override['area'] = area
+            override['space_data'] = area.spaces.active
+            region = next((r for r in area.regions if r.type == 'WINDOW'), None)
+            if region is None:
+                continue
+            override['region'] = region
+            space = area.spaces.active
+            space.image = image
+            if hasattr(space, "image_user"):
+                space.image_user.tile = int(tile_number)
+            bpy.ops.image.save(override, filepath=filepath)
+            return
+        # Fallback: attempt to set filepath and invoke save without override
+        image.filepath = filepath
+        image.save()
 
 # Must register the new dialog class as well
 classes = (
