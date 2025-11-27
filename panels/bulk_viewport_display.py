@@ -266,6 +266,74 @@ class VIEWPORT_OT_SetViewportColors(bpy.types.Operator):
         
         bpy.context.window_manager.popup_menu(draw_popup, title="Processing Complete", icon='INFO')
 
+
+class VIEWPORT_OT_RefreshMaterialPreviews(bpy.types.Operator):
+    """Regenerate material previews to avoid stale thumbnails"""
+    bl_idname = "bst.refresh_material_previews"
+    bl_label = "Refresh Material Previews"
+    bl_options = {'REGISTER'}
+
+    def execute(self, context):
+        forced_count = 0
+        try:
+            bpy.ops.wm.previews_clear()
+            bpy.ops.wm.previews_batch_generate()
+            bpy.ops.wm.previews_ensure()
+        except Exception as exc:
+            self.report({'WARNING'}, f"Pre-clearing previews failed: {exc}")
+        
+        temp_obj = self._create_preview_object(context)
+        
+        try:
+            for material in bpy.data.materials:
+                if not material or material.is_grease_pencil:
+                    continue
+                
+                try:
+                    self._force_preview(material, temp_obj)
+                    forced_count += 1
+                except Exception as exc:
+                    print(f"BST preview refresh: failed for {material.name}: {exc}")
+        finally:
+            self._cleanup_preview_object(temp_obj)
+
+        message = f"Material previews refreshed ({forced_count} materials)"
+        self.report({'INFO'}, message)
+        return {'FINISHED'}
+
+    def _create_preview_object(self, context):
+        mesh = bpy.data.meshes.new("BST_PreviewMesh")
+        mesh.from_pydata(
+            [(0, 0, 0), (1, 0, 0), (0, 1, 0), (0, 0, 1)],
+            [],
+            [(0, 1, 2), (0, 2, 3), (0, 3, 1), (1, 3, 2)]
+        )
+        obj = bpy.data.objects.new("BST_PreviewObject", mesh)
+        obj.hide_viewport = True
+        obj.hide_render = True
+        context.scene.collection.objects.link(obj)
+        return obj
+
+    def _cleanup_preview_object(self, obj):
+        if not obj:
+            return
+        mesh = obj.data
+        bpy.data.objects.remove(obj, do_unlink=True)
+        if mesh:
+            bpy.data.meshes.remove(mesh, do_unlink=True)
+
+    def _force_preview(self, material, temp_obj):
+        if temp_obj.data.materials:
+            temp_obj.data.materials[0] = material
+        else:
+            temp_obj.data.materials.append(material)
+        material.preview_render_type = 'SPHERE'
+        preview = material.preview_ensure()
+        if preview:
+            # Touch icon id to ensure generation
+            _ = preview.icon_id
+
+
 def correct_viewport_color(color):
     """Adjust viewport colors by color intensity and saturation"""
     r, g, b = color
@@ -702,6 +770,7 @@ class VIEW3D_PT_BulkViewportDisplay(bpy.types.Panel):
         # Add primary settings
         col = box.column(align=True)
         col.prop(context.scene, "viewport_colors_selected_only")
+        col.operator("bst.refresh_material_previews", icon='FILE_REFRESH')
         
         # Add advanced options in a collapsible section
         row = box.row()
@@ -936,6 +1005,7 @@ class VIEWPORT_OT_SelectDiffuseNodes(bpy.types.Operator):
 # List of all classes in this module
 classes = (
     VIEWPORT_OT_SetViewportColors,
+    VIEWPORT_OT_RefreshMaterialPreviews,
     VIEW3D_PT_BulkViewportDisplay,
     MATERIAL_OT_SelectInEditor,
     VIEWPORT_OT_SelectDiffuseNodes,
