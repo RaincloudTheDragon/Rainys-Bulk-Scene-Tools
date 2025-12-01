@@ -1,17 +1,3 @@
-bl_info = {
-    "name": "Raincloud's Bulk Scene Tools",
-    "author": "RaincloudTheDragon",
-    "version": (0, 10, 1),
-    "blender": (4, 5, 0),
-    "location": "View3D > Sidebar > Edit Tab",
-    "description": "Tools for bulk operations on scene data",
-    "warning": "",
-    "doc_url": "https://github.com/RaincloudTheDragon/Rainys-Bulk-Scene-Tools",
-    "category": "Scene",
-    "maintainer": "RaincloudTheDragon",
-    "support": "COMMUNITY",
-}
-
 import bpy # type: ignore
 from bpy.types import AddonPreferences, Panel # type: ignore
 from bpy.props import BoolProperty # type: ignore
