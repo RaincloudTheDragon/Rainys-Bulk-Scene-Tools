@@ -1,0 +1,29 @@
+schema_version = "1.0.0"
+
+id = "rainclouds_bulk_scene_tools"
+name = "Raincloud's Bulk Scene Tools"
+tagline = "Bulk utilities for optimizing scene data"
+version = "0.10.1"
+type = "add-on"
+
+maintainer = "RaincloudTheDragon <raincloudthedragon@gmail.com>"
+license = ["GPL-3.0-or-later"]
+blender_version_min = "4.5.0"
+
+website = "https://github.com/RaincloudTheDragon/Rainys-Bulk-Scene-Tools"
+
+tags = ["Scene", "Workflow", "Materials"]
+
+[permissions]
+files = "Read and write external resources referenced by scenes"
+
+[build]
+paths_exclude_pattern = [
+    "__pycache__/",
+    "*.pyc",
+    ".git/",
+    ".github/",
+    "docs/",
+    "tests/",
+]
+
