@@ -1,7 +1,7 @@
 bl_info = {
     "name": "Raincloud's Bulk Scene Tools",
     "author": "RaincloudTheDragon",
-    "version": (0, 9, 1),
+    "version": (0, 10, 1),
     "blender": (4, 5, 0),
     "location": "View3D > Sidebar > Edit Tab",
     "description": "Tools for bulk operations on scene data",
@@ -13,8 +13,8 @@ bl_info = {
 }
 
 import bpy # type: ignore
-from bpy.types import AddonPreferences, Operator, Panel # type: ignore
-from bpy.props import BoolProperty, IntProperty # type: ignore
+from bpy.types import AddonPreferences, Panel # type: ignore
+from bpy.props import BoolProperty # type: ignore
 from .panels import bulk_viewport_display
 from .panels import bulk_data_remap
 from .panels import bulk_path_management
@@ -23,26 +23,10 @@ from .ops.AutoMatExtractor import AutoMatExtractor, AUTOMAT_OT_summary_dialog
 from .ops.Rename_images_by_mat import Rename_images_by_mat, RENAME_OT_summary_dialog
 from .ops.FreeGPU import BST_FreeGPU
 from .ops import ghost_buster
-from . import updater
 
 # Addon preferences class for update settings
 class BST_AddonPreferences(AddonPreferences):
     bl_idname = __package__
-
-    # Auto Updater settings
-    check_for_updates: BoolProperty(
-        name="Check for Updates on Startup",
-        description="Automatically check for new versions of the addon when Blender starts",
-        default=True,
-    )
-    
-    update_check_interval: IntProperty(  # type: ignore
-        name="Update check interval (hours)",
-        description="How often to check for updates (in hours)",
-        default=24,
-        min=1,
-        max=168  # 1 week max
-    )
 
     # AutoMat Extractor settings
     automat_common_outside_blend: BoolProperty(
@@ -53,30 +37,6 @@ class BST_AddonPreferences(AddonPreferences):
 
     def draw(self, context):
         layout = self.layout
-
-        # Custom updater UI
-        box = layout.box()
-        box.label(text="Update Settings")
-        row = box.row()
-        row.prop(self, "check_for_updates")
-        row = box.row()
-        row.prop(self, "update_check_interval")
-        
-        # Check for updates button
-        row = box.row()
-        row.operator("bst.check_for_updates", icon='FILE_REFRESH')
-        
-        # Show update status if available
-        if updater.UpdaterState.update_available:
-            box.label(text=f"Update available: v{updater.UpdaterState.update_version}")
-            row = box.row()
-            row.operator("bst.install_update", icon='IMPORT')
-            row = box.row()
-            row.operator("wm.url_open", text="Download Update").url = updater.UpdaterState.update_download_url
-        elif updater.UpdaterState.checking_for_updates:
-            box.label(text="Checking for updates...")
-        elif updater.UpdaterState.error_message:
-            box.label(text=f"Error checking for updates: {updater.UpdaterState.error_message}")
 
         # AutoMat Extractor settings
         box = layout.box()
@@ -123,13 +83,6 @@ def register():
             print(f"Available addons: {', '.join(bpy.context.preferences.addons.keys())}")
     except Exception as e:
         print(f"Error accessing preferences: {str(e)}")
-    
-    # Register the updater module
-    updater.register()
-    
-    # Check for updates on startup
-    if hasattr(updater, "check_for_updates"):
-        updater.check_for_updates()
     
     # Register modules
     bulk_scene_general.register()
@@ -181,11 +134,6 @@ def unregister():
         pass
     try:
         bulk_scene_general.unregister()
-    except Exception:
-        pass
-    # Unregister the updater module
-    try:
-        updater.unregister()
     except Exception:
         pass
     # Unregister classes from this module

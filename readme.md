@@ -6,7 +6,6 @@ A couple Blender tools to help me automate some tedious tasks in scene optimizat
 
 - Bulk Data Remap
 - Bulk Viewport Display
-- Automatic update checking and one-click updates from GitHub releases
 
 Officially supports Blender 4.4.1, but may still work on older versions.
 
@@ -36,15 +35,6 @@ Officially supports Blender 4.4.1, but may still work on older versions.
 3. Remap all image paths as preferred (Bulk Operations)
 4. Bulk Path Management > Save All (If selected, will save selected, if none are selected, will save all images in file)
 5. Remove pack
-
-### Updating the addon
-
-The addon will automatically check for updates when Blender starts. You can also:
-
-1. Go to Edit > Preferences > Add-ons
-2. Find "Raincloud's Bulk Scene Tools" in the list
-3. In the addon preferences, click "Check Now" to check for updates
-4. If an update is available, click "Install Update" to download and install it
 
 ## Author
 
