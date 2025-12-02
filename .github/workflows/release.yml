@@ -19,26 +19,31 @@ jobs:
       - name: Get Version
         id: get_version
         run: |
-          VERSION=$(python -c "import json; v=json.load(open('bl_info.json'))['version']; print(f'{v[0]}.{v[1]}.{v[2]}')")
-          echo "version=$VERSION" >> $GITHUB_OUTPUT
-          echo "zip_name=Rainys-Bulk-Scene-Tools.v$VERSION.zip" >> $GITHUB_OUTPUT
+          python - <<'PY'
+          import os
+          import tomllib
+          from pathlib import Path
+
+          data = tomllib.loads(Path("blender_manifest.toml").read_text(encoding="utf-8"))
+          version = data["version"]
+
+          with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as fh:
+              fh.write(f"version={version}\n")
+              fh.write(f"zip_name=Rainys_Bulk_Scene_Tools.v{version}.zip\n")
+          PY
       
       - name: Create ZIP
         run: |
-          # Create a temporary directory structure
-          mkdir -p addon_files/Rainys-Bulk-Scene-Tools
-          # Create the subdirectories in the addon directory
-          mkdir -p addon_files/Rainys-Bulk-Scene-Tools/updater
-          mkdir -p addon_files/Rainys-Bulk-Scene-Tools/panels
-          mkdir -p addon_files/Rainys-Bulk-Scene-Tools/ops
-          # Copy main addon files
-          cp __init__.py bl_info.json requirements.txt readme.md changelog.md addon_files/Rainys-Bulk-Scene-Tools/
-          # Copy the panels module
-          cp -r panels/* addon_files/Rainys-Bulk-Scene-Tools/panels/
-          # Copy the ops module
-          cp -r ops/* addon_files/Rainys-Bulk-Scene-Tools/ops/
-          # Copy the updater module
-          cp -r updater/* addon_files/Rainys-Bulk-Scene-Tools/updater/
+          ADDON_DIR=addon_files/Rainys_Bulk_Scene_Tools
+          mkdir -p "$ADDON_DIR"
+
+          # Copy top-level files required for the add-on
+          cp __init__.py blender_manifest.toml requirements.txt readme.md changelog.md "$ADDON_DIR"/
+
+          # Copy packages
+          cp -r panels "$ADDON_DIR"/
+          cp -r ops "$ADDON_DIR"/
+
           # Create the zip from the temporary directory
           cd addon_files
           zip -r "../${{ steps.get_version.outputs.zip_name }}" ./*

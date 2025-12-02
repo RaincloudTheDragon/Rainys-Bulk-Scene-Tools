@@ -48,3 +48,276 @@ Yep—lines 214‑220 show the dev server receiving a reload for `Rainys_Bulk_Sc
 
 ---
 
+_**User (2025-12-01 23:42Z)**_
+
+@.github/workflows/release.yml:1-53 we need to ensure that the github workflow is compatible with the new structure.
+
+---
+
+_**Agent (model gpt-5.1-codex, mode Agent)**_
+
+<think><details><summary>Thought Process</summary>
+**Revising release workflow for new structure**
+
+I’m planning to update the release workflow to accommodate the removal of `bl_info.json` and the updater folder, shifting version retrieval to parse `bl_info` from `__init__.py` using a small Python AST snippet, and adjusting the zip packaging to use underscores in directory names matching the new manifest ID. I’ll also update file copy steps to include `blender_manifest.toml` and other root files, remove outdated steps, and ensure the zipped addon folder structure aligns with Blender’s extension requirements.</details></think>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file">
+<details><summary>Tool use: **read_file** • Read file: .github/workflows/release.yml</summary>
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+**Preparing patch for GitHub Actions script update**
+
+I'm putting together a patch that updates the GitHub Actions workflow script to extract version info from `__init__.py` using `ast.literal_eval`, and revising the ZIP creation step to copy necessary files and folders (like `panels` and `ops`) properly into an addon directory while making sure all required files (including `blender_manifest.toml` and `requirements.txt`) are included. I'll handle quotes for spaces and ensure the script fails gracefully if needed.</details></think>
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="apply_patch">
+<details>
+<summary>Tool use: **apply_patch**</summary>
+
+
+Parameters:
+
+```json
+{
+  &quot;relativeWorkspacePath&quot;: &quot;.github/workflows/release.yml&quot;
+}
+```
+Additional data:
+
+```json
+{
+  &quot;reasonForAcceptReject&quot;: {
+    &quot;type&quot;: &quot;dotFile&quot;
+  },
+  &quot;codeblockId&quot;: &quot;5977a6df-e502-4fda-8528-b76fa3c4a47f&quot;
+}
+```
+Result:
+
+```json
+{
+  &quot;diff&quot;: {
+    &quot;chunks&quot;: [
+      {
+        &quot;diffString&quot;: &quot;          id: get_version\r\n          run: |\r\n-           VERSION=$(python -c \&quot;import json; v=json.load(open(&#39;bl_info.json&#39;))[&#39;version&#39;]; print(f&#39;{v[0]}.{v[1]}.{v[2]}&#39;)\&quot;)\r\n-           echo \&quot;version=$VERSION\&quot; &gt;&gt; $GITHUB_OUTPUT\r\n-           echo \&quot;zip_name=Rainys-Bulk-Scene-Tools.v$VERSION.zip\&quot; &gt;&gt; $GITHUB_OUTPUT\r\n+           python - &lt;&lt;&#39;PY&#39;\r\n+           import ast\r\n+           import os\r\n+           from pathlib import Path\r\n+ \r\n+           text = Path(\&quot;__init__.py\&quot;).read_text(encoding=\&quot;utf-8\&quot;)\r\n+           module = ast.parse(text)\r\n+ \r\n+           info = None\r\n+           for node in module.body:\r\n+               if isinstance(node, ast.Assign) and any(getattr(target, \&quot;id\&quot;, None) == \&quot;bl_info\&quot; for target in node.targets):\r\n+                   info = ast.literal_eval(node.value)\r\n+                   break\r\n+ \r\n+           if info is None:\r\n+               raise SystemExit(\&quot;Unable to locate bl_info in __init__.py\&quot;)\r\n+ \r\n+           version = \&quot;.\&quot;.join(str(part) for part in info[\&quot;version\&quot;])\r\n+ \r\n+           with open(os.environ[\&quot;GITHUB_OUTPUT\&quot;], \&quot;a\&quot;, encoding=\&quot;utf-8\&quot;) as fh:\r\n+               fh.write(f\&quot;version={version}\\n\&quot;)\r\n+               fh.write(f\&quot;zip_name=Rainys_Bulk_Scene_Tools.v{version}.zip\\n\&quot;)\r\n+           PY\r\n        \r\n        - name: Create ZIP\r\n          run: |\r\n-           # Create a temporary directory structure\r\n-           mkdir -p addon_files/Rainys-Bulk-Scene-Tools\r\n-           # Create the subdirectories in the addon directory\r\n-           mkdir -p addon_files/Rainys-Bulk-Scene-Tools/updater\r\n-           mkdir -p addon_files/Rainys-Bulk-Scene-Tools/panels\r\n-           mkdir -p addon_files/Rainys-Bulk-Scene-Tools/ops\r\n-           # Copy main addon files\r\n-           cp __init__.py bl_info.json requirements.txt readme.md changelog.md addon_files/Rainys-Bulk-Scene-Tools/\r\n-           # Copy the panels module\r\n-           cp -r panels/* addon_files/Rainys-Bulk-Scene-Tools/panels/\r\n-           # Copy the ops module\r\n-           cp -r ops/* addon_files/Rainys-Bulk-Scene-Tools/ops/\r\n-           # Copy the updater module\r\n-           cp -r updater/* addon_files/Rainys-Bulk-Scene-Tools/updater/\r\n+           ADDON_DIR=addon_files/Rainys_Bulk_Scene_Tools\r\n+           mkdir -p \&quot;$ADDON_DIR\&quot;\r\n+ \r\n+           # Copy top-level files required for the add-on\r\n+           cp __init__.py blender_manifest.toml requirements.txt readme.md changelog.md \&quot;$ADDON_DIR\&quot;/\r\n+ \r\n+           # Copy packages\r\n+           cp -r panels \&quot;$ADDON_DIR\&quot;/\r\n+           cp -r ops \&quot;$ADDON_DIR\&quot;/\r\n+ \r\n            # Create the zip from the temporary directory\r\n            cd addon_files\r&quot;,
+        &quot;oldStart&quot;: 20,
+        &quot;newStart&quot;: 20,
+        &quot;oldLines&quot;: 24,
+        &quot;newLines&quot;: 40,
+        &quot;linesRemoved&quot;: 17,
+        &quot;linesAdded&quot;: 33
+      }
+    ],
+    &quot;editor&quot;: &quot;EDITOR_AI&quot;
+  },
+  &quot;shouldAutoFixLints&quot;: true,
+  &quot;resultForModel&quot;: &quot;Success. Updated the following files:\nM .github/workflows/release.yml&quot;,
+  &quot;contentsAfterEdit&quot;: &quot;name: Create Release\r\n\r\non:\r\n  workflow_dispatch:\r\n    inputs:\r\n      release_tag:\r\n        description: &#39;Release tag (e.g., v0.2.0)&#39;\r\n        required: true\r\n        type: string\r\n\r\njobs:\r\n  build:\r\n    runs-on: ubuntu-latest\r\n    permissions:\r\n      contents: write\r\n    steps:\r\n      - uses: actions/checkout@v4\r\n      \r\n      - name: Get Version\r\n        id: get_version\r\n        run: |\r\n          python - &lt;&lt;&#39;PY&#39;\r\n          import ast\r\n          import os\r\n          from pathlib import Path\r\n\r\n          text = Path(\&quot;__init__.py\&quot;).read_text(encoding=\&quot;utf-8\&quot;)\r\n          module = ast.parse(text)\r\n\r\n          info = None\r\n          for node in module.body:\r\n              if isinstance(node, ast.Assign) and any(getattr(target, \&quot;id\&quot;, None) == \&quot;bl_info\&quot; for target in node.targets):\r\n                  info = ast.literal_eval(node.value)\r\n                  break\r\n\r\n          if info is None:\r\n              raise SystemExit(\&quot;Unable to locate bl_info in __init__.py\&quot;)\r\n\r\n          version = \&quot;.\&quot;.join(str(part) for part in info[\&quot;version\&quot;])\r\n\r\n          with open(os.environ[\&quot;GITHUB_OUTPUT\&quot;], \&quot;a\&quot;, encoding=\&quot;utf-8\&quot;) as fh:\r\n              fh.write(f\&quot;version={version}\\n\&quot;)\r\n              fh.write(f\&quot;zip_name=Rainys_Bulk_Scene_Tools.v{version}.zip\\n\&quot;)\r\n          PY\r\n      \r\n      - name: Create ZIP\r\n        run: |\r\n          ADDON_DIR=addon_files/Rainys_Bulk_Scene_Tools\r\n          mkdir -p \&quot;$ADDON_DIR\&quot;\r\n\r\n          # Copy top-level files required for the add-on\r\n          cp __init__.py blender_manifest.toml requirements.txt readme.md changelog.md \&quot;$ADDON_DIR\&quot;/\r\n\r\n          # Copy packages\r\n          cp -r panels \&quot;$ADDON_DIR\&quot;/\r\n          cp -r ops \&quot;$ADDON_DIR\&quot;/\r\n\r\n          # Create the zip from the temporary directory\r\n          cd addon_files\r\n          zip -r \&quot;../${{ steps.get_version.outputs.zip_name }}\&quot; ./*\r\n      \r\n      - name: Upload Release Asset\r\n        env:\r\n          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}\r\n        uses: softprops/action-gh-release@v1\r\n        with:\r\n          files: ${{ steps.get_version.outputs.zip_name }}\r\n          tag_name: ${{ inputs.release_tag }}\r\n          draft: true &quot;
+}
+```
+User decision: **accepted**
+
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+**Reviewing copy and zip details**</details></think>
+
+---
+
+<tool-use data-tool-type="generic" data-tool-name="read_lints">
+<details>
+          <summary>Tool use: **read_lints** • Read lints for 1 file</summary>
+      
+Lint paths:
+
+- `.github/workflows/release.yml`
+
+Lint results
+
+
+**No lint errors found**
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+**Summarizing final message content**</details></think>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file">
+<details><summary>Tool use: **read_file** • Read file: .github/workflows/release.yml</summary>
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+**Extending line extraction with offset**</details></think>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file">
+<details><summary>Tool use: **read_file** • Read file: .github/workflows/release.yml</summary>
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+**Summarizing code change details**</details></think>
+
+---
+
+Updated the release workflow so it pulls version info from `bl_info` inside `__init__.py` and writes consistent artifact names, then packages the new manifest‑based layout (no updater folder, includes `blender_manifest.toml`, underscores in the add-on directory). ```19:60:.github/workflows/release.yml
+      - name: Get Version
+        id: get_version
+        run: |
+          python - <<'PY'
+          ...
+              fh.write(f"zip_name=Rainys_Bulk_Scene_Tools.v{version}.zip\n")
+          PY
+      
+      - name: Create ZIP
+        run: |
+          ADDON_DIR=addon_files/Rainys_Bulk_Scene_Tools
+          ...
+          cp __init__.py blender_manifest.toml requirements.txt readme.md changelog.md "$ADDON_DIR"/
+          cp -r panels "$ADDON_DIR"/
+          cp -r ops "$ADDON_DIR"/
+          cd addon_files
+          zip -r "../${{ steps.get_version.outputs.zip_name }}" ./*
+```
+
+This keeps the automated releases aligned with the new extension structure. Tests not run (workflow change only).
+
+---
+
+_**User (2025-12-02 00:23Z)**_
+
+no, I removed bl_info from initpy because it's contained in the manifest toml.
+
+---
+
+_**Agent (model gpt-5.1-codex, mode Agent)**_
+
+<think><details><summary>Thought Process</summary>
+**Checking for removed bl_info**</details></think>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file">
+<details><summary>Tool use: **read_file** • Read file: __init__.py</summary>
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+**Updating release workflow to parse manifest**
+
+I’m reworking the release workflow to get the version info from `blender_manifest.toml` instead of `bl_info` in `__init__` since `bl_info` was removed. I plan to use Python's `tomllib` (since GitHub runner runs Python 3.11) to parse the manifest and extract the version and possibly the zip name. I need to update the script step in the workflow to read the manifest, set the version, and name the zipped release folder consistently with the manifest ID, favoring underscores over hyphens to match the user’s preferences.</details></think>
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="apply_patch">
+<details>
+<summary>Tool use: **apply_patch**</summary>
+
+
+Parameters:
+
+```json
+{
+  &quot;relativeWorkspacePath&quot;: &quot;.github/workflows/release.yml&quot;
+}
+```
+Additional data:
+
+```json
+{
+  &quot;codeblockId&quot;: &quot;554f6d09-342a-4733-9355-22001067c053&quot;
+}
+```
+Result:
+
+```json
+{
+  &quot;diff&quot;: {
+    &quot;chunks&quot;: [
+      {
+        &quot;diffString&quot;: &quot;          run: |\r\n            python - &lt;&lt;&#39;PY&#39;\r\n-           import ast\r\n            import os\r\n+           import tomllib\r\n            from pathlib import Path\r\n  \r\n-           text = Path(\&quot;__init__.py\&quot;).read_text(encoding=\&quot;utf-8\&quot;)\r\n-           module = ast.parse(text)\r\n- \r\n-           info = None\r\n-           for node in module.body:\r\n-               if isinstance(node, ast.Assign) and any(getattr(target, \&quot;id\&quot;, None) == \&quot;bl_info\&quot; for target in node.targets):\r\n-                   info = ast.literal_eval(node.value)\r\n-                   break\r\n- \r\n-           if info is None:\r\n-               raise SystemExit(\&quot;Unable to locate bl_info in __init__.py\&quot;)\r\n- \r\n-           version = \&quot;.\&quot;.join(str(part) for part in info[\&quot;version\&quot;])\r\n+           data = tomllib.loads(Path(\&quot;blender_manifest.toml\&quot;).read_text(encoding=\&quot;utf-8\&quot;))\r\n+           version = data[\&quot;version\&quot;]\r\n  \r\n            with open(os.environ[\&quot;GITHUB_OUTPUT\&quot;], \&quot;a\&quot;, encoding=\&quot;utf-8\&quot;) as fh:\r&quot;,
+        &quot;oldStart&quot;: 21,
+        &quot;newStart&quot;: 21,
+        &quot;oldLines&quot;: 21,
+        &quot;newLines&quot;: 10,
+        &quot;linesRemoved&quot;: 14,
+        &quot;linesAdded&quot;: 3
+      }
+    ],
+    &quot;editor&quot;: &quot;EDITOR_AI&quot;
+  },
+  &quot;shouldAutoFixLints&quot;: true,
+  &quot;resultForModel&quot;: &quot;Success. Updated the following files:\nM .github/workflows/release.yml&quot;,
+  &quot;contentsAfterEdit&quot;: &quot;name: Create Release\r\n\r\non:\r\n  workflow_dispatch:\r\n    inputs:\r\n      release_tag:\r\n        description: &#39;Release tag (e.g., v0.2.0)&#39;\r\n        required: true\r\n        type: string\r\n\r\njobs:\r\n  build:\r\n    runs-on: ubuntu-latest\r\n    permissions:\r\n      contents: write\r\n    steps:\r\n      - uses: actions/checkout@v4\r\n      \r\n      - name: Get Version\r\n        id: get_version\r\n        run: |\r\n          python - &lt;&lt;&#39;PY&#39;\r\n          import os\r\n          import tomllib\r\n          from pathlib import Path\r\n\r\n          data = tomllib.loads(Path(\&quot;blender_manifest.toml\&quot;).read_text(encoding=\&quot;utf-8\&quot;))\r\n          version = data[\&quot;version\&quot;]\r\n\r\n          with open(os.environ[\&quot;GITHUB_OUTPUT\&quot;], \&quot;a\&quot;, encoding=\&quot;utf-8\&quot;) as fh:\r\n              fh.write(f\&quot;version={version}\\n\&quot;)\r\n              fh.write(f\&quot;zip_name=Rainys_Bulk_Scene_Tools.v{version}.zip\\n\&quot;)\r\n          PY\r\n      \r\n      - name: Create ZIP\r\n        run: |\r\n          ADDON_DIR=addon_files/Rainys_Bulk_Scene_Tools\r\n          mkdir -p \&quot;$ADDON_DIR\&quot;\r\n\r\n          # Copy top-level files required for the add-on\r\n          cp __init__.py blender_manifest.toml requirements.txt readme.md changelog.md \&quot;$ADDON_DIR\&quot;/\r\n\r\n          # Copy packages\r\n          cp -r panels \&quot;$ADDON_DIR\&quot;/\r\n          cp -r ops \&quot;$ADDON_DIR\&quot;/\r\n\r\n          # Create the zip from the temporary directory\r\n          cd addon_files\r\n          zip -r \&quot;../${{ steps.get_version.outputs.zip_name }}\&quot; ./*\r\n      \r\n      - name: Upload Release Asset\r\n        env:\r\n          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}\r\n        uses: softprops/action-gh-release@v1\r\n        with:\r\n          files: ${{ steps.get_version.outputs.zip_name }}\r\n          tag_name: ${{ inputs.release_tag }}\r\n          draft: true &quot;
+}
+```
+User decision: **accepted**
+
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+**Running read_lints file**</details></think>
+
+---
+
+<tool-use data-tool-type="generic" data-tool-name="read_lints">
+<details>
+          <summary>Tool use: **read_lints** • Read lints for 1 file</summary>
+      
+Lint paths:
+
+- `.github/workflows/release.yml`
+
+Lint results
+
+
+**No lint errors found**
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+**Preparing response about manifest requirements**</details></think>
+
+---
+
+All good—`bl_info` can stay out of `__init__.py`. I’ve updated `.github/workflows/release.yml` so the “Get Version” step now parses `version` from `blender_manifest.toml` via `tomllib`, keeping the release artifacts in sync with the manifest and avoiding the removed Python metadata. Packaging still copies `__init__.py`, `blender_manifest.toml`, `panels/`, and `ops/` into `Rainys_Bulk_Scene_Tools` before zipping. Tests not run (CI workflow change only).
+
+---
+
