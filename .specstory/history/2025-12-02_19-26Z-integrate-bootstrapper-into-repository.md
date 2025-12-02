@@ -630,14 +630,380 @@ _**Agent (model gpt-5.1-codex, mode Agent)**_
 ---
 
 <tool-use data-tool-type="task" data-tool-name="todo_write">
-<details><summary>Tool use: **todo_write** • Error parsing todo list data</summary>
+<details><summary>Tool use: **todo_write** • Todo List</summary>
+
+- [-] Add register/unregister wrappers to rainys_repo_bootstrap.py
+- [ ] Import helper in __init__.py and call it in register/unregister
+- [ ] Copy rainys_repo_bootstrap.py in release workflow
 
 </details>
 </tool-use>
 
 ---
 
+<think><details><summary>Thought Process</summary>
+**Adding register and unregister functions**</details></think>
 
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="apply_patch">
+<details>
+<summary>Tool use: **apply_patch**</summary>
+
+
+Parameters:
+
+```json
+{
+  "relativeWorkspacePath": "rainys_repo_bootstrap.py"
+}
+```
+Additional data:
+
+```json
+{
+  "codeblockId": "00557f0b-23c8-480b-9517-e605faac314a"
+}
+```
+Result:
+
+```json
+{
+  "diff": {
+    "chunks": [
+      {
+        "diffString": "      _BOOTSTRAP_DONE = True\r\n  \r\n- \r\n+ \r\n+ def register() -&gt; None:\r\n+     \"\"\"Entry point for Blender add-on registration.\"\"\"\r\n+     ensure_rainys_extensions_repo()\r\n+ \r\n+ \r\n+ def unregister() -&gt; None:\r\n+     \"\"\"Reset bootstrap guard so next registration re-runs the checks.\"\"\"\r\n+     global _BOOTSTRAP_DONE\r\n+     _BOOTSTRAP_DONE = False\r\n+ \r\n  ",
+        "oldStart": 162,
+        "newStart": 163,
+        "oldLines": 4,
+        "newLines": 14,
+        "linesRemoved": 1,
+        "linesAdded": 11
+      }
+    ],
+    "editor": "EDITOR_AI"
+  },
+  "shouldAutoFixLints": true,
+  "resultForModel": "Success. Updated the following files:\nM rainys_repo_bootstrap.py",
+  "contentsAfterEdit": "import bpy  # type: ignore\r\n\r\nRAINYS_EXTENSIONS_REPO_NAME = \"Rainy's Extensions\"\r\nRAINYS_EXTENSIONS_REPO_URL = (\r\n    \"https://raw.githubusercontent.com/RaincloudTheDragon/rainys-blender-extensions/refs/heads/main/index.json\"\r\n)\r\n\r\n_BOOTSTRAP_DONE = False\r\n\r\n\r\ndef _log(message: str) -&gt; None:\r\n    print(f\"RainysExtensionsCheck: {message}\")\r\n\r\n\r\ndef ensure_rainys_extensions_repo(_deferred: bool = False) -&gt; None:\r\n    \"\"\"\r\n    Ensure the Rainy's Extensions repository is registered in Blender.\r\n\r\n    Safe to import and call from multiple add-ons; the helper guards against doing the\r\n    work more than once per Blender session.\r\n    \"\"\"\r\n    global _BOOTSTRAP_DONE\r\n\r\n    if _BOOTSTRAP_DONE:\r\n        return\r\n\r\n    _log(\"starting repository verification\")\r\n\r\n    context_class_name = type(bpy.context).__name__\r\n    if context_class_name == \"_RestrictContext\":\r\n        if _deferred:\r\n            _log(\"context still restricted after deferral; aborting repo check\")\r\n            return\r\n\r\n        _log(\"context restricted; scheduling repo check retry\")\r\n\r\n        def _retry():\r\n            ensure_rainys_extensions_repo(_deferred=True)\r\n            return None\r\n\r\n        bpy.app.timers.register(_retry, first_interval=0.5)\r\n        return\r\n\r\n    prefs = getattr(bpy.context, \"preferences\", None)\r\n    if prefs is None:\r\n        _log(\"no preferences available on context; skipping\")\r\n        return\r\n\r\n    preferences_changed = False\r\n    addon_prefs = None\r\n    addon_entry = None\r\n    if hasattr(getattr(prefs, \"addons\", None), \"get\"):\r\n        addon_entry = prefs.addons.get(__name__)\r\n    elif hasattr(prefs, \"addons\"):\r\n        try:\r\n            addon_entry = prefs.addons[__name__]\r\n        except Exception:\r\n            addon_entry = None\r\n    if addon_entry:\r\n        addon_prefs = getattr(addon_entry, \"preferences\", None)\r\n    addon_repo_initialized = bool(\r\n        addon_prefs and getattr(addon_prefs, \"repo_initialized\", False)\r\n    )\r\n\r\n    experimental = getattr(prefs, \"experimental\", None)\r\n    if experimental and hasattr(experimental, \"use_extension_platform\"):\r\n        if not experimental.use_extension_platform:\r\n            experimental.use_extension_platform = True\r\n            preferences_changed = True\r\n            _log(\"enabled experimental extension platform\")\r\n\r\n    repositories = None\r\n    extensions_obj = getattr(prefs, \"extensions\", None)\r\n    if extensions_obj:\r\n        if hasattr(extensions_obj, \"repos\"):\r\n            repositories = extensions_obj.repos\r\n        elif hasattr(extensions_obj, \"repositories\"):\r\n            repositories = extensions_obj.repositories\r\n\r\n    if repositories is None:\r\n        filepaths = getattr(prefs, \"filepaths\", None)\r\n        repositories = getattr(filepaths, \"extension_repos\", None) if filepaths else None\r\n\r\n    if repositories is None:\r\n        _log(\"extension repositories collection missing; skipping\")\r\n        return\r\n\r\n    def _repo_matches(repo) -&gt; bool:\r\n        return getattr(repo, \"remote_url\", \"\") == RAINYS_EXTENSIONS_REPO_URL or getattr(\r\n            repo, \"url\", \"\"\r\n        ) == RAINYS_EXTENSIONS_REPO_URL\r\n\r\n    matching_indices = [idx for idx, repo in enumerate(repositories) if _repo_matches(repo)]\r\n\r\n    target_repo = None\r\n    if matching_indices:\r\n        target_repo = repositories[matching_indices[0]]\r\n        if len(matching_indices) &gt; 1 and hasattr(repositories, \"remove\"):\r\n            for dup_idx in reversed(matching_indices[1:]):\r\n                try:\r\n                    repositories.remove(dup_idx)\r\n                    _log(f\"removed duplicate repository entry at index {dup_idx}\")\r\n                except Exception as exc:\r\n                    _log(f\"could not remove duplicate repository at index {dup_idx}: {exc}\")\r\n    else:\r\n        target_repo = next(\r\n            (\r\n                repo\r\n                for repo in repositories\r\n                if getattr(repo, \"name\", \"\") == RAINYS_EXTENSIONS_REPO_NAME\r\n            ),\r\n            None,\r\n        )\r\n\r\n    if target_repo is None:\r\n        _log(\"repo missing; creating new entry\")\r\n        if hasattr(repositories, \"new\"):\r\n            target_repo = repositories.new()\r\n        elif hasattr(repositories, \"add\"):\r\n            target_repo = repositories.add()\r\n        else:\r\n            _log(\"repository collection does not support creation; aborting\")\r\n            return\r\n    else:\r\n        _log(\"repo entry already present; validating fields\")\r\n\r\n    changed = preferences_changed\r\n\r\n    def _ensure_attr(obj, attr, value):\r\n        if hasattr(obj, attr) and getattr(obj, attr) != value:\r\n            setattr(obj, attr, value)\r\n            return True\r\n        if not hasattr(obj, attr):\r\n            _log(f\"repository entry missing attribute '{attr}', skipping field\")\r\n        return False\r\n\r\n    changed |= _ensure_attr(target_repo, \"name\", RAINYS_EXTENSIONS_REPO_NAME)\r\n    changed |= _ensure_attr(target_repo, \"module\", \"rainys_extensions\")\r\n    changed |= _ensure_attr(target_repo, \"use_remote_url\", True)\r\n    changed |= _ensure_attr(target_repo, \"remote_url\", RAINYS_EXTENSIONS_REPO_URL)\r\n    changed |= _ensure_attr(target_repo, \"use_sync_on_startup\", True)\r\n    changed |= _ensure_attr(target_repo, \"use_cache\", True)\r\n    changed |= _ensure_attr(target_repo, \"use_access_token\", False)\r\n\r\n    if addon_prefs and hasattr(addon_prefs, \"repo_initialized\") and not addon_prefs.repo_initialized:\r\n        addon_prefs.repo_initialized = True\r\n        changed = True\r\n\r\n    if not changed:\r\n        _log(\"repository already configured; skipping preference save\")\r\n        _BOOTSTRAP_DONE = True\r\n        return\r\n\r\n    if hasattr(bpy.ops, \"wm\") and hasattr(bpy.ops.wm, \"save_userpref\"):\r\n        try:\r\n            bpy.ops.wm.save_userpref()\r\n            _log(\"preferences updated and saved\")\r\n        except Exception as exc:  # pragma: no cover\r\n            print(f\"RainysExtensionsCheck: could not save preferences after repo update -&gt; {exc}\")\r\n    else:\r\n        _log(\"preferences API unavailable; changes not persisted\")\r\n\r\n    _BOOTSTRAP_DONE = True\r\n\r\n\r\ndef register() -&gt; None:\r\n    \"\"\"Entry point for Blender add-on registration.\"\"\"\r\n    ensure_rainys_extensions_repo()\r\n\r\n\r\ndef unregister() -&gt; None:\r\n    \"\"\"Reset bootstrap guard so next registration re-runs the checks.\"\"\"\r\n    global _BOOTSTRAP_DONE\r\n    _BOOTSTRAP_DONE = False\r\n"
+}
+```
+User decision: **accepted**
+
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+**Updating task status**</details></think>
+
+---
+
+<tool-use data-tool-type="task" data-tool-name="todo_write">
+<details><summary>Tool use: **todo_write** • Todo List</summary>
+
+- [x] Add register/unregister wrappers to rainys_repo_bootstrap.py
+- [-] Import helper in __init__.py and call it in register/unregister
+- [ ] Copy rainys_repo_bootstrap.py in release workflow
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+**Updating __init__.py imports and calls**</details></think>
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="apply_patch">
+<details>
+<summary>Tool use: **apply_patch**</summary>
+
+
+Parameters:
+
+```json
+{
+  "relativeWorkspacePath": "__init__.py"
+}
+```
+Additional data:
+
+```json
+{
+  "codeblockId": "e413d3dc-9fd6-4f48-a1d6-50b069bc1085"
+}
+```
+Result:
+
+```json
+{
+  "diff": {
+    "chunks": [
+      {
+        "diffString": "  from .ops.FreeGPU import BST_FreeGPU\r\n  from .ops import ghost_buster\r\n+ from . import rainys_repo_bootstrap\r\n  \r\n  # Addon preferences class for update settings\r",
+        "oldStart": 10,
+        "newStart": 10,
+        "oldLines": 4,
+        "newLines": 5,
+        "linesAdded": 1
+      },
+      {
+        "diffString": "          bpy.types.Scene._bst_keymaps = addon_keymaps\r\n  \r\n+     rainys_repo_bootstrap.register()\r\n+ \r\n  def unregister():\r\n      # Remove keybinds\r",
+        "oldStart": 90,
+        "newStart": 91,
+        "oldLines": 4,
+        "newLines": 6,
+        "linesAdded": 2
+      },
+      {
+        "diffString": "      except Exception:\r\n          pass\r\n+     rainys_repo_bootstrap.unregister()\r\n      # Unregister classes from this module\r\n      for cls in reversed(classes):\r",
+        "oldStart": 123,
+        "newStart": 126,
+        "oldLines": 4,
+        "newLines": 5,
+        "linesAdded": 1
+      }
+    ],
+    "editor": "EDITOR_AI"
+  },
+  "shouldAutoFixLints": true,
+  "resultForModel": "Success. Updated the following files:\nM __init__.py",
+  "contentsAfterEdit": "import bpy # type: ignore\r\nfrom bpy.types import AddonPreferences, Panel # type: ignore\r\nfrom bpy.props import BoolProperty # type: ignore\r\nfrom .panels import bulk_viewport_display\r\nfrom .panels import bulk_data_remap\r\nfrom .panels import bulk_path_management\r\nfrom .panels import bulk_scene_general\r\nfrom .ops.AutoMatExtractor import AutoMatExtractor, AUTOMAT_OT_summary_dialog\r\nfrom .ops.Rename_images_by_mat import Rename_images_by_mat, RENAME_OT_summary_dialog\r\nfrom .ops.FreeGPU import BST_FreeGPU\r\nfrom .ops import ghost_buster\r\nfrom . import rainys_repo_bootstrap\r\n\r\n# Addon preferences class for update settings\r\nclass BST_AddonPreferences(AddonPreferences):\r\n    bl_idname = __package__\r\n\r\n    # AutoMat Extractor settings\r\n    automat_common_outside_blend: BoolProperty(\r\n        name=\"Place 'common' folder outside 'blend' folder\",\r\n        description=\"If enabled, the 'common' folder for shared textures will be placed directly in 'textures/'. If disabled, it will be placed inside 'textures/&lt;blend_name&gt;/'\",\r\n        default=False,\r\n    )\r\n\r\n    def draw(self, context):\r\n        layout = self.layout\r\n\r\n        # AutoMat Extractor settings\r\n        box = layout.box()\r\n        box.label(text=\"AutoMat Extractor Settings\")\r\n        row = box.row()\r\n        row.prop(self, \"automat_common_outside_blend\")\r\n\r\n# Main panel for Bulk Scene Tools\r\nclass VIEW3D_PT_BulkSceneTools(Panel):\r\n    \"\"\"Bulk Scene Tools Panel\"\"\"\r\n    bl_label = \"Bulk Scene Tools\"\r\n    bl_idname = \"VIEW3D_PT_bulk_scene_tools\"\r\n    bl_space_type = 'VIEW_3D'\r\n    bl_region_type = 'UI'\r\n    bl_category = 'Edit'\r\n\r\n    def draw(self, context):\r\n        layout = self.layout\r\n        layout.label(text=\"Tools for bulk operations on scene data\")\r\n\r\n# List of all classes in this module\r\nclasses = (\r\n    VIEW3D_PT_BulkSceneTools,\r\n    BST_AddonPreferences,\r\n    AutoMatExtractor,\r\n    AUTOMAT_OT_summary_dialog,\r\n    Rename_images_by_mat,\r\n    RENAME_OT_summary_dialog,\r\n    BST_FreeGPU,\r\n)\r\n\r\ndef register():\r\n    # Register classes from this module (do this first to ensure preferences are available)\r\n    for cls in classes:\r\n        bpy.utils.register_class(cls)\r\n    \r\n    # Print debug info about preferences\r\n    try:\r\n        prefs = bpy.context.preferences.addons.get(__package__)\r\n        if prefs:\r\n            print(f\"Addon preferences registered successfully: {prefs}\")\r\n        else:\r\n            print(\"WARNING: Addon preferences not found after registration!\")\r\n            print(f\"Available addons: {', '.join(bpy.context.preferences.addons.keys())}\")\r\n    except Exception as e:\r\n        print(f\"Error accessing preferences: {str(e)}\")\r\n    \r\n    # Register modules\r\n    bulk_scene_general.register()\r\n    bulk_viewport_display.register()\r\n    bulk_data_remap.register()\r\n    bulk_path_management.register()\r\n    ghost_buster.register()\r\n    \r\n    # Add keybind for Free GPU (global context)\r\n    wm = bpy.context.window_manager\r\n    kc = wm.keyconfigs.addon\r\n    if kc:\r\n        # Use Screen keymap for global shortcuts that work everywhere\r\n        km = kc.keymaps.new(name='Screen', space_type='EMPTY')\r\n        kmi = km.keymap_items.new('bst.free_gpu', 'M', 'PRESS', ctrl=True, alt=True, shift=True)\r\n        # Store keymap for cleanup\r\n        addon_keymaps = getattr(bpy.types.Scene, '_bst_keymaps', [])\r\n        addon_keymaps.append((km, kmi))\r\n        bpy.types.Scene._bst_keymaps = addon_keymaps\r\n\r\n    rainys_repo_bootstrap.register()\r\n\r\ndef unregister():\r\n    # Remove keybinds\r\n    addon_keymaps = getattr(bpy.types.Scene, '_bst_keymaps', [])\r\n    for km, kmi in addon_keymaps:\r\n        try:\r\n            km.keymap_items.remove(kmi)\r\n        except:\r\n            pass\r\n    addon_keymaps.clear()\r\n    if hasattr(bpy.types.Scene, '_bst_keymaps'):\r\n        delattr(bpy.types.Scene, '_bst_keymaps')\r\n    \r\n    # Unregister modules\r\n    try:\r\n        ghost_buster.unregister()\r\n    except Exception:\r\n        pass\r\n    try:\r\n        bulk_path_management.unregister()\r\n    except Exception:\r\n        pass\r\n    try:\r\n        bulk_data_remap.unregister()\r\n    except Exception:\r\n        pass\r\n    try:\r\n        bulk_viewport_display.unregister()\r\n    except Exception:\r\n        pass\r\n    try:\r\n        bulk_scene_general.unregister()\r\n    except Exception:\r\n        pass\r\n    rainys_repo_bootstrap.unregister()\r\n    # Unregister classes from this module\r\n    for cls in reversed(classes):\r\n        try:\r\n            bpy.utils.unregister_class(cls)\r\n        except RuntimeError:\r\n            pass\r\n\r\nif __name__ == \"__main__\":\r\n    register()\r\n"
+}
+```
+User decision: **accepted**
+
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+**Marking initialization complete**</details></think>
+
+---
+
+<tool-use data-tool-type="task" data-tool-name="todo_write">
+<details><summary>Tool use: **todo_write** • Todo List</summary>
+
+- [x] Add register/unregister wrappers to rainys_repo_bootstrap.py
+- [x] Import helper in __init__.py and call it in register/unregister
+- [-] Copy rainys_repo_bootstrap.py in release workflow
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+**Preparing release yaml file update**</details></think>
+
+---
+
+Cancelled
+
+---
+
+
+
+---
+
+_**User (2025-12-02 17:39Z)**_
+
+sorry, got interrupted.
+
+---
+
+_**Agent (model gpt-5.1-codex, mode Agent)**_
+
+<think><details><summary>Thought Process</summary>
+**Continuing with release and patch updates**</details></think>
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="apply_patch">
+<details>
+<summary>Tool use: **apply_patch**</summary>
+
+
+Parameters:
+
+```json
+{
+  "relativeWorkspacePath": ".github/workflows/release.yml"
+}
+```
+Additional data:
+
+```json
+{
+  "codeblockId": "ccc26bbe-b236-485c-b725-fbfa6d93977a"
+}
+```
+Result:
+
+```json
+{
+  "diff": {
+    "chunks": [
+      {
+        "diffString": "  \r\n            # Copy top-level files if they exist\r\n-           for file in __init__.py blender_manifest.toml readme.md changelog.md requirements.txt; do\r\n+           for file in __init__.py rainys_repo_bootstrap.py blender_manifest.toml readme.md changelog.md requirements.txt; do\r\n              if [ -f \"$file\" ]; then\r\n                cp \"$file\" \"$ADDON_DIR\"/\r",
+        "oldStart": 39,
+        "newStart": 39,
+        "oldLines": 5,
+        "newLines": 5,
+        "linesRemoved": 1,
+        "linesAdded": 1
+      }
+    ],
+    "editor": "EDITOR_AI"
+  },
+  "shouldAutoFixLints": true,
+  "resultForModel": "Success. Updated the following files:\nM .github/workflows/release.yml",
+  "contentsAfterEdit": "name: Create Release\r\n\r\non:\r\n  workflow_dispatch:\r\n    inputs:\r\n      release_tag:\r\n        description: 'Release tag (e.g., v0.2.0)'\r\n        required: true\r\n        type: string\r\n\r\njobs:\r\n  build:\r\n    runs-on: ubuntu-latest\r\n    permissions:\r\n      contents: write\r\n    steps:\r\n      - uses: actions/checkout@v4\r\n      \r\n      - name: Get Version\r\n        id: get_version\r\n        run: |\r\n          python - &lt;&lt;'PY'\r\n          import os\r\n          import tomllib\r\n          from pathlib import Path\r\n\r\n          data = tomllib.loads(Path(\"blender_manifest.toml\").read_text(encoding=\"utf-8\"))\r\n          version = data[\"version\"]\r\n\r\n          with open(os.environ[\"GITHUB_OUTPUT\"], \"a\", encoding=\"utf-8\") as fh:\r\n              fh.write(f\"version={version}\\n\")\r\n              fh.write(f\"zip_name=Rainys_Bulk_Scene_Tools.v{version}.zip\\n\")\r\n          PY\r\n      \r\n      - name: Create ZIP\r\n        run: |\r\n          ADDON_DIR=addon_files/Rainys_Bulk_Scene_Tools\r\n          mkdir -p \"$ADDON_DIR\"\r\n\r\n          # Copy top-level files if they exist\r\n          for file in __init__.py rainys_repo_bootstrap.py blender_manifest.toml readme.md changelog.md requirements.txt; do\r\n            if [ -f \"$file\" ]; then\r\n              cp \"$file\" \"$ADDON_DIR\"/\r\n            else\r\n              echo \"Skipping missing file: $file\"\r\n            fi\r\n          done\r\n\r\n          # Copy packages\r\n          cp -r panels \"$ADDON_DIR\"/\r\n          cp -r ops \"$ADDON_DIR\"/\r\n\r\n          # Create the zip from the temporary directory\r\n          cd addon_files\r\n          zip -r \"../${{ steps.get_version.outputs.zip_name }}\" ./*\r\n      \r\n      - name: Upload Release Asset\r\n        env:\r\n          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}\r\n        uses: softprops/action-gh-release@v1\r\n        with:\r\n          files: ${{ steps.get_version.outputs.zip_name }}\r\n          tag_name: ${{ inputs.release_tag }}\r\n          draft: true "
+}
+```
+User decision: **accepted**
+
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+**Marking TODO as complete**</details></think>
+
+---
+
+<tool-use data-tool-type="task" data-tool-name="todo_write">
+<details><summary>Tool use: **todo_write** • Todo List</summary>
+
+- [x] Add register/unregister wrappers to rainys_repo_bootstrap.py
+- [x] Import helper in __init__.py and call it in register/unregister
+- [x] Copy rainys_repo_bootstrap.py in release workflow
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+**Considering running linter**</details></think>
+
+---
+
+<tool-use data-tool-type="generic" data-tool-name="read_lints">
+<details>
+          <summary>Tool use: **read_lints** • Read lints for 3 files</summary>
+      
+Lint paths:
+
+- `rainys_repo_bootstrap.py`
+- `__init__.py`
+- `.github/workflows/release.yml`
+
+Lint results
+
+
+**No lint errors found**
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+**Preparing final response details**</details></think>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file">
+<details><summary>Tool use: **read_file** • Read file: rainys_repo_bootstrap.py</summary>
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+**Preparing __init__ snippet**</details></think>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file">
+<details><summary>Tool use: **read_file** • Read file: __init__.py</summary>
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+**Extracting release workflow snippet**</details></think>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file">
+<details><summary>Tool use: **read_file** • Read file: .github/workflows/release.yml</summary>
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+**Preparing final response**</details></think>
+
+---
+
+Integrated the bootstrapper lifecycle just like other submodules:
+
+- `rainys_repo_bootstrap.register()` now wraps the existing `ensure_rainys_extensions_repo()` logic, and `unregister()` simply clears `_BOOTSTRAP_DONE` so reloading the add-on reruns the verification.
+
+```166:175:rainys_repo_bootstrap.py
+def register() -> None:
+    """Entry point for Blender add-on registration."""
+    ensure_rainys_extensions_repo()
+
+
+def unregister() -> None:
+    """Reset bootstrap guard so next registration re-runs the checks."""
+    global _BOOTSTRAP_DONE
+    _BOOTSTRAP_DONE = False
+```
+
+- The add-on root imports the helper, runs it after all other modules and keymaps are ready, and resets it during teardown to keep Blender reload-safe.
+
+```1:134:__init__.py
+from . import rainys_repo_bootstrap
+...
+    rainys_repo_bootstrap.register()
+
+def unregister():
+    ...
+    rainys_repo_bootstrap.unregister()
+```
+
+- Release packaging now copies `rainys_repo_bootstrap.py` alongside the other top-level files so every artifact includes the helper.
+
+```40:55:.github/workflows/release.yml
+for file in __init__.py rainys_repo_bootstrap.py blender_manifest.toml readme.md changelog.md requirements.txt; do
+    ...
+done
+```
+
+Linter check reported no issues. Tests were not run (Blender not invoked here). Let me know if you’d like me to spin up Blender to confirm the repo auto-registers.
 
 ---
 
