@@ -37,8 +37,14 @@ jobs:
           ADDON_DIR=addon_files/Rainys_Bulk_Scene_Tools
           mkdir -p "$ADDON_DIR"
 
-          # Copy top-level files required for the add-on
-          cp __init__.py blender_manifest.toml requirements.txt readme.md changelog.md "$ADDON_DIR"/
+          # Copy top-level files if they exist
+          for file in __init__.py blender_manifest.toml readme.md changelog.md requirements.txt; do
+            if [ -f "$file" ]; then
+              cp "$file" "$ADDON_DIR"/
+            else
+              echo "Skipping missing file: $file"
+            fi
+          done
 
           # Copy packages
           cp -r panels "$ADDON_DIR"/
