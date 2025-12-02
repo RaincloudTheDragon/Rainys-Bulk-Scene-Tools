@@ -162,3 +162,13 @@ def ensure_rainys_extensions_repo(_deferred: bool = False) -> None:
 
     _BOOTSTRAP_DONE = True
 
+
+def register() -> None:
+    """Entry point for Blender add-on registration."""
+    ensure_rainys_extensions_repo()
+
+
+def unregister() -> None:
+    """Reset bootstrap guard so next registration re-runs the checks."""
+    global _BOOTSTRAP_DONE
+    _BOOTSTRAP_DONE = False
