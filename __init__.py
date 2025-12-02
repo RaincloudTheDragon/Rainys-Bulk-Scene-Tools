@@ -9,6 +9,7 @@ from .ops.AutoMatExtractor import AutoMatExtractor, AUTOMAT_OT_summary_dialog
 from .ops.Rename_images_by_mat import Rename_images_by_mat, RENAME_OT_summary_dialog
 from .ops.FreeGPU import BST_FreeGPU
 from .ops import ghost_buster
+from . import rainys_repo_bootstrap
 
 # Addon preferences class for update settings
 class BST_AddonPreferences(AddonPreferences):
@@ -89,6 +90,8 @@ def register():
         addon_keymaps.append((km, kmi))
         bpy.types.Scene._bst_keymaps = addon_keymaps
 
+    rainys_repo_bootstrap.register()
+
 def unregister():
     # Remove keybinds
     addon_keymaps = getattr(bpy.types.Scene, '_bst_keymaps', [])
@@ -122,6 +125,7 @@ def unregister():
         bulk_scene_general.unregister()
     except Exception:
         pass
+    rainys_repo_bootstrap.unregister()
     # Unregister classes from this module
     for cls in reversed(classes):
         try:
