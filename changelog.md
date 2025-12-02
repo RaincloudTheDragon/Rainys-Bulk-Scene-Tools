@@ -1,3 +1,11 @@
+# v0.12.0
+  - Integrate Rainy's Extension Repo bootstrapper
+  - Set minimum Blender version to 4.2 for #9
+
+# v0.11.0
+  - Ported to blender extension type
+  - Removed CGCookie autoupdater
+
 # v 0.10.0
 - **AutoMat Extractor**
   - Added UDIM/tiled image detection so multi-tile textures are organized alongside standard images without errors. #8
