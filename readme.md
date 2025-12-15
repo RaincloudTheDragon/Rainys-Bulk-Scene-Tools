@@ -7,7 +7,7 @@ A couple Blender tools to help me automate some tedious tasks in scene optimizat
 - Bulk Data Remap
 - Bulk Viewport Display
 
-Officially supports Blender 4.4.1, but may still work on older versions.
+Officially supports Blender 4.2, 4.4, 4.5, and 5.0.
 
 ## Installation
 

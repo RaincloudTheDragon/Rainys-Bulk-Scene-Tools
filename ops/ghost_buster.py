@@ -1,4 +1,5 @@
 import bpy
+from ..utils import compat
 
 def safe_wgt_removal():
     """Safely remove only WGT widget objects that are clearly ghosts"""
@@ -680,11 +681,8 @@ classes = (
 
 def register():
     for cls in classes:
-        bpy.utils.register_class(cls)
+        compat.safe_register_class(cls)
 
 def unregister():
     for cls in reversed(classes):
-        try:
-            bpy.utils.unregister_class(cls)
-        except RuntimeError:
-            pass
+        compat.safe_unregister_class(cls)

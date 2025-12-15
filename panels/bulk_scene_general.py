@@ -7,6 +7,7 @@ from ..ops.delete_single_keyframe_actions import DeleteSingleKeyframeActions
 from ..ops.find_material_users import FindMaterialUsers, MATERIAL_USERS_OT_summary_dialog
 from ..ops.remove_unused_material_slots import RemoveUnusedMaterialSlots
 from ..ops.convert_relations_to_constraint import ConvertRelationsToConstraint
+from ..utils import compat
 
 class BulkSceneGeneral(bpy.types.Panel):
     """Bulk Scene General Panel"""
@@ -76,7 +77,7 @@ classes = (
 # Registration
 def register():
     for cls in classes:
-        bpy.utils.register_class(cls)
+        compat.safe_register_class(cls)
     # Register the window manager property for the checkbox
     bpy.types.WindowManager.bst_no_subdiv_only_selected = bpy.props.BoolProperty(
         name="Selected Only",
@@ -92,10 +93,7 @@ def register():
 
 def unregister():
     for cls in reversed(classes):
-        try:
-            bpy.utils.unregister_class(cls)
-        except RuntimeError:
-            pass
+        compat.safe_unregister_class(cls)
     # Unregister the window manager property
     if hasattr(bpy.types.WindowManager, "bst_no_subdiv_only_selected"):
         del bpy.types.WindowManager.bst_no_subdiv_only_selected

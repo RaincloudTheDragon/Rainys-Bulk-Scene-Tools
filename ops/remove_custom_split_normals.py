@@ -1,4 +1,5 @@
 import bpy
+from ..utils import compat
 
 class RemoveCustomSplitNormals(bpy.types.Operator):
     """Remove custom split normals and apply smooth shading to all accessible mesh objects"""
@@ -53,10 +54,10 @@ class RemoveCustomSplitNormals(bpy.types.Operator):
 
 # Registration
 def register():
-    bpy.utils.register_class(MESH_OT_RemoveCustomSplitNormals)
+    compat.safe_register_class(RemoveCustomSplitNormals)
 
 def unregister():
-    bpy.utils.unregister_class(MESH_OT_RemoveCustomSplitNormals)
+    compat.safe_unregister_class(RemoveCustomSplitNormals)
 
 # Only run if this script is run directly
 if __name__ == "__main__":

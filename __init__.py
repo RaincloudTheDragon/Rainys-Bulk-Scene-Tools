@@ -10,6 +10,7 @@ from .ops.Rename_images_by_mat import Rename_images_by_mat, RENAME_OT_summary_di
 from .ops.FreeGPU import BST_FreeGPU
 from .ops import ghost_buster
 from . import rainys_repo_bootstrap
+from .utils import compat
 
 # Addon preferences class for update settings
 class BST_AddonPreferences(AddonPreferences):
@@ -58,7 +59,7 @@ classes = (
 def register():
     # Register classes from this module (do this first to ensure preferences are available)
     for cls in classes:
-        bpy.utils.register_class(cls)
+        compat.safe_register_class(cls)
     
     # Print debug info about preferences
     try:
@@ -128,10 +129,7 @@ def unregister():
     rainys_repo_bootstrap.unregister()
     # Unregister classes from this module
     for cls in reversed(classes):
-        try:
-            bpy.utils.unregister_class(cls)
-        except RuntimeError:
-            pass
+        compat.safe_unregister_class(cls)
 
 if __name__ == "__main__":
     register()

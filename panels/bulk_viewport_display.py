@@ -5,6 +5,7 @@ import os
 from enum import Enum
 import colorsys  # Add colorsys for RGB to HSV conversion
 from ..ops.select_diffuse_nodes import select_diffuse_nodes  # Import the specific function
+from ..utils import compat
 
 # Material processing status enum
 class MaterialStatus(Enum):
@@ -1014,7 +1015,7 @@ classes = (
 # Registration
 def register():
     for cls in classes:
-        bpy.utils.register_class(cls)
+        compat.safe_register_class(cls)
     
     # Register properties
     register_viewport_properties()
@@ -1027,7 +1028,4 @@ def unregister():
         pass
     # Unregister classes
     for cls in reversed(classes):
-        try:
-            bpy.utils.unregister_class(cls)
-        except RuntimeError:
-            pass 
+        compat.safe_unregister_class(cls) 
