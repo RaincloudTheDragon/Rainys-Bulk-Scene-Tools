@@ -1,3 +1,6 @@
+# v0.13.1
+  - Fix github workflow to include new utils folder
+
 # v0.13.0
   - Set up compat for #9, still needs bugchecking, but the main setup is complete.
   - Fixed #10

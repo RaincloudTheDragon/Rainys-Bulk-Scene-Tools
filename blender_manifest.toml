@@ -3,7 +3,7 @@ schema_version = "1.0.0"
 id = "rainclouds_bulk_scene_tools"
 name = "Raincloud's Bulk Scene Tools"
 tagline = "Bulk utilities for optimizing scene data"
-version = "0.13.0"
+version = "0.13.1"
 type = "add-on"
 
 maintainer = "RaincloudTheDragon <raincloudthedragon@gmail.com>"
