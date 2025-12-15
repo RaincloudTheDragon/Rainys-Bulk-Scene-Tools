@@ -2383,3 +2383,252 @@ The fixes add defensive checks so the code handles missing preferences gracefull
 
 ---
 
+_**User (2025-12-15 22:22Z)**_
+
+Let's fix #10 real quick. https://github.com/RaincloudTheDragon/Rainys-Bulk-Scene-Tools/issues/10 
+
+---
+
+_**Agent (model default, mode Agent)**_
+
+
+
+---
+
+
+Investigating why AutoMat extractor ignores `bst_path_props.blend_subfolder`. Checking the relevant code:
+
+
+---
+
+<tool-use data-tool-type="search" data-tool-name="grep">
+<details>
+<summary>Tool use: **grep** • Grep for "blend_subfolder|bst_path_props" in "ops/AutoMatExtractor.py" • 2 matches</summary>
+
+Output mode: content
+
+
+| File | Content | Line |
+|------|------|------|
+| `ops/AutoMatExtractor.py` | `props = context.scene.bst_path_props` | L86 |
+| `ops/AutoMatExtractor.py` | `props = bpy.context.scene.bst_path_props` | L113 |
+
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="search" data-tool-name="grep">
+<details>
+<summary>Tool use: **grep** • Grep for "blend_subfolder" in "panels/bulk_path_management.py" • 8 matches</summary>
+
+Output mode: content
+
+
+| File | Content | Line |
+|------|------|------|
+| `panels/bulk_path_management.py` | `use_blend_subfolder: BoolProperty(` | L269 |
+| `panels/bulk_path_management.py` | `blend_subfolder: StringProperty(` | L275 |
+| `panels/bulk_path_management.py` | `context.scene.bst_path_props.blend_subfolder = blend_name` | L750 |
+| `panels/bulk_path_management.py` | `if props.use_blend_subfolder:` | L1330 |
+| `panels/bulk_path_management.py` | `subfolder = props.blend_subfolder` | L1331 |
+| `panels/bulk_path_management.py` | `subrow.prop(path_props, "use_blend_subfolder", text="")` | L1452 |
+| `panels/bulk_path_management.py` | `subrow.enabled = path_props.use_blend_subfolder` | L1454 |
+| `panels/bulk_path_management.py` | `subrow.prop(path_props, "blend_subfolder", text="Blend Subfolder")` | L1455 |
+
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="search" data-tool-name="codebase_search">
+<details>
+                <summary>Tool use: **codebase_search** • Searched codebase "How does AutoMat extractor determine the output folder path for textures?" • **6** results</summary>
+            
+| File | Lines |
+|------|-------|
+| `ops/AutoMatExtractor.py` | L62-526 |
+| `ops/AutoMatExtractor.py` | L11-526 |
+| `ops/AutoMatExtractor.py` | L62-532 |
+| `ops/Rename_images_by_mat.py` | L66-497 |
+| `ops/AutoMatExtractor.py` | L62 |
+| `ops/AutoMatExtractor.py` | L9-526 |
+
+</details>
+</tool-use>
+
+---
+
+
+
+---
+
+
+Checking where `blend_name` is defined and how it's used:
+
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file">
+<details><summary>Tool use: **read_file** • Read file: ops/AutoMatExtractor.py</summary>
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="search" data-tool-name="grep">
+<details>
+<summary>Tool use: **grep** • Grep for "blend_name\s*=" in "ops/AutoMatExtractor.py" • 4 matches</summary>
+
+Output mode: content
+
+
+| File | Content | Line |
+|------|------|------|
+| `ops/AutoMatExtractor.py` | `blend_name = bpy.path.basename(bpy.data.filepath)` | L196 |
+| `ops/AutoMatExtractor.py` | `blend_name = os.path.splitext(blend_name)[0]` | L198 |
+| `ops/AutoMatExtractor.py` | `blend_name = "untitled"` | L200 |
+| `ops/AutoMatExtractor.py` | `blend_name = self.sanitize_filename(blend_name)` | L201 |
+
+
+</details>
+</tool-use>
+
+---
+
+
+
+---
+
+
+Checking how `bulk_path_management.py` handles this:
+
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file">
+<details><summary>Tool use: **read_file** • Read file: panels/bulk_path_management.py</summary>
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file">
+<details><summary>Tool use: **read_file** • Read file: panels/bulk_path_management.py</summary>
+
+</details>
+</tool-use>
+
+---
+
+
+
+---
+
+
+Updating AutoMatExtractor to respect `bst_path_props.use_blend_subfolder` and `bst_path_props.blend_subfolder`, matching the pattern in `bulk_path_management.py`:
+
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file">
+<details><summary>Tool use: **read_file** • Read file: ops/AutoMatExtractor.py</summary>
+
+</details>
+</tool-use>
+
+---
+
+
+
+---
+
+
+Updating AutoMatExtractor to respect the blend_subfolder preference:
+
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="search_replace">
+
+<details><summary>Tool use: **search_replace** • Edit file: ops/AutoMatExtractor.py</summary>
+
+**Chunk 1**
+Lines added: 17, lines removed: 6
+
+```diff
+@@ -193,10 +193,21 @@
+              props.operation_status = f"Building path for {img.name}..."
+              
+-             # Get blend file name
+-             blend_name = bpy.path.basename(bpy.data.filepath)
+-             if blend_name:
+-                 blend_name = os.path.splitext(blend_name)[0]
+-             else:
+-                 blend_name = "untitled"
++             # Get blend file name - respect user preference if set
++             if props.use_blend_subfolder:
++                 blend_name = props.blend_subfolder
++                 if not blend_name:
++                     # Fall back to filename if not specified
++                     blend_path = bpy.data.filepath
++                     if blend_path:
++                         blend_name = os.path.splitext(os.path.basename(blend_path))[0]
++                     else:
++                         blend_name = "untitled"
++             else:
++                 # Derive from filename
++                 blend_path = bpy.data.filepath
++                 if blend_path:
++                     blend_name = os.path.splitext(os.path.basename(blend_path))[0]
++                 else:
++                     blend_name = "untitled"
+              blend_name = self.sanitize_filename(blend_name)
+              
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="generic" data-tool-name="read_lints">
+<details>
+          <summary>Tool use: **read_lints** • Read lints for 1 file</summary>
+      
+Lint paths:
+
+- `ops/AutoMatExtractor.py`
+
+Lint results
+
+
+**No lint errors found**
+</details>
+</tool-use>
+
+---
+
+
+
+---
+
+
+Fixed issue #10. AutoMatExtractor now respects the `bst_path_props.blend_subfolder` preference.
+
+**What was changed:**
+- Updated the `blend_name` logic in `AutoMatExtractor.py` (lines 195-201) to check `props.use_blend_subfolder` first
+- If enabled, it uses `props.blend_subfolder` (with a fallback to the filename if empty)
+- If disabled, it derives the name from the filename as before
+
+This matches the pattern used in `bulk_path_management.py` (around line 1330). AutoMatExtractor will now use the user-set blend subfolder instead of always deriving it from the filename, so textures won't need to be relocated after renaming the blend file.
+
+The fix ensures that when `use_blend_subfolder` is enabled and `blend_subfolder` is set, that value is used for organizing textures, resolving the issue described in [#10](https://github.com/RaincloudTheDragon/Rainys-Bulk-Scene-Tools/issues/10).
+
+---
+

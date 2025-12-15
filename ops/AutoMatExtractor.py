@@ -192,12 +192,23 @@ class AutoMatExtractor(bpy.types.Operator):
             img = self.selected_images[self.current_index]
             props.operation_status = f"Building path for {img.name}..."
             
-            # Get blend file name
-            blend_name = bpy.path.basename(bpy.data.filepath)
-            if blend_name:
-                blend_name = os.path.splitext(blend_name)[0]
+            # Get blend file name - respect user preference if set
+            if props.use_blend_subfolder:
+                blend_name = props.blend_subfolder
+                if not blend_name:
+                    # Fall back to filename if not specified
+                    blend_path = bpy.data.filepath
+                    if blend_path:
+                        blend_name = os.path.splitext(os.path.basename(blend_path))[0]
+                    else:
+                        blend_name = "untitled"
             else:
-                blend_name = "untitled"
+                # Derive from filename
+                blend_path = bpy.data.filepath
+                if blend_path:
+                    blend_name = os.path.splitext(os.path.basename(blend_path))[0]
+                else:
+                    blend_name = "untitled"
             blend_name = self.sanitize_filename(blend_name)
             
             # Determine common path
