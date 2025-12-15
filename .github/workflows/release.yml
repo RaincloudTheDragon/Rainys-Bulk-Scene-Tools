@@ -49,6 +49,7 @@ jobs:
           # Copy packages
           cp -r panels "$ADDON_DIR"/
           cp -r ops "$ADDON_DIR"/
+          cp -r utils "$ADDON_DIR"/
 
           # Create the zip from the temporary directory
           cd addon_files

@@ -2135,7 +2135,6 @@ _**Agent (model default, mode Agent)**_
 
 ---
 
-
 The error is from accessing preferences without checking if the addon entry exists. Checking the problematic code:
 
 
@@ -2169,7 +2168,6 @@ Output mode: content
 
 
 ---
-
 
 The error is from accessing preferences without checking if the addon entry exists. Our compat changes don't fix this; they only affect registration/unregistration. Checking for other unsafe preference accesses and fixing them:
 
@@ -2206,7 +2204,6 @@ Output mode: content
 
 ---
 
-
 Fixing unsafe preference accesses. Checking how preferences are used:
 
 
@@ -2232,7 +2229,6 @@ Fixing unsafe preference accesses. Checking how preferences are used:
 
 ---
 
-
 Fixing both unsafe preference accesses with defensive checks:
 
 
@@ -2257,7 +2253,6 @@ Fixing both unsafe preference accesses with defensive checks:
 
 
 ---
-
 
 Fixing both unsafe preference accesses:
 
@@ -2332,7 +2327,6 @@ Lines added: 3, lines removed: 2
 
 ---
 
-
 Checking for linting errors:
 
 
@@ -2359,7 +2353,6 @@ Lint results
 
 
 ---
-
 
 ## Answer
 
@@ -2394,7 +2387,6 @@ _**Agent (model default, mode Agent)**_
 
 
 ---
-
 
 Investigating why AutoMat extractor ignores `bst_path_props.blend_subfolder`. Checking the relevant code:
 
@@ -2465,7 +2457,6 @@ Output mode: content
 
 ---
 
-
 Checking where `blend_name` is defined and how it's used:
 
 
@@ -2503,7 +2494,6 @@ Output mode: content
 
 ---
 
-
 Checking how `bulk_path_management.py` handles this:
 
 
@@ -2529,7 +2519,6 @@ Checking how `bulk_path_management.py` handles this:
 
 ---
 
-
 Updating AutoMatExtractor to respect `bst_path_props.use_blend_subfolder` and `bst_path_props.blend_subfolder`, matching the pattern in `bulk_path_management.py`:
 
 
@@ -2546,7 +2535,6 @@ Updating AutoMatExtractor to respect `bst_path_props.use_blend_subfolder` and `b
 
 
 ---
-
 
 Updating AutoMatExtractor to respect the blend_subfolder preference:
 
@@ -2618,7 +2606,6 @@ Lint results
 
 ---
 
-
 Fixed issue #10. AutoMatExtractor now respects the `bst_path_props.blend_subfolder` preference.
 
 **What was changed:**
@@ -2629,6 +2616,961 @@ Fixed issue #10. AutoMatExtractor now respects the `bst_path_props.blend_subfold
 This matches the pattern used in `bulk_path_management.py` (around line 1330). AutoMatExtractor will now use the user-set blend subfolder instead of always deriving it from the filename, so textures won't need to be relocated after renaming the blend file.
 
 The fix ensures that when `use_blend_subfolder` is enabled and `blend_subfolder` is set, that value is used for organizing textures, resolving the issue described in [#10](https://github.com/RaincloudTheDragon/Rainys-Bulk-Scene-Tools/issues/10).
+
+---
+
+_**User (2025-12-15 22:46Z)**_
+
+When I update it from my addon repo, it fails to enable. The unsafe preference access errors were there because I was on 0.12.0, so I went to update it and got the later errors:
+
+AttributeError: 'NoneType' object has no attribute 'preferences'
+27:53.187  bpy.rna          | ERROR Python script error in VIEW3D_PT_bulk_path_subpanel.draw
+Traceback (most recent call last):
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1581, in draw
+    NODE_PT_bulk_path_tools.draw(self, context)
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1485, in draw
+    prefs = context.preferences.addons.get(addon_name).preferences
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'preferences'
+27:53.203  bpy.rna          | ERROR Python script error in VIEW3D_PT_bulk_path_subpanel.draw
+Traceback (most recent call last):
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1581, in draw
+    NODE_PT_bulk_path_tools.draw(self, context)
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1485, in draw
+    prefs = context.preferences.addons.get(addon_name).preferences
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'preferences'
+27:53.859  bpy.rna          | ERROR Python script error in VIEW3D_PT_bulk_path_subpanel.draw
+Traceback (most recent call last):
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1581, in draw
+    NODE_PT_bulk_path_tools.draw(self, context)
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1485, in draw
+    prefs = context.preferences.addons.get(addon_name).preferences
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'preferences'
+27:54.875  bpy.rna          | ERROR Python script error in VIEW3D_PT_bulk_path_subpanel.draw
+Traceback (most recent call last):
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1581, in draw
+    NODE_PT_bulk_path_tools.draw(self, context)
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1485, in draw
+    prefs = context.preferences.addons.get(addon_name).preferences
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'preferences'
+27:55.875  bpy.rna          | ERROR Python script error in VIEW3D_PT_bulk_path_subpanel.draw
+Traceback (most recent call last):
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1581, in draw
+    NODE_PT_bulk_path_tools.draw(self, context)
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1485, in draw
+    prefs = context.preferences.addons.get(addon_name).preferences
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'preferences'
+27:56.875  bpy.rna          | ERROR Python script error in VIEW3D_PT_bulk_path_subpanel.draw
+Traceback (most recent call last):
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1581, in draw
+    NODE_PT_bulk_path_tools.draw(self, context)
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1485, in draw
+    prefs = context.preferences.addons.get(addon_name).preferences
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'preferences'
+27:57.875  bpy.rna          | ERROR Python script error in VIEW3D_PT_bulk_path_subpanel.draw
+Traceback (most recent call last):
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1581, in draw
+    NODE_PT_bulk_path_tools.draw(self, context)
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1485, in draw
+    prefs = context.preferences.addons.get(addon_name).preferences
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'preferences'
+27:58.875  bpy.rna          | ERROR Python script error in VIEW3D_PT_bulk_path_subpanel.draw
+Traceback (most recent call last):
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1581, in draw
+    NODE_PT_bulk_path_tools.draw(self, context)
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1485, in draw
+    prefs = context.preferences.addons.get(addon_name).preferences
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'preferences'
+27:59.078  bpy.rna          | ERROR Python script error in VIEW3D_PT_bulk_path_subpanel.draw
+Traceback (most recent call last):
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1581, in draw
+    NODE_PT_bulk_path_tools.draw(self, context)
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1485, in draw
+    prefs = context.preferences.addons.get(addon_name).preferences
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'preferences'
+27:59.562  bpy.rna          | ERROR Python script error in VIEW3D_PT_bulk_path_subpanel.draw
+Traceback (most recent call last):
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1581, in draw
+    NODE_PT_bulk_path_tools.draw(self, context)
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1485, in draw
+    prefs = context.preferences.addons.get(addon_name).preferences
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'preferences'
+27:59.594  bpy.rna          | ERROR Python script error in VIEW3D_PT_bulk_path_subpanel.draw
+Traceback (most recent call last):
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1581, in draw
+    NODE_PT_bulk_path_tools.draw(self, context)
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1485, in draw
+    prefs = context.preferences.addons.get(addon_name).preferences
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'preferences'
+27:59.656  bpy.rna          | ERROR Python script error in VIEW3D_PT_bulk_path_subpanel.draw
+Traceback (most recent call last):
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1581, in draw
+    NODE_PT_bulk_path_tools.draw(self, context)
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1485, in draw
+    prefs = context.preferences.addons.get(addon_name).preferences
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'preferences'
+27:59.703  bpy.rna          | ERROR Python script error in VIEW3D_PT_bulk_path_subpanel.draw
+Traceback (most recent call last):
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1581, in draw
+    NODE_PT_bulk_path_tools.draw(self, context)
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1485, in draw
+    prefs = context.preferences.addons.get(addon_name).preferences
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'preferences'
+27:59.765  bpy.rna          | ERROR Python script error in VIEW3D_PT_bulk_path_subpanel.draw
+Traceback (most recent call last):
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1581, in draw
+    NODE_PT_bulk_path_tools.draw(self, context)
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1485, in draw
+    prefs = context.preferences.addons.get(addon_name).preferences
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'preferences'
+27:59.875  bpy.rna          | ERROR Python script error in VIEW3D_PT_bulk_path_subpanel.draw
+Traceback (most recent call last):
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1581, in draw
+    NODE_PT_bulk_path_tools.draw(self, context)
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1485, in draw
+    prefs = context.preferences.addons.get(addon_name).preferences
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'preferences'
+28:00.875  bpy.rna          | ERROR Python script error in VIEW3D_PT_bulk_path_subpanel.draw
+Traceback (most recent call last):
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1581, in draw
+    NODE_PT_bulk_path_tools.draw(self, context)
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1485, in draw
+    prefs = context.preferences.addons.get(addon_name).preferences
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'preferences'
+28:01.344  bpy.rna          | ERROR Python script error in VIEW3D_PT_bulk_path_subpanel.draw
+Traceback (most recent call last):
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1581, in draw
+    NODE_PT_bulk_path_tools.draw(self, context)
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1485, in draw
+    prefs = context.preferences.addons.get(addon_name).preferences
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'preferences'
+28:01.422  bpy.rna          | ERROR Python script error in VIEW3D_PT_bulk_path_subpanel.draw
+Traceback (most recent call last):
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1581, in draw
+    NODE_PT_bulk_path_tools.draw(self, context)
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1485, in draw
+    prefs = context.preferences.addons.get(addon_name).preferences
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'preferences'
+28:01.515  bpy.rna          | ERROR Python script error in VIEW3D_PT_bulk_path_subpanel.draw
+Traceback (most recent call last):
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1581, in draw
+    NODE_PT_bulk_path_tools.draw(self, context)
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1485, in draw
+    prefs = context.preferences.addons.get(addon_name).preferences
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'preferences'
+28:01.547  bpy.rna          | ERROR Python script error in VIEW3D_PT_bulk_path_subpanel.draw
+Traceback (most recent call last):
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1581, in draw
+    NODE_PT_bulk_path_tools.draw(self, context)
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1485, in draw
+    prefs = context.preferences.addons.get(addon_name).preferences
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'preferences'
+28:01.609  bpy.rna          | ERROR Python script error in VIEW3D_PT_bulk_path_subpanel.draw
+Traceback (most recent call last):
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1581, in draw
+    NODE_PT_bulk_path_tools.draw(self, context)
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1485, in draw
+    prefs = context.preferences.addons.get(addon_name).preferences
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'preferences'
+28:01.890  bpy.rna          | ERROR Python script error in VIEW3D_PT_bulk_path_subpanel.draw
+Traceback (most recent call last):
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1581, in draw
+    NODE_PT_bulk_path_tools.draw(self, context)
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1485, in draw
+    prefs = context.preferences.addons.get(addon_name).preferences
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'preferences'
+28:02.515  bpy.rna          | ERROR Python script error in VIEW3D_PT_bulk_path_subpanel.draw
+Traceback (most recent call last):
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1581, in draw
+    NODE_PT_bulk_path_tools.draw(self, context)
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1485, in draw
+    prefs = context.preferences.addons.get(addon_name).preferences
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'preferences'
+28:02.531  bpy.rna          | ERROR Python script error in VIEW3D_PT_bulk_path_subpanel.draw
+Traceback (most recent call last):
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1581, in draw
+    NODE_PT_bulk_path_tools.draw(self, context)
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1485, in draw
+    prefs = context.preferences.addons.get(addon_name).preferences
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'preferences'
+28:02.547  bpy.rna          | ERROR Python script error in VIEW3D_PT_bulk_path_subpanel.draw
+Traceback (most recent call last):
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1581, in draw
+    NODE_PT_bulk_path_tools.draw(self, context)
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1485, in draw
+    prefs = context.preferences.addons.get(addon_name).preferences
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'preferences'
+28:02.562  bpy.rna          | ERROR Python script error in VIEW3D_PT_bulk_path_subpanel.draw
+Traceback (most recent call last):
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1581, in draw
+    NODE_PT_bulk_path_tools.draw(self, context)
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1485, in draw
+    prefs = context.preferences.addons.get(addon_name).preferences
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'preferences'
+28:02.625  bpy.rna          | ERROR Python script error in VIEW3D_PT_bulk_path_subpanel.draw
+Traceback (most recent call last):
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1581, in draw
+    NODE_PT_bulk_path_tools.draw(self, context)
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1485, in draw
+    prefs = context.preferences.addons.get(addon_name).preferences
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'preferences'
+28:02.656  bpy.rna          | ERROR Python script error in VIEW3D_PT_bulk_path_subpanel.draw
+Traceback (most recent call last):
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1581, in draw
+    NODE_PT_bulk_path_tools.draw(self, context)
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1485, in draw
+    prefs = context.preferences.addons.get(addon_name).preferences
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'preferences'
+28:02.672  bpy.rna          | ERROR Python script error in VIEW3D_PT_bulk_path_subpanel.draw
+Traceback (most recent call last):
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1581, in draw
+    NODE_PT_bulk_path_tools.draw(self, context)
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1485, in draw
+    prefs = context.preferences.addons.get(addon_name).preferences
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'preferences'
+28:02.703  bpy.rna          | ERROR Python script error in VIEW3D_PT_bulk_path_subpanel.draw
+Traceback (most recent call last):
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1581, in draw
+    NODE_PT_bulk_path_tools.draw(self, context)
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1485, in draw
+    prefs = context.preferences.addons.get(addon_name).preferences
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'preferences'
+28:02.703  bpy.rna          | ERROR Python script error in VIEW3D_PT_bulk_path_subpanel.draw
+Traceback (most recent call last):
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1581, in draw
+    NODE_PT_bulk_path_tools.draw(self, context)
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1485, in draw
+    prefs = context.preferences.addons.get(addon_name).preferences
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'preferences'
+28:02.734  bpy.rna          | ERROR Python script error in VIEW3D_PT_bulk_path_subpanel.draw
+Traceback (most recent call last):
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1581, in draw
+    NODE_PT_bulk_path_tools.draw(self, context)
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1485, in draw
+    prefs = context.preferences.addons.get(addon_name).preferences
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'preferences'
+28:02.765  bpy.rna          | ERROR Python script error in VIEW3D_PT_bulk_path_subpanel.draw
+Traceback (most recent call last):
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1581, in draw
+    NODE_PT_bulk_path_tools.draw(self, context)
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1485, in draw
+    prefs = context.preferences.addons.get(addon_name).preferences
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'preferences'
+28:02.890  bpy.rna          | ERROR Python script error in VIEW3D_PT_bulk_path_subpanel.draw
+Traceback (most recent call last):
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1581, in draw
+    NODE_PT_bulk_path_tools.draw(self, context)
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1485, in draw
+    prefs = context.preferences.addons.get(addon_name).preferences
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'preferences'
+28:03.890  bpy.rna          | ERROR Python script error in VIEW3D_PT_bulk_path_subpanel.draw
+Traceback (most recent call last):
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1581, in draw
+    NODE_PT_bulk_path_tools.draw(self, context)
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1485, in draw
+    prefs = context.preferences.addons.get(addon_name).preferences
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'preferences'
+28:04.890  bpy.rna          | ERROR Python script error in VIEW3D_PT_bulk_path_subpanel.draw
+Traceback (most recent call last):
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1581, in draw
+    NODE_PT_bulk_path_tools.draw(self, context)
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1485, in draw
+    prefs = context.preferences.addons.get(addon_name).preferences
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'preferences'
+28:05.906  bpy.rna          | ERROR Python script error in VIEW3D_PT_bulk_path_subpanel.draw
+Traceback (most recent call last):
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1581, in draw
+    NODE_PT_bulk_path_tools.draw(self, context)
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1485, in draw
+    prefs = context.preferences.addons.get(addon_name).preferences
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'preferences'
+28:06.594  bpy.rna          | ERROR Python script error in VIEW3D_PT_bulk_path_subpanel.draw
+Traceback (most recent call last):
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1581, in draw
+    NODE_PT_bulk_path_tools.draw(self, context)
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1485, in draw
+    prefs = context.preferences.addons.get(addon_name).preferences
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'preferences'
+28:06.703  bpy.rna          | ERROR Python script error in VIEW3D_PT_bulk_path_subpanel.draw
+Traceback (most recent call last):
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1581, in draw
+    NODE_PT_bulk_path_tools.draw(self, context)
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1485, in draw
+    prefs = context.preferences.addons.get(addon_name).preferences
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'preferences'
+28:06.750  bpy.rna          | ERROR Python script error in VIEW3D_PT_bulk_path_subpanel.draw
+Traceback (most recent call last):
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1581, in draw
+    NODE_PT_bulk_path_tools.draw(self, context)
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1485, in draw
+    prefs = context.preferences.addons.get(addon_name).preferences
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'preferences'
+28:06.828  bpy.rna          | ERROR Python script error in VIEW3D_PT_bulk_path_subpanel.draw
+Traceback (most recent call last):
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1581, in draw
+    NODE_PT_bulk_path_tools.draw(self, context)
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1485, in draw
+    prefs = context.preferences.addons.get(addon_name).preferences
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'preferences'
+28:06.828  bpy.rna          | ERROR Python script error in VIEW3D_PT_bulk_path_subpanel.draw
+Traceback (most recent call last):
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1581, in draw
+    NODE_PT_bulk_path_tools.draw(self, context)
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1485, in draw
+    prefs = context.preferences.addons.get(addon_name).preferences
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'preferences'
+28:06.844  bpy.rna          | ERROR Python script error in VIEW3D_PT_bulk_path_subpanel.draw
+Traceback (most recent call last):
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1581, in draw
+    NODE_PT_bulk_path_tools.draw(self, context)
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1485, in draw
+    prefs = context.preferences.addons.get(addon_name).preferences
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'preferences'
+28:06.844  bpy.rna          | ERROR Python script error in VIEW3D_PT_bulk_path_subpanel.draw
+Traceback (most recent call last):
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1581, in draw
+    NODE_PT_bulk_path_tools.draw(self, context)
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1485, in draw
+    prefs = context.preferences.addons.get(addon_name).preferences
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'preferences'
+28:06.906  bpy.rna          | ERROR Python script error in VIEW3D_PT_bulk_path_subpanel.draw
+Traceback (most recent call last):
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1581, in draw
+    NODE_PT_bulk_path_tools.draw(self, context)
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1485, in draw
+    prefs = context.preferences.addons.get(addon_name).preferences
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'preferences'
+28:07.906  bpy.rna          | ERROR Python script error in VIEW3D_PT_bulk_path_subpanel.draw
+Traceback (most recent call last):
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1581, in draw
+    NODE_PT_bulk_path_tools.draw(self, context)
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1485, in draw
+    prefs = context.preferences.addons.get(addon_name).preferences
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'preferences'
+28:08.906  bpy.rna          | ERROR Python script error in VIEW3D_PT_bulk_path_subpanel.draw
+Traceback (most recent call last):
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1581, in draw
+    NODE_PT_bulk_path_tools.draw(self, context)
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1485, in draw
+    prefs = context.preferences.addons.get(addon_name).preferences
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'preferences'
+28:09.906  bpy.rna          | ERROR Python script error in VIEW3D_PT_bulk_path_subpanel.draw
+Traceback (most recent call last):
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1581, in draw
+    NODE_PT_bulk_path_tools.draw(self, context)
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1485, in draw
+    prefs = context.preferences.addons.get(addon_name).preferences
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'preferences'
+28:10.906  bpy.rna          | ERROR Python script error in VIEW3D_PT_bulk_path_subpanel.draw
+Traceback (most recent call last):
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1581, in draw
+    NODE_PT_bulk_path_tools.draw(self, context)
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1485, in draw
+    prefs = context.preferences.addons.get(addon_name).preferences
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'preferences'
+28:11.906  bpy.rna          | ERROR Python script error in VIEW3D_PT_bulk_path_subpanel.draw
+Traceback (most recent call last):
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1581, in draw
+    NODE_PT_bulk_path_tools.draw(self, context)
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1485, in draw
+    prefs = context.preferences.addons.get(addon_name).preferences
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'preferences'
+28:12.906  bpy.rna          | ERROR Python script error in VIEW3D_PT_bulk_path_subpanel.draw
+Traceback (most recent call last):
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1581, in draw
+    NODE_PT_bulk_path_tools.draw(self, context)
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1485, in draw
+    prefs = context.preferences.addons.get(addon_name).preferences
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'preferences'
+28:13.922  bpy.rna          | ERROR Python script error in VIEW3D_PT_bulk_path_subpanel.draw
+Traceback (most recent call last):
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1581, in draw
+    NODE_PT_bulk_path_tools.draw(self, context)
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1485, in draw
+    prefs = context.preferences.addons.get(addon_name).preferences
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'preferences'
+28:14.906  bpy.rna          | ERROR Python script error in VIEW3D_PT_bulk_path_subpanel.draw
+Traceback (most recent call last):
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1581, in draw
+    NODE_PT_bulk_path_tools.draw(self, context)
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1485, in draw
+    prefs = context.preferences.addons.get(addon_name).preferences
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'preferences'
+28:15.922  bpy.rna          | ERROR Python script error in VIEW3D_PT_bulk_path_subpanel.draw
+Info: Saved copy as "2025-30-15_15-30_Rumi v3.0.blend"
+Incremental Autosave: Saved file:  C:\Users\Nathan\AppData\Local\Temp\2025-30-15_15-30_Rumi v3.0.blend
+Traceback (most recent call last):
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1581, in draw
+    NODE_PT_bulk_path_tools.draw(self, context)
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1485, in draw
+    prefs = context.preferences.addons.get(addon_name).preferences
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'preferences'
+28:16.859  bpy.rna          | ERROR Python script error in VIEW3D_PT_bulk_path_subpanel.draw
+Traceback (most recent call last):
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1581, in draw
+    NODE_PT_bulk_path_tools.draw(self, context)
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1485, in draw
+    prefs = context.preferences.addons.get(addon_name).preferences
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'preferences'
+28:21.578  bpy.rna          | ERROR Python script error in VIEW3D_PT_bulk_path_subpanel.draw
+Traceback (most recent call last):
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1581, in draw
+    NODE_PT_bulk_path_tools.draw(self, context)
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1485, in draw
+    prefs = context.preferences.addons.get(addon_name).preferences
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'preferences'
+28:21.672  bpy.rna          | ERROR Python script error in VIEW3D_PT_bulk_path_subpanel.draw
+Traceback (most recent call last):
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1581, in draw
+    NODE_PT_bulk_path_tools.draw(self, context)
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1485, in draw
+    prefs = context.preferences.addons.get(addon_name).preferences
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'preferences'
+28:21.703  bpy.rna          | ERROR Python script error in VIEW3D_PT_bulk_path_subpanel.draw
+Traceback (most recent call last):
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1581, in draw
+    NODE_PT_bulk_path_tools.draw(self, context)
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1485, in draw
+    prefs = context.preferences.addons.get(addon_name).preferences
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'preferences'
+28:22.078  bpy.rna          | ERROR Python script error in VIEW3D_PT_bulk_path_subpanel.draw
+Traceback (most recent call last):
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1581, in draw
+    NODE_PT_bulk_path_tools.draw(self, context)
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1485, in draw
+    prefs = context.preferences.addons.get(addon_name).preferences
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'preferences'
+28:22.140  bpy.rna          | ERROR Python script error in VIEW3D_PT_bulk_path_subpanel.draw
+Traceback (most recent call last):
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1581, in draw
+    NODE_PT_bulk_path_tools.draw(self, context)
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1485, in draw
+    prefs = context.preferences.addons.get(addon_name).preferences
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'preferences'
+28:22.219  bpy.rna          | ERROR Python script error in VIEW3D_PT_bulk_path_subpanel.draw
+28:24.812  operator         | Saved "Rumi v3.0.blend"
+Traceback (most recent call last):
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1581, in draw
+    NODE_PT_bulk_path_tools.draw(self, context)
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1485, in draw
+    prefs = context.preferences.addons.get(addon_name).preferences
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'preferences'
+28:24.828  bpy.rna          | ERROR Python script error in VIEW3D_PT_bulk_path_subpanel.draw
+ℹ️  blenderkit: No temporarily enabled addons to clean up [15:30:30.189, download.py:391]
+Render Preset --- Startup handler
+Render Preset --- Reloading presets
+Render Preset --- Loaded : N:\2. ASSETS\Addons\render_preset\EEVEE_AMZN.json
+Render Preset --- Loaded : N:\2. ASSETS\Addons\render_preset\Cycles_High.json
+Render Preset --- Loaded : N:\2. ASSETS\Addons\render_preset\ASSET_THUMB.json
+Render Preset --- Loaded : N:\2. ASSETS\Addons\render_preset\Cycles_Low.json
+Render Preset --- Loaded : N:\2. ASSETS\Addons\render_preset\EEVEE_AMZN_VERTICAL.json
+Render Preset --- Loaded : N:\2. ASSETS\Addons\render_preset\EEVEE_AMZN_VERT_STILL.json
+Render Preset --- Loaded : N:\2. ASSETS\Addons\render_preset\Cycles_4kSuperRes.json
+Render Preset --- Loaded : N:\2. ASSETS\Addons\render_preset\EEVEE_AMZN_STILL.json
+Render Preset --- Loaded : N:\2. ASSETS\Addons\render_preset\Cycles_Med.json
+Render Preset --- Presets reloaded
+Info: Saved copy as "2025-30-15_15-30_Unnamed.blend"
+Incremental Autosave: Saved file:  C:\Users\Nathan\AppData\Local\Temp\2025-30-15_15-30_Unnamed.blend
+43:18.297  blend            | Read blend: "T:\251031_Tatt2Away_Idol\Assets\Blends\Char\Rumi v3.0.blend"
+register_class(...):
+Info: Registering panel class: 'RigBakeSettings', bl_idname 'VIEW3D_PT_rig_bake_settings_sq19j1tt87080496' has been registered before, unregistering previous
+register_class(...):
+Info: Registering panel class: 'RigUI', bl_idname 'VIEW3D_PT_rig_ui_sq19j1tt87080496' has been registered before, unregistering previous
+register_class(...):
+Info: Registering panel class: 'RigLayers', bl_idname 'VIEW3D_PT_rig_layers_sq19j1tt87080496' has been registered before, unregistering previous
+register_class(...):
+Info: Registering operator class: 'RIGIFY_OT_get_frame_range', bl_idname 'rigify.get_frame_range_sq19j1tt87080496' has been registered before, unregistering previous
+register_class(...):
+Info: Registering operator class: 'POSE_OT_rigify_generic_snap', bl_idname 'pose.rigify_generic_snap_sq19j1tt87080496' has been registered before, unregistering previous
+register_class(...):
+Info: Registering operator class: 'POSE_OT_rigify_generic_snap_bake', bl_idname 'pose.rigify_generic_snap_bake_sq19j1tt87080496' has been registered before, unregistering previous
+register_class(...):
+Info: Registering operator class: 'POSE_OT_rigify_clear_keyframes', bl_idname 'pose.rigify_clear_keyframes_sq19j1tt87080496' has been registered before, unregistering previous
+register_class(...):
+Info: Registering operator class: 'POSE_OT_rigify_limb_ik2fk', bl_idname 'pose.rigify_limb_ik2fk_sq19j1tt87080496' has been registered before, unregistering previous
+register_class(...):
+Info: Registering operator class: 'POSE_OT_rigify_limb_ik2fk_bake', bl_idname 'pose.rigify_limb_ik2fk_bake_sq19j1tt87080496' has been registered before, unregistering previous
+register_class(...):
+Info: Registering operator class: 'POSE_OT_rigify_limb_toggle_pole', bl_idname 'pose.rigify_limb_toggle_pole_sq19j1tt87080496' has been registered before, unregistering previous
+register_class(...):
+Info: Registering operator class: 'POSE_OT_rigify_limb_toggle_pole_bake', bl_idname 'pose.rigify_limb_toggle_pole_bake_sq19j1tt87080496' has been registered before, unregistering previous
+register_class(...):
+Info: Registering operator class: 'POSE_OT_rigify_leg_roll_ik2fk', bl_idname 'pose.rigify_leg_roll_ik2fk_sq19j1tt87080496' has been registered before, unregistering previous
+register_class(...):
+Info: Registering operator class: 'POSE_OT_rigify_leg_roll_ik2fk_bake', bl_idname 'pose.rigify_leg_roll_ik2fk_bake_sq19j1tt87080496' has been registered before, unregistering previous
+register_class(...):
+Info: Registering operator class: 'POSE_OT_rigify_switch_parent', bl_idname 'pose.rigify_switch_parent_sq19j1tt87080496' has been registered before, unregistering previous
+register_class(...):
+Info: Registering operator class: 'POSE_OT_rigify_switch_parent_bake', bl_idname 'pose.rigify_switch_parent_bake_sq19j1tt87080496' has been registered before, unregistering previous
+ℹ️  blenderkit: No temporarily enabled addons to clean up [15:45:17.991, download.py:391]
+Render Preset --- Startup handler
+Render Preset --- Reloading presets
+Render Preset --- Loaded : N:\2. ASSETS\Addons\render_preset\EEVEE_AMZN.json
+Render Preset --- Loaded : N:\2. ASSETS\Addons\render_preset\Cycles_High.json
+Render Preset --- Loaded : N:\2. ASSETS\Addons\render_preset\ASSET_THUMB.json
+Render Preset --- Loaded : N:\2. ASSETS\Addons\render_preset\Cycles_Low.json
+Render Preset --- Loaded : N:\2. ASSETS\Addons\render_preset\EEVEE_AMZN_VERTICAL.json
+Render Preset --- Loaded : N:\2. ASSETS\Addons\render_preset\EEVEE_AMZN_VERT_STILL.json
+Render Preset --- Loaded : N:\2. ASSETS\Addons\render_preset\Cycles_4kSuperRes.json
+Render Preset --- Loaded : N:\2. ASSETS\Addons\render_preset\EEVEE_AMZN_STILL.json
+Render Preset --- Loaded : N:\2. ASSETS\Addons\render_preset\Cycles_Med.json
+Render Preset --- Presets reloaded
+Info: Saved copy as "2025-45-15_15-45_Rumi v3.0.blend"
+Incremental Autosave: Saved file:  C:\Users\Nathan\AppData\Local\Temp\2025-45-15_15-45_Rumi v3.0.blend
+Traceback (most recent call last):
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1581, in draw
+    NODE_PT_bulk_path_tools.draw(self, context)
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1485, in draw
+    prefs = context.preferences.addons.get(addon_name).preferences
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'preferences'
+43:19.203  bpy.rna          | ERROR Python script error in VIEW3D_PT_bulk_path_subpanel.draw
+Traceback (most recent call last):
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1581, in draw
+    NODE_PT_bulk_path_tools.draw(self, context)
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1485, in draw
+    prefs = context.preferences.addons.get(addon_name).preferences
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'preferences'
+43:24.781  bpy.rna          | ERROR Python script error in VIEW3D_PT_bulk_path_subpanel.draw
+Traceback (most recent call last):
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1581, in draw
+    NODE_PT_bulk_path_tools.draw(self, context)
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1485, in draw
+    prefs = context.preferences.addons.get(addon_name).preferences
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'preferences'
+43:24.797  bpy.rna          | ERROR Python script error in VIEW3D_PT_bulk_path_subpanel.draw
+43:29.828  blend            | Read blend: "C:\Users\Nathan\AppData\Local\Temp\2025-44-15_15-44_Rumi v3.0.blend"
+register_class(...):
+Info: Registering panel class: 'RigBakeSettings', bl_idname 'VIEW3D_PT_rig_bake_settings_sq19j1tt87080496' has been registered before, unregistering previous
+register_class(...):
+Info: Registering panel class: 'RigUI', bl_idname 'VIEW3D_PT_rig_ui_sq19j1tt87080496' has been registered before, unregistering previous
+register_class(...):
+Info: Registering panel class: 'RigLayers', bl_idname 'VIEW3D_PT_rig_layers_sq19j1tt87080496' has been registered before, unregistering previous
+register_class(...):
+Info: Registering operator class: 'RIGIFY_OT_get_frame_range', bl_idname 'rigify.get_frame_range_sq19j1tt87080496' has been registered before, unregistering previous
+register_class(...):
+Info: Registering operator class: 'POSE_OT_rigify_generic_snap', bl_idname 'pose.rigify_generic_snap_sq19j1tt87080496' has been registered before, unregistering previous
+register_class(...):
+Info: Registering operator class: 'POSE_OT_rigify_generic_snap_bake', bl_idname 'pose.rigify_generic_snap_bake_sq19j1tt87080496' has been registered before, unregistering previous
+register_class(...):
+Info: Registering operator class: 'POSE_OT_rigify_clear_keyframes', bl_idname 'pose.rigify_clear_keyframes_sq19j1tt87080496' has been registered before, unregistering previous
+register_class(...):
+Info: Registering operator class: 'POSE_OT_rigify_limb_ik2fk', bl_idname 'pose.rigify_limb_ik2fk_sq19j1tt87080496' has been registered before, unregistering previous
+register_class(...):
+Info: Registering operator class: 'POSE_OT_rigify_limb_ik2fk_bake', bl_idname 'pose.rigify_limb_ik2fk_bake_sq19j1tt87080496' has been registered before, unregistering previous
+register_class(...):
+Info: Registering operator class: 'POSE_OT_rigify_limb_toggle_pole', bl_idname 'pose.rigify_limb_toggle_pole_sq19j1tt87080496' has been registered before, unregistering previous
+register_class(...):
+Info: Registering operator class: 'POSE_OT_rigify_limb_toggle_pole_bake', bl_idname 'pose.rigify_limb_toggle_pole_bake_sq19j1tt87080496' has been registered before, unregistering previous
+register_class(...):
+Info: Registering operator class: 'POSE_OT_rigify_leg_roll_ik2fk', bl_idname 'pose.rigify_leg_roll_ik2fk_sq19j1tt87080496' has been registered before, unregistering previous
+register_class(...):
+Info: Registering operator class: 'POSE_OT_rigify_leg_roll_ik2fk_bake', bl_idname 'pose.rigify_leg_roll_ik2fk_bake_sq19j1tt87080496' has been registered before, unregistering previous
+register_class(...):
+Info: Registering operator class: 'POSE_OT_rigify_switch_parent', bl_idname 'pose.rigify_switch_parent_sq19j1tt87080496' has been registered before, unregistering previous
+register_class(...):
+Info: Registering operator class: 'POSE_OT_rigify_switch_parent_bake', bl_idname 'pose.rigify_switch_parent_bake_sq19j1tt87080496' has been registered before, unregistering previous
+ℹ️  blenderkit: No temporarily enabled addons to clean up [15:45:29.543, download.py:391]
+Render Preset --- Startup handler
+Render Preset --- Reloading presets
+Render Preset --- Loaded : N:\2. ASSETS\Addons\render_preset\EEVEE_AMZN.json
+Render Preset --- Loaded : N:\2. ASSETS\Addons\render_preset\Cycles_High.json
+Render Preset --- Loaded : N:\2. ASSETS\Addons\render_preset\ASSET_THUMB.json
+Render Preset --- Loaded : N:\2. ASSETS\Addons\render_preset\Cycles_Low.json
+Render Preset --- Loaded : N:\2. ASSETS\Addons\render_preset\EEVEE_AMZN_VERTICAL.json
+Render Preset --- Loaded : N:\2. ASSETS\Addons\render_preset\EEVEE_AMZN_VERT_STILL.json
+Render Preset --- Loaded : N:\2. ASSETS\Addons\render_preset\Cycles_4kSuperRes.json
+Render Preset --- Loaded : N:\2. ASSETS\Addons\render_preset\EEVEE_AMZN_STILL.json
+Render Preset --- Loaded : N:\2. ASSETS\Addons\render_preset\Cycles_Med.json
+Render Preset --- Presets reloaded
+Info: Saved copy as "2025-45-15_15-45_2025-44-15_15-44_Rumi v3.0.blend"
+Incremental Autosave: Saved file:  C:\Users\Nathan\AppData\Local\Temp\2025-45-15_15-45_2025-44-15_15-44_Rumi v3.0.blend
+Traceback (most recent call last):
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1581, in draw
+    NODE_PT_bulk_path_tools.draw(self, context)
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1485, in draw
+    prefs = context.preferences.addons.get(addon_name).preferences
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'preferences'
+43:30.547  bpy.rna          | ERROR Python script error in VIEW3D_PT_bulk_path_subpanel.draw
+Traceback (most recent call last):
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1581, in draw
+    NODE_PT_bulk_path_tools.draw(self, context)
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1485, in draw
+    prefs = context.preferences.addons.get(addon_name).preferences
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'preferences'
+43:31.828  bpy.rna          | ERROR Python script error in VIEW3D_PT_bulk_path_subpanel.draw
+Traceback (most recent call last):
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1581, in draw
+    NODE_PT_bulk_path_tools.draw(self, context)
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1485, in draw
+    prefs = context.preferences.addons.get(addon_name).preferences
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'preferences'
+43:34.140  bpy.rna          | ERROR Python script error in VIEW3D_PT_bulk_path_subpanel.draw
+Traceback (most recent call last):
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1581, in draw
+    NODE_PT_bulk_path_tools.draw(self, context)
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1485, in draw
+    prefs = context.preferences.addons.get(addon_name).preferences
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'preferences'
+43:35.406  bpy.rna          | ERROR Python script error in VIEW3D_PT_bulk_path_subpanel.draw
+Traceback (most recent call last):
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1581, in draw
+    NODE_PT_bulk_path_tools.draw(self, context)
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1485, in draw
+    prefs = context.preferences.addons.get(addon_name).preferences
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'preferences'
+43:36.672  bpy.rna          | ERROR Python script error in VIEW3D_PT_bulk_path_subpanel.draw
+Traceback (most recent call last):
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1581, in draw
+    NODE_PT_bulk_path_tools.draw(self, context)
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1485, in draw
+    prefs = context.preferences.addons.get(addon_name).preferences
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'preferences'
+43:39.484  bpy.rna          | ERROR Python script error in VIEW3D_PT_bulk_path_subpanel.draw
+Traceback (most recent call last):
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1581, in draw
+    NODE_PT_bulk_path_tools.draw(self, context)
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1485, in draw
+    prefs = context.preferences.addons.get(addon_name).preferences
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'preferences'
+43:40.578  bpy.rna          | ERROR Python script error in VIEW3D_PT_bulk_path_subpanel.draw
+Traceback (most recent call last):
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1581, in draw
+    NODE_PT_bulk_path_tools.draw(self, context)
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1485, in draw
+    prefs = context.preferences.addons.get(addon_name).preferences
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'preferences'
+43:41.250  bpy.rna          | ERROR Python script error in VIEW3D_PT_bulk_path_subpanel.draw
+Traceback (most recent call last):
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1581, in draw
+    NODE_PT_bulk_path_tools.draw(self, context)
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1485, in draw
+    prefs = context.preferences.addons.get(addon_name).preferences
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'preferences'
+43:44.344  bpy.rna          | ERROR Python script error in VIEW3D_PT_bulk_path_subpanel.draw
+Traceback (most recent call last):
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1581, in draw
+    NODE_PT_bulk_path_tools.draw(self, context)
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1485, in draw
+    prefs = context.preferences.addons.get(addon_name).preferences
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'preferences'
+43:44.437  bpy.rna          | ERROR Python script error in VIEW3D_PT_bulk_path_subpanel.draw
+Traceback (most recent call last):
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1581, in draw
+    NODE_PT_bulk_path_tools.draw(self, context)
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1485, in draw
+    prefs = context.preferences.addons.get(addon_name).preferences
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'preferences'
+43:44.531  bpy.rna          | ERROR Python script error in VIEW3D_PT_bulk_path_subpanel.draw
+Traceback (most recent call last):
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1581, in draw
+    NODE_PT_bulk_path_tools.draw(self, context)
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1485, in draw
+    prefs = context.preferences.addons.get(addon_name).preferences
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'preferences'
+43:44.625  bpy.rna          | ERROR Python script error in VIEW3D_PT_bulk_path_subpanel.draw
+Warning: Pie menus with more than 8 items are currently unsupported
+Warning: Pie menus with more than 8 items are currently unsupported
+Warning: Pie menus with more than 8 items are currently unsupported
+Traceback (most recent call last):
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1581, in draw
+    NODE_PT_bulk_path_tools.draw(self, context)
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1485, in draw
+    prefs = context.preferences.addons.get(addon_name).preferences
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'preferences'
+43:48.937  bpy.rna          | ERROR Python script error in VIEW3D_PT_bulk_path_subpanel.draw
+Traceback (most recent call last):
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1581, in draw
+    NODE_PT_bulk_path_tools.draw(self, context)
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1485, in draw
+    prefs = context.preferences.addons.get(addon_name).preferences
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'preferences'
+43:50.031  bpy.rna          | ERROR Python script error in VIEW3D_PT_bulk_path_subpanel.draw
+Traceback (most recent call last):
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1581, in draw
+    NODE_PT_bulk_path_tools.draw(self, context)
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1485, in draw
+    prefs = context.preferences.addons.get(addon_name).preferences
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'preferences'
+43:51.937  bpy.rna          | ERROR Python script error in VIEW3D_PT_bulk_path_subpanel.draw
+43:52.703  operator         | Saved "2025-44-15_15-44_Rumi v3.0.blend"
+Traceback (most recent call last):
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1581, in draw
+    NODE_PT_bulk_path_tools.draw(self, context)
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1485, in draw
+    prefs = context.preferences.addons.get(addon_name).preferences
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'preferences'
+43:52.719  bpy.rna          | ERROR Python script error in VIEW3D_PT_bulk_path_subpanel.draw
+Traceback (most recent call last):
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1581, in draw
+    NODE_PT_bulk_path_tools.draw(self, context)
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1485, in draw
+    prefs = context.preferences.addons.get(addon_name).preferences
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'preferences'
+43:56.906  bpy.rna          | ERROR Python script error in VIEW3D_PT_bulk_path_subpanel.draw
+Traceback (most recent call last):
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1581, in draw
+    NODE_PT_bulk_path_tools.draw(self, context)
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1485, in draw
+    prefs = context.preferences.addons.get(addon_name).preferences
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'preferences'
+43:56.922  bpy.rna          | ERROR Python script error in VIEW3D_PT_bulk_path_subpanel.draw
+Traceback (most recent call last):
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1581, in draw
+    NODE_PT_bulk_path_tools.draw(self, context)
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_path_management.py", line 1485, in draw
+    prefs = context.preferences.addons.get(addon_name).preferences
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'preferences'
+43:57.609  bpy.rna          | ERROR Python script error in VIEW3D_PT_bulk_path_subpanel.draw
+ℹ️  blenderkit: Cache reloaded, tagging preferences for redraw. [15:45:57.211, override_extension_draw.py:194]
+ℹ️  blenderkit: Cache reloaded, tagging preferences for redraw. [15:46:03.841, override_extension_draw.py:194]
+44:08.312  operator         | ERROR No module named 'bl_ext.rainys_extensions.rainclouds_bulk_scene_tools.utils'
+Warning: add-on missing 'bl_info', this can cause poor performance!: 'C:\\Program Files (x86)\\Steam\\steamapps\\common\\Blender\\portable\\scripts\\addons\\brushstroke_tools\\__init__.py'
+reloading addon meta-data: bl_ext.rainys_extensions.rainclouds_bulk_scene_tools 'C:\\Program Files (x86)\\Steam\\steamapps\\common\\Blender\\portable\\extensions\\rainys_extensions\\rainclouds_bulk_scene_tools\\blender_manifest.toml' (time-stamp change detected)
+Traceback (most recent call last):
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\5.0\scripts\modules\addon_utils.py", line 432, in enable
+    mod = importlib.import_module(module_name)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\5.0\python\Lib\importlib\__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1204, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1176, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1147, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 690, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 940, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\__init__.py", line 4, in <module>
+    from .panels import bulk_viewport_display
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_viewport_display.py", line 8, in <module>
+    from ..utils import compat
+ModuleNotFoundError: No module named 'bl_ext.rainys_extensions.rainclouds_bulk_scene_tools.utils'
+Traceback (most recent call last):
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\5.0\scripts\modules\addon_utils.py", line 432, in enable
+    mod = importlib.import_module(module_name)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\5.0\python\Lib\importlib\__init__.py", line 126, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<frozen importlib._bootstrap>", line 1204, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 1176, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 1147, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 690, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 940, in exec_module
+  File "<frozen importlib._bootstrap>", line 241, in _call_with_frames_removed
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\__init__.py", line 4, in <module>
+    from .panels import bulk_viewport_display
+  File "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\extensions\rainys_extensions\rainclouds_bulk_scene_tools\panels\bulk_viewport_display.py", line 8, in <module>
+    from ..utils import compat
+ModuleNotFoundError: No module named 'bl_ext.rainys_extensions.rainclouds_bulk_scene_tools.utils'
+44:22.609  blend            | Writing user preferences: "C:\Program Files (x86)\Steam\steamapps\common\Blender\portable\config\userpref.blend"
+44:22.609  operator         | Preferences saved
+44:31.984  operator         | ERROR No module named 'bl_ext.rainys_extensions.rainclouds_bulk_scene_tools.utils'
+
+
+---
+
+_**Agent (model default, mode Agent)**_
+
+
+
+---
+
+
+Two issues:
+
+1. The `utils` module isn't being found — likely not included in the package.
+2. The old unsafe preference access is still present — the fix may not have been applied.
+
+Checking the current state and ensuring the fix is applied:
+
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file">
+<details><summary>Tool use: **read_file** • Read file: panels/bulk_path_management.py</summary>
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="search" data-tool-name="grep">
+<details>
+<summary>Tool use: **grep** • Grep for "from \.\.utils import compat" in "panels/bulk_path_management.py" • 1 match</summary>
+
+Output mode: content
+
+
+| File | Content | Line |
+|------|------|------|
+| `panels/bulk_path_management.py` | `from ..utils import compat` | L6 |
+
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file">
+<details><summary>Tool use: **read_file** • Read file: .github/workflows/release.yml</summary>
+
+</details>
+</tool-use>
+
+---
+
+
+
+---
+
+
+The build workflow doesn't include the `utils` directory. Updating it to include `utils`:
+
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="search_replace">
+
+<details><summary>Tool use: **search_replace** • Edit file: .github/workflows/release.yml</summary>
+
+**Chunk 1**
+Lines added: 1, lines removed: undefined
+
+```diff
+@@ -50,4 +50,5 @@
+            cp -r panels "$ADDON_DIR"/
+            cp -r ops "$ADDON_DIR"/
++           cp -r utils "$ADDON_DIR"/
+  
+            # Create the zip from the temporary directory
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="generic" data-tool-name="read_lints">
+<details>
+          <summary>Tool use: **read_lints** • Read lints for 1 file</summary>
+      
+Lint paths:
+
+- `.github/workflows/release.yml`
+
+Lint results
+
+
+**No lint errors found**
+</details>
+</tool-use>
+
+---
+
+
+
+---
+
+
+Fixed the build workflow. The `utils` directory wasn't being included in the package, causing the `ModuleNotFoundError`.
+
+**What I fixed:**
+- Updated `.github/workflows/release.yml` to include `cp -r utils "$ADDON_DIR"/` so the `utils` directory is copied into the package.
+
+**Why this happened:**
+- The workflow only copied `panels` and `ops`, not `utils`.
+- When the addon tried to import `from ..utils import compat`, it failed because `utils` wasn't in the package.
+- The old errors you're seeing are from the previous version still loaded in memory; the new version couldn't load due to the missing module.
+
+After rebuilding/releasing with this change, the `utils` directory will be included and the addon should load. The preference access fix is already in the code (lines 1486-1487 show the defensive check), but it couldn't run because the import failed first.
+
+**Next steps:**
+1. Commit this workflow change
+2. Create a new release/rebuild the package
+3. The `utils` directory will now be included and the addon should enable properly
 
 ---
 
