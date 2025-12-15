@@ -1,5 +1,6 @@
 import bpy
 from bpy.types import Operator
+from ..utils import compat
 
 class CreateOrthoCamera(Operator):
     """Create an orthographic camera with predefined settings"""
@@ -38,10 +39,10 @@ class CreateOrthoCamera(Operator):
         return {'FINISHED'}
 
 def register():
-    bpy.utils.register_class(CreateOrthoCamera)
+    compat.safe_register_class(CreateOrthoCamera)
 
 def unregister():
-    bpy.utils.unregister_class(CreateOrthoCamera)
+    compat.safe_unregister_class(CreateOrthoCamera)
 
 if __name__ == "__main__":
     register()

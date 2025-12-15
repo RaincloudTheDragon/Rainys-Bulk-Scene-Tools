@@ -6,6 +6,7 @@ import subprocess
 
 # Import ghost buster functionality
 from ..ops.ghost_buster import GhostBuster, GhostDetector, ResyncEnforce
+from ..utils import compat
 
 # Regular expression to match numbered suffixes like .001, .002, _001, _0001, etc.
 NUMBERED_SUFFIX_PATTERN = re.compile(r'(.*?)[._](\d{3,})$')
@@ -1443,14 +1444,11 @@ def register():
     register_dataremap_properties()
     
     for cls in classes:
-        bpy.utils.register_class(cls)
+        compat.safe_register_class(cls)
 
 def unregister():
     for cls in reversed(classes):
-        try:
-            bpy.utils.unregister_class(cls)
-        except RuntimeError:
-            pass
+        compat.safe_unregister_class(cls)
     # Unregister properties
     try:
         unregister_dataremap_properties()

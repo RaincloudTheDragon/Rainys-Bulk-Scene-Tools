@@ -3,6 +3,7 @@ from bpy.types import Panel, Operator, PropertyGroup # type: ignore
 from bpy.props import StringProperty, BoolProperty, EnumProperty, PointerProperty, CollectionProperty # type: ignore
 import os
 import re
+from ..utils import compat
 
 class REMOVE_EXT_OT_summary_dialog(bpy.types.Operator):
     """Show remove extensions operation summary"""
@@ -1482,7 +1483,8 @@ class NODE_PT_bulk_path_tools(Panel):
         
         # Get addon preferences
         addon_name = __package__.split('.')[0]
-        prefs = context.preferences.addons.get(addon_name).preferences
+        addon_entry = context.preferences.addons.get(addon_name)
+        prefs = addon_entry.preferences if addon_entry else None
         
         row = box.row(align=True)
         row.enabled = any_selected
@@ -1495,7 +1497,8 @@ class NODE_PT_bulk_path_tools(Panel):
         
         # Right side: checkbox
         col = split.column()
-        col.prop(prefs, "automat_common_outside_blend", text="", icon='FOLDER_REDIRECT')
+        if prefs:
+            col.prop(prefs, "automat_common_outside_blend", text="", icon='FOLDER_REDIRECT')
         
         # Bulk operations section
         box = layout.box()
@@ -1609,7 +1612,7 @@ classes = (
 
 def register():
     for cls in classes:
-        bpy.utils.register_class(cls)
+        compat.safe_register_class(cls)
     
     # Register properties
     bpy.types.Scene.bst_path_props = PointerProperty(type=BST_PathProperties)
@@ -1633,7 +1636,7 @@ def unregister():
     
     # Unregister classes
     for cls in reversed(classes):
-        bpy.utils.unregister_class(cls)
+        compat.safe_unregister_class(cls)
 
 if __name__ == "__main__":
     register()

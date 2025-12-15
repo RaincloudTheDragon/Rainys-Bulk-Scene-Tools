@@ -7,6 +7,7 @@ from ..panels.bulk_path_management import (
     set_image_paths,
     ensure_directory_for_path,
 )
+from ..utils import compat
 
 class AUTOMAT_OT_summary_dialog(bpy.types.Operator):
     """Show AutoMat Extractor operation summary"""
@@ -70,8 +71,9 @@ class AutoMatExtractor(bpy.types.Operator):
     def execute(self, context):
         # Get addon preferences
         addon_name = __package__.split('.')[0]
-        prefs = context.preferences.addons.get(addon_name).preferences
-        common_outside = prefs.automat_common_outside_blend
+        addon_entry = context.preferences.addons.get(addon_name)
+        prefs = addon_entry.preferences if addon_entry else None
+        common_outside = prefs.automat_common_outside_blend if prefs else False
         
         # Get selected images
         selected_images = [img for img in bpy.data.images if hasattr(img, "bst_selected") and img.bst_selected]
@@ -532,9 +534,9 @@ classes = (
 
 def register():
     for cls in classes:
-        bpy.utils.register_class(cls)
+        compat.safe_register_class(cls)
 
 def unregister():
     for cls in reversed(classes):
-        bpy.utils.unregister_class(cls)
+        compat.safe_unregister_class(cls)
 

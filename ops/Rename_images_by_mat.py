@@ -1,5 +1,6 @@
 import bpy
 import re
+from ..utils import compat
 
 class RENAME_OT_summary_dialog(bpy.types.Operator):
     """Show rename operation summary"""
@@ -505,9 +506,9 @@ classes = (
 
 def register():
     for cls in classes:
-        bpy.utils.register_class(cls)
+        compat.safe_register_class(cls)
 
 def unregister():
     for cls in reversed(classes):
-        bpy.utils.unregister_class(cls)
+        compat.safe_unregister_class(cls)
 
