@@ -1,3 +1,7 @@
+# v0.13.0
+  - Set up compat for #9, still needs bugchecking, but the main setup is complete.
+  - Fixed #10
+
 # v0.12.0
   - Integrate Rainy's Extension Repo bootstrapper
   - Set minimum Blender version to 4.2 for #9
