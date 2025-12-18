@@ -15530,3 +15530,158 @@ The search functionality should work now. The error was caused by passing an inv
 
 ---
 
+_**User**_
+
+bump 0.14.0 and summarize BRIEFLY and concisely in changelog. reference issues #3 and #4
+
+---
+
+_**Agent (model default, mode Agent)**_
+
+
+Bumping the version to 0.14.0 and updating the changelog with a brief summary referencing issues #3 and #4.
+
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: E:\Rainys_Bulk_Scene_Tools\blender_manifest.toml</summary>
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: E:\Rainys_Bulk_Scene_Tools\__init__.py</summary>
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: E:\Rainys_Bulk_Scene_Tools\changelog.md</summary>
+
+</details>
+</tool-use>
+
+---
+
+
+
+
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search">
+<details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+
+Parameters:
+
+```json
+{
+  "pattern": "version|bl_info",
+  "path": "__init__.py",
+  "caseInsensitive": false
+}
+```
+Result:
+
+```json
+{
+  "success": {
+    "pattern": "version|bl_info",
+    "path": "__init__.py",
+    "outputMode": "content",
+    "workspaceResults": {
+      "E:\\Rainys_Bulk_Scene_Tools": {
+        "content": {}
+      }
+    }
+  }
+}
+```
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: E:\Rainys_Bulk_Scene_Tools\__init__.py</summary>
+
+</details>
+</tool-use>
+
+---
+
+
+
+
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="edit_file_v2">
+<details>
+<summary>Tool use: **edit_file_v2**</summary>
+
+
+Parameters:
+
+```json
+{
+  "relativeWorkspacePath": "E:\\Rainys_Bulk_Scene_Tools\\blender_manifest.toml"
+}
+```
+Additional data:
+
+```json
+{
+  "codeblockId": "fb52e209-5769-4f23-a5e2-9edf492e97eb"
+}
+```
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="edit_file_v2">
+<details>
+<summary>Tool use: **edit_file_v2**</summary>
+
+
+Parameters:
+
+```json
+{
+  "relativeWorkspacePath": "E:\\Rainys_Bulk_Scene_Tools\\changelog.md"
+}
+```
+Additional data:
+
+```json
+{
+  "codeblockId": "39425c32-318b-4128-9836-d326731a9116"
+}
+```
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+
+Updated the version to 0.14.0 in the manifest and added a brief changelog entry referencing issues #3 and #4.
+
+---
+
