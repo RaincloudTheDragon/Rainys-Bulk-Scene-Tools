@@ -595,6 +595,61 @@ class BST_OT_select_active_images(Operator):
         
         return {'FINISHED'}
 
+# Operator to select all images with absolute paths
+class BST_OT_select_absolute_images(Operator):
+    bl_idname = "bst.select_absolute_images"
+    bl_label = "Select Absolute Images"
+    bl_description = "Select all images with absolute file paths"
+    bl_options = {'REGISTER', 'UNDO'}
+    
+    def execute(self, context):
+        selected_count = 0
+        
+        # Iterate through all images
+        for img in bpy.data.images:
+            # Skip images that shouldn't be checked
+            if (img.source == 'GENERATED' or  # Procedurally generated
+                img.source == 'VIEWER' or  # Render Result, Viewer Node, etc.
+                img.name in ['Render Result', 'Viewer Node']):  # Special Blender images
+                continue
+            
+            # Check if image has a file path
+            if not img.filepath and not img.filepath_raw:
+                continue
+            
+            # Check both filepath and filepath_raw for absolute paths
+            is_absolute = False
+            
+            # Check filepath
+            if img.filepath:
+                # Skip Blender relative paths (starting with //)
+                if not img.filepath.startswith('//'):
+                    # Convert to absolute path and check
+                    abs_path = bpy.path.abspath(img.filepath)
+                    if abs_path and os.path.isabs(abs_path):
+                        is_absolute = True
+            
+            # Check filepath_raw if filepath wasn't absolute
+            if not is_absolute and img.filepath_raw:
+                # Skip Blender relative paths (starting with //)
+                if not img.filepath_raw.startswith('//'):
+                    # Convert to absolute path and check
+                    abs_path = bpy.path.abspath(img.filepath_raw)
+                    if abs_path and os.path.isabs(abs_path):
+                        is_absolute = True
+            
+            # Select image if it has an absolute path
+            if is_absolute:
+                img.bst_selected = True
+                selected_count += 1
+        
+        if selected_count > 0:
+            self.report({'INFO'}, f"Selected {selected_count} images with absolute paths")
+        else:
+            self.report({'INFO'}, "No images with absolute paths found")
+        
+        return {'FINISHED'}
+
 # Add a class for renaming datablocks
 class BST_OT_rename_datablock(Operator):
     """Click to rename datablock"""
@@ -1524,6 +1579,7 @@ class NODE_PT_bulk_path_tools(Panel):
             row = box.row(align=True)
             row.operator("bst.select_material_images", text="Material Images")
             row.operator("bst.select_active_images", text="Active Images")
+            row.operator("bst.select_absolute_images", text="Absolute Images", icon='FOLDER_REDIRECT')
             
             # Sorting option
             row = box.row()
@@ -1593,6 +1649,7 @@ classes = (
     BST_OT_toggle_path_edit,
     BST_OT_select_material_images,
     BST_OT_select_active_images,
+    BST_OT_select_absolute_images,
     BST_OT_rename_datablock,
     BST_OT_toggle_image_selection,
     BST_OT_reuse_material_path,
