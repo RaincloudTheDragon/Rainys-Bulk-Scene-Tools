@@ -1,3 +1,7 @@
+# v0.14.0
+  - Added operator to select all images with absolute paths (#3)
+  - Added search functionality to filter datablocks in PathMan and Data Remapper panels (#4)
+
 # v0.13.1
   - Fix github workflow to include new utils folder
 
