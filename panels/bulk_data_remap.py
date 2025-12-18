@@ -92,6 +92,31 @@ def register_dataremap_properties():
         default=False
     )
     
+    # Search filter properties for each data type
+    bpy.types.Scene.dataremap_search_images = bpy.props.StringProperty(  # type: ignore
+        name="Search Images",
+        description="Filter images by name (case-insensitive)",
+        default=""
+    )
+    
+    bpy.types.Scene.dataremap_search_materials = bpy.props.StringProperty(  # type: ignore
+        name="Search Materials",
+        description="Filter materials by name (case-insensitive)",
+        default=""
+    )
+    
+    bpy.types.Scene.dataremap_search_fonts = bpy.props.StringProperty(  # type: ignore
+        name="Search Fonts",
+        description="Filter fonts by name (case-insensitive)",
+        default=""
+    )
+    
+    bpy.types.Scene.dataremap_search_worlds = bpy.props.StringProperty(  # type: ignore
+        name="Search Worlds",
+        description="Filter worlds by name (case-insensitive)",
+        default=""
+    )
+    
     # Dictionary to store excluded groups
     if not hasattr(bpy.types.Scene, "excluded_remap_groups"):
         bpy.types.Scene.excluded_remap_groups = {}
@@ -860,6 +885,21 @@ def draw_drag_selectable_checkbox(layout, context, data_type, group_key):
     op.group_key = group_key
     op.data_type = data_type
 
+def search_matches_group(group, search_string):
+    """Check if search string matches group base name or any item in group"""
+    if not search_string:
+        return True
+    search_lower = search_string.lower()
+    base_name, items = group
+    # Check base name
+    if search_lower in base_name.lower():
+        return True
+    # Check all item names in group
+    for item in items:
+        if search_lower in item.name.lower():
+            return True
+    return False
+
 # Update the UI code to use the custom draw function
 def draw_data_duplicates(layout, context, data_type, data_groups):
     """Draw the list of duplicate data items with drag-selectable checkboxes and click to rename"""
@@ -882,6 +922,13 @@ def draw_data_duplicates(layout, context, data_type, data_groups):
     if hasattr(context.scene, sort_prop_name):
         select_row.prop(context.scene, sort_prop_name, text="Sort by Selected")
     
+    # Add search filter
+    search_row = box_dup.row()
+    search_row.label(text="", icon='VIEWZOOM')
+    search_prop_name = f"dataremap_search_{data_type}"
+    if hasattr(context.scene, search_prop_name):
+        search_row.prop(context.scene, search_prop_name, text="")
+    
     box_dup.separator(factor=0.5)
     
     # Initialize the expanded groups dictionary if it doesn't exist
@@ -890,6 +937,15 @@ def draw_data_duplicates(layout, context, data_type, data_groups):
     
     # Get the groups and possibly sort them
     group_items = list(data_groups.items())
+    
+    # Filter by search string if provided
+    search_prop_name = f"dataremap_search_{data_type}"
+    search_string = ""
+    if hasattr(context.scene, search_prop_name):
+        search_string = getattr(context.scene, search_prop_name)
+    
+    if search_string:
+        group_items = [group for group in group_items if search_matches_group(group, search_string)]
     
     # Sort by selection if enabled
     sort_prop_name = f"dataremap_sort_{data_type}"

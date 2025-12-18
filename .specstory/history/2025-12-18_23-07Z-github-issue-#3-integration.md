@@ -9234,7 +9234,6 @@ To-do's from the plan have already been created. Do not create them again. Mark 
 
 _**Agent (model default, mode Agent)**_
 
-
 Reviewing the relevant file to understand the structure, then implementing the operator.
 
 
@@ -9248,15 +9247,6286 @@ Reviewing the relevant file to understand the structure, then implementing the o
 
 ---
 
-<tool-use data-tool-type="unknown" data-tool-name="read_file_v2">
-<details>
-<summary>Tool use: **read_file_v2**</summary>
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_path_management.py</summary>
 
-Status: **loading**
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_path_management.py</summary>
+
+</details>
+</tool-use>
+
+---
+
+Implementing the operator. Creating the operator class first:
+
+
+---
+
+<tool-use data-tool-type="task" data-tool-name="todo_write">
+<details><summary>Tool use: **todo_write** • Todo List</summary>
+
+- [-] Create BST_OT_select_absolute_images operator class with logic to detect and select images with absolute paths
+- [ ] Add BST_OT_select_absolute_images to the classes tuple for registration
+- [ ] Add UI button for the operator in the Bulk Operations section alongside other selection operators
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="edit_file_v2">
+<details>
+<summary>Tool use: **edit_file_v2**</summary>
+
+
+Parameters:
+
+```json
+{
+  "relativeWorkspacePath": "E:\\Rainys_Bulk_Scene_Tools\\panels\\bulk_path_management.py"
+}
+```
+Additional data:
+
+```json
+{
+  "codeblockId": "508d56a2-6a36-4fb8-8e6f-126a5f7cda78"
+}
+```
+Status: **completed**
 
 
 </details>
 </tool-use>
+
+---
+
+Registering the operator and adding the UI button:
+
+
+---
+
+<tool-use data-tool-type="task" data-tool-name="todo_write">
+<details><summary>Tool use: **todo_write** • Todo List</summary>
+
+- [x] Create BST_OT_select_absolute_images operator class with logic to detect and select images with absolute paths
+- [-] Add BST_OT_select_absolute_images to the classes tuple for registration
+- [ ] Add UI button for the operator in the Bulk Operations section alongside other selection operators
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="edit_file_v2">
+<details>
+<summary>Tool use: **edit_file_v2**</summary>
+
+
+Parameters:
+
+```json
+{
+  "relativeWorkspacePath": "E:\\Rainys_Bulk_Scene_Tools\\panels\\bulk_path_management.py"
+}
+```
+Additional data:
+
+```json
+{
+  "codeblockId": "c4143653-ccb6-4bef-8683-c22d3c58d5b1"
+}
+```
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="task" data-tool-name="todo_write">
+<details><summary>Tool use: **todo_write** • Todo List</summary>
+
+- [x] Create BST_OT_select_absolute_images operator class with logic to detect and select images with absolute paths
+- [x] Add BST_OT_select_absolute_images to the classes tuple for registration
+- [-] Add UI button for the operator in the Bulk Operations section alongside other selection operators
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="edit_file_v2">
+<details>
+<summary>Tool use: **edit_file_v2**</summary>
+
+
+Parameters:
+
+```json
+{
+  "relativeWorkspacePath": "E:\\Rainys_Bulk_Scene_Tools\\panels\\bulk_path_management.py"
+}
+```
+Additional data:
+
+```json
+{
+  "codeblockId": "32e46ba5-0b5a-4f90-be76-caa7923c8412"
+}
+```
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="task" data-tool-name="todo_write">
+<details><summary>Tool use: **todo_write** • Todo List</summary>
+
+- [x] Create BST_OT_select_absolute_images operator class with logic to detect and select images with absolute paths
+- [x] Add BST_OT_select_absolute_images to the classes tuple for registration
+- [x] Add UI button for the operator in the Bulk Operations section alongside other selection operators
+
+</details>
+</tool-use>
+
+---
+
+Checking for linting errors:
+
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="read_lints">
+<details>
+<summary>Tool use: **read_lints**</summary>
+
+
+Parameters:
+
+```json
+{
+  "paths": [
+    "panels/bulk_path_management.py"
+  ]
+}
+```
+Result:
+
+```json
+{
+  "linterErrorsByFile": [
+    {
+      "relativeWorkspacePath": "panels/bulk_path_management.py"
+    }
+  ]
+}
+```
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+Verifying the implementation by reading the relevant sections:
+
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_path_management.py</summary>
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_path_management.py</summary>
+
+</details>
+</tool-use>
+
+---
+
+
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_path_management.py</summary>
+
+</details>
+</tool-use>
+
+---
+
+
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search">
+<details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+
+Parameters:
+
+```json
+{
+  "pattern": "select_absolute_images",
+  "path": "panels/bulk_path_management.py",
+  "caseInsensitive": false
+}
+```
+Result:
+
+```json
+{
+  "success": {
+    "pattern": "select_absolute_images",
+    "path": "panels/bulk_path_management.py",
+    "outputMode": "content",
+    "workspaceResults": {
+      "E:\\Rainys_Bulk_Scene_Tools": {
+        "content": {
+          "matches": [
+            {
+              "file": "panels/bulk_path_management.py",
+              "matches": [
+                {
+                  "lineNumber": 599,
+                  "content": "class BST_OT_select_absolute_images(Operator):"
+                },
+                {
+                  "lineNumber": 600,
+                  "content": "    bl_idname = \"bst.select_absolute_images\""
+                },
+                {
+                  "lineNumber": 1582,
+                  "content": "            row.operator(\"bst.select_absolute_images\", text=\"Absolute Images\", icon='FOLDER_REDIRECT')"
+                },
+                {
+                  "lineNumber": 1652,
+                  "content": "    BST_OT_select_absolute_images,"
+                }
+              ]
+            }
+          ],
+          "totalLines": 4,
+          "totalMatchedLines": 4
+        }
+      }
+    }
+  }
+}
+```
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+Verifying the registration in the classes tuple:
+
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_path_management.py</summary>
+
+</details>
+</tool-use>
+
+---
+
+## Implementation Summary
+
+1. **Created the operator class** (`BST_OT_select_absolute_images`):
+   - Operator ID: `bst.select_absolute_images`
+   - Iterates through all images in `bpy.data.images`
+   - Skips generated, viewer, and special Blender images (Render Result, Viewer Node)
+   - Checks both `filepath` and `filepath_raw` for absolute paths
+   - Uses `bpy.path.abspath()` and `os.path.isabs()` to detect absolute paths
+   - Handles Blender's relative paths (skips paths starting with `//`)
+   - Sets `img.bst_selected = True` for images with absolute paths
+   - Reports the count of selected images
+
+2. **Registered the operator**: Added `BST_OT_select_absolute_images` to the `classes` tuple for automatic registration
+
+3. **Added UI button**: Added a button in the Bulk Operations section alongside "Material Images" and "Active Images" buttons, with the icon `'FOLDER_REDIRECT'`
+
+The operator follows the same pattern as the existing selection operators and integrates with the existing image selection system using the `bst_selected` property. All todos are completed and there are no linting errors.
+
+---
+
+_**User**_
+
+excellent. next issue. https://github.com/RaincloudTheDragon/Rainys-Bulk-Scene-Tools/issues/4 
+
+---
+
+_**Agent (model default, mode Plan)**_
+
+
+Reviewing the codebase to understand how datablocks are displayed in PathMan and Data Remapper before planning the search feature.
+
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_path_management.py</summary>
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_data_remap.py</summary>
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="semantic_search_full">
+<details>
+<summary>Tool use: **semantic_search_full**</summary>
+
+
+Parameters:
+
+```json
+{
+  "query": "How are datablocks displayed in lists in the Bulk Path Management and Bulk Data Remap panels?",
+  "topK": 10,
+  "explanation": ""
+}
+```
+Result:
+
+```json
+{
+  "codeResults": [
+    {
+      "codeBlock": {
+        "relativeWorkspacePath": ".\\panels\\bulk_path_management.py",
+        "range": {
+          "startPosition": {
+            "line": 1428
+          },
+          "endPosition": {
+            "line": 1639
+          }
+        },
+        "contents": "class NODE_PT_bulk_path_tools(Panel):\ndef draw(self, context):\n\n\n            box.separator()\n            \n            # Image selection list with thumbnails\n            if len(bpy.data.images) &gt; 0:\n                # Sort images if enabled\n                if path_props.sort_by_selected:\n                    # Create a sorted list with selected images first\n                    sorted_images = sorted(bpy.data.images, \n                                           key=lambda img: not getattr(img, \"bst_selected\", False))\n                else:\n                    # Use original order\n                    sorted_images = bpy.data.images\n                \n                for img in sorted_images:\n                    # Add bst_selected attribute if it doesn't exist\n                    if not hasattr(img, \"bst_selected\"):\n                        img.bst_selected = False\n                    \n                    row = box.row(align=True)\n                    \n                    # Checkbox for selection - use operator for shift+click support\n                    op = row.operator(\"bst.toggle_image_selection\", text=\"\", \n                                    icon='CHECKBOX_HLT' if img.bst_selected else 'CHECKBOX_DEHLT',\n                                    emboss=False)\n                    op.image_name = img.name\n                    \n                    # Image thumbnail\n                    if hasattr(img, 'preview'):\n                        # Use the actual image thumbnail\n                        row.template_icon(icon_value=img.preview_ensure().icon_id, scale=1.0)\n                    else:\n                        row.label(text=\"\", icon='IMAGE_DATA')\n                    \n                    # Image name with rename operator\n                    rename_op = row.operator(\"bst.rename_datablock\", text=img.name, emboss=False)\n                    rename_op.old_name = img.name\n            else:\n                box.label(text=\"No images in blend file\")\n\n# Sub-panel for existing Bulk Scene Tools\nclass VIEW3D_PT_bulk_path_subpanel(Panel):\n    bl_label = \"Bulk Path Management\"",
+        "signatures": {
+          "ranges": [
+            {
+              "startPosition": {
+                "line": 1429,
+                "column": 1
+              },
+              "endPosition": {
+                "line": 1430,
+                "column": 5
+              }
+            },
+            {
+              "startPosition": {
+                "line": 1441,
+                "column": 5
+              },
+              "endPosition": {
+                "line": 1442,
+                "column": 9
+              }
+            }
+          ]
+        },
+        "detailedLines": [
+          {
+            "text": "class NODE_PT_bulk_path_tools(Panel):",
+            "lineNumber": 1429,
+            "isSignature": true
+          },
+          {
+            "text": "def draw(self, context):",
+            "lineNumber": 1441
+          },
+          {
+            "lineNumber": 1586
+          },
+          {
+            "lineNumber": 1587
+          },
+          {
+            "text": "            box.separator()",
+            "lineNumber": 1588
+          },
+          {
+            "text": "            ",
+            "lineNumber": 1589
+          },
+          {
+            "text": "            # Image selection list with thumbnails",
+            "lineNumber": 1590
+          },
+          {
+            "text": "            if len(bpy.data.images) &gt; 0:",
+            "lineNumber": 1591
+          },
+          {
+            "text": "                # Sort images if enabled",
+            "lineNumber": 1592
+          },
+          {
+            "text": "                if path_props.sort_by_selected:",
+            "lineNumber": 1593
+          },
+          {
+            "text": "                    # Create a sorted list with selected images first",
+            "lineNumber": 1594
+          },
+          {
+            "text": "                    sorted_images = sorted(bpy.data.images, ",
+            "lineNumber": 1595
+          },
+          {
+            "text": "                                           key=lambda img: not getattr(img, \"bst_selected\", False))",
+            "lineNumber": 1596
+          },
+          {
+            "text": "                else:",
+            "lineNumber": 1597
+          },
+          {
+            "text": "                    # Use original order",
+            "lineNumber": 1598
+          },
+          {
+            "text": "                    sorted_images = bpy.data.images",
+            "lineNumber": 1599
+          },
+          {
+            "text": "                ",
+            "lineNumber": 1600
+          },
+          {
+            "text": "                for img in sorted_images:",
+            "lineNumber": 1601
+          },
+          {
+            "text": "                    # Add bst_selected attribute if it doesn't exist",
+            "lineNumber": 1602
+          },
+          {
+            "text": "                    if not hasattr(img, \"bst_selected\"):",
+            "lineNumber": 1603
+          },
+          {
+            "text": "                        img.bst_selected = False",
+            "lineNumber": 1604
+          },
+          {
+            "text": "                    ",
+            "lineNumber": 1605
+          },
+          {
+            "text": "                    row = box.row(align=True)",
+            "lineNumber": 1606
+          },
+          {
+            "text": "                    ",
+            "lineNumber": 1607
+          },
+          {
+            "text": "                    # Checkbox for selection - use operator for shift+click support",
+            "lineNumber": 1608
+          },
+          {
+            "text": "                    op = row.operator(\"bst.toggle_image_selection\", text=\"\", ",
+            "lineNumber": 1609
+          },
+          {
+            "text": "                                    icon='CHECKBOX_HLT' if img.bst_selected else 'CHECKBOX_DEHLT',",
+            "lineNumber": 1610
+          },
+          {
+            "text": "                                    emboss=False)",
+            "lineNumber": 1611
+          },
+          {
+            "text": "                    op.image_name = img.name",
+            "lineNumber": 1612
+          },
+          {
+            "text": "                    ",
+            "lineNumber": 1613
+          },
+          {
+            "text": "                    # Image thumbnail",
+            "lineNumber": 1614
+          },
+          {
+            "text": "                    if hasattr(img, 'preview'):",
+            "lineNumber": 1615
+          },
+          {
+            "text": "                        # Use the actual image thumbnail",
+            "lineNumber": 1616
+          },
+          {
+            "text": "                        row.template_icon(icon_value=img.preview_ensure().icon_id, scale=1.0)",
+            "lineNumber": 1617
+          },
+          {
+            "text": "                    else:",
+            "lineNumber": 1618
+          },
+          {
+            "text": "                        row.label(text=\"\", icon='IMAGE_DATA')",
+            "lineNumber": 1619
+          },
+          {
+            "text": "                    ",
+            "lineNumber": 1620
+          },
+          {
+            "text": "                    # Image name with rename operator",
+            "lineNumber": 1621
+          },
+          {
+            "text": "                    rename_op = row.operator(\"bst.rename_datablock\", text=img.name, emboss=False)",
+            "lineNumber": 1622
+          },
+          {
+            "text": "                    rename_op.old_name = img.name",
+            "lineNumber": 1623
+          },
+          {
+            "text": "            else:",
+            "lineNumber": 1624
+          },
+          {
+            "text": "                box.label(text=\"No images in blend file\")",
+            "lineNumber": 1625,
+            "isSignature": true
+          },
+          {
+            "lineNumber": 1626
+          },
+          {
+            "text": "# Sub-panel for existing Bulk Scene Tools",
+            "lineNumber": 1627
+          },
+          {
+            "text": "class VIEW3D_PT_bulk_path_subpanel(Panel):",
+            "lineNumber": 1628,
+            "isSignature": true
+          },
+          {
+            "text": "    bl_label = \"Bulk Path Management\"",
+            "lineNumber": 1629
+          }
+        ]
+      },
+      "score": 0.45810186862945557
+    },
+    {
+      "codeBlock": {
+        "relativeWorkspacePath": ".\\panels\\bulk_data_remap.py",
+        "range": {
+          "startPosition": {
+            "line": 863
+          },
+          "endPosition": {
+            "line": 990
+          }
+        },
+        "contents": "def draw_data_duplicates(layout, context, data_type, data_groups):\n\n            \n            # Add icon based on data type\n            if data_type == \"images\":\n                if target_item and hasattr(target_item, 'preview'):\n                    # Use the actual image thumbnail\n                    row.template_icon(icon_value=target_item.preview_ensure().icon_id, scale=1.0)\n                else:\n                    row.label(text=\"\", icon='IMAGE_DATA')\n            elif data_type == \"materials\":\n                if target_item and hasattr(target_item, 'preview'):\n                    # Use UI_previews_ensure_material which is what Blender uses internally\n                    # This accesses the cached thumbnail without triggering a render\n                    icon_id = bpy.types.UILayout.icon(target_item)\n                    row.label(text=\"\", icon_value=icon_id)\n                else:\n                    row.label(text=\"\", icon='MATERIAL')\n            elif data_type == \"fonts\":\n                row.label(text=\"\", icon='FONT_DATA')\n            elif data_type == \"worlds\":\n                if target_item and hasattr(target_item, 'preview') and target_item.preview:\n                    row.template_icon(icon_value=target_item.preview.icon_id, scale=1.0)\n                else:\n                    row.label(text=\"\", icon='WORLD')\n            \n            # Add rename operator for the group name\n            rename_op = row.operator(\"bst.rename_datablock_remap\", text=f\"{base_name}: {len(items)} versions\", emboss=False)\n            rename_op.data_type = data_type\n            rename_op.old_name = target_item.name\n            \n            # Only show details if expanded",
+        "signatures": {
+          "ranges": [
+            {
+              "startPosition": {
+                "line": 864,
+                "column": 1
+              },
+              "endPosition": {
+                "line": 865,
+                "column": 5
+              }
+            }
+          ]
+        },
+        "detailedLines": [
+          {
+            "text": "def draw_data_duplicates(layout, context, data_type, data_groups):",
+            "lineNumber": 864,
+            "isSignature": true
+          },
+          {
+            "lineNumber": 926
+          },
+          {
+            "text": "            ",
+            "lineNumber": 927
+          },
+          {
+            "text": "            # Add icon based on data type",
+            "lineNumber": 928
+          },
+          {
+            "text": "            if data_type == \"images\":",
+            "lineNumber": 929
+          },
+          {
+            "text": "                if target_item and hasattr(target_item, 'preview'):",
+            "lineNumber": 930
+          },
+          {
+            "text": "                    # Use the actual image thumbnail",
+            "lineNumber": 931
+          },
+          {
+            "text": "                    row.template_icon(icon_value=target_item.preview_ensure().icon_id, scale=1.0)",
+            "lineNumber": 932
+          },
+          {
+            "text": "                else:",
+            "lineNumber": 933
+          },
+          {
+            "text": "                    row.label(text=\"\", icon='IMAGE_DATA')",
+            "lineNumber": 934
+          },
+          {
+            "text": "            elif data_type == \"materials\":",
+            "lineNumber": 935
+          },
+          {
+            "text": "                if target_item and hasattr(target_item, 'preview'):",
+            "lineNumber": 936
+          },
+          {
+            "text": "                    # Use UI_previews_ensure_material which is what Blender uses internally",
+            "lineNumber": 937
+          },
+          {
+            "text": "                    # This accesses the cached thumbnail without triggering a render",
+            "lineNumber": 938
+          },
+          {
+            "text": "                    icon_id = bpy.types.UILayout.icon(target_item)",
+            "lineNumber": 939
+          },
+          {
+            "text": "                    row.label(text=\"\", icon_value=icon_id)",
+            "lineNumber": 940
+          },
+          {
+            "text": "                else:",
+            "lineNumber": 941
+          },
+          {
+            "text": "                    row.label(text=\"\", icon='MATERIAL')",
+            "lineNumber": 942
+          },
+          {
+            "text": "            elif data_type == \"fonts\":",
+            "lineNumber": 943
+          },
+          {
+            "text": "                row.label(text=\"\", icon='FONT_DATA')",
+            "lineNumber": 944
+          },
+          {
+            "text": "            elif data_type == \"worlds\":",
+            "lineNumber": 945
+          },
+          {
+            "text": "                if target_item and hasattr(target_item, 'preview') and target_item.preview:",
+            "lineNumber": 946
+          },
+          {
+            "text": "                    row.template_icon(icon_value=target_item.preview.icon_id, scale=1.0)",
+            "lineNumber": 947
+          },
+          {
+            "text": "                else:",
+            "lineNumber": 948
+          },
+          {
+            "text": "                    row.label(text=\"\", icon='WORLD')",
+            "lineNumber": 949
+          },
+          {
+            "text": "            ",
+            "lineNumber": 950
+          },
+          {
+            "text": "            # Add rename operator for the group name",
+            "lineNumber": 951
+          },
+          {
+            "text": "            rename_op = row.operator(\"bst.rename_datablock_remap\", text=f\"{base_name}: {len(items)} versions\", emboss=False)",
+            "lineNumber": 952
+          },
+          {
+            "text": "            rename_op.data_type = data_type",
+            "lineNumber": 953
+          },
+          {
+            "text": "            rename_op.old_name = target_item.name",
+            "lineNumber": 954
+          },
+          {
+            "text": "            ",
+            "lineNumber": 955
+          },
+          {
+            "text": "            # Only show details if expanded",
+            "lineNumber": 956
+          }
+        ]
+      },
+      "score": 0.3902151584625244
+    },
+    {
+      "codeBlock": {
+        "relativeWorkspacePath": ".\\panels\\bulk_data_remap.py",
+        "range": {
+          "startPosition": {
+            "line": 990,
+            "column": 50
+          },
+          "endPosition": {
+            "line": 1254
+          }
+        },
+        "contents": "class VIEW3D_PT_BulkDataRemap(bpy.types.Panel):\n    \"\"\"Bulk Data Remap Panel\"\"\"\n    bl_label = \"Bulk Data Remap\"\n    bl_idname = \"VIEW3D_PT_bulk_data_remap\"\n    bl_space_type = 'VIEW_3D'\n    bl_region_type = 'UI'\n    bl_category = 'Edit'\n    bl_parent_id = \"VIEW3D_PT_bulk_scene_tools\"\n    bl_order = 2\n    \n    def draw(self, context):\n        layout = self.layout\n        \n        # Data Remapper section\n        box = layout.box()\n        box.label(text=\"Data Remapper\")\n        \n        # Check for linked datablocks and create a separate warning section if found\n        linked_datablocks_found = False\n        linked_types = []\n        linked_paths = set()\n        \n        if context.scene.dataremap_images and has_linked_datablocks(bpy.data.images):\n            linked_datablocks_found = True\n            linked_types.append(\"images\")\n            linked_paths.update(get_linked_file_paths(bpy.data.images))\n            \n        if context.scene.dataremap_materials and has_linked_datablocks(bpy.data.materials):\n            linked_datablocks_found = True\n            linked_types.append(\"materials\")\n            linked_paths.update(get_linked_file_paths(bpy.data.materials))\n            \n        if context.scene.dataremap_fonts and has_linked_datablocks(bpy.data.fonts):\n            linked_datablocks_found = True\n            linked_types.append(\"fonts\")\n            linked_paths.update(get_linked_file_paths(bpy.data.fonts))\n            \n        if context.scene.dataremap_worlds and has_linked_datablocks(bpy.data.worlds):\n            linked_datablocks_found = True\n            linked_types.append(\"worlds\")\n            linked_paths.update(get_linked_file_paths(bpy.data.worlds))\n        \n        # Display warning about linked datablocks in a separate section if found",
+        "signatures": {},
+        "detailedLines": [
+          {
+            "text": "class VIEW3D_PT_BulkDataRemap(bpy.types.Panel):",
+            "lineNumber": 993,
+            "isSignature": true
+          },
+          {
+            "text": "    \"\"\"Bulk Data Remap Panel\"\"\"",
+            "lineNumber": 994
+          },
+          {
+            "text": "    bl_label = \"Bulk Data Remap\"",
+            "lineNumber": 995
+          },
+          {
+            "text": "    bl_idname = \"VIEW3D_PT_bulk_data_remap\"",
+            "lineNumber": 996
+          },
+          {
+            "text": "    bl_space_type = 'VIEW_3D'",
+            "lineNumber": 997
+          },
+          {
+            "text": "    bl_region_type = 'UI'",
+            "lineNumber": 998
+          },
+          {
+            "text": "    bl_category = 'Edit'",
+            "lineNumber": 999
+          },
+          {
+            "text": "    bl_parent_id = \"VIEW3D_PT_bulk_scene_tools\"",
+            "lineNumber": 1000
+          },
+          {
+            "text": "    bl_order = 2",
+            "lineNumber": 1001
+          },
+          {
+            "text": "    ",
+            "lineNumber": 1002
+          },
+          {
+            "text": "    def draw(self, context):",
+            "lineNumber": 1003
+          },
+          {
+            "text": "        layout = self.layout",
+            "lineNumber": 1004
+          },
+          {
+            "text": "        ",
+            "lineNumber": 1005
+          },
+          {
+            "text": "        # Data Remapper section",
+            "lineNumber": 1006
+          },
+          {
+            "text": "        box = layout.box()",
+            "lineNumber": 1007
+          },
+          {
+            "text": "        box.label(text=\"Data Remapper\")",
+            "lineNumber": 1008
+          },
+          {
+            "text": "        ",
+            "lineNumber": 1009
+          },
+          {
+            "text": "        # Check for linked datablocks and create a separate warning section if found",
+            "lineNumber": 1010
+          },
+          {
+            "text": "        linked_datablocks_found = False",
+            "lineNumber": 1011
+          },
+          {
+            "text": "        linked_types = []",
+            "lineNumber": 1012
+          },
+          {
+            "text": "        linked_paths = set()",
+            "lineNumber": 1013
+          },
+          {
+            "text": "        ",
+            "lineNumber": 1014
+          },
+          {
+            "text": "        if context.scene.dataremap_images and has_linked_datablocks(bpy.data.images):",
+            "lineNumber": 1015
+          },
+          {
+            "text": "            linked_datablocks_found = True",
+            "lineNumber": 1016
+          },
+          {
+            "text": "            linked_types.append(\"images\")",
+            "lineNumber": 1017
+          },
+          {
+            "text": "            linked_paths.update(get_linked_file_paths(bpy.data.images))",
+            "lineNumber": 1018
+          },
+          {
+            "text": "            ",
+            "lineNumber": 1019
+          },
+          {
+            "text": "        if context.scene.dataremap_materials and has_linked_datablocks(bpy.data.materials):",
+            "lineNumber": 1020
+          },
+          {
+            "text": "            linked_datablocks_found = True",
+            "lineNumber": 1021
+          },
+          {
+            "text": "            linked_types.append(\"materials\")",
+            "lineNumber": 1022
+          },
+          {
+            "text": "            linked_paths.update(get_linked_file_paths(bpy.data.materials))",
+            "lineNumber": 1023
+          },
+          {
+            "text": "            ",
+            "lineNumber": 1024
+          },
+          {
+            "text": "        if context.scene.dataremap_fonts and has_linked_datablocks(bpy.data.fonts):",
+            "lineNumber": 1025
+          },
+          {
+            "text": "            linked_datablocks_found = True",
+            "lineNumber": 1026
+          },
+          {
+            "text": "            linked_types.append(\"fonts\")",
+            "lineNumber": 1027
+          },
+          {
+            "text": "            linked_paths.update(get_linked_file_paths(bpy.data.fonts))",
+            "lineNumber": 1028
+          },
+          {
+            "text": "            ",
+            "lineNumber": 1029
+          },
+          {
+            "text": "        if context.scene.dataremap_worlds and has_linked_datablocks(bpy.data.worlds):",
+            "lineNumber": 1030
+          },
+          {
+            "text": "            linked_datablocks_found = True",
+            "lineNumber": 1031
+          },
+          {
+            "text": "            linked_types.append(\"worlds\")",
+            "lineNumber": 1032
+          },
+          {
+            "text": "            linked_paths.update(get_linked_file_paths(bpy.data.worlds))",
+            "lineNumber": 1033
+          },
+          {
+            "text": "        ",
+            "lineNumber": 1034
+          },
+          {
+            "text": "        # Display warning about linked datablocks in a separate section if found",
+            "lineNumber": 1035
+          }
+        ]
+      },
+      "score": 0.38669368624687195
+    },
+    {
+      "codeBlock": {
+        "relativeWorkspacePath": ".\\panels\\bulk_data_remap.py",
+        "range": {
+          "startPosition": {
+            "line": 860,
+            "column": 28
+          },
+          "endPosition": {
+            "line": 990
+          }
+        },
+        "contents": "# Update the UI code to use the custom draw function\ndef draw_data_duplicates(layout, context, data_type, data_groups):\n    \"\"\"Draw the list of duplicate data items with drag-selectable checkboxes and click to rename\"\"\"\n    box_dup = layout.box()\n    \n    # Add Select All / Deselect All buttons\n    select_row = box_dup.row(align=True)\n    select_row.scale_y = 0.8\n    \n    select_op = select_row.operator(\"bst.select_all_data_groups\", text=\"Select All\")\n    select_op.data_type = data_type\n    select_op.select_all = True\n    \n    deselect_op = select_row.operator(\"bst.select_all_data_groups\", text=\"Deselect All\")\n    deselect_op.data_type = data_type\n    deselect_op.select_all = False\n    \n    # Add sort by selected toggle\n    sort_prop_name = f\"dataremap_sort_{data_type}\"\n    if hasattr(context.scene, sort_prop_name):\n        select_row.prop(context.scene, sort_prop_name, text=\"Sort by Selected\")\n    \n    box_dup.separator(factor=0.5)\n    \n    # Initialize the expanded groups dictionary if it doesn't exist\n    if not hasattr(context.scene, \"expanded_remap_groups\"):\n        context.scene.expanded_remap_groups = {}\n    \n    # Get the groups and possibly sort them\n    group_items = list(data_groups.items())\n    \n    # Sort by selection if enabled\n    sort_prop_name = f\"dataremap_sort_{data_type}\"\n    if hasattr(context.scene, sort_prop_name) and getattr(context.scene, sort_prop_name):\n        # Check if groups are excluded\n        def is_group_selected(group_key):\n            base_name, items = group_key\n            group_id = f\"{data_type}:{base_name}\"\n            # A group is \"selected\" if it's not excluded\n            return group_id not in context.scene.excluded_remap_groups\n        \n        # Sort groups so that selected groups appear first\n        group_items.sort(key=lambda x: not is_group_selected(x))\n    \n    for base_name, items in group_items:",
+        "signatures": {},
+        "detailedLines": [
+          {
+            "text": "# Update the UI code to use the custom draw function",
+            "lineNumber": 863
+          },
+          {
+            "text": "def draw_data_duplicates(layout, context, data_type, data_groups):",
+            "lineNumber": 864,
+            "isSignature": true
+          },
+          {
+            "text": "    \"\"\"Draw the list of duplicate data items with drag-selectable checkboxes and click to rename\"\"\"",
+            "lineNumber": 865
+          },
+          {
+            "text": "    box_dup = layout.box()",
+            "lineNumber": 866
+          },
+          {
+            "text": "    ",
+            "lineNumber": 867
+          },
+          {
+            "text": "    # Add Select All / Deselect All buttons",
+            "lineNumber": 868
+          },
+          {
+            "text": "    select_row = box_dup.row(align=True)",
+            "lineNumber": 869
+          },
+          {
+            "text": "    select_row.scale_y = 0.8",
+            "lineNumber": 870
+          },
+          {
+            "text": "    ",
+            "lineNumber": 871
+          },
+          {
+            "text": "    select_op = select_row.operator(\"bst.select_all_data_groups\", text=\"Select All\")",
+            "lineNumber": 872
+          },
+          {
+            "text": "    select_op.data_type = data_type",
+            "lineNumber": 873
+          },
+          {
+            "text": "    select_op.select_all = True",
+            "lineNumber": 874
+          },
+          {
+            "text": "    ",
+            "lineNumber": 875
+          },
+          {
+            "text": "    deselect_op = select_row.operator(\"bst.select_all_data_groups\", text=\"Deselect All\")",
+            "lineNumber": 876
+          },
+          {
+            "text": "    deselect_op.data_type = data_type",
+            "lineNumber": 877
+          },
+          {
+            "text": "    deselect_op.select_all = False",
+            "lineNumber": 878
+          },
+          {
+            "text": "    ",
+            "lineNumber": 879
+          },
+          {
+            "text": "    # Add sort by selected toggle",
+            "lineNumber": 880
+          },
+          {
+            "text": "    sort_prop_name = f\"dataremap_sort_{data_type}\"",
+            "lineNumber": 881
+          },
+          {
+            "text": "    if hasattr(context.scene, sort_prop_name):",
+            "lineNumber": 882
+          },
+          {
+            "text": "        select_row.prop(context.scene, sort_prop_name, text=\"Sort by Selected\")",
+            "lineNumber": 883
+          },
+          {
+            "text": "    ",
+            "lineNumber": 884
+          },
+          {
+            "text": "    box_dup.separator(factor=0.5)",
+            "lineNumber": 885
+          },
+          {
+            "text": "    ",
+            "lineNumber": 886
+          },
+          {
+            "text": "    # Initialize the expanded groups dictionary if it doesn't exist",
+            "lineNumber": 887
+          },
+          {
+            "text": "    if not hasattr(context.scene, \"expanded_remap_groups\"):",
+            "lineNumber": 888
+          },
+          {
+            "text": "        context.scene.expanded_remap_groups = {}",
+            "lineNumber": 889
+          },
+          {
+            "text": "    ",
+            "lineNumber": 890
+          },
+          {
+            "text": "    # Get the groups and possibly sort them",
+            "lineNumber": 891
+          },
+          {
+            "text": "    group_items = list(data_groups.items())",
+            "lineNumber": 892
+          },
+          {
+            "text": "    ",
+            "lineNumber": 893
+          },
+          {
+            "text": "    # Sort by selection if enabled",
+            "lineNumber": 894
+          },
+          {
+            "text": "    sort_prop_name = f\"dataremap_sort_{data_type}\"",
+            "lineNumber": 895
+          },
+          {
+            "text": "    if hasattr(context.scene, sort_prop_name) and getattr(context.scene, sort_prop_name):",
+            "lineNumber": 896
+          },
+          {
+            "text": "        # Check if groups are excluded",
+            "lineNumber": 897
+          },
+          {
+            "text": "        def is_group_selected(group_key):",
+            "lineNumber": 898
+          },
+          {
+            "text": "            base_name, items = group_key",
+            "lineNumber": 899
+          },
+          {
+            "text": "            group_id = f\"{data_type}:{base_name}\"",
+            "lineNumber": 900
+          },
+          {
+            "text": "            # A group is \"selected\" if it's not excluded",
+            "lineNumber": 901
+          },
+          {
+            "text": "            return group_id not in context.scene.excluded_remap_groups",
+            "lineNumber": 902
+          },
+          {
+            "text": "        ",
+            "lineNumber": 903
+          },
+          {
+            "text": "        # Sort groups so that selected groups appear first",
+            "lineNumber": 904
+          },
+          {
+            "text": "        group_items.sort(key=lambda x: not is_group_selected(x))",
+            "lineNumber": 905
+          },
+          {
+            "text": "    ",
+            "lineNumber": 906
+          },
+          {
+            "text": "    for base_name, items in group_items:",
+            "lineNumber": 907
+          }
+        ]
+      },
+      "score": 0.36830663681030273
+    },
+    {
+      "codeBlock": {
+        "relativeWorkspacePath": ".\\panels\\bulk_data_remap.py",
+        "range": {
+          "startPosition": {
+            "line": 863
+          },
+          "endPosition": {
+            "line": 990
+          }
+        },
+        "contents": "def draw_data_duplicates(layout, context, data_type, data_groups):\n\n            \n            # Only show details if expanded\n            if is_expanded:\n                # Sort subgroup items if sort by selected is enabled\n                if hasattr(context.scene, sort_prop_name) and getattr(context.scene, sort_prop_name):\n                    items = sorted(items, key=lambda item: item != target_item)  # Keep target at top\n                \n                for item in items:\n                    sub_row = box_dup.row()\n                    sub_row.label(text=\"\", icon='BLANK1')  # Indent\n                    # Add icon based on data type\n                    if data_type == \"images\":\n                        if item and hasattr(item, 'preview'):\n                            # Use the actual image thumbnail\n                            sub_row.template_icon(icon_value=item.preview_ensure().icon_id, scale=1.0)\n                        else:\n                            sub_row.label(text=\"\", icon='IMAGE_DATA')\n                    elif data_type == \"materials\":\n                        if item and hasattr(item, 'preview'):\n                            # Use UI_previews_ensure_material which is what Blender uses internally\n                            # This accesses the cached thumbnail without triggering a render\n                            icon_id = bpy.types.UILayout.icon(item)\n                            sub_row.label(text=\"\", icon_value=icon_id)\n                        else:\n                            sub_row.label(text=\"\", icon='MATERIAL')\n                    elif data_type == \"fonts\":\n                        sub_row.label(text=\"\", icon='FONT_DATA')\n                    elif data_type == \"worlds\":\n                        if item and hasattr(item, 'preview') and item.preview:\n                            sub_row.template_icon(icon_value=item.preview.icon_id, scale=1.0)\n                        else:\n                            sub_row.label(text=\"\", icon='WORLD')\n                    \n                    ",
+        "signatures": {
+          "ranges": [
+            {
+              "startPosition": {
+                "line": 864,
+                "column": 1
+              },
+              "endPosition": {
+                "line": 865,
+                "column": 5
+              }
+            }
+          ]
+        },
+        "detailedLines": [
+          {
+            "text": "def draw_data_duplicates(layout, context, data_type, data_groups):",
+            "lineNumber": 864,
+            "isSignature": true
+          },
+          {
+            "lineNumber": 954
+          },
+          {
+            "text": "            ",
+            "lineNumber": 955
+          },
+          {
+            "text": "            # Only show details if expanded",
+            "lineNumber": 956
+          },
+          {
+            "text": "            if is_expanded:",
+            "lineNumber": 957
+          },
+          {
+            "text": "                # Sort subgroup items if sort by selected is enabled",
+            "lineNumber": 958
+          },
+          {
+            "text": "                if hasattr(context.scene, sort_prop_name) and getattr(context.scene, sort_prop_name):",
+            "lineNumber": 959
+          },
+          {
+            "text": "                    items = sorted(items, key=lambda item: item != target_item)  # Keep target at top",
+            "lineNumber": 960
+          },
+          {
+            "text": "                ",
+            "lineNumber": 961
+          },
+          {
+            "text": "                for item in items:",
+            "lineNumber": 962
+          },
+          {
+            "text": "                    sub_row = box_dup.row()",
+            "lineNumber": 963
+          },
+          {
+            "text": "                    sub_row.label(text=\"\", icon='BLANK1')  # Indent",
+            "lineNumber": 964
+          },
+          {
+            "text": "                    # Add icon based on data type",
+            "lineNumber": 965
+          },
+          {
+            "text": "                    if data_type == \"images\":",
+            "lineNumber": 966
+          },
+          {
+            "text": "                        if item and hasattr(item, 'preview'):",
+            "lineNumber": 967
+          },
+          {
+            "text": "                            # Use the actual image thumbnail",
+            "lineNumber": 968
+          },
+          {
+            "text": "                            sub_row.template_icon(icon_value=item.preview_ensure().icon_id, scale=1.0)",
+            "lineNumber": 969
+          },
+          {
+            "text": "                        else:",
+            "lineNumber": 970
+          },
+          {
+            "text": "                            sub_row.label(text=\"\", icon='IMAGE_DATA')",
+            "lineNumber": 971
+          },
+          {
+            "text": "                    elif data_type == \"materials\":",
+            "lineNumber": 972
+          },
+          {
+            "text": "                        if item and hasattr(item, 'preview'):",
+            "lineNumber": 973
+          },
+          {
+            "text": "                            # Use UI_previews_ensure_material which is what Blender uses internally",
+            "lineNumber": 974
+          },
+          {
+            "text": "                            # This accesses the cached thumbnail without triggering a render",
+            "lineNumber": 975
+          },
+          {
+            "text": "                            icon_id = bpy.types.UILayout.icon(item)",
+            "lineNumber": 976
+          },
+          {
+            "text": "                            sub_row.label(text=\"\", icon_value=icon_id)",
+            "lineNumber": 977
+          },
+          {
+            "text": "                        else:",
+            "lineNumber": 978
+          },
+          {
+            "text": "                            sub_row.label(text=\"\", icon='MATERIAL')",
+            "lineNumber": 979
+          },
+          {
+            "text": "                    elif data_type == \"fonts\":",
+            "lineNumber": 980
+          },
+          {
+            "text": "                        sub_row.label(text=\"\", icon='FONT_DATA')",
+            "lineNumber": 981
+          },
+          {
+            "text": "                    elif data_type == \"worlds\":",
+            "lineNumber": 982
+          },
+          {
+            "text": "                        if item and hasattr(item, 'preview') and item.preview:",
+            "lineNumber": 983
+          },
+          {
+            "text": "                            sub_row.template_icon(icon_value=item.preview.icon_id, scale=1.0)",
+            "lineNumber": 984
+          },
+          {
+            "text": "                        else:",
+            "lineNumber": 985
+          },
+          {
+            "text": "                            sub_row.label(text=\"\", icon='WORLD')",
+            "lineNumber": 986
+          },
+          {
+            "text": "                    ",
+            "lineNumber": 987
+          },
+          {
+            "text": "                    ",
+            "lineNumber": 988
+          }
+        ]
+      },
+      "score": 0.3607881963253021
+    },
+    {
+      "codeBlock": {
+        "relativeWorkspacePath": ".\\panels\\bulk_data_remap.py",
+        "range": {
+          "startPosition": {
+            "line": 992
+          },
+          "endPosition": {
+            "line": 1254
+          }
+        },
+        "contents": "class VIEW3D_PT_BulkDataRemap(bpy.types.Panel):\ndef draw(self, context):\n\n        \n        # Display warning about linked datablocks in a separate section if found\n        if linked_datablocks_found:\n            warning_box = layout.box()\n            warning_box.alert = True\n            warning_box.label(text=\"Warning: Linked datablocks detected\", icon='ERROR')\n            warning_box.label(text=f\"Types: {', '.join(linked_types)}\")\n            warning_box.label(text=\"Cannot remap linked datablocks.\")\n            warning_box.label(text=\"Edit the source file directly.\")\n            \n            # Add buttons to open linked files\n            if linked_paths:\n                warning_box.separator()\n                warning_box.label(text=\"Linked files:\")\n                for path in linked_paths:\n                    row = warning_box.row()\n                    row.label(text=os.path.basename(path))\n                    op = row.operator(\"bst.open_linked_file\", text=\"Open\", icon='FILE_BLEND')\n                    op.filepath = path\n        \n        # Add description\n        col = box.column()\n        col.label(text=\"Find and remap redundant datablocks,\")\n        col.label(text=\"e.g. .001, .002 duplicates\")\n        col.label(text=\"SAVE OFTEN! Bulk Data Processing can cause instability.\", icon='ERROR')\n        # Add data type options with checkboxes\n        col = box.column(align=True)\n        \n        # Count duplicates and numbered suffixes for each type\n        image_groups = find_data_groups(bpy.data.images)\n        material_groups = find_data_groups(bpy.data.materials)\n        font_groups = find_data_groups(bpy.data.fonts)\n        world_groups = find_data_groups(bpy.data.worlds)\n        \n        image_duplicates = sum(len(group) - 1 for group in image_groups.values())\n        material_duplicates = sum(len(group) - 1 for group in material_groups.values())\n        font_duplicates = sum(len(group) - 1 for group in font_groups.values())\n        world_duplicates = sum(len(group) - 1 for group in world_groups.values())\n        \n        image_numbered = sum(1 for img in bpy.data.images",
+        "signatures": {
+          "ranges": [
+            {
+              "startPosition": {
+                "line": 993,
+                "column": 1
+              },
+              "endPosition": {
+                "line": 994,
+                "column": 5
+              }
+            },
+            {
+              "startPosition": {
+                "line": 1003,
+                "column": 5
+              },
+              "endPosition": {
+                "line": 1004,
+                "column": 9
+              }
+            }
+          ]
+        },
+        "detailedLines": [
+          {
+            "text": "class VIEW3D_PT_BulkDataRemap(bpy.types.Panel):",
+            "lineNumber": 993,
+            "isSignature": true
+          },
+          {
+            "text": "def draw(self, context):",
+            "lineNumber": 1003
+          },
+          {
+            "lineNumber": 1033
+          },
+          {
+            "text": "        ",
+            "lineNumber": 1034
+          },
+          {
+            "text": "        # Display warning about linked datablocks in a separate section if found",
+            "lineNumber": 1035
+          },
+          {
+            "text": "        if linked_datablocks_found:",
+            "lineNumber": 1036
+          },
+          {
+            "text": "            warning_box = layout.box()",
+            "lineNumber": 1037
+          },
+          {
+            "text": "            warning_box.alert = True",
+            "lineNumber": 1038
+          },
+          {
+            "text": "            warning_box.label(text=\"Warning: Linked datablocks detected\", icon='ERROR')",
+            "lineNumber": 1039
+          },
+          {
+            "text": "            warning_box.label(text=f\"Types: {', '.join(linked_types)}\")",
+            "lineNumber": 1040
+          },
+          {
+            "text": "            warning_box.label(text=\"Cannot remap linked datablocks.\")",
+            "lineNumber": 1041
+          },
+          {
+            "text": "            warning_box.label(text=\"Edit the source file directly.\")",
+            "lineNumber": 1042
+          },
+          {
+            "text": "            ",
+            "lineNumber": 1043
+          },
+          {
+            "text": "            # Add buttons to open linked files",
+            "lineNumber": 1044
+          },
+          {
+            "text": "            if linked_paths:",
+            "lineNumber": 1045
+          },
+          {
+            "text": "                warning_box.separator()",
+            "lineNumber": 1046
+          },
+          {
+            "text": "                warning_box.label(text=\"Linked files:\")",
+            "lineNumber": 1047
+          },
+          {
+            "text": "                for path in linked_paths:",
+            "lineNumber": 1048
+          },
+          {
+            "text": "                    row = warning_box.row()",
+            "lineNumber": 1049
+          },
+          {
+            "text": "                    row.label(text=os.path.basename(path))",
+            "lineNumber": 1050
+          },
+          {
+            "text": "                    op = row.operator(\"bst.open_linked_file\", text=\"Open\", icon='FILE_BLEND')",
+            "lineNumber": 1051
+          },
+          {
+            "text": "                    op.filepath = path",
+            "lineNumber": 1052
+          },
+          {
+            "text": "        ",
+            "lineNumber": 1053
+          },
+          {
+            "text": "        # Add description",
+            "lineNumber": 1054
+          },
+          {
+            "text": "        col = box.column()",
+            "lineNumber": 1055
+          },
+          {
+            "text": "        col.label(text=\"Find and remap redundant datablocks,\")",
+            "lineNumber": 1056
+          },
+          {
+            "text": "        col.label(text=\"e.g. .001, .002 duplicates\")",
+            "lineNumber": 1057
+          },
+          {
+            "text": "        col.label(text=\"SAVE OFTEN! Bulk Data Processing can cause instability.\", icon='ERROR')",
+            "lineNumber": 1058
+          },
+          {
+            "text": "        # Add data type options with checkboxes",
+            "lineNumber": 1059
+          },
+          {
+            "text": "        col = box.column(align=True)",
+            "lineNumber": 1060
+          },
+          {
+            "text": "        ",
+            "lineNumber": 1061
+          },
+          {
+            "text": "        # Count duplicates and numbered suffixes for each type",
+            "lineNumber": 1062
+          },
+          {
+            "text": "        image_groups = find_data_groups(bpy.data.images)",
+            "lineNumber": 1063
+          },
+          {
+            "text": "        material_groups = find_data_groups(bpy.data.materials)",
+            "lineNumber": 1064
+          },
+          {
+            "text": "        font_groups = find_data_groups(bpy.data.fonts)",
+            "lineNumber": 1065
+          },
+          {
+            "text": "        world_groups = find_data_groups(bpy.data.worlds)",
+            "lineNumber": 1066
+          },
+          {
+            "text": "        ",
+            "lineNumber": 1067
+          },
+          {
+            "text": "        image_duplicates = sum(len(group) - 1 for group in image_groups.values())",
+            "lineNumber": 1068
+          },
+          {
+            "text": "        material_duplicates = sum(len(group) - 1 for group in material_groups.values())",
+            "lineNumber": 1069
+          },
+          {
+            "text": "        font_duplicates = sum(len(group) - 1 for group in font_groups.values())",
+            "lineNumber": 1070
+          },
+          {
+            "text": "        world_duplicates = sum(len(group) - 1 for group in world_groups.values())",
+            "lineNumber": 1071
+          },
+          {
+            "text": "        ",
+            "lineNumber": 1072
+          },
+          {
+            "text": "        image_numbered = sum(1 for img in bpy.data.images",
+            "lineNumber": 1073
+          }
+        ]
+      },
+      "score": 0.3583560883998871
+    },
+    {
+      "codeBlock": {
+        "relativeWorkspacePath": ".\\panels\\bulk_data_remap.py",
+        "range": {
+          "startPosition": {
+            "line": 863
+          },
+          "endPosition": {
+            "line": 1254
+          }
+        },
+        "contents": "def draw_data_duplicates(layout, context, data_type, data_groups):\n\n                    \n                    # Add rename operator for each item\n                    rename_op = sub_row.operator(\"bst.rename_datablock_remap\", text=f\"{item.name}\", emboss=False)\n                    rename_op.data_type = data_type\n                    rename_op.old_name = item.name\n\nclass VIEW3D_PT_BulkDataRemap(bpy.types.Panel):\n    \"\"\"Bulk Data Remap Panel\"\"\"",
+        "signatures": {
+          "ranges": [
+            {
+              "startPosition": {
+                "line": 864,
+                "column": 1
+              },
+              "endPosition": {
+                "line": 865,
+                "column": 5
+              }
+            }
+          ]
+        },
+        "detailedLines": [
+          {
+            "text": "def draw_data_duplicates(layout, context, data_type, data_groups):",
+            "lineNumber": 864,
+            "isSignature": true
+          },
+          {
+            "lineNumber": 986
+          },
+          {
+            "text": "                    ",
+            "lineNumber": 987
+          },
+          {
+            "text": "                    # Add rename operator for each item",
+            "lineNumber": 988
+          },
+          {
+            "text": "                    rename_op = sub_row.operator(\"bst.rename_datablock_remap\", text=f\"{item.name}\", emboss=False)",
+            "lineNumber": 989
+          },
+          {
+            "text": "                    rename_op.data_type = data_type",
+            "lineNumber": 990
+          },
+          {
+            "text": "                    rename_op.old_name = item.name",
+            "lineNumber": 991,
+            "isSignature": true
+          },
+          {
+            "lineNumber": 992
+          },
+          {
+            "text": "class VIEW3D_PT_BulkDataRemap(bpy.types.Panel):",
+            "lineNumber": 993,
+            "isSignature": true
+          },
+          {
+            "text": "    \"\"\"Bulk Data Remap Panel\"\"\"",
+            "lineNumber": 994
+          }
+        ]
+      },
+      "score": 0.3511686325073242
+    },
+    {
+      "codeBlock": {
+        "relativeWorkspacePath": ".\\panels\\bulk_data_remap.py",
+        "range": {
+          "startPosition": {
+            "line": 992
+          },
+          "endPosition": {
+            "line": 1254
+          }
+        },
+        "contents": "class VIEW3D_PT_BulkDataRemap(bpy.types.Panel):\ndef draw(self, context):\n\n        \n        sub_row = split.row()\n        if world_duplicates &gt; 0:\n            sub_row.prop(context.scene, \"show_world_duplicates\", \n                         text=f\"{world_duplicates} duplicates\", \n                         icon='DISCLOSURE_TRI_DOWN' if context.scene.show_world_duplicates else 'DISCLOSURE_TRI_RIGHT',\n                         emboss=False)\n        elif world_numbered &gt; 0:\n            sub_row.label(text=f\"{world_numbered} numbered\")\n        else:\n            sub_row.label(text=\"0 duplicates\")\n        \n        # Show world duplicates if enabled\n        if context.scene.show_world_duplicates and world_duplicates &gt; 0 and context.scene.dataremap_worlds:\n            draw_data_duplicates(col, context, \"worlds\", world_groups)\n        \n        # Add the operator button\n        row = box.row()\n        row.scale_y = 1.5\n        row.operator(\"bst.bulk_data_remap\")\n        \n        # Show total counts\n        total_duplicates = image_duplicates + material_duplicates + font_duplicates + world_duplicates\n        total_numbered = image_numbered + material_numbered + font_numbered + world_numbered\n        \n        if total_duplicates &gt; 0 or total_numbered &gt; 0:\n            box.separator()\n            if total_duplicates &gt; 0:\n                box.label(text=f\"Found {total_duplicates} duplicate data blocks\")\n            if total_numbered &gt; 0:\n                box.label(text=f\"Found {total_numbered} numbered data blocks\")\n        else:\n            box.label(text=\"No data blocks to process\")\n        \n        # Add a separator and purge button\n        box.separator()\n        row = box.row()\n        row.operator(\"bst.purge_unused_data\", icon='TRASH')\n        \n        # Ghost Buster section\n        layout.separator()\n        ghost_box = layout.box()\n        ghost_box.label(text=\"Ghost Buster - Experimental\")\n        \n        col = ghost_box.column()\n        col.label(text=\"Ghost data cleanup &amp; library override fixes:\")\n        col.label(text=\"• Unused local WGT widget objects\")\n        col.label(text=\"• Empty unlinked collections\")",
+        "signatures": {
+          "ranges": [
+            {
+              "startPosition": {
+                "line": 993,
+                "column": 1
+              },
+              "endPosition": {
+                "line": 994,
+                "column": 5
+              }
+            },
+            {
+              "startPosition": {
+                "line": 1003,
+                "column": 5
+              },
+              "endPosition": {
+                "line": 1004,
+                "column": 9
+              }
+            }
+          ]
+        },
+        "detailedLines": [
+          {
+            "text": "class VIEW3D_PT_BulkDataRemap(bpy.types.Panel):",
+            "lineNumber": 993,
+            "isSignature": true
+          },
+          {
+            "text": "def draw(self, context):",
+            "lineNumber": 1003
+          },
+          {
+            "lineNumber": 1190
+          },
+          {
+            "text": "        ",
+            "lineNumber": 1191
+          },
+          {
+            "text": "        sub_row = split.row()",
+            "lineNumber": 1192
+          },
+          {
+            "text": "        if world_duplicates &gt; 0:",
+            "lineNumber": 1193
+          },
+          {
+            "text": "            sub_row.prop(context.scene, \"show_world_duplicates\", ",
+            "lineNumber": 1194
+          },
+          {
+            "text": "                         text=f\"{world_duplicates} duplicates\", ",
+            "lineNumber": 1195
+          },
+          {
+            "text": "                         icon='DISCLOSURE_TRI_DOWN' if context.scene.show_world_duplicates else 'DISCLOSURE_TRI_RIGHT',",
+            "lineNumber": 1196
+          },
+          {
+            "text": "                         emboss=False)",
+            "lineNumber": 1197
+          },
+          {
+            "text": "        elif world_numbered &gt; 0:",
+            "lineNumber": 1198
+          },
+          {
+            "text": "            sub_row.label(text=f\"{world_numbered} numbered\")",
+            "lineNumber": 1199
+          },
+          {
+            "text": "        else:",
+            "lineNumber": 1200
+          },
+          {
+            "text": "            sub_row.label(text=\"0 duplicates\")",
+            "lineNumber": 1201
+          },
+          {
+            "text": "        ",
+            "lineNumber": 1202
+          },
+          {
+            "text": "        # Show world duplicates if enabled",
+            "lineNumber": 1203
+          },
+          {
+            "text": "        if context.scene.show_world_duplicates and world_duplicates &gt; 0 and context.scene.dataremap_worlds:",
+            "lineNumber": 1204
+          },
+          {
+            "text": "            draw_data_duplicates(col, context, \"worlds\", world_groups)",
+            "lineNumber": 1205
+          },
+          {
+            "text": "        ",
+            "lineNumber": 1206
+          },
+          {
+            "text": "        # Add the operator button",
+            "lineNumber": 1207
+          },
+          {
+            "text": "        row = box.row()",
+            "lineNumber": 1208
+          },
+          {
+            "text": "        row.scale_y = 1.5",
+            "lineNumber": 1209
+          },
+          {
+            "text": "        row.operator(\"bst.bulk_data_remap\")",
+            "lineNumber": 1210
+          },
+          {
+            "text": "        ",
+            "lineNumber": 1211
+          },
+          {
+            "text": "        # Show total counts",
+            "lineNumber": 1212
+          },
+          {
+            "text": "        total_duplicates = image_duplicates + material_duplicates + font_duplicates + world_duplicates",
+            "lineNumber": 1213
+          },
+          {
+            "text": "        total_numbered = image_numbered + material_numbered + font_numbered + world_numbered",
+            "lineNumber": 1214
+          },
+          {
+            "text": "        ",
+            "lineNumber": 1215
+          },
+          {
+            "text": "        if total_duplicates &gt; 0 or total_numbered &gt; 0:",
+            "lineNumber": 1216
+          },
+          {
+            "text": "            box.separator()",
+            "lineNumber": 1217
+          },
+          {
+            "text": "            if total_duplicates &gt; 0:",
+            "lineNumber": 1218
+          },
+          {
+            "text": "                box.label(text=f\"Found {total_duplicates} duplicate data blocks\")",
+            "lineNumber": 1219
+          },
+          {
+            "text": "            if total_numbered &gt; 0:",
+            "lineNumber": 1220
+          },
+          {
+            "text": "                box.label(text=f\"Found {total_numbered} numbered data blocks\")",
+            "lineNumber": 1221
+          },
+          {
+            "text": "        else:",
+            "lineNumber": 1222
+          },
+          {
+            "text": "            box.label(text=\"No data blocks to process\")",
+            "lineNumber": 1223
+          },
+          {
+            "text": "        ",
+            "lineNumber": 1224
+          },
+          {
+            "text": "        # Add a separator and purge button",
+            "lineNumber": 1225
+          },
+          {
+            "text": "        box.separator()",
+            "lineNumber": 1226
+          },
+          {
+            "text": "        row = box.row()",
+            "lineNumber": 1227
+          },
+          {
+            "text": "        row.operator(\"bst.purge_unused_data\", icon='TRASH')",
+            "lineNumber": 1228
+          },
+          {
+            "text": "        ",
+            "lineNumber": 1229
+          },
+          {
+            "text": "        # Ghost Buster section",
+            "lineNumber": 1230
+          },
+          {
+            "text": "        layout.separator()",
+            "lineNumber": 1231
+          },
+          {
+            "text": "        ghost_box = layout.box()",
+            "lineNumber": 1232
+          },
+          {
+            "text": "        ghost_box.label(text=\"Ghost Buster - Experimental\")",
+            "lineNumber": 1233
+          },
+          {
+            "text": "        ",
+            "lineNumber": 1234
+          },
+          {
+            "text": "        col = ghost_box.column()",
+            "lineNumber": 1235
+          },
+          {
+            "text": "        col.label(text=\"Ghost data cleanup &amp; library override fixes:\")",
+            "lineNumber": 1236
+          },
+          {
+            "text": "        col.label(text=\"• Unused local WGT widget objects\")",
+            "lineNumber": 1237
+          },
+          {
+            "text": "        col.label(text=\"• Empty unlinked collections\")",
+            "lineNumber": 1238
+          }
+        ]
+      },
+      "score": 0.346759557723999
+    },
+    {
+      "codeBlock": {
+        "relativeWorkspacePath": ".\\panels\\bulk_viewport_display.py",
+        "range": {
+          "startPosition": {
+            "line": 749
+          },
+          "endPosition": {
+            "line": 868
+          }
+        },
+        "contents": "class VIEW3D_PT_BulkViewportDisplay(bpy.types.Panel):\ndef draw(self, context):\n\n                failed_count = 0\n                \n                # Display material results - use a copy of the keys to avoid modification during iteration\n                for material_name in list(material_results.keys()):\n                    color, status = material_results[material_name]\n                    \n                    # Update counts\n                    if status == MaterialStatus.PREVIEW_BASED:\n                        preview_count += 1\n                    elif status == MaterialStatus.FAILED:\n                        failed_count += 1\n                    \n                    row = col.row(align=True)\n                    \n                    # Add status icon\n                    row.label(text=\"\", icon=get_status_icon(status))\n                    \n                    # Add material name with operator to select it\n                    op = row.operator(\"bst.select_in_editor\", text=material_name)\n                    op.material_name = material_name\n                    \n                    # Add color preview\n                    if color:\n                        material = bpy.data.materials.get(material_name)\n                        if material:  # Check if material still exists\n                            row.prop(material, \"diffuse_color\", text=\"\")\n                        else:\n                            # Material no longer exists, show a placeholder color\n                            row.label(text=\"\", icon='ERROR')\n                            # Mark for removal\n                            materials_to_remove.append(material_name)\n                \n                # Remove materials that no longer exist\n                for material_name in materials_to_remove:\n                    material_results.pop(material_name, None)\n                \n                # Show statistics\n                if",
+        "signatures": {
+          "ranges": [
+            {
+              "startPosition": {
+                "line": 750,
+                "column": 1
+              },
+              "endPosition": {
+                "line": 751,
+                "column": 5
+              }
+            },
+            {
+              "startPosition": {
+                "line": 760,
+                "column": 5
+              },
+              "endPosition": {
+                "line": 761,
+                "column": 9
+              }
+            }
+          ]
+        },
+        "detailedLines": [
+          {
+            "text": "class VIEW3D_PT_BulkViewportDisplay(bpy.types.Panel):",
+            "lineNumber": 750,
+            "isSignature": true
+          },
+          {
+            "text": "def draw(self, context):",
+            "lineNumber": 760
+          },
+          {
+            "lineNumber": 822
+          },
+          {
+            "text": "                failed_count = 0",
+            "lineNumber": 823
+          },
+          {
+            "text": "                ",
+            "lineNumber": 824
+          },
+          {
+            "text": "                # Display material results - use a copy of the keys to avoid modification during iteration",
+            "lineNumber": 825
+          },
+          {
+            "text": "                for material_name in list(material_results.keys()):",
+            "lineNumber": 826
+          },
+          {
+            "text": "                    color, status = material_results[material_name]",
+            "lineNumber": 827
+          },
+          {
+            "text": "                    ",
+            "lineNumber": 828
+          },
+          {
+            "text": "                    # Update counts",
+            "lineNumber": 829
+          },
+          {
+            "text": "                    if status == MaterialStatus.PREVIEW_BASED:",
+            "lineNumber": 830
+          },
+          {
+            "text": "                        preview_count += 1",
+            "lineNumber": 831
+          },
+          {
+            "text": "                    elif status == MaterialStatus.FAILED:",
+            "lineNumber": 832
+          },
+          {
+            "text": "                        failed_count += 1",
+            "lineNumber": 833
+          },
+          {
+            "text": "                    ",
+            "lineNumber": 834
+          },
+          {
+            "text": "                    row = col.row(align=True)",
+            "lineNumber": 835
+          },
+          {
+            "text": "                    ",
+            "lineNumber": 836
+          },
+          {
+            "text": "                    # Add status icon",
+            "lineNumber": 837
+          },
+          {
+            "text": "                    row.label(text=\"\", icon=get_status_icon(status))",
+            "lineNumber": 838
+          },
+          {
+            "text": "                    ",
+            "lineNumber": 839
+          },
+          {
+            "text": "                    # Add material name with operator to select it",
+            "lineNumber": 840
+          },
+          {
+            "text": "                    op = row.operator(\"bst.select_in_editor\", text=material_name)",
+            "lineNumber": 841
+          },
+          {
+            "text": "                    op.material_name = material_name",
+            "lineNumber": 842
+          },
+          {
+            "text": "                    ",
+            "lineNumber": 843
+          },
+          {
+            "text": "                    # Add color preview",
+            "lineNumber": 844
+          },
+          {
+            "text": "                    if color:",
+            "lineNumber": 845
+          },
+          {
+            "text": "                        material = bpy.data.materials.get(material_name)",
+            "lineNumber": 846
+          },
+          {
+            "text": "                        if material:  # Check if material still exists",
+            "lineNumber": 847
+          },
+          {
+            "text": "                            row.prop(material, \"diffuse_color\", text=\"\")",
+            "lineNumber": 848
+          },
+          {
+            "text": "                        else:",
+            "lineNumber": 849
+          },
+          {
+            "text": "                            # Material no longer exists, show a placeholder color",
+            "lineNumber": 850
+          },
+          {
+            "text": "                            row.label(text=\"\", icon='ERROR')",
+            "lineNumber": 851
+          },
+          {
+            "text": "                            # Mark for removal",
+            "lineNumber": 852
+          },
+          {
+            "text": "                            materials_to_remove.append(material_name)",
+            "lineNumber": 853
+          },
+          {
+            "text": "                ",
+            "lineNumber": 854
+          },
+          {
+            "text": "                # Remove materials that no longer exist",
+            "lineNumber": 855
+          },
+          {
+            "text": "                for material_name in materials_to_remove:",
+            "lineNumber": 856
+          },
+          {
+            "text": "                    material_results.pop(material_name, None)",
+            "lineNumber": 857
+          },
+          {
+            "text": "                ",
+            "lineNumber": 858
+          },
+          {
+            "text": "                # Show statistics",
+            "lineNumber": 859
+          },
+          {
+            "text": "                if",
+            "lineNumber": 860
+          }
+        ]
+      },
+      "score": 0.3350357115268707
+    },
+    {
+      "codeBlock": {
+        "relativeWorkspacePath": ".\\panels\\bulk_data_remap.py",
+        "range": {
+          "startPosition": {
+            "line": 992
+          },
+          "endPosition": {
+            "line": 1254
+          }
+        },
+        "contents": "class VIEW3D_PT_BulkDataRemap(bpy.types.Panel):\ndef draw(self, context):\n\n        \n        image_numbered = sum(1 for img in bpy.data.images if img.users &gt; 0 and get_base_name(img.name) != img.name)\n        material_numbered = sum(1 for mat in bpy.data.materials if mat.users &gt; 0 and get_base_name(mat.name) != mat.name)\n        font_numbered = sum(1 for font in bpy.data.fonts if font.users &gt; 0 and get_base_name(font.name) != font.name)\n        world_numbered = sum(1 for world in bpy.data.worlds if world.users &gt; 0 and get_base_name(world.name) != world.name)\n        \n        # Initialize excluded_remap_groups if it doesn't exist\n        if not hasattr(context.scene, \"excluded_remap_groups\"):\n            context.scene.excluded_remap_groups = {}\n        \n        # Add checkboxes with counts and dropdown toggles\n        # Images\n        row = col.row()\n        split = row.split(factor=0.6)\n        sub_row = split.row()\n        \n        # Use depress parameter to show button as pressed when active\n        op = sub_row.operator(\"bst.toggle_data_type\", text=\"\", icon='IMAGE_DATA', depress=context.scene.dataremap_images)\n        op.data_type = \"images\"\n        \n        # Use different text color based on activation\n        if context.scene.dataremap_images:\n            sub_row.label(text=\"Images\")\n        else:\n            # Create a row with a different color for inactive text\n            sub_row.label(text=\"Images\", icon='RADIOBUT_OFF')\n        \n        sub_row = split.row()\n        if image_duplicates &gt; 0:\n            sub_row.prop(context.scene, \"show_image_duplicates\", \n                         text=f\"{image_duplicates} duplicates\", \n                         icon='DISCLOSURE_TRI_DOWN' if context.scene.show_image_duplicates else 'DISCLOSURE_TRI_RIGHT',\n                         emboss=False)\n        elif image_numbered &gt; 0:\n            sub_row.label(text=f\"{image_numbered} numbered\")\n        else:\n            sub_row.label(text=\"0 duplicates\")\n        \n        # Show image duplicates if enabled",
+        "signatures": {
+          "ranges": [
+            {
+              "startPosition": {
+                "line": 993,
+                "column": 1
+              },
+              "endPosition": {
+                "line": 994,
+                "column": 5
+              }
+            },
+            {
+              "startPosition": {
+                "line": 1003,
+                "column": 5
+              },
+              "endPosition": {
+                "line": 1004,
+                "column": 9
+              }
+            }
+          ]
+        },
+        "detailedLines": [
+          {
+            "text": "class VIEW3D_PT_BulkDataRemap(bpy.types.Panel):",
+            "lineNumber": 993,
+            "isSignature": true
+          },
+          {
+            "text": "def draw(self, context):",
+            "lineNumber": 1003
+          },
+          {
+            "lineNumber": 1071
+          },
+          {
+            "text": "        ",
+            "lineNumber": 1072
+          },
+          {
+            "text": "        image_numbered = sum(1 for img in bpy.data.images if img.users &gt; 0 and get_base_name(img.name) != img.name)",
+            "lineNumber": 1073
+          },
+          {
+            "text": "        material_numbered = sum(1 for mat in bpy.data.materials if mat.users &gt; 0 and get_base_name(mat.name) != mat.name)",
+            "lineNumber": 1074
+          },
+          {
+            "text": "        font_numbered = sum(1 for font in bpy.data.fonts if font.users &gt; 0 and get_base_name(font.name) != font.name)",
+            "lineNumber": 1075
+          },
+          {
+            "text": "        world_numbered = sum(1 for world in bpy.data.worlds if world.users &gt; 0 and get_base_name(world.name) != world.name)",
+            "lineNumber": 1076
+          },
+          {
+            "text": "        ",
+            "lineNumber": 1077
+          },
+          {
+            "text": "        # Initialize excluded_remap_groups if it doesn't exist",
+            "lineNumber": 1078
+          },
+          {
+            "text": "        if not hasattr(context.scene, \"excluded_remap_groups\"):",
+            "lineNumber": 1079
+          },
+          {
+            "text": "            context.scene.excluded_remap_groups = {}",
+            "lineNumber": 1080
+          },
+          {
+            "text": "        ",
+            "lineNumber": 1081
+          },
+          {
+            "text": "        # Add checkboxes with counts and dropdown toggles",
+            "lineNumber": 1082
+          },
+          {
+            "text": "        # Images",
+            "lineNumber": 1083
+          },
+          {
+            "text": "        row = col.row()",
+            "lineNumber": 1084
+          },
+          {
+            "text": "        split = row.split(factor=0.6)",
+            "lineNumber": 1085
+          },
+          {
+            "text": "        sub_row = split.row()",
+            "lineNumber": 1086
+          },
+          {
+            "text": "        ",
+            "lineNumber": 1087
+          },
+          {
+            "text": "        # Use depress parameter to show button as pressed when active",
+            "lineNumber": 1088
+          },
+          {
+            "text": "        op = sub_row.operator(\"bst.toggle_data_type\", text=\"\", icon='IMAGE_DATA', depress=context.scene.dataremap_images)",
+            "lineNumber": 1089
+          },
+          {
+            "text": "        op.data_type = \"images\"",
+            "lineNumber": 1090
+          },
+          {
+            "text": "        ",
+            "lineNumber": 1091
+          },
+          {
+            "text": "        # Use different text color based on activation",
+            "lineNumber": 1092
+          },
+          {
+            "text": "        if context.scene.dataremap_images:",
+            "lineNumber": 1093
+          },
+          {
+            "text": "            sub_row.label(text=\"Images\")",
+            "lineNumber": 1094
+          },
+          {
+            "text": "        else:",
+            "lineNumber": 1095
+          },
+          {
+            "text": "            # Create a row with a different color for inactive text",
+            "lineNumber": 1096
+          },
+          {
+            "text": "            sub_row.label(text=\"Images\", icon='RADIOBUT_OFF')",
+            "lineNumber": 1097
+          },
+          {
+            "text": "        ",
+            "lineNumber": 1098
+          },
+          {
+            "text": "        sub_row = split.row()",
+            "lineNumber": 1099
+          },
+          {
+            "text": "        if image_duplicates &gt; 0:",
+            "lineNumber": 1100
+          },
+          {
+            "text": "            sub_row.prop(context.scene, \"show_image_duplicates\", ",
+            "lineNumber": 1101
+          },
+          {
+            "text": "                         text=f\"{image_duplicates} duplicates\", ",
+            "lineNumber": 1102
+          },
+          {
+            "text": "                         icon='DISCLOSURE_TRI_DOWN' if context.scene.show_image_duplicates else 'DISCLOSURE_TRI_RIGHT',",
+            "lineNumber": 1103
+          },
+          {
+            "text": "                         emboss=False)",
+            "lineNumber": 1104
+          },
+          {
+            "text": "        elif image_numbered &gt; 0:",
+            "lineNumber": 1105
+          },
+          {
+            "text": "            sub_row.label(text=f\"{image_numbered} numbered\")",
+            "lineNumber": 1106
+          },
+          {
+            "text": "        else:",
+            "lineNumber": 1107
+          },
+          {
+            "text": "            sub_row.label(text=\"0 duplicates\")",
+            "lineNumber": 1108
+          },
+          {
+            "text": "        ",
+            "lineNumber": 1109
+          },
+          {
+            "text": "        # Show image duplicates if enabled",
+            "lineNumber": 1110
+          }
+        ]
+      },
+      "score": 0.32868289947509766
+    },
+    {
+      "codeBlock": {
+        "relativeWorkspacePath": ".\\panels\\bulk_data_remap.py",
+        "range": {
+          "startPosition": {
+            "line": 863
+          },
+          "endPosition": {
+            "line": 990
+          }
+        },
+        "contents": "def draw_data_duplicates(layout, context, data_type, data_groups):\n\n    \n    for base_name, items in group_items:\n        if len(items) &gt; 1:\n            row = box_dup.row()\n            \n            # Add checkbox to include/exclude this group using the custom draw function\n            draw_drag_selectable_checkbox(row, context, data_type, base_name)\n            \n            # Add dropdown toggle\n            group_key = f\"{data_type}:{base_name}\"\n            is_expanded = group_key in context.scene.expanded_remap_groups\n            \n            exp_op = row.operator(\"bst.toggle_group_expansion\",\n                                 text=\"\",\n                                 icon='DISCLOSURE_TRI_DOWN' if is_expanded else 'DISCLOSURE_TRI_RIGHT',\n                                 emboss=False)\n            exp_op.group_key = base_name\n            exp_op.data_type = data_type\n            \n            # Find the original data item (target)\n            target_item = find_target_data(items)\n            \n            # Add icon based on data type\n            if",
+        "signatures": {
+          "ranges": [
+            {
+              "startPosition": {
+                "line": 864,
+                "column": 1
+              },
+              "endPosition": {
+                "line": 865,
+                "column": 5
+              }
+            }
+          ]
+        },
+        "detailedLines": [
+          {
+            "text": "def draw_data_duplicates(layout, context, data_type, data_groups):",
+            "lineNumber": 864,
+            "isSignature": true
+          },
+          {
+            "lineNumber": 905
+          },
+          {
+            "text": "    ",
+            "lineNumber": 906
+          },
+          {
+            "text": "    for base_name, items in group_items:",
+            "lineNumber": 907
+          },
+          {
+            "text": "        if len(items) &gt; 1:",
+            "lineNumber": 908
+          },
+          {
+            "text": "            row = box_dup.row()",
+            "lineNumber": 909
+          },
+          {
+            "text": "            ",
+            "lineNumber": 910
+          },
+          {
+            "text": "            # Add checkbox to include/exclude this group using the custom draw function",
+            "lineNumber": 911
+          },
+          {
+            "text": "            draw_drag_selectable_checkbox(row, context, data_type, base_name)",
+            "lineNumber": 912
+          },
+          {
+            "text": "            ",
+            "lineNumber": 913
+          },
+          {
+            "text": "            # Add dropdown toggle",
+            "lineNumber": 914
+          },
+          {
+            "text": "            group_key = f\"{data_type}:{base_name}\"",
+            "lineNumber": 915
+          },
+          {
+            "text": "            is_expanded = group_key in context.scene.expanded_remap_groups",
+            "lineNumber": 916
+          },
+          {
+            "text": "            ",
+            "lineNumber": 917
+          },
+          {
+            "text": "            exp_op = row.operator(\"bst.toggle_group_expansion\",",
+            "lineNumber": 918
+          },
+          {
+            "text": "                                 text=\"\",",
+            "lineNumber": 919
+          },
+          {
+            "text": "                                 icon='DISCLOSURE_TRI_DOWN' if is_expanded else 'DISCLOSURE_TRI_RIGHT',",
+            "lineNumber": 920
+          },
+          {
+            "text": "                                 emboss=False)",
+            "lineNumber": 921
+          },
+          {
+            "text": "            exp_op.group_key = base_name",
+            "lineNumber": 922
+          },
+          {
+            "text": "            exp_op.data_type = data_type",
+            "lineNumber": 923
+          },
+          {
+            "text": "            ",
+            "lineNumber": 924
+          },
+          {
+            "text": "            # Find the original data item (target)",
+            "lineNumber": 925
+          },
+          {
+            "text": "            target_item = find_target_data(items)",
+            "lineNumber": 926
+          },
+          {
+            "text": "            ",
+            "lineNumber": 927
+          },
+          {
+            "text": "            # Add icon based on data type",
+            "lineNumber": 928
+          },
+          {
+            "text": "            if",
+            "lineNumber": 929
+          }
+        ]
+      },
+      "score": 0.30822455883026123
+    },
+    {
+      "codeBlock": {
+        "relativeWorkspacePath": ".\\panels\\bulk_path_management.py",
+        "range": {
+          "startPosition": {
+            "line": 650,
+            "column": 27
+          },
+          "endPosition": {
+            "line": 751
+          }
+        },
+        "contents": "# Add a class for renaming datablocks\nclass BST_OT_rename_datablock(Operator):\n    \"\"\"Click to rename datablock\"\"\"\n    bl_idname = \"bst.rename_datablock\"\n    bl_label = \"Rename Datablock\"\n    bl_options = {'REGISTER', 'UNDO'}\n    \n    old_name: StringProperty(\n        name=\"Old Name\",\n        description=\"Current name of the datablock\",\n        default=\"\"\n    ) # type: ignore\n    \n    new_name: StringProperty(\n        name=\"New Name\",\n        description=\"New name for the datablock\",\n        default=\"\"\n    ) # type: ignore\n    \n    def invoke(self, context, event):\n        self.new_name = self.old_name\n        return context.window_manager.invoke_props_dialog(self)\n    \n    def draw(self, context):\n        layout = self.layout\n        layout.prop(self, \"new_name\", text=\"Name\")\n    \n    def execute(self, context):\n        # Find the datablock\n        datablock = bpy.data.images.get(self.old_name)\n        if not datablock:\n            self.report({'ERROR'}, f\"Could not find image with name {self.old_name}\")\n            return {'CANCELLED'}\n        \n        # Check if the datablock is linked\n        if hasattr(datablock, 'library') and datablock.library is not None:\n            self.report({'ERROR'}, \"Cannot rename linked image\")\n            return {'CANCELLED'}\n        \n        # Rename the datablock\n        try:\n            datablock.name = self.new_name\n            self.report({'INFO'}, f\"Renamed image to {self.new_name}\")\n            return {'FINISHED'}\n        except Exception as e:\n            self.report({'ERROR'}, f\"Failed to rename image: {str(e)}\")\n            return {'CANCELLED'}\n\n# Update class for shift+click selection\nclass BST_OT_toggle_image_selection(Operator):\n    \"\"\"Toggle whether this image should be included in bulk operations\"\"\"",
+        "signatures": {},
+        "detailedLines": [
+          {
+            "text": "# Add a class for renaming datablocks",
+            "lineNumber": 653
+          },
+          {
+            "text": "class BST_OT_rename_datablock(Operator):",
+            "lineNumber": 654,
+            "isSignature": true
+          },
+          {
+            "text": "    \"\"\"Click to rename datablock\"\"\"",
+            "lineNumber": 655
+          },
+          {
+            "text": "    bl_idname = \"bst.rename_datablock\"",
+            "lineNumber": 656
+          },
+          {
+            "text": "    bl_label = \"Rename Datablock\"",
+            "lineNumber": 657
+          },
+          {
+            "text": "    bl_options = {'REGISTER', 'UNDO'}",
+            "lineNumber": 658
+          },
+          {
+            "text": "    ",
+            "lineNumber": 659
+          },
+          {
+            "text": "    old_name: StringProperty(",
+            "lineNumber": 660
+          },
+          {
+            "text": "        name=\"Old Name\",",
+            "lineNumber": 661
+          },
+          {
+            "text": "        description=\"Current name of the datablock\",",
+            "lineNumber": 662
+          },
+          {
+            "text": "        default=\"\"",
+            "lineNumber": 663
+          },
+          {
+            "text": "    ) # type: ignore",
+            "lineNumber": 664
+          },
+          {
+            "text": "    ",
+            "lineNumber": 665
+          },
+          {
+            "text": "    new_name: StringProperty(",
+            "lineNumber": 666
+          },
+          {
+            "text": "        name=\"New Name\",",
+            "lineNumber": 667
+          },
+          {
+            "text": "        description=\"New name for the datablock\",",
+            "lineNumber": 668
+          },
+          {
+            "text": "        default=\"\"",
+            "lineNumber": 669
+          },
+          {
+            "text": "    ) # type: ignore",
+            "lineNumber": 670
+          },
+          {
+            "text": "    ",
+            "lineNumber": 671
+          },
+          {
+            "text": "    def invoke(self, context, event):",
+            "lineNumber": 672
+          },
+          {
+            "text": "        self.new_name = self.old_name",
+            "lineNumber": 673
+          },
+          {
+            "text": "        return context.window_manager.invoke_props_dialog(self)",
+            "lineNumber": 674
+          },
+          {
+            "text": "    ",
+            "lineNumber": 675
+          },
+          {
+            "text": "    def draw(self, context):",
+            "lineNumber": 676
+          },
+          {
+            "text": "        layout = self.layout",
+            "lineNumber": 677
+          },
+          {
+            "text": "        layout.prop(self, \"new_name\", text=\"Name\")",
+            "lineNumber": 678
+          },
+          {
+            "text": "    ",
+            "lineNumber": 679
+          },
+          {
+            "text": "    def execute(self, context):",
+            "lineNumber": 680
+          },
+          {
+            "text": "        # Find the datablock",
+            "lineNumber": 681
+          },
+          {
+            "text": "        datablock = bpy.data.images.get(self.old_name)",
+            "lineNumber": 682
+          },
+          {
+            "text": "        if not datablock:",
+            "lineNumber": 683
+          },
+          {
+            "text": "            self.report({'ERROR'}, f\"Could not find image with name {self.old_name}\")",
+            "lineNumber": 684
+          },
+          {
+            "text": "            return {'CANCELLED'}",
+            "lineNumber": 685
+          },
+          {
+            "text": "        ",
+            "lineNumber": 686
+          },
+          {
+            "text": "        # Check if the datablock is linked",
+            "lineNumber": 687
+          },
+          {
+            "text": "        if hasattr(datablock, 'library') and datablock.library is not None:",
+            "lineNumber": 688
+          },
+          {
+            "text": "            self.report({'ERROR'}, \"Cannot rename linked image\")",
+            "lineNumber": 689
+          },
+          {
+            "text": "            return {'CANCELLED'}",
+            "lineNumber": 690
+          },
+          {
+            "text": "        ",
+            "lineNumber": 691
+          },
+          {
+            "text": "        # Rename the datablock",
+            "lineNumber": 692
+          },
+          {
+            "text": "        try:",
+            "lineNumber": 693
+          },
+          {
+            "text": "            datablock.name = self.new_name",
+            "lineNumber": 694
+          },
+          {
+            "text": "            self.report({'INFO'}, f\"Renamed image to {self.new_name}\")",
+            "lineNumber": 695
+          },
+          {
+            "text": "            return {'FINISHED'}",
+            "lineNumber": 696
+          },
+          {
+            "text": "        except Exception as e:",
+            "lineNumber": 697
+          },
+          {
+            "text": "            self.report({'ERROR'}, f\"Failed to rename image: {str(e)}\")",
+            "lineNumber": 698
+          },
+          {
+            "text": "            return {'CANCELLED'}",
+            "lineNumber": 699,
+            "isSignature": true
+          },
+          {
+            "lineNumber": 700
+          },
+          {
+            "text": "# Update class for shift+click selection",
+            "lineNumber": 701
+          },
+          {
+            "text": "class BST_OT_toggle_image_selection(Operator):",
+            "lineNumber": 702,
+            "isSignature": true
+          },
+          {
+            "text": "    \"\"\"Toggle whether this image should be included in bulk operations\"\"\"",
+            "lineNumber": 703
+          }
+        ]
+      },
+      "score": 0.30399879813194275
+    },
+    {
+      "codeBlock": {
+        "relativeWorkspacePath": ".\\panels\\bulk_path_management.py",
+        "range": {
+          "startPosition": {
+            "line": 320,
+            "column": 5
+          },
+          "endPosition": {
+            "line": 386
+          }
+        },
+        "contents": "# Operator to remap a single datablock path\nclass BST_OT_remap_path(Operator):\n    bl_idname = \"bst.remap_path\"\n    bl_label = \"Remap Path\"\n    bl_description = \"Change the filepath and filepath_raw for a datablock\"\n    bl_options = {'REGISTER', 'UNDO'}\n    \n    new_path: StringProperty(\n        name=\"New Path\",\n        description=\"Base path for datablock (datablock name will be appended)\",\n        default=\"//textures/\",\n        subtype='DIR_PATH'\n    ) # type: ignore\n    \n    def execute(self, context):\n        # Get the active image\n        active_image = context.scene.bst_path_props.active_image\n        if active_image:\n            # Get file extension from the image\n            extension = get_image_extension(active_image)\n            \n            # Get the combined path\n            full_path = get_combined_path(context, active_image.name, extension)\n            \n            # Use the set_image_paths function to ensure proper handling of packed files\n            success = set_image_paths(active_image.name, full_path)\n            \n            if success:\n                self.report({'INFO'}, f\"Successfully remapped {active_image.name}\")\n                return {'FINISHED'}\n            else:\n                self.report({'ERROR'}, f\"Failed to remap {active_image.name}\")\n                return {'CANCELLED'}\n        else:\n            self.report({'ERROR'}, \"No active datablock selected\")\n            return {'CANCELLED'}\n    \n    def invoke(self, context, event):\n        # Use the path from properties\n        props = context.scene.bst_path_props\n        if props.use_smart_pathing:\n            self.new_path = props.smart_base_path\n        else:\n            self.new_path = props.new_path\n        return context.window_manager.invoke_props_dialog(self)\n\n# Operator to toggle all image selections\nclass BST_OT_toggle_select_all(Operator):\n    bl_idname = \"bst.toggle_select_all\"",
+        "signatures": {},
+        "detailedLines": [
+          {
+            "text": "# Operator to remap a single datablock path",
+            "lineNumber": 323
+          },
+          {
+            "text": "class BST_OT_remap_path(Operator):",
+            "lineNumber": 324,
+            "isSignature": true
+          },
+          {
+            "text": "    bl_idname = \"bst.remap_path\"",
+            "lineNumber": 325
+          },
+          {
+            "text": "    bl_label = \"Remap Path\"",
+            "lineNumber": 326
+          },
+          {
+            "text": "    bl_description = \"Change the filepath and filepath_raw for a datablock\"",
+            "lineNumber": 327
+          },
+          {
+            "text": "    bl_options = {'REGISTER', 'UNDO'}",
+            "lineNumber": 328
+          },
+          {
+            "text": "    ",
+            "lineNumber": 329
+          },
+          {
+            "text": "    new_path: StringProperty(",
+            "lineNumber": 330
+          },
+          {
+            "text": "        name=\"New Path\",",
+            "lineNumber": 331
+          },
+          {
+            "text": "        description=\"Base path for datablock (datablock name will be appended)\",",
+            "lineNumber": 332
+          },
+          {
+            "text": "        default=\"//textures/\",",
+            "lineNumber": 333
+          },
+          {
+            "text": "        subtype='DIR_PATH'",
+            "lineNumber": 334
+          },
+          {
+            "text": "    ) # type: ignore",
+            "lineNumber": 335
+          },
+          {
+            "text": "    ",
+            "lineNumber": 336
+          },
+          {
+            "text": "    def execute(self, context):",
+            "lineNumber": 337
+          },
+          {
+            "text": "        # Get the active image",
+            "lineNumber": 338
+          },
+          {
+            "text": "        active_image = context.scene.bst_path_props.active_image",
+            "lineNumber": 339
+          },
+          {
+            "text": "        if active_image:",
+            "lineNumber": 340
+          },
+          {
+            "text": "            # Get file extension from the image",
+            "lineNumber": 341
+          },
+          {
+            "text": "            extension = get_image_extension(active_image)",
+            "lineNumber": 342
+          },
+          {
+            "text": "            ",
+            "lineNumber": 343
+          },
+          {
+            "text": "            # Get the combined path",
+            "lineNumber": 344
+          },
+          {
+            "text": "            full_path = get_combined_path(context, active_image.name, extension)",
+            "lineNumber": 345
+          },
+          {
+            "text": "            ",
+            "lineNumber": 346
+          },
+          {
+            "text": "            # Use the set_image_paths function to ensure proper handling of packed files",
+            "lineNumber": 347
+          },
+          {
+            "text": "            success = set_image_paths(active_image.name, full_path)",
+            "lineNumber": 348
+          },
+          {
+            "text": "            ",
+            "lineNumber": 349
+          },
+          {
+            "text": "            if success:",
+            "lineNumber": 350
+          },
+          {
+            "text": "                self.report({'INFO'}, f\"Successfully remapped {active_image.name}\")",
+            "lineNumber": 351
+          },
+          {
+            "text": "                return {'FINISHED'}",
+            "lineNumber": 352
+          },
+          {
+            "text": "            else:",
+            "lineNumber": 353
+          },
+          {
+            "text": "                self.report({'ERROR'}, f\"Failed to remap {active_image.name}\")",
+            "lineNumber": 354
+          },
+          {
+            "text": "                return {'CANCELLED'}",
+            "lineNumber": 355
+          },
+          {
+            "text": "        else:",
+            "lineNumber": 356
+          },
+          {
+            "text": "            self.report({'ERROR'}, \"No active datablock selected\")",
+            "lineNumber": 357
+          },
+          {
+            "text": "            return {'CANCELLED'}",
+            "lineNumber": 358
+          },
+          {
+            "text": "    ",
+            "lineNumber": 359
+          },
+          {
+            "text": "    def invoke(self, context, event):",
+            "lineNumber": 360
+          },
+          {
+            "text": "        # Use the path from properties",
+            "lineNumber": 361
+          },
+          {
+            "text": "        props = context.scene.bst_path_props",
+            "lineNumber": 362
+          },
+          {
+            "text": "        if props.use_smart_pathing:",
+            "lineNumber": 363
+          },
+          {
+            "text": "            self.new_path = props.smart_base_path",
+            "lineNumber": 364
+          },
+          {
+            "text": "        else:",
+            "lineNumber": 365
+          },
+          {
+            "text": "            self.new_path = props.new_path",
+            "lineNumber": 366
+          },
+          {
+            "text": "        return context.window_manager.invoke_props_dialog(self)",
+            "lineNumber": 367,
+            "isSignature": true
+          },
+          {
+            "lineNumber": 368
+          },
+          {
+            "text": "# Operator to toggle all image selections",
+            "lineNumber": 369
+          },
+          {
+            "text": "class BST_OT_toggle_select_all(Operator):",
+            "lineNumber": 370,
+            "isSignature": true
+          },
+          {
+            "text": "    bl_idname = \"bst.toggle_select_all\"",
+            "lineNumber": 371
+          }
+        ]
+      },
+      "score": 0.3016032874584198
+    },
+    {
+      "codeBlock": {
+        "relativeWorkspacePath": ".\\panels\\bulk_path_management.py",
+        "range": {
+          "startPosition": {
+            "line": 1428
+          },
+          "endPosition": {
+            "line": 1624
+          }
+        },
+        "contents": "class NODE_PT_bulk_path_tools(Panel):\ndef draw(self, context):\n for img in bpy.data.images)\n        row = box.row()\n        row.enabled = any_selected\n        row.operator(\"bst.bulk_remap\", text=\"Remap Selected\", icon='FILE_REFRESH')\n        \n        # Rename by Material and AutoMat buttons - placed right after remap selected\n        row = box.row()\n        row.enabled = any_selected\n        row.operator(\"bst.rename_images_by_mat\", text=\"Rename by Material\", icon='OUTLINER_DATA_FONT')\n        \n        # Get addon preferences\n        addon_name = __package__.split('.')[0]\n        addon_entry = context.preferences.addons.get(addon_name)\n        prefs = addon_entry.preferences if addon_entry else None\n        \n        row = box.row(align=True)\n        row.enabled = any_selected\n        \n        # Split row for button and checkbox\n        split = row.split(factor=0.8)\n        \n        # Left side: button\n        split.operator(\"bst.automatextractor\", text=\"AutoMat Extractor\", icon='PACKAGE')\n        \n        # Right side: checkbox\n        col = split.column()\n        if prefs:\n            col.prop(prefs, \"automat_common_outside_blend\", text=\"\", icon='FOLDER_REDIRECT')\n        \n        # Bulk operations section\n        box = layout.box()\n        box.label(text=\"Bulk Operations\", icon='MODIFIER')\n        row = box.row()\n        row.prop(path_props, \"show_bulk_operations\", \n                 text=\"Show Bulk Operations\", \n                 icon=\"TRIA_DOWN\" if path_props.show_bulk_operations else \"TRIA_RIGHT\",\n                 icon_only=True, emboss=False)\n        row.label(text=\"Image Selection\")\n        \n        # Show bulk operations UI only when expanded",
+        "signatures": {
+          "ranges": [
+            {
+              "startPosition": {
+                "line": 1429,
+                "column": 1
+              },
+              "endPosition": {
+                "line": 1430,
+                "column": 5
+              }
+            },
+            {
+              "startPosition": {
+                "line": 1441,
+                "column": 5
+              },
+              "endPosition": {
+                "line": 1442,
+                "column": 9
+              }
+            }
+          ]
+        },
+        "detailedLines": [
+          {
+            "text": "class NODE_PT_bulk_path_tools(Panel):",
+            "lineNumber": 1429,
+            "isSignature": true
+          },
+          {
+            "text": "def draw(self, context):",
+            "lineNumber": 1441
+          },
+          {
+            "text": " for img in bpy.data.images)",
+            "lineNumber": 1529
+          },
+          {
+            "text": "        row = box.row()",
+            "lineNumber": 1530
+          },
+          {
+            "text": "        row.enabled = any_selected",
+            "lineNumber": 1531
+          },
+          {
+            "text": "        row.operator(\"bst.bulk_remap\", text=\"Remap Selected\", icon='FILE_REFRESH')",
+            "lineNumber": 1532
+          },
+          {
+            "text": "        ",
+            "lineNumber": 1533
+          },
+          {
+            "text": "        # Rename by Material and AutoMat buttons - placed right after remap selected",
+            "lineNumber": 1534
+          },
+          {
+            "text": "        row = box.row()",
+            "lineNumber": 1535
+          },
+          {
+            "text": "        row.enabled = any_selected",
+            "lineNumber": 1536
+          },
+          {
+            "text": "        row.operator(\"bst.rename_images_by_mat\", text=\"Rename by Material\", icon='OUTLINER_DATA_FONT')",
+            "lineNumber": 1537
+          },
+          {
+            "text": "        ",
+            "lineNumber": 1538
+          },
+          {
+            "text": "        # Get addon preferences",
+            "lineNumber": 1539
+          },
+          {
+            "text": "        addon_name = __package__.split('.')[0]",
+            "lineNumber": 1540
+          },
+          {
+            "text": "        addon_entry = context.preferences.addons.get(addon_name)",
+            "lineNumber": 1541
+          },
+          {
+            "text": "        prefs = addon_entry.preferences if addon_entry else None",
+            "lineNumber": 1542
+          },
+          {
+            "text": "        ",
+            "lineNumber": 1543
+          },
+          {
+            "text": "        row = box.row(align=True)",
+            "lineNumber": 1544
+          },
+          {
+            "text": "        row.enabled = any_selected",
+            "lineNumber": 1545
+          },
+          {
+            "text": "        ",
+            "lineNumber": 1546
+          },
+          {
+            "text": "        # Split row for button and checkbox",
+            "lineNumber": 1547
+          },
+          {
+            "text": "        split = row.split(factor=0.8)",
+            "lineNumber": 1548
+          },
+          {
+            "text": "        ",
+            "lineNumber": 1549
+          },
+          {
+            "text": "        # Left side: button",
+            "lineNumber": 1550
+          },
+          {
+            "text": "        split.operator(\"bst.automatextractor\", text=\"AutoMat Extractor\", icon='PACKAGE')",
+            "lineNumber": 1551
+          },
+          {
+            "text": "        ",
+            "lineNumber": 1552
+          },
+          {
+            "text": "        # Right side: checkbox",
+            "lineNumber": 1553
+          },
+          {
+            "text": "        col = split.column()",
+            "lineNumber": 1554
+          },
+          {
+            "text": "        if prefs:",
+            "lineNumber": 1555
+          },
+          {
+            "text": "            col.prop(prefs, \"automat_common_outside_blend\", text=\"\", icon='FOLDER_REDIRECT')",
+            "lineNumber": 1556
+          },
+          {
+            "text": "        ",
+            "lineNumber": 1557
+          },
+          {
+            "text": "        # Bulk operations section",
+            "lineNumber": 1558
+          },
+          {
+            "text": "        box = layout.box()",
+            "lineNumber": 1559
+          },
+          {
+            "text": "        box.label(text=\"Bulk Operations\", icon='MODIFIER')",
+            "lineNumber": 1560
+          },
+          {
+            "text": "        row = box.row()",
+            "lineNumber": 1561
+          },
+          {
+            "text": "        row.prop(path_props, \"show_bulk_operations\", ",
+            "lineNumber": 1562
+          },
+          {
+            "text": "                 text=\"Show Bulk Operations\", ",
+            "lineNumber": 1563
+          },
+          {
+            "text": "                 icon=\"TRIA_DOWN\" if path_props.show_bulk_operations else \"TRIA_RIGHT\",",
+            "lineNumber": 1564
+          },
+          {
+            "text": "                 icon_only=True, emboss=False)",
+            "lineNumber": 1565
+          },
+          {
+            "text": "        row.label(text=\"Image Selection\")",
+            "lineNumber": 1566
+          },
+          {
+            "text": "        ",
+            "lineNumber": 1567
+          },
+          {
+            "text": "        # Show bulk operations UI only when expanded",
+            "lineNumber": 1568
+          }
+        ]
+      },
+      "score": 0.3003145456314087
+    },
+    {
+      "codeBlock": {
+        "relativeWorkspacePath": ".\\panels\\bulk_path_management.py",
+        "range": {
+          "startPosition": {
+            "line": 1425,
+            "column": 44
+          },
+          "endPosition": {
+            "line": 1624
+          }
+        },
+        "contents": "# Panel for Shader Editor sidebar\nclass NODE_PT_bulk_path_tools(Panel):\n    bl_label = \"Bulk Pathing\"\n    bl_idname = \"NODE_PT_bulk_path_tools\"\n    bl_space_type = 'NODE_EDITOR'\n    bl_region_type = 'UI'\n    bl_category = 'Node'\n    bl_context = 'shader'\n    \n    @classmethod\n    def poll(cls, context):\n        return hasattr(context.space_data, 'tree_type') and context.space_data.tree_type == 'ShaderNodeTree'\n    \n    def draw(self, context):\n        layout = self.layout\n        scene = context.scene\n        path_props = scene.bst_path_props        \n        \n        layout.separator()\n        \n        # Progress display section\n        if path_props.is_operation_running:\n            box = layout.box()\n            box.label(text=\"Operation Progress\", icon='TIME')\n            \n            # Progress bar\n            row = box.row()\n            row.prop(path_props, \"operation_progress\", text=\"\")\n            \n            # Status message\n            if path_props.operation_status:\n                row = box.row()\n                row.label(text=path_props.operation_status, icon='INFO')\n            \n            # Cancel button\n            row = box.row()\n            row.operator(\"bst.cancel_operation\", text=\"Cancel Operation\", icon='X')\n            \n            layout.separator()\n        \n        # Workflow section\n        box = layout.box()\n        box.label(text=\"Workflow\", icon_value=0)\n        col = box.column(heading='', align=True)\n        \n        # Autopack toggle (full width)\n        col.prop(bpy.data, \"use_autopack\", text=\"Autopack\", icon='PACKAGE')\n        \n        # Pack/Unpack split\n        split = col.split(factor=0.5, align=True)\n        split.operator(\"bst.pack_images\", text=\"Pack\", icon='PACKAGE')\n        split.operator(\"bst.unpack_images\", text=\"Unpack Local\", icon='UGLYPACKAGE')\n        \n        # Remove packed/Extensions split\n        split = col.split(factor=0.5, align=True)\n        split.operator(\"bst.remove_packed_images\", text=\"Remove Pack\", icon='TRASH')\n        split.operator(\"bst.remove_extensions\", text=\"Remove Ext\", icon='X')\n        \n        # Make paths relative/absolute split\n        split = col.split(factor=0.5, align=True)",
+        "signatures": {},
+        "detailedLines": [
+          {
+            "text": "# Panel for Shader Editor sidebar",
+            "lineNumber": 1428
+          },
+          {
+            "text": "class NODE_PT_bulk_path_tools(Panel):",
+            "lineNumber": 1429,
+            "isSignature": true
+          },
+          {
+            "text": "    bl_label = \"Bulk Pathing\"",
+            "lineNumber": 1430
+          },
+          {
+            "text": "    bl_idname = \"NODE_PT_bulk_path_tools\"",
+            "lineNumber": 1431
+          },
+          {
+            "text": "    bl_space_type = 'NODE_EDITOR'",
+            "lineNumber": 1432
+          },
+          {
+            "text": "    bl_region_type = 'UI'",
+            "lineNumber": 1433
+          },
+          {
+            "text": "    bl_category = 'Node'",
+            "lineNumber": 1434
+          },
+          {
+            "text": "    bl_context = 'shader'",
+            "lineNumber": 1435
+          },
+          {
+            "text": "    ",
+            "lineNumber": 1436
+          },
+          {
+            "text": "    @classmethod",
+            "lineNumber": 1437
+          },
+          {
+            "text": "    def poll(cls, context):",
+            "lineNumber": 1438
+          },
+          {
+            "text": "        return hasattr(context.space_data, 'tree_type') and context.space_data.tree_type == 'ShaderNodeTree'",
+            "lineNumber": 1439
+          },
+          {
+            "text": "    ",
+            "lineNumber": 1440
+          },
+          {
+            "text": "    def draw(self, context):",
+            "lineNumber": 1441
+          },
+          {
+            "text": "        layout = self.layout",
+            "lineNumber": 1442
+          },
+          {
+            "text": "        scene = context.scene",
+            "lineNumber": 1443
+          },
+          {
+            "text": "        path_props = scene.bst_path_props        ",
+            "lineNumber": 1444
+          },
+          {
+            "text": "        ",
+            "lineNumber": 1445
+          },
+          {
+            "text": "        layout.separator()",
+            "lineNumber": 1446
+          },
+          {
+            "text": "        ",
+            "lineNumber": 1447
+          },
+          {
+            "text": "        # Progress display section",
+            "lineNumber": 1448
+          },
+          {
+            "text": "        if path_props.is_operation_running:",
+            "lineNumber": 1449
+          },
+          {
+            "text": "            box = layout.box()",
+            "lineNumber": 1450
+          },
+          {
+            "text": "            box.label(text=\"Operation Progress\", icon='TIME')",
+            "lineNumber": 1451
+          },
+          {
+            "text": "            ",
+            "lineNumber": 1452
+          },
+          {
+            "text": "            # Progress bar",
+            "lineNumber": 1453
+          },
+          {
+            "text": "            row = box.row()",
+            "lineNumber": 1454
+          },
+          {
+            "text": "            row.prop(path_props, \"operation_progress\", text=\"\")",
+            "lineNumber": 1455
+          },
+          {
+            "text": "            ",
+            "lineNumber": 1456
+          },
+          {
+            "text": "            # Status message",
+            "lineNumber": 1457
+          },
+          {
+            "text": "            if path_props.operation_status:",
+            "lineNumber": 1458
+          },
+          {
+            "text": "                row = box.row()",
+            "lineNumber": 1459
+          },
+          {
+            "text": "                row.label(text=path_props.operation_status, icon='INFO')",
+            "lineNumber": 1460
+          },
+          {
+            "text": "            ",
+            "lineNumber": 1461
+          },
+          {
+            "text": "            # Cancel button",
+            "lineNumber": 1462
+          },
+          {
+            "text": "            row = box.row()",
+            "lineNumber": 1463
+          },
+          {
+            "text": "            row.operator(\"bst.cancel_operation\", text=\"Cancel Operation\", icon='X')",
+            "lineNumber": 1464
+          },
+          {
+            "text": "            ",
+            "lineNumber": 1465
+          },
+          {
+            "text": "            layout.separator()",
+            "lineNumber": 1466
+          },
+          {
+            "text": "        ",
+            "lineNumber": 1467
+          },
+          {
+            "text": "        # Workflow section",
+            "lineNumber": 1468
+          },
+          {
+            "text": "        box = layout.box()",
+            "lineNumber": 1469
+          },
+          {
+            "text": "        box.label(text=\"Workflow\", icon_value=0)",
+            "lineNumber": 1470
+          },
+          {
+            "text": "        col = box.column(heading='', align=True)",
+            "lineNumber": 1471
+          },
+          {
+            "text": "        ",
+            "lineNumber": 1472
+          },
+          {
+            "text": "        # Autopack toggle (full width)",
+            "lineNumber": 1473
+          },
+          {
+            "text": "        col.prop(bpy.data, \"use_autopack\", text=\"Autopack\", icon='PACKAGE')",
+            "lineNumber": 1474
+          },
+          {
+            "text": "        ",
+            "lineNumber": 1475
+          },
+          {
+            "text": "        # Pack/Unpack split",
+            "lineNumber": 1476
+          },
+          {
+            "text": "        split = col.split(factor=0.5, align=True)",
+            "lineNumber": 1477
+          },
+          {
+            "text": "        split.operator(\"bst.pack_images\", text=\"Pack\", icon='PACKAGE')",
+            "lineNumber": 1478
+          },
+          {
+            "text": "        split.operator(\"bst.unpack_images\", text=\"Unpack Local\", icon='UGLYPACKAGE')",
+            "lineNumber": 1479
+          },
+          {
+            "text": "        ",
+            "lineNumber": 1480
+          },
+          {
+            "text": "        # Remove packed/Extensions split",
+            "lineNumber": 1481
+          },
+          {
+            "text": "        split = col.split(factor=0.5, align=True)",
+            "lineNumber": 1482
+          },
+          {
+            "text": "        split.operator(\"bst.remove_packed_images\", text=\"Remove Pack\", icon='TRASH')",
+            "lineNumber": 1483
+          },
+          {
+            "text": "        split.operator(\"bst.remove_extensions\", text=\"Remove Ext\", icon='X')",
+            "lineNumber": 1484
+          },
+          {
+            "text": "        ",
+            "lineNumber": 1485
+          },
+          {
+            "text": "        # Make paths relative/absolute split",
+            "lineNumber": 1486
+          },
+          {
+            "text": "        split = col.split(factor=0.5, align=True)",
+            "lineNumber": 1487
+          }
+        ]
+      },
+      "score": 0.29737579822540283
+    },
+    {
+      "codeBlock": {
+        "relativeWorkspacePath": ".\\panels\\bulk_data_remap.py",
+        "range": {
+          "startPosition": {
+            "line": 1354,
+            "column": 27
+          },
+          "endPosition": {
+            "line": 1423
+          }
+        },
+        "contents": "# Add a new operator for renaming datablocks\nclass DATAREMAP_OT_RenameDatablock(bpy.types.Operator):\n    \"\"\"Click to rename datablock\"\"\"\n    bl_idname = \"bst.rename_datablock_remap\"\n    bl_label = \"Rename Datablock\"\n    bl_options = {'REGISTER', 'UNDO'}\n    \n    data_type: bpy.props.StringProperty(  # type: ignore\n        name=\"Data Type\",\n        description=\"Type of data (images, materials, fonts, worlds)\",\n        default=\"\"\n    )\n    \n    old_name: bpy.props.StringProperty(  # type: ignore\n        name=\"Old Name\",\n        description=\"Current name of the datablock\",\n        default=\"\"\n    )\n    \n    new_name: bpy.props.StringProperty(  # type: ignore\n        name=\"New Name\",\n        description=\"New name for the datablock\",\n        default=\"\"\n    )\n    \n    def invoke(self, context, event):\n        self.new_name = self.old_name\n        return context.window_manager.invoke_props_dialog(self)\n    \n    def draw(self, context):\n        layout = self.layout\n        layout.prop(self, \"new_name\", text=\"Name\")\n    \n    def execute(self, context):\n        # Get the appropriate data collection\n        ",
+        "signatures": {},
+        "detailedLines": [
+          {
+            "text": "# Add a new operator for renaming datablocks",
+            "lineNumber": 1357
+          },
+          {
+            "text": "class DATAREMAP_OT_RenameDatablock(bpy.types.Operator):",
+            "lineNumber": 1358,
+            "isSignature": true
+          },
+          {
+            "text": "    \"\"\"Click to rename datablock\"\"\"",
+            "lineNumber": 1359
+          },
+          {
+            "text": "    bl_idname = \"bst.rename_datablock_remap\"",
+            "lineNumber": 1360
+          },
+          {
+            "text": "    bl_label = \"Rename Datablock\"",
+            "lineNumber": 1361
+          },
+          {
+            "text": "    bl_options = {'REGISTER', 'UNDO'}",
+            "lineNumber": 1362
+          },
+          {
+            "text": "    ",
+            "lineNumber": 1363
+          },
+          {
+            "text": "    data_type: bpy.props.StringProperty(  # type: ignore",
+            "lineNumber": 1364
+          },
+          {
+            "text": "        name=\"Data Type\",",
+            "lineNumber": 1365
+          },
+          {
+            "text": "        description=\"Type of data (images, materials, fonts, worlds)\",",
+            "lineNumber": 1366
+          },
+          {
+            "text": "        default=\"\"",
+            "lineNumber": 1367
+          },
+          {
+            "text": "    )",
+            "lineNumber": 1368
+          },
+          {
+            "text": "    ",
+            "lineNumber": 1369
+          },
+          {
+            "text": "    old_name: bpy.props.StringProperty(  # type: ignore",
+            "lineNumber": 1370
+          },
+          {
+            "text": "        name=\"Old Name\",",
+            "lineNumber": 1371
+          },
+          {
+            "text": "        description=\"Current name of the datablock\",",
+            "lineNumber": 1372
+          },
+          {
+            "text": "        default=\"\"",
+            "lineNumber": 1373
+          },
+          {
+            "text": "    )",
+            "lineNumber": 1374
+          },
+          {
+            "text": "    ",
+            "lineNumber": 1375
+          },
+          {
+            "text": "    new_name: bpy.props.StringProperty(  # type: ignore",
+            "lineNumber": 1376
+          },
+          {
+            "text": "        name=\"New Name\",",
+            "lineNumber": 1377
+          },
+          {
+            "text": "        description=\"New name for the datablock\",",
+            "lineNumber": 1378
+          },
+          {
+            "text": "        default=\"\"",
+            "lineNumber": 1379
+          },
+          {
+            "text": "    )",
+            "lineNumber": 1380
+          },
+          {
+            "text": "    ",
+            "lineNumber": 1381
+          },
+          {
+            "text": "    def invoke(self, context, event):",
+            "lineNumber": 1382
+          },
+          {
+            "text": "        self.new_name = self.old_name",
+            "lineNumber": 1383
+          },
+          {
+            "text": "        return context.window_manager.invoke_props_dialog(self)",
+            "lineNumber": 1384
+          },
+          {
+            "text": "    ",
+            "lineNumber": 1385
+          },
+          {
+            "text": "    def draw(self, context):",
+            "lineNumber": 1386
+          },
+          {
+            "text": "        layout = self.layout",
+            "lineNumber": 1387
+          },
+          {
+            "text": "        layout.prop(self, \"new_name\", text=\"Name\")",
+            "lineNumber": 1388
+          },
+          {
+            "text": "    ",
+            "lineNumber": 1389
+          },
+          {
+            "text": "    def execute(self, context):",
+            "lineNumber": 1390
+          },
+          {
+            "text": "        # Get the appropriate data collection",
+            "lineNumber": 1391
+          },
+          {
+            "text": "        ",
+            "lineNumber": 1392
+          }
+        ]
+      },
+      "score": 0.29236650466918945
+    },
+    {
+      "codeBlock": {
+        "relativeWorkspacePath": ".\\panels\\bulk_data_remap.py",
+        "range": {
+          "startPosition": {
+            "line": 144,
+            "column": 15
+          },
+          "endPosition": {
+            "line": 197
+          }
+        },
+        "contents": "def find_data_groups(data_collection):\n    \"\"\"Group data blocks by their base name, excluding those with no users or linked from libraries\"\"\"\n    groups = {}\n    \n    for data in data_collection:\n        # Skip datablocks with no users\n        if data.users == 0:\n            continue\n            \n        # Skip linked datablocks\n        if hasattr(data, 'library') and data.library is not None:\n            continue\n            \n        base_name = get_base_name(data.name)\n        \n        # Only group local datablocks\n        if base_name not in groups:\n            groups[base_name] = []\n        groups[base_name].append(data)\n    \n    # Filter out groups with only one item (no duplicates)\n    # Also filter out groups where all items are linked\n    return {name: items for name, items in groups.items() \n            if len(items) &gt; 1 and any(not (hasattr(item, 'library') and item.library is not None) for item in items)}\n\ndef find_target_data(data_group):\n    \"\"\"Find the target data block to remap to\"\"\"",
+        "signatures": {},
+        "detailedLines": [
+          {
+            "text": "def find_data_groups(data_collection):",
+            "lineNumber": 147,
+            "isSignature": true
+          },
+          {
+            "text": "    \"\"\"Group data blocks by their base name, excluding those with no users or linked from libraries\"\"\"",
+            "lineNumber": 148
+          },
+          {
+            "text": "    groups = {}",
+            "lineNumber": 149
+          },
+          {
+            "text": "    ",
+            "lineNumber": 150
+          },
+          {
+            "text": "    for data in data_collection:",
+            "lineNumber": 151
+          },
+          {
+            "text": "        # Skip datablocks with no users",
+            "lineNumber": 152
+          },
+          {
+            "text": "        if data.users == 0:",
+            "lineNumber": 153
+          },
+          {
+            "text": "            continue",
+            "lineNumber": 154
+          },
+          {
+            "text": "            ",
+            "lineNumber": 155
+          },
+          {
+            "text": "        # Skip linked datablocks",
+            "lineNumber": 156
+          },
+          {
+            "text": "        if hasattr(data, 'library') and data.library is not None:",
+            "lineNumber": 157
+          },
+          {
+            "text": "            continue",
+            "lineNumber": 158
+          },
+          {
+            "text": "            ",
+            "lineNumber": 159
+          },
+          {
+            "text": "        base_name = get_base_name(data.name)",
+            "lineNumber": 160
+          },
+          {
+            "text": "        ",
+            "lineNumber": 161
+          },
+          {
+            "text": "        # Only group local datablocks",
+            "lineNumber": 162
+          },
+          {
+            "text": "        if base_name not in groups:",
+            "lineNumber": 163
+          },
+          {
+            "text": "            groups[base_name] = []",
+            "lineNumber": 164
+          },
+          {
+            "text": "        groups[base_name].append(data)",
+            "lineNumber": 165
+          },
+          {
+            "text": "    ",
+            "lineNumber": 166
+          },
+          {
+            "text": "    # Filter out groups with only one item (no duplicates)",
+            "lineNumber": 167
+          },
+          {
+            "text": "    # Also filter out groups where all items are linked",
+            "lineNumber": 168
+          },
+          {
+            "text": "    return {name: items for name, items in groups.items() ",
+            "lineNumber": 169
+          },
+          {
+            "text": "            if len(items) &gt; 1 and any(not (hasattr(item, 'library') and item.library is not None) for item in items)}",
+            "lineNumber": 170,
+            "isSignature": true
+          },
+          {
+            "lineNumber": 171
+          },
+          {
+            "text": "def find_target_data(data_group):",
+            "lineNumber": 172,
+            "isSignature": true
+          },
+          {
+            "text": "    \"\"\"Find the target data block to remap to\"\"\"",
+            "lineNumber": 173
+          }
+        ]
+      },
+      "score": 0.2913050949573517
+    },
+    {
+      "codeBlock": {
+        "relativeWorkspacePath": ".\\panels\\bulk_path_management.py",
+        "range": {
+          "startPosition": {
+            "line": 203,
+            "column": 39
+          },
+          "endPosition": {
+            "line": 320
+          }
+        },
+        "contents": "# Properties for path management\nclass BST_PathProperties(PropertyGroup):\n    # Active image pointer\n    active_image: PointerProperty(\n        name=\"Image\",\n        type=bpy.types.Image\n    ) # type: ignore\n    \n    show_bulk_operations: BoolProperty(\n        name=\"Show Bulk Operations\",\n        description=\"Expand to show bulk operations interface\",\n        default=False\n    ) # type: ignore\n    \n    # Properties for inline editing\n    edit_filepath: BoolProperty(\n        name=\"Edit Path\",\n        description=\"Toggle editing mode for filepath\",\n        default=False\n    ) # type: ignore\n    \n    edit_filepath_raw: BoolProperty(\n        name=\"Edit Raw Path\",\n        description=\"Toggle editing mode for filepath_raw\",\n        default=False\n    ) # type: ignore\n    \n    temp_filepath: StringProperty(\n        name=\"Temporary Path\",\n        description=\"Temporary storage for editing filepath\",\n        default=\"//textures\",\n        subtype='FILE_PATH'\n    ) # type: ignore\n    \n    temp_filepath_raw: StringProperty(\n        name=\"Temporary Raw Path\",\n        description=\"Temporary storage for editing filepath_raw\",\n        default=\"//textures\",\n        subtype='FILE_PATH'\n    ) # type: ignore\n\n    # Track last selected image for shift+click behavior\n    last_selected_image: StringProperty(\n        name=\"Last Selected Image\",\n        description=\"Name of the last selected image for shift+click behavior\",\n        default=\"\"\n    ) # type: ignore\n    \n    # Whether to sort by selected in the UI\n    sort_by_selected: BoolProperty(\n        name=\"Sort by Selected\",\n        description=\"Show selected images at the top of the list\",\n        default=True\n    ) # type: ignore\n    \n    # Smart pathing properties\n    smart_base_path: StringProperty(\n        name=\"Base Path\",\n        description=\"Base path for image textures\",\n        default=\"//textures/\",\n        subtype='DIR_PATH'\n    ) # type: ignore\n    \n    use_blend_subfolder:",
+        "signatures": {},
+        "detailedLines": [
+          {
+            "text": "# Properties for path management",
+            "lineNumber": 206
+          },
+          {
+            "text": "class BST_PathProperties(PropertyGroup):",
+            "lineNumber": 207,
+            "isSignature": true
+          },
+          {
+            "text": "    # Active image pointer",
+            "lineNumber": 208,
+            "isSignature": true
+          },
+          {
+            "text": "    active_image: PointerProperty(",
+            "lineNumber": 209
+          },
+          {
+            "text": "        name=\"Image\",",
+            "lineNumber": 210
+          },
+          {
+            "text": "        type=bpy.types.Image",
+            "lineNumber": 211
+          },
+          {
+            "text": "    ) # type: ignore",
+            "lineNumber": 212
+          },
+          {
+            "text": "    ",
+            "lineNumber": 213
+          },
+          {
+            "text": "    show_bulk_operations: BoolProperty(",
+            "lineNumber": 214
+          },
+          {
+            "text": "        name=\"Show Bulk Operations\",",
+            "lineNumber": 215
+          },
+          {
+            "text": "        description=\"Expand to show bulk operations interface\",",
+            "lineNumber": 216
+          },
+          {
+            "text": "        default=False",
+            "lineNumber": 217
+          },
+          {
+            "text": "    ) # type: ignore",
+            "lineNumber": 218
+          },
+          {
+            "text": "    ",
+            "lineNumber": 219
+          },
+          {
+            "text": "    # Properties for inline editing",
+            "lineNumber": 220
+          },
+          {
+            "text": "    edit_filepath: BoolProperty(",
+            "lineNumber": 221
+          },
+          {
+            "text": "        name=\"Edit Path\",",
+            "lineNumber": 222
+          },
+          {
+            "text": "        description=\"Toggle editing mode for filepath\",",
+            "lineNumber": 223
+          },
+          {
+            "text": "        default=False",
+            "lineNumber": 224
+          },
+          {
+            "text": "    ) # type: ignore",
+            "lineNumber": 225
+          },
+          {
+            "text": "    ",
+            "lineNumber": 226
+          },
+          {
+            "text": "    edit_filepath_raw: BoolProperty(",
+            "lineNumber": 227
+          },
+          {
+            "text": "        name=\"Edit Raw Path\",",
+            "lineNumber": 228
+          },
+          {
+            "text": "        description=\"Toggle editing mode for filepath_raw\",",
+            "lineNumber": 229
+          },
+          {
+            "text": "        default=False",
+            "lineNumber": 230
+          },
+          {
+            "text": "    ) # type: ignore",
+            "lineNumber": 231
+          },
+          {
+            "text": "    ",
+            "lineNumber": 232
+          },
+          {
+            "text": "    temp_filepath: StringProperty(",
+            "lineNumber": 233
+          },
+          {
+            "text": "        name=\"Temporary Path\",",
+            "lineNumber": 234
+          },
+          {
+            "text": "        description=\"Temporary storage for editing filepath\",",
+            "lineNumber": 235
+          },
+          {
+            "text": "        default=\"//textures\",",
+            "lineNumber": 236
+          },
+          {
+            "text": "        subtype='FILE_PATH'",
+            "lineNumber": 237
+          },
+          {
+            "text": "    ) # type: ignore",
+            "lineNumber": 238
+          },
+          {
+            "text": "    ",
+            "lineNumber": 239
+          },
+          {
+            "text": "    temp_filepath_raw: StringProperty(",
+            "lineNumber": 240
+          },
+          {
+            "text": "        name=\"Temporary Raw Path\",",
+            "lineNumber": 241
+          },
+          {
+            "text": "        description=\"Temporary storage for editing filepath_raw\",",
+            "lineNumber": 242
+          },
+          {
+            "text": "        default=\"//textures\",",
+            "lineNumber": 243
+          },
+          {
+            "text": "        subtype='FILE_PATH'",
+            "lineNumber": 244
+          },
+          {
+            "text": "    ) # type: ignore",
+            "lineNumber": 245
+          },
+          {
+            "lineNumber": 246
+          },
+          {
+            "text": "    # Track last selected image for shift+click behavior",
+            "lineNumber": 247
+          },
+          {
+            "text": "    last_selected_image: StringProperty(",
+            "lineNumber": 248
+          },
+          {
+            "text": "        name=\"Last Selected Image\",",
+            "lineNumber": 249
+          },
+          {
+            "text": "        description=\"Name of the last selected image for shift+click behavior\",",
+            "lineNumber": 250
+          },
+          {
+            "text": "        default=\"\"",
+            "lineNumber": 251
+          },
+          {
+            "text": "    ) # type: ignore",
+            "lineNumber": 252
+          },
+          {
+            "text": "    ",
+            "lineNumber": 253
+          },
+          {
+            "text": "    # Whether to sort by selected in the UI",
+            "lineNumber": 254
+          },
+          {
+            "text": "    sort_by_selected: BoolProperty(",
+            "lineNumber": 255
+          },
+          {
+            "text": "        name=\"Sort by Selected\",",
+            "lineNumber": 256
+          },
+          {
+            "text": "        description=\"Show selected images at the top of the list\",",
+            "lineNumber": 257
+          },
+          {
+            "text": "        default=True",
+            "lineNumber": 258
+          },
+          {
+            "text": "    ) # type: ignore",
+            "lineNumber": 259
+          },
+          {
+            "text": "    ",
+            "lineNumber": 260
+          },
+          {
+            "text": "    # Smart pathing properties",
+            "lineNumber": 261
+          },
+          {
+            "text": "    smart_base_path: StringProperty(",
+            "lineNumber": 262
+          },
+          {
+            "text": "        name=\"Base Path\",",
+            "lineNumber": 263
+          },
+          {
+            "text": "        description=\"Base path for image textures\",",
+            "lineNumber": 264
+          },
+          {
+            "text": "        default=\"//textures/\",",
+            "lineNumber": 265
+          },
+          {
+            "text": "        subtype='DIR_PATH'",
+            "lineNumber": 266
+          },
+          {
+            "text": "    ) # type: ignore",
+            "lineNumber": 267
+          },
+          {
+            "text": "    ",
+            "lineNumber": 268
+          },
+          {
+            "text": "    use_blend_subfolder:",
+            "lineNumber": 269
+          }
+        ]
+      },
+      "score": 0.2871302366256714
+    },
+    {
+      "codeBlock": {
+        "relativeWorkspacePath": ".\\panels\\bulk_data_remap.py",
+        "range": {
+          "startPosition": {
+            "line": 568,
+            "column": 40
+          },
+          "endPosition": {
+            "line": 637
+          }
+        },
+        "contents": "class DATAREMAP_OT_RemapData(bpy.types.Operator):\n    \"\"\"Remap redundant data blocks to reduce duplicates\"\"\"\n    bl_idname = \"bst.bulk_data_remap\"\n    bl_label = \"Remap Data\"\n    bl_options = {'REGISTER', 'UNDO'}\n    \n    def execute(self, context):\n        # Get settings from scene properties\n        remap_images = context.scene.dataremap_images\n        remap_materials = context.scene.dataremap_materials\n        remap_fonts = context.scene.dataremap_fonts\n        remap_worlds = context.scene.dataremap_worlds\n        \n        # Count duplicates before remapping (only for local datablocks)\n        image_groups = find_data_groups(bpy.data.images) if remap_images else {}\n        material_groups = find_data_groups(bpy.data.materials) if remap_materials else {}\n        font_groups = find_data_groups(bpy.data.fonts) if remap_fonts else {}\n        world_groups = find_data_groups(bpy.data.worlds) if remap_worlds else {}\n        \n        total_duplicates = sum(len(group) - 1 for groups in [image_groups, material_groups, font_groups, world_groups] for group in groups.values())\n        \n        # Count data blocks with numbered suffixes (only for local datablocks)\n        total_numbered = 0\n        if remap_images:\n            total_numbered += sum(1 for img in bpy.data.images \n                                if img.users &gt; 0 \n                                and not (hasattr(img, 'library') and img.library is not None)\n                                and get_base_name(img.name) != img.name)\n        if remap_materials:\n            total_numbered += sum(1 for mat in bpy.data.materials \n                                if mat.users &gt; 0 \n                                and not (hasattr(mat, 'library') and mat.library is not None)\n                                and get_base_name(mat.name) != mat.name)\n        if remap_fonts:\n            total_numbered +=",
+        "signatures": {},
+        "detailedLines": [
+          {
+            "text": "class DATAREMAP_OT_RemapData(bpy.types.Operator):",
+            "lineNumber": 571,
+            "isSignature": true
+          },
+          {
+            "text": "    \"\"\"Remap redundant data blocks to reduce duplicates\"\"\"",
+            "lineNumber": 572
+          },
+          {
+            "text": "    bl_idname = \"bst.bulk_data_remap\"",
+            "lineNumber": 573
+          },
+          {
+            "text": "    bl_label = \"Remap Data\"",
+            "lineNumber": 574
+          },
+          {
+            "text": "    bl_options = {'REGISTER', 'UNDO'}",
+            "lineNumber": 575
+          },
+          {
+            "text": "    ",
+            "lineNumber": 576
+          },
+          {
+            "text": "    def execute(self, context):",
+            "lineNumber": 577
+          },
+          {
+            "text": "        # Get settings from scene properties",
+            "lineNumber": 578
+          },
+          {
+            "text": "        remap_images = context.scene.dataremap_images",
+            "lineNumber": 579
+          },
+          {
+            "text": "        remap_materials = context.scene.dataremap_materials",
+            "lineNumber": 580
+          },
+          {
+            "text": "        remap_fonts = context.scene.dataremap_fonts",
+            "lineNumber": 581
+          },
+          {
+            "text": "        remap_worlds = context.scene.dataremap_worlds",
+            "lineNumber": 582
+          },
+          {
+            "text": "        ",
+            "lineNumber": 583
+          },
+          {
+            "text": "        # Count duplicates before remapping (only for local datablocks)",
+            "lineNumber": 584
+          },
+          {
+            "text": "        image_groups = find_data_groups(bpy.data.images) if remap_images else {}",
+            "lineNumber": 585
+          },
+          {
+            "text": "        material_groups = find_data_groups(bpy.data.materials) if remap_materials else {}",
+            "lineNumber": 586
+          },
+          {
+            "text": "        font_groups = find_data_groups(bpy.data.fonts) if remap_fonts else {}",
+            "lineNumber": 587
+          },
+          {
+            "text": "        world_groups = find_data_groups(bpy.data.worlds) if remap_worlds else {}",
+            "lineNumber": 588
+          },
+          {
+            "text": "        ",
+            "lineNumber": 589
+          },
+          {
+            "text": "        total_duplicates = sum(len(group) - 1 for groups in [image_groups, material_groups, font_groups, world_groups] for group in groups.values())",
+            "lineNumber": 590
+          },
+          {
+            "text": "        ",
+            "lineNumber": 591
+          },
+          {
+            "text": "        # Count data blocks with numbered suffixes (only for local datablocks)",
+            "lineNumber": 592
+          },
+          {
+            "text": "        total_numbered = 0",
+            "lineNumber": 593
+          },
+          {
+            "text": "        if remap_images:",
+            "lineNumber": 594
+          },
+          {
+            "text": "            total_numbered += sum(1 for img in bpy.data.images ",
+            "lineNumber": 595
+          },
+          {
+            "text": "                                if img.users &gt; 0 ",
+            "lineNumber": 596
+          },
+          {
+            "text": "                                and not (hasattr(img, 'library') and img.library is not None)",
+            "lineNumber": 597
+          },
+          {
+            "text": "                                and get_base_name(img.name) != img.name)",
+            "lineNumber": 598
+          },
+          {
+            "text": "        if remap_materials:",
+            "lineNumber": 599
+          },
+          {
+            "text": "            total_numbered += sum(1 for mat in bpy.data.materials ",
+            "lineNumber": 600
+          },
+          {
+            "text": "                                if mat.users &gt; 0 ",
+            "lineNumber": 601
+          },
+          {
+            "text": "                                and not (hasattr(mat, 'library') and mat.library is not None)",
+            "lineNumber": 602
+          },
+          {
+            "text": "                                and get_base_name(mat.name) != mat.name)",
+            "lineNumber": 603
+          },
+          {
+            "text": "        if remap_fonts:",
+            "lineNumber": 604
+          },
+          {
+            "text": "            total_numbered +=",
+            "lineNumber": 605
+          }
+        ]
+      },
+      "score": 0.2839463949203491
+    },
+    {
+      "codeBlock": {
+        "relativeWorkspacePath": ".\\panels\\bulk_data_remap.py",
+        "range": {
+          "startPosition": {
+            "line": 992
+          },
+          "endPosition": {
+            "line": 1254
+          }
+        },
+        "contents": "class VIEW3D_PT_BulkDataRemap(bpy.types.Panel):\ndef draw(self, context):\n\n        \n        # Show image duplicates if enabled\n        if context.scene.show_image_duplicates and image_duplicates &gt; 0 and context.scene.dataremap_images:\n            draw_data_duplicates(col, context, \"images\", image_groups)\n        \n        # Materials\n        row = col.row()\n        split = row.split(factor=0.6)\n        sub_row = split.row()\n        \n        # Use depress parameter to show button as pressed when active\n        op = sub_row.operator(\"bst.toggle_data_type\", text=\"\", icon='MATERIAL', depress=context.scene.dataremap_materials)\n        op.data_type = \"materials\"\n        \n        # Use different text color based on activation\n        if context.scene.dataremap_materials:\n            sub_row.label(text=\"Materials\")\n        else:\n            # Create a row with a different color for inactive text\n            sub_row.label(text=\"Materials\", icon='RADIOBUT_OFF')\n        \n        sub_row = split.row()\n        if material_duplicates &gt; 0:\n            sub_row.prop(context.scene, \"show_material_duplicates\", \n                         text=f\"{material_duplicates} duplicates\", \n                         icon='DISCLOSURE_TRI_DOWN' if context.scene.show_material_duplicates else 'DISCLOSURE_TRI_RIGHT',\n                         emboss=False)\n        elif material_numbered &gt; 0:\n            sub_row.label(text=f\"{material_numbered} numbered\")\n        else:\n            sub_row.label(text=\"0 duplicates\")\n        \n        # Show material duplicates if enabled\n        if context.scene.show_material_duplicates and material_duplicates &gt; 0 and context.scene.dataremap_materials:\n            draw_data_duplicates(col, context, \"materials\", material_groups)\n        \n        # Fonts\n        row = col.row()\n        split = row.split(factor=0.6)\n        sub_row = split.row()\n        \n        # Use depress parameter to show button as pressed when active\n        op = sub_row.operator(\"bst.toggle_data_type\", text=\"\", icon='FONT_DATA', depress=context.scene.dataremap_fonts)\n        op.data_type = \"fonts\"\n        \n        # Use different text color based on activation\n        if",
+        "signatures": {
+          "ranges": [
+            {
+              "startPosition": {
+                "line": 993,
+                "column": 1
+              },
+              "endPosition": {
+                "line": 994,
+                "column": 5
+              }
+            },
+            {
+              "startPosition": {
+                "line": 1003,
+                "column": 5
+              },
+              "endPosition": {
+                "line": 1004,
+                "column": 9
+              }
+            }
+          ]
+        },
+        "detailedLines": [
+          {
+            "text": "class VIEW3D_PT_BulkDataRemap(bpy.types.Panel):",
+            "lineNumber": 993,
+            "isSignature": true
+          },
+          {
+            "text": "def draw(self, context):",
+            "lineNumber": 1003
+          },
+          {
+            "lineNumber": 1108
+          },
+          {
+            "text": "        ",
+            "lineNumber": 1109
+          },
+          {
+            "text": "        # Show image duplicates if enabled",
+            "lineNumber": 1110
+          },
+          {
+            "text": "        if context.scene.show_image_duplicates and image_duplicates &gt; 0 and context.scene.dataremap_images:",
+            "lineNumber": 1111
+          },
+          {
+            "text": "            draw_data_duplicates(col, context, \"images\", image_groups)",
+            "lineNumber": 1112
+          },
+          {
+            "text": "        ",
+            "lineNumber": 1113
+          },
+          {
+            "text": "        # Materials",
+            "lineNumber": 1114
+          },
+          {
+            "text": "        row = col.row()",
+            "lineNumber": 1115
+          },
+          {
+            "text": "        split = row.split(factor=0.6)",
+            "lineNumber": 1116
+          },
+          {
+            "text": "        sub_row = split.row()",
+            "lineNumber": 1117
+          },
+          {
+            "text": "        ",
+            "lineNumber": 1118
+          },
+          {
+            "text": "        # Use depress parameter to show button as pressed when active",
+            "lineNumber": 1119
+          },
+          {
+            "text": "        op = sub_row.operator(\"bst.toggle_data_type\", text=\"\", icon='MATERIAL', depress=context.scene.dataremap_materials)",
+            "lineNumber": 1120
+          },
+          {
+            "text": "        op.data_type = \"materials\"",
+            "lineNumber": 1121
+          },
+          {
+            "text": "        ",
+            "lineNumber": 1122
+          },
+          {
+            "text": "        # Use different text color based on activation",
+            "lineNumber": 1123
+          },
+          {
+            "text": "        if context.scene.dataremap_materials:",
+            "lineNumber": 1124
+          },
+          {
+            "text": "            sub_row.label(text=\"Materials\")",
+            "lineNumber": 1125
+          },
+          {
+            "text": "        else:",
+            "lineNumber": 1126
+          },
+          {
+            "text": "            # Create a row with a different color for inactive text",
+            "lineNumber": 1127
+          },
+          {
+            "text": "            sub_row.label(text=\"Materials\", icon='RADIOBUT_OFF')",
+            "lineNumber": 1128
+          },
+          {
+            "text": "        ",
+            "lineNumber": 1129
+          },
+          {
+            "text": "        sub_row = split.row()",
+            "lineNumber": 1130
+          },
+          {
+            "text": "        if material_duplicates &gt; 0:",
+            "lineNumber": 1131
+          },
+          {
+            "text": "            sub_row.prop(context.scene, \"show_material_duplicates\", ",
+            "lineNumber": 1132
+          },
+          {
+            "text": "                         text=f\"{material_duplicates} duplicates\", ",
+            "lineNumber": 1133
+          },
+          {
+            "text": "                         icon='DISCLOSURE_TRI_DOWN' if context.scene.show_material_duplicates else 'DISCLOSURE_TRI_RIGHT',",
+            "lineNumber": 1134
+          },
+          {
+            "text": "                         emboss=False)",
+            "lineNumber": 1135
+          },
+          {
+            "text": "        elif material_numbered &gt; 0:",
+            "lineNumber": 1136
+          },
+          {
+            "text": "            sub_row.label(text=f\"{material_numbered} numbered\")",
+            "lineNumber": 1137
+          },
+          {
+            "text": "        else:",
+            "lineNumber": 1138
+          },
+          {
+            "text": "            sub_row.label(text=\"0 duplicates\")",
+            "lineNumber": 1139
+          },
+          {
+            "text": "        ",
+            "lineNumber": 1140
+          },
+          {
+            "text": "        # Show material duplicates if enabled",
+            "lineNumber": 1141
+          },
+          {
+            "text": "        if context.scene.show_material_duplicates and material_duplicates &gt; 0 and context.scene.dataremap_materials:",
+            "lineNumber": 1142
+          },
+          {
+            "text": "            draw_data_duplicates(col, context, \"materials\", material_groups)",
+            "lineNumber": 1143
+          },
+          {
+            "text": "        ",
+            "lineNumber": 1144
+          },
+          {
+            "text": "        # Fonts",
+            "lineNumber": 1145
+          },
+          {
+            "text": "        row = col.row()",
+            "lineNumber": 1146
+          },
+          {
+            "text": "        split = row.split(factor=0.6)",
+            "lineNumber": 1147
+          },
+          {
+            "text": "        sub_row = split.row()",
+            "lineNumber": 1148
+          },
+          {
+            "text": "        ",
+            "lineNumber": 1149
+          },
+          {
+            "text": "        # Use depress parameter to show button as pressed when active",
+            "lineNumber": 1150
+          },
+          {
+            "text": "        op = sub_row.operator(\"bst.toggle_data_type\", text=\"\", icon='FONT_DATA', depress=context.scene.dataremap_fonts)",
+            "lineNumber": 1151
+          },
+          {
+            "text": "        op.data_type = \"fonts\"",
+            "lineNumber": 1152
+          },
+          {
+            "text": "        ",
+            "lineNumber": 1153
+          },
+          {
+            "text": "        # Use different text color based on activation",
+            "lineNumber": 1154
+          },
+          {
+            "text": "        if",
+            "lineNumber": 1155
+          }
+        ]
+      },
+      "score": 0.28275561332702637
+    },
+    {
+      "codeBlock": {
+        "relativeWorkspacePath": ".\\panels\\bulk_path_management.py",
+        "range": {
+          "startPosition": {
+            "line": 1428
+          },
+          "endPosition": {
+            "line": 1624
+          }
+        },
+        "contents": "class NODE_PT_bulk_path_tools(Panel):\ndef draw(self, context):\n icon='TRASH')\n        split.operator(\"bst.remove_extensions\", text=\"Remove Ext\", icon='X')\n        \n        # Make paths relative/absolute split\n        split = col.split(factor=0.5, align=True)\n        split.operator(\"bst.make_paths_relative\", text=\"Make Relative\", icon='FILE_FOLDER')\n        split.operator(\"bst.make_paths_absolute\", text=\"Make Absolute\", icon='FILE_FOLDER')\n\n        # Flat color renaming (full width)\n        col.operator(\"bst.rename_flat_colors\", text=\"Rename Flat Colors\", icon='COLOR')\n        \n        # Save images (full width)\n        col.operator(\"bst.save_all_images\", text=\"Save All\", icon='EXPORT')\n        \n        # Path Settings UI\n        box.separator()\n        \n        # Base path\n        row = box.row(align=True)\n        row.prop(path_props, \"smart_base_path\", text=\"Base Path\")\n        \n        # Blend subfolder\n        row = box.row()\n        subrow = row.row()\n        subrow.prop(path_props, \"use_blend_subfolder\", text=\"\")\n        subrow = row.row()\n        subrow.enabled = path_props.use_blend_subfolder\n        subrow.prop(path_props, \"blend_subfolder\", text=\"Blend Subfolder\")\n        reuse_blend = subrow.operator(\"bst.reuse_blend_name\", text=\"\", icon='FILE_REFRESH')\n        \n        # Material subfolder\n        row = box.row()\n        subrow = row.row()\n        subrow.prop(path_props, \"use_material_subfolder\", text=\"\")\n        subrow = row.row()\n        subrow.enabled = path_props.use_material_subfolder\n        subrow.prop(path_props, \"material_subfolder\", text=\"Material Subfolder\")\n        reuse_material = subrow.operator(\"bst.reuse_material_path\", text=\"\", icon='FILE_REFRESH')\n        \n        # Example path\n        example_path = get_combined_path(context, \"texture_name\", \".png\")\n        row = box.row()\n        row.alignment = 'RIGHT'\n        row.label(text=f\"Preview: {example_path}\")\n        \n        # Remap selected button - placed right under the preview\n        any_selected = any(hasattr(img, \"bst_selected\") and img.bst_selected for img in bpy.data.images)\n        row = box.row()\n        row.enabled = any_selected",
+        "signatures": {
+          "ranges": [
+            {
+              "startPosition": {
+                "line": 1429,
+                "column": 1
+              },
+              "endPosition": {
+                "line": 1430,
+                "column": 5
+              }
+            },
+            {
+              "startPosition": {
+                "line": 1441,
+                "column": 5
+              },
+              "endPosition": {
+                "line": 1442,
+                "column": 9
+              }
+            }
+          ]
+        },
+        "detailedLines": [
+          {
+            "text": "class NODE_PT_bulk_path_tools(Panel):",
+            "lineNumber": 1429,
+            "isSignature": true
+          },
+          {
+            "text": "def draw(self, context):",
+            "lineNumber": 1441
+          },
+          {
+            "text": " icon='TRASH')",
+            "lineNumber": 1483
+          },
+          {
+            "text": "        split.operator(\"bst.remove_extensions\", text=\"Remove Ext\", icon='X')",
+            "lineNumber": 1484
+          },
+          {
+            "text": "        ",
+            "lineNumber": 1485
+          },
+          {
+            "text": "        # Make paths relative/absolute split",
+            "lineNumber": 1486
+          },
+          {
+            "text": "        split = col.split(factor=0.5, align=True)",
+            "lineNumber": 1487
+          },
+          {
+            "text": "        split.operator(\"bst.make_paths_relative\", text=\"Make Relative\", icon='FILE_FOLDER')",
+            "lineNumber": 1488
+          },
+          {
+            "text": "        split.operator(\"bst.make_paths_absolute\", text=\"Make Absolute\", icon='FILE_FOLDER')",
+            "lineNumber": 1489
+          },
+          {
+            "lineNumber": 1490
+          },
+          {
+            "text": "        # Flat color renaming (full width)",
+            "lineNumber": 1491
+          },
+          {
+            "text": "        col.operator(\"bst.rename_flat_colors\", text=\"Rename Flat Colors\", icon='COLOR')",
+            "lineNumber": 1492
+          },
+          {
+            "text": "        ",
+            "lineNumber": 1493
+          },
+          {
+            "text": "        # Save images (full width)",
+            "lineNumber": 1494
+          },
+          {
+            "text": "        col.operator(\"bst.save_all_images\", text=\"Save All\", icon='EXPORT')",
+            "lineNumber": 1495
+          },
+          {
+            "text": "        ",
+            "lineNumber": 1496
+          },
+          {
+            "text": "        # Path Settings UI",
+            "lineNumber": 1497
+          },
+          {
+            "text": "        box.separator()",
+            "lineNumber": 1498
+          },
+          {
+            "text": "        ",
+            "lineNumber": 1499
+          },
+          {
+            "text": "        # Base path",
+            "lineNumber": 1500
+          },
+          {
+            "text": "        row = box.row(align=True)",
+            "lineNumber": 1501
+          },
+          {
+            "text": "        row.prop(path_props, \"smart_base_path\", text=\"Base Path\")",
+            "lineNumber": 1502
+          },
+          {
+            "text": "        ",
+            "lineNumber": 1503
+          },
+          {
+            "text": "        # Blend subfolder",
+            "lineNumber": 1504
+          },
+          {
+            "text": "        row = box.row()",
+            "lineNumber": 1505
+          },
+          {
+            "text": "        subrow = row.row()",
+            "lineNumber": 1506
+          },
+          {
+            "text": "        subrow.prop(path_props, \"use_blend_subfolder\", text=\"\")",
+            "lineNumber": 1507
+          },
+          {
+            "text": "        subrow = row.row()",
+            "lineNumber": 1508
+          },
+          {
+            "text": "        subrow.enabled = path_props.use_blend_subfolder",
+            "lineNumber": 1509
+          },
+          {
+            "text": "        subrow.prop(path_props, \"blend_subfolder\", text=\"Blend Subfolder\")",
+            "lineNumber": 1510
+          },
+          {
+            "text": "        reuse_blend = subrow.operator(\"bst.reuse_blend_name\", text=\"\", icon='FILE_REFRESH')",
+            "lineNumber": 1511
+          },
+          {
+            "text": "        ",
+            "lineNumber": 1512
+          },
+          {
+            "text": "        # Material subfolder",
+            "lineNumber": 1513
+          },
+          {
+            "text": "        row = box.row()",
+            "lineNumber": 1514
+          },
+          {
+            "text": "        subrow = row.row()",
+            "lineNumber": 1515
+          },
+          {
+            "text": "        subrow.prop(path_props, \"use_material_subfolder\", text=\"\")",
+            "lineNumber": 1516
+          },
+          {
+            "text": "        subrow = row.row()",
+            "lineNumber": 1517
+          },
+          {
+            "text": "        subrow.enabled = path_props.use_material_subfolder",
+            "lineNumber": 1518
+          },
+          {
+            "text": "        subrow.prop(path_props, \"material_subfolder\", text=\"Material Subfolder\")",
+            "lineNumber": 1519
+          },
+          {
+            "text": "        reuse_material = subrow.operator(\"bst.reuse_material_path\", text=\"\", icon='FILE_REFRESH')",
+            "lineNumber": 1520
+          },
+          {
+            "text": "        ",
+            "lineNumber": 1521
+          },
+          {
+            "text": "        # Example path",
+            "lineNumber": 1522
+          },
+          {
+            "text": "        example_path = get_combined_path(context, \"texture_name\", \".png\")",
+            "lineNumber": 1523
+          },
+          {
+            "text": "        row = box.row()",
+            "lineNumber": 1524
+          },
+          {
+            "text": "        row.alignment = 'RIGHT'",
+            "lineNumber": 1525
+          },
+          {
+            "text": "        row.label(text=f\"Preview: {example_path}\")",
+            "lineNumber": 1526
+          },
+          {
+            "text": "        ",
+            "lineNumber": 1527
+          },
+          {
+            "text": "        # Remap selected button - placed right under the preview",
+            "lineNumber": 1528
+          },
+          {
+            "text": "        any_selected = any(hasattr(img, \"bst_selected\") and img.bst_selected for img in bpy.data.images)",
+            "lineNumber": 1529
+          },
+          {
+            "text": "        row = box.row()",
+            "lineNumber": 1530
+          },
+          {
+            "text": "        row.enabled = any_selected",
+            "lineNumber": 1531
+          }
+        ]
+      },
+      "score": 0.28148460388183594
+    },
+    {
+      "codeBlock": {
+        "relativeWorkspacePath": ".\\panels\\bulk_data_remap.py",
+        "range": {
+          "startPosition": {
+            "line": 843,
+            "column": 27
+          },
+          "endPosition": {
+            "line": 990
+          }
+        },
+        "contents": "# Add a custom draw function for checkboxes that supports drag selection\ndef draw_drag_selectable_checkbox(layout, context, data_type, group_key):\n    \"\"\"Draw a checkbox that supports drag selection\"\"\"\n    # Create a unique key for this group\n    key = f\"{data_type}:{group_key}\"\n    \n    # Check if this group is excluded\n    is_excluded = key in context.scene.excluded_remap_groups\n    \n    # Draw the checkbox\n    op = layout.operator(\"bst.toggle_group_selection\", \n                         text=\"\", \n                         icon='CHECKBOX_HLT' if not is_excluded else 'CHECKBOX_DEHLT',\n                         emboss=False)\n    op.group_key = group_key\n    op.data_type = data_type\n\n# Update the UI code to use the custom draw function\ndef draw_data_duplicates(layout, context, data_type, data_groups):\n    \"\"\"",
+        "signatures": {},
+        "detailedLines": [
+          {
+            "text": "# Add a custom draw function for checkboxes that supports drag selection",
+            "lineNumber": 846
+          },
+          {
+            "text": "def draw_drag_selectable_checkbox(layout, context, data_type, group_key):",
+            "lineNumber": 847,
+            "isSignature": true
+          },
+          {
+            "text": "    \"\"\"Draw a checkbox that supports drag selection\"\"\"",
+            "lineNumber": 848
+          },
+          {
+            "text": "    # Create a unique key for this group",
+            "lineNumber": 849
+          },
+          {
+            "text": "    key = f\"{data_type}:{group_key}\"",
+            "lineNumber": 850
+          },
+          {
+            "text": "    ",
+            "lineNumber": 851
+          },
+          {
+            "text": "    # Check if this group is excluded",
+            "lineNumber": 852
+          },
+          {
+            "text": "    is_excluded = key in context.scene.excluded_remap_groups",
+            "lineNumber": 853
+          },
+          {
+            "text": "    ",
+            "lineNumber": 854
+          },
+          {
+            "text": "    # Draw the checkbox",
+            "lineNumber": 855
+          },
+          {
+            "text": "    op = layout.operator(\"bst.toggle_group_selection\", ",
+            "lineNumber": 856
+          },
+          {
+            "text": "                         text=\"\", ",
+            "lineNumber": 857
+          },
+          {
+            "text": "                         icon='CHECKBOX_HLT' if not is_excluded else 'CHECKBOX_DEHLT',",
+            "lineNumber": 858
+          },
+          {
+            "text": "                         emboss=False)",
+            "lineNumber": 859
+          },
+          {
+            "text": "    op.group_key = group_key",
+            "lineNumber": 860
+          },
+          {
+            "text": "    op.data_type = data_type",
+            "lineNumber": 861,
+            "isSignature": true
+          },
+          {
+            "lineNumber": 862
+          },
+          {
+            "text": "# Update the UI code to use the custom draw function",
+            "lineNumber": 863
+          },
+          {
+            "text": "def draw_data_duplicates(layout, context, data_type, data_groups):",
+            "lineNumber": 864,
+            "isSignature": true
+          },
+          {
+            "text": "    \"\"\"",
+            "lineNumber": 865
+          }
+        ]
+      },
+      "score": 0.28011274337768555
+    },
+    {
+      "codeBlock": {
+        "relativeWorkspacePath": ".\\panels\\bulk_path_management.py",
+        "range": {
+          "startPosition": {
+            "line": 1428
+          },
+          "endPosition": {
+            "line": 1624
+          }
+        },
+        "contents": "class NODE_PT_bulk_path_tools(Panel):\ndef draw(self, context):\n\n        \n        # Show bulk operations UI only when expanded\n        if path_props.show_bulk_operations:\n            # Select all row\n            row = box.row()\n            row.label(text=\"Select:\")\n            select_all = row.operator(\"bst.toggle_select_all\", text=\"All\")\n            select_all.select_state = True\n            deselect_all = row.operator(\"bst.toggle_select_all\", text=\"None\")\n            deselect_all.select_state = False\n            \n            # Node editor selection buttons\n            row = box.row(align=True)\n            row.operator(\"bst.select_material_images\", text=\"Material Images\")\n            row.operator(\"bst.select_active_images\", text=\"Active Images\")\n            row.operator(\"bst.select_absolute_images\", text=\"Absolute Images\", icon='FOLDER_REDIRECT')\n            \n            # Sorting option\n            row = box.row()\n            row.prop(path_props, \"sort_by_selected\", text=\"Sort by Selected\")\n\n            box.separator()\n            \n            # Image selection list with thumbnails\n            if",
+        "signatures": {
+          "ranges": [
+            {
+              "startPosition": {
+                "line": 1429,
+                "column": 1
+              },
+              "endPosition": {
+                "line": 1430,
+                "column": 5
+              }
+            },
+            {
+              "startPosition": {
+                "line": 1441,
+                "column": 5
+              },
+              "endPosition": {
+                "line": 1442,
+                "column": 9
+              }
+            }
+          ]
+        },
+        "detailedLines": [
+          {
+            "text": "class NODE_PT_bulk_path_tools(Panel):",
+            "lineNumber": 1429,
+            "isSignature": true
+          },
+          {
+            "text": "def draw(self, context):",
+            "lineNumber": 1441
+          },
+          {
+            "lineNumber": 1566
+          },
+          {
+            "text": "        ",
+            "lineNumber": 1567
+          },
+          {
+            "text": "        # Show bulk operations UI only when expanded",
+            "lineNumber": 1568
+          },
+          {
+            "text": "        if path_props.show_bulk_operations:",
+            "lineNumber": 1569
+          },
+          {
+            "text": "            # Select all row",
+            "lineNumber": 1570
+          },
+          {
+            "text": "            row = box.row()",
+            "lineNumber": 1571
+          },
+          {
+            "text": "            row.label(text=\"Select:\")",
+            "lineNumber": 1572
+          },
+          {
+            "text": "            select_all = row.operator(\"bst.toggle_select_all\", text=\"All\")",
+            "lineNumber": 1573
+          },
+          {
+            "text": "            select_all.select_state = True",
+            "lineNumber": 1574
+          },
+          {
+            "text": "            deselect_all = row.operator(\"bst.toggle_select_all\", text=\"None\")",
+            "lineNumber": 1575
+          },
+          {
+            "text": "            deselect_all.select_state = False",
+            "lineNumber": 1576
+          },
+          {
+            "text": "            ",
+            "lineNumber": 1577
+          },
+          {
+            "text": "            # Node editor selection buttons",
+            "lineNumber": 1578
+          },
+          {
+            "text": "            row = box.row(align=True)",
+            "lineNumber": 1579
+          },
+          {
+            "text": "            row.operator(\"bst.select_material_images\", text=\"Material Images\")",
+            "lineNumber": 1580
+          },
+          {
+            "text": "            row.operator(\"bst.select_active_images\", text=\"Active Images\")",
+            "lineNumber": 1581
+          },
+          {
+            "text": "            row.operator(\"bst.select_absolute_images\", text=\"Absolute Images\", icon='FOLDER_REDIRECT')",
+            "lineNumber": 1582
+          },
+          {
+            "text": "            ",
+            "lineNumber": 1583
+          },
+          {
+            "text": "            # Sorting option",
+            "lineNumber": 1584
+          },
+          {
+            "text": "            row = box.row()",
+            "lineNumber": 1585
+          },
+          {
+            "text": "            row.prop(path_props, \"sort_by_selected\", text=\"Sort by Selected\")",
+            "lineNumber": 1586
+          },
+          {
+            "lineNumber": 1587
+          },
+          {
+            "text": "            box.separator()",
+            "lineNumber": 1588
+          },
+          {
+            "text": "            ",
+            "lineNumber": 1589
+          },
+          {
+            "text": "            # Image selection list with thumbnails",
+            "lineNumber": 1590
+          },
+          {
+            "text": "            if",
+            "lineNumber": 1591
+          }
+        ]
+      },
+      "score": 0.274560809135437
+    },
+    {
+      "codeBlock": {
+        "relativeWorkspacePath": ".\\panels\\bulk_data_remap.py",
+        "range": {
+          "startPosition": {
+            "line": 992
+          },
+          "endPosition": {
+            "line": 1254
+          }
+        },
+        "contents": "class VIEW3D_PT_BulkDataRemap(bpy.types.Panel):\ndef draw(self, context):\n depress=context.scene.dataremap_fonts)\n        op.data_type = \"fonts\"\n        \n        # Use different text color based on activation\n        if context.scene.dataremap_fonts:\n            sub_row.label(text=\"Fonts\")\n        else:\n            # Create a row with a different color for inactive text\n            sub_row.label(text=\"Fonts\", icon='RADIOBUT_OFF')\n        \n        sub_row = split.row()\n        if font_duplicates &gt; 0:\n            sub_row.prop(context.scene, \"show_font_duplicates\", \n                         text=f\"{font_duplicates} duplicates\", \n                         icon='DISCLOSURE_TRI_DOWN' if context.scene.show_font_duplicates else 'DISCLOSURE_TRI_RIGHT',\n                         emboss=False)\n        elif font_numbered &gt; 0:\n            sub_row.label(text=f\"{font_numbered} numbered\")\n        else:\n            sub_row.label(text=\"0 duplicates\")\n        \n        # Show font duplicates if enabled\n        if context.scene.show_font_duplicates and font_duplicates &gt; 0 and context.scene.dataremap_fonts:\n            draw_data_duplicates(col, context, \"fonts\", font_groups)\n        \n        # World\n        row = col.row()\n        split = row.split(factor=0.6)\n        sub_row = split.row()\n        \n        # Use depress parameter to show button as pressed when active\n        op = sub_row.operator(\"bst.toggle_data_type\", text=\"\", icon='WORLD', depress=context.scene.dataremap_worlds)\n        op.data_type = \"worlds\"\n        \n        # Use different text color based on activation\n        if context.scene.dataremap_worlds:\n            sub_row.label(text=\"Worlds\")\n        else:\n            # Create a row with a different color for inactive text\n            sub_row.label(text=\"Worlds\", icon='RADIOBUT_OFF')\n        \n        sub_row = split.row()\n        if world_duplicates &gt; 0:\n            sub_row.prop(context.scene, \"show_world_duplicates\",",
+        "signatures": {
+          "ranges": [
+            {
+              "startPosition": {
+                "line": 993,
+                "column": 1
+              },
+              "endPosition": {
+                "line": 994,
+                "column": 5
+              }
+            },
+            {
+              "startPosition": {
+                "line": 1003,
+                "column": 5
+              },
+              "endPosition": {
+                "line": 1004,
+                "column": 9
+              }
+            }
+          ]
+        },
+        "detailedLines": [
+          {
+            "text": "class VIEW3D_PT_BulkDataRemap(bpy.types.Panel):",
+            "lineNumber": 993,
+            "isSignature": true
+          },
+          {
+            "text": "def draw(self, context):",
+            "lineNumber": 1003
+          },
+          {
+            "text": " depress=context.scene.dataremap_fonts)",
+            "lineNumber": 1151
+          },
+          {
+            "text": "        op.data_type = \"fonts\"",
+            "lineNumber": 1152
+          },
+          {
+            "text": "        ",
+            "lineNumber": 1153
+          },
+          {
+            "text": "        # Use different text color based on activation",
+            "lineNumber": 1154
+          },
+          {
+            "text": "        if context.scene.dataremap_fonts:",
+            "lineNumber": 1155
+          },
+          {
+            "text": "            sub_row.label(text=\"Fonts\")",
+            "lineNumber": 1156
+          },
+          {
+            "text": "        else:",
+            "lineNumber": 1157
+          },
+          {
+            "text": "            # Create a row with a different color for inactive text",
+            "lineNumber": 1158
+          },
+          {
+            "text": "            sub_row.label(text=\"Fonts\", icon='RADIOBUT_OFF')",
+            "lineNumber": 1159
+          },
+          {
+            "text": "        ",
+            "lineNumber": 1160
+          },
+          {
+            "text": "        sub_row = split.row()",
+            "lineNumber": 1161
+          },
+          {
+            "text": "        if font_duplicates &gt; 0:",
+            "lineNumber": 1162
+          },
+          {
+            "text": "            sub_row.prop(context.scene, \"show_font_duplicates\", ",
+            "lineNumber": 1163
+          },
+          {
+            "text": "                         text=f\"{font_duplicates} duplicates\", ",
+            "lineNumber": 1164
+          },
+          {
+            "text": "                         icon='DISCLOSURE_TRI_DOWN' if context.scene.show_font_duplicates else 'DISCLOSURE_TRI_RIGHT',",
+            "lineNumber": 1165
+          },
+          {
+            "text": "                         emboss=False)",
+            "lineNumber": 1166
+          },
+          {
+            "text": "        elif font_numbered &gt; 0:",
+            "lineNumber": 1167
+          },
+          {
+            "text": "            sub_row.label(text=f\"{font_numbered} numbered\")",
+            "lineNumber": 1168
+          },
+          {
+            "text": "        else:",
+            "lineNumber": 1169
+          },
+          {
+            "text": "            sub_row.label(text=\"0 duplicates\")",
+            "lineNumber": 1170
+          },
+          {
+            "text": "        ",
+            "lineNumber": 1171
+          },
+          {
+            "text": "        # Show font duplicates if enabled",
+            "lineNumber": 1172
+          },
+          {
+            "text": "        if context.scene.show_font_duplicates and font_duplicates &gt; 0 and context.scene.dataremap_fonts:",
+            "lineNumber": 1173
+          },
+          {
+            "text": "            draw_data_duplicates(col, context, \"fonts\", font_groups)",
+            "lineNumber": 1174
+          },
+          {
+            "text": "        ",
+            "lineNumber": 1175
+          },
+          {
+            "text": "        # World",
+            "lineNumber": 1176
+          },
+          {
+            "text": "        row = col.row()",
+            "lineNumber": 1177
+          },
+          {
+            "text": "        split = row.split(factor=0.6)",
+            "lineNumber": 1178
+          },
+          {
+            "text": "        sub_row = split.row()",
+            "lineNumber": 1179
+          },
+          {
+            "text": "        ",
+            "lineNumber": 1180
+          },
+          {
+            "text": "        # Use depress parameter to show button as pressed when active",
+            "lineNumber": 1181
+          },
+          {
+            "text": "        op = sub_row.operator(\"bst.toggle_data_type\", text=\"\", icon='WORLD', depress=context.scene.dataremap_worlds)",
+            "lineNumber": 1182
+          },
+          {
+            "text": "        op.data_type = \"worlds\"",
+            "lineNumber": 1183
+          },
+          {
+            "text": "        ",
+            "lineNumber": 1184
+          },
+          {
+            "text": "        # Use different text color based on activation",
+            "lineNumber": 1185
+          },
+          {
+            "text": "        if context.scene.dataremap_worlds:",
+            "lineNumber": 1186
+          },
+          {
+            "text": "            sub_row.label(text=\"Worlds\")",
+            "lineNumber": 1187
+          },
+          {
+            "text": "        else:",
+            "lineNumber": 1188
+          },
+          {
+            "text": "            # Create a row with a different color for inactive text",
+            "lineNumber": 1189
+          },
+          {
+            "text": "            sub_row.label(text=\"Worlds\", icon='RADIOBUT_OFF')",
+            "lineNumber": 1190
+          },
+          {
+            "text": "        ",
+            "lineNumber": 1191
+          },
+          {
+            "text": "        sub_row = split.row()",
+            "lineNumber": 1192
+          },
+          {
+            "text": "        if world_duplicates &gt; 0:",
+            "lineNumber": 1193
+          },
+          {
+            "text": "            sub_row.prop(context.scene, \"show_world_duplicates\",",
+            "lineNumber": 1194
+          }
+        ]
+      },
+      "score": 0.2727760970592499
+    },
+    {
+      "codeBlock": {
+        "relativeWorkspacePath": ".\\panels\\bulk_path_management.py",
+        "range": {
+          "startPosition": {
+            "line": 1639,
+            "column": 51
+          },
+          "endPosition": {
+            "line": 1695
+          }
+        },
+        "contents": "# Registration function for this module\nclasses = (\n    REMOVE_EXT_OT_summary_dialog,\n    BST_PathProperties,\n    BST_OT_remap_path,\n    BST_OT_toggle_select_all,\n    BST_OT_bulk_remap,\n    BST_OT_toggle_path_edit,\n    BST_OT_select_material_images,\n    BST_OT_select_active_images,\n    BST_OT_select_absolute_images,\n    BST_OT_rename_datablock,\n    BST_OT_toggle_image_selection,\n    BST_OT_reuse_material_path,\n    BST_OT_reuse_blend_name,\n    BST_OT_make_paths_relative,\n    BST_OT_make_paths_absolute,\n    BST_OT_pack_images,\n    BST_OT_unpack_images,\n    BST_OT_remove_packed_images,\n    BST_OT_save_all_images,\n    BST_OT_remove_extensions,\n    BST_OT_rename_flat_colors,\n    BST_OT_cancel_operation,\n    NODE_PT_bulk_path_tools,\n    VIEW3D_PT_bulk_path_subpanel,\n)\n\ndef register():\n    for cls in classes:\n        compat.safe_register_class(cls)\n    \n    # Register properties\n    bpy.types.Scene.bst_path_props = PointerProperty(type=BST_PathProperties)\n    \n    # Add custom property to images for selection\n    bpy.types.Image.bst_selected = BoolProperty(\n        name=\"Selected for Bulk Operations\",\n        default=False\n    )\n    \n    # For debugging only\n    print(\"Bulk Path Management registered successfully\")\n\ndef unregister():\n    # Remove custom property\n    if",
+        "signatures": {},
+        "detailedLines": [
+          {
+            "text": "# Registration function for this module",
+            "lineNumber": 1642
+          },
+          {
+            "text": "classes = (",
+            "lineNumber": 1643
+          },
+          {
+            "text": "    REMOVE_EXT_OT_summary_dialog,",
+            "lineNumber": 1644
+          },
+          {
+            "text": "    BST_PathProperties,",
+            "lineNumber": 1645
+          },
+          {
+            "text": "    BST_OT_remap_path,",
+            "lineNumber": 1646
+          },
+          {
+            "text": "    BST_OT_toggle_select_all,",
+            "lineNumber": 1647
+          },
+          {
+            "text": "    BST_OT_bulk_remap,",
+            "lineNumber": 1648
+          },
+          {
+            "text": "    BST_OT_toggle_path_edit,",
+            "lineNumber": 1649
+          },
+          {
+            "text": "    BST_OT_select_material_images,",
+            "lineNumber": 1650
+          },
+          {
+            "text": "    BST_OT_select_active_images,",
+            "lineNumber": 1651
+          },
+          {
+            "text": "    BST_OT_select_absolute_images,",
+            "lineNumber": 1652
+          },
+          {
+            "text": "    BST_OT_rename_datablock,",
+            "lineNumber": 1653
+          },
+          {
+            "text": "    BST_OT_toggle_image_selection,",
+            "lineNumber": 1654
+          },
+          {
+            "text": "    BST_OT_reuse_material_path,",
+            "lineNumber": 1655
+          },
+          {
+            "text": "    BST_OT_reuse_blend_name,",
+            "lineNumber": 1656
+          },
+          {
+            "text": "    BST_OT_make_paths_relative,",
+            "lineNumber": 1657
+          },
+          {
+            "text": "    BST_OT_make_paths_absolute,",
+            "lineNumber": 1658
+          },
+          {
+            "text": "    BST_OT_pack_images,",
+            "lineNumber": 1659
+          },
+          {
+            "text": "    BST_OT_unpack_images,",
+            "lineNumber": 1660
+          },
+          {
+            "text": "    BST_OT_remove_packed_images,",
+            "lineNumber": 1661
+          },
+          {
+            "text": "    BST_OT_save_all_images,",
+            "lineNumber": 1662
+          },
+          {
+            "text": "    BST_OT_remove_extensions,",
+            "lineNumber": 1663
+          },
+          {
+            "text": "    BST_OT_rename_flat_colors,",
+            "lineNumber": 1664
+          },
+          {
+            "text": "    BST_OT_cancel_operation,",
+            "lineNumber": 1665
+          },
+          {
+            "text": "    NODE_PT_bulk_path_tools,",
+            "lineNumber": 1666
+          },
+          {
+            "text": "    VIEW3D_PT_bulk_path_subpanel,",
+            "lineNumber": 1667
+          },
+          {
+            "text": ")",
+            "lineNumber": 1668
+          },
+          {
+            "lineNumber": 1669
+          },
+          {
+            "text": "def register():",
+            "lineNumber": 1670,
+            "isSignature": true
+          },
+          {
+            "text": "    for cls in classes:",
+            "lineNumber": 1671
+          },
+          {
+            "text": "        compat.safe_register_class(cls)",
+            "lineNumber": 1672
+          },
+          {
+            "text": "    ",
+            "lineNumber": 1673
+          },
+          {
+            "text": "    # Register properties",
+            "lineNumber": 1674
+          },
+          {
+            "text": "    bpy.types.Scene.bst_path_props = PointerProperty(type=BST_PathProperties)",
+            "lineNumber": 1675
+          },
+          {
+            "text": "    ",
+            "lineNumber": 1676
+          },
+          {
+            "text": "    # Add custom property to images for selection",
+            "lineNumber": 1677
+          },
+          {
+            "text": "    bpy.types.Image.bst_selected = BoolProperty(",
+            "lineNumber": 1678
+          },
+          {
+            "text": "        name=\"Selected for Bulk Operations\",",
+            "lineNumber": 1679
+          },
+          {
+            "text": "        default=False",
+            "lineNumber": 1680
+          },
+          {
+            "text": "    )",
+            "lineNumber": 1681
+          },
+          {
+            "text": "    ",
+            "lineNumber": 1682
+          },
+          {
+            "text": "    # For debugging only",
+            "lineNumber": 1683
+          },
+          {
+            "text": "    print(\"Bulk Path Management registered successfully\")",
+            "lineNumber": 1684,
+            "isSignature": true
+          },
+          {
+            "lineNumber": 1685
+          },
+          {
+            "text": "def unregister():",
+            "lineNumber": 1686,
+            "isSignature": true
+          },
+          {
+            "text": "    # Remove custom property",
+            "lineNumber": 1687,
+            "isSignature": true
+          },
+          {
+            "text": "    if",
+            "lineNumber": 1688
+          }
+        ]
+      },
+      "score": 0.2713637351989746
+    }
+  ]
+}
+```
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+
+
+
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_path_management.py</summary>
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_data_remap.py</summary>
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search">
+<details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+
+Parameters:
+
+```json
+{
+  "pattern": "StringProperty|search|filter",
+  "path": "panels",
+  "caseInsensitive": true
+}
+```
+Result:
+
+```json
+{
+  "success": {
+    "pattern": "StringProperty|search|filter",
+    "path": "panels",
+    "outputMode": "content",
+    "workspaceResults": {
+      "E:\\Rainys_Bulk_Scene_Tools": {
+        "content": {
+          "matches": [
+            {
+              "file": "panels/bulk_path_management.py",
+              "matches": [
+                {
+                  "lineNumber": 3,
+                  "content": "from bpy.props import StringProperty, BoolProperty, EnumProperty, PointerProperty, CollectionProperty # type: ignore"
+                },
+                {
+                  "lineNumber": 19,
+                  "content": "    removal_details: bpy.props.StringProperty(default=\"\")"
+                },
+                {
+                  "lineNumber": 233,
+                  "content": "    temp_filepath: StringProperty("
+                },
+                {
+                  "lineNumber": 240,
+                  "content": "    temp_filepath_raw: StringProperty("
+                },
+                {
+                  "lineNumber": 248,
+                  "content": "    last_selected_image: StringProperty("
+                },
+                {
+                  "lineNumber": 262,
+                  "content": "    smart_base_path: StringProperty("
+                },
+                {
+                  "lineNumber": 275,
+                  "content": "    blend_subfolder: StringProperty("
+                },
+                {
+                  "lineNumber": 288,
+                  "content": "    material_subfolder: StringProperty("
+                },
+                {
+                  "lineNumber": 305,
+                  "content": "    operation_status: bpy.props.StringProperty(  # type: ignore"
+                },
+                {
+                  "lineNumber": 330,
+                  "content": "    new_path: StringProperty("
+                },
+                {
+                  "lineNumber": 397,
+                  "content": "    source_dir: StringProperty("
+                },
+                {
+                  "lineNumber": 404,
+                  "content": "    target_dir: StringProperty("
+                },
+                {
+                  "lineNumber": 660,
+                  "content": "    old_name: StringProperty("
+                },
+                {
+                  "lineNumber": 666,
+                  "content": "    new_name: StringProperty("
+                },
+                {
+                  "lineNumber": 708,
+                  "content": "    image_name: StringProperty("
+                },
+                {
+                  "lineNumber": 1090,
+                  "content": "                match = re.search(pattern, img.name, re.IGNORECASE)"
+                }
+              ]
+            },
+            {
+              "file": "panels/bulk_viewport_display.py",
+              "matches": [
+                {
+                  "lineNumber": 877,
+                  "content": "    material_name: bpy.props.StringProperty(  # type: ignore"
+                },
+                {
+                  "lineNumber": 953,
+                  "content": "        # Filter out black pixels (background) by checking if R+G+B is very small"
+                }
+              ]
+            },
+            {
+              "file": "panels/bulk_data_remap.py",
+              "matches": [
+                {
+                  "lineNumber": 167,
+                  "content": "    # Filter out groups with only one item (no duplicates)"
+                },
+                {
+                  "lineNumber": 168,
+                  "content": "    # Also filter out groups where all items are linked"
+                },
+                {
+                  "lineNumber": 174,
+                  "content": "    # Filter out linked datablocks"
+                },
+                {
+                  "lineNumber": 662,
+                  "content": "    group_key: bpy.props.StringProperty(  # type: ignore"
+                },
+                {
+                  "lineNumber": 668,
+                  "content": "    data_type: bpy.props.StringProperty(  # type: ignore"
+                },
+                {
+                  "lineNumber": 696,
+                  "content": "    data_type: bpy.props.StringProperty(  # type: ignore"
+                },
+                {
+                  "lineNumber": 746,
+                  "content": "    group_key: bpy.props.StringProperty(  # type: ignore"
+                },
+                {
+                  "lineNumber": 752,
+                  "content": "    data_type: bpy.props.StringProperty(  # type: ignore"
+                },
+                {
+                  "lineNumber": 1264,
+                  "content": "    data_type: bpy.props.StringProperty(  # type: ignore"
+                },
+                {
+                  "lineNumber": 1289,
+                  "content": "    group_key: bpy.props.StringProperty(  # type: ignore"
+                },
+                {
+                  "lineNumber": 1295,
+                  "content": "    data_type: bpy.props.StringProperty(  # type: ignore"
+                },
+                {
+                  "lineNumber": 1335,
+                  "content": "    filepath: bpy.props.StringProperty(  # type: ignore"
+                },
+                {
+                  "lineNumber": 1364,
+                  "content": "    data_type: bpy.props.StringProperty(  # type: ignore"
+                },
+                {
+                  "lineNumber": 1370,
+                  "content": "    old_name: bpy.props.StringProperty(  # type: ignore"
+                },
+                {
+                  "lineNumber": 1376,
+                  "content": "    new_name: bpy.props.StringProperty(  # type: ignore"
+                }
+              ]
+            }
+          ],
+          "totalLines": 33,
+          "totalMatchedLines": 33
+        }
+      }
+    }
+  }
+}
+```
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+
+Clarifying a few details about the search functionality:
+
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="ask_question">
+<details>
+<summary>Tool use: **ask_question**</summary>
+
+
+Parameters:
+
+```json
+{
+  "questions": [
+    {
+      "id": "search_scope",
+      "prompt": "What should the search filter by?",
+      "options": [
+        {
+          "id": "name_only",
+          "label": "Datablock names only"
+        },
+        {
+          "id": "name_and_path",
+          "label": "Datablock names and file paths (for images)"
+        },
+        {
+          "id": "all_properties",
+          "label": "All searchable properties (names, paths, etc.)"
+        }
+      ]
+    },
+    {
+      "id": "search_behavior",
+      "prompt": "How should the search work?",
+      "options": [
+        {
+          "id": "filter_as_you_type",
+          "label": "Filter as you type (real-time filtering)"
+        },
+        {
+          "id": "case_insensitive",
+          "label": "Case-insensitive substring matching"
+        },
+        {
+          "id": "both",
+          "label": "Both: real-time filtering with case-insensitive matching"
+        }
+      ]
+    }
+  ]
+}
+```
+Additional data:
+
+```json
+{
+  "status": "submitted",
+  "currentSelections": {
+    "search_scope": [
+      "name_only"
+    ],
+    "search_behavior": [
+      "both"
+    ]
+  }
+}
+```
+Result:
+
+```json
+{
+  "answers": [
+    {
+      "questionId": "search_scope",
+      "selectedOptionIds": [
+        "name_only"
+      ]
+    },
+    {
+      "questionId": "search_behavior",
+      "selectedOptionIds": [
+        "both"
+      ]
+    }
+  ]
+}
+```
+User decision: **accepted**
+
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+
+Creating the plan:
+
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="create_plan">
+<details>
+<summary>Tool use: **create_plan**</summary>
+
+
+Parameters:
+
+```json
+{
+  "plan": "# Add Search to Datablock Browsers\n\n## Overview\nImplement issue #4: Add search functionality to filter datablocks in the PathMan (Bulk Path Management) and Data Remapper panels. The search will filter datablock names in real-time with case-insensitive matching.\n\n## Implementation Details\n\n### 1. Add Search Properties\n\n#### For Bulk Path Management (PathMan)\nAdd a search property to [&#96;BST_PathProperties&#96;](panels/bulk_path_management.py) class (around line 255):\n- Property name: &#96;search_filter&#96;\n- Type: &#96;StringProperty&#96;\n- Default: &#96;\"\"&#96;\n- Description: \"Filter images by name (case-insensitive)\"\n\n#### For Bulk Data Remap\nAdd search properties to scene properties in [&#96;bulk_data_remap.py&#96;](panels/bulk_data_remap.py) (in &#96;register_dataremap_properties()&#96; function, around line 93):\n- &#96;dataremap_search_images&#96;: StringProperty for filtering image groups\n- &#96;dataremap_search_materials&#96;: StringProperty for filtering material groups\n- &#96;dataremap_search_fonts&#96;: StringProperty for filtering font groups\n- &#96;dataremap_search_worlds&#96;: StringProperty for filtering world groups\n- All default to &#96;\"\"&#96; with description \"Filter {type} by name (case-insensitive)\"\n\n### 2. Add Search UI Elements\n\n#### PathMan Search Box\nIn [&#96;NODE_PT_bulk_path_tools.draw()&#96;](panels/bulk_path_management.py) method, add search box before the image list (around line 1588, before the image selection list):\n- Add a row with a search icon and text input field\n- Use &#96;layout.prop()&#96; to display the &#96;path_props.search_filter&#96; property\n- Place it in the Bulk Operations section, right before the image list\n- Icon: &#96;'VIEWZOOM'&#96; or &#96;'SEARCH'&#96;\n\n#### Data Remap Search Boxes\nIn [&#96;draw_data_duplicates()&#96;](panels/bulk_data_remap.py) function (around line 868, after the Select All/Deselect All row):\n- Add a search row with icon and text input\n- Use the appropriate search property based on &#96;data_type&#96; (e.g., &#96;dataremap_search_images&#96; for images)\n- Place it between the Select All row and the separator\n- Icon: &#96;'VIEWZOOM'&#96; or &#96;'SEARCH'&#96;\n\n### 3. Implement Filtering Logic\n\n#### PathMan Filtering\nIn [&#96;NODE_PT_bulk_path_tools.draw()&#96;](panels/bulk_path_management.py) method, modify the image iteration (around line 1591-1625):\n- After getting &#96;sorted_images&#96;, filter by &#96;path_props.search_filter&#96;\n- Filter condition: &#96;search_filter.lower() in img.name.lower()&#96; (case-insensitive)\n- Only show images that match the search filter (or all if filter is empty)\n\n#### Data Remap Filtering\nIn [&#96;draw_data_duplicates()&#96;](panels/bulk_data_remap.py) function, modify the group iteration (around line 907):\n- Before iterating &#96;group_items&#96;, filter based on the search property\n- Filter condition: Check if search string (case-insensitive) is in &#96;base_name&#96; or any item name in the group\n- Filter groups: &#96;[group for group in group_items if search_matches_group(group, search_string)]&#96;\n- Helper function: &#96;search_matches_group(group, search_string)&#96; - returns True if search string matches base_name or any item name (case-insensitive)\n\n### 4. Helper Function for Data Remap\nAdd a helper function in [&#96;bulk_data_remap.py&#96;](panels/bulk_data_remap.py) (around line 863, before &#96;draw_data_duplicates()&#96;):\n&#96;&#96;&#96;python\ndef search_matches_group(group, search_string):\n    \"\"\"Check if search string matches group base name or any item in group\"\"\"\n    if not search_string:\n        return True\n    search_lower = search_string.lower()\n    base_name, items = group\n    # Check base name\n    if search_lower in base_name.lower():\n        return True\n    # Check all item names in group\n    for item in items:\n        if search_lower in item.name.lower():\n            return True\n    return False\n&#96;&#96;&#96;\n\n## Files to Modify\n- [&#96;panels/bulk_path_management.py&#96;](panels/bulk_path_management.py) - Add search property, UI, and filtering logic\n- [&#96;panels/bulk_data_remap.py&#96;](panels/bulk_data_remap.py) - Add search properties, UI, filtering logic, and helper function\n\n## Implementation Notes\n- Search is case-insensitive and filters in real-time as the user types\n- Empty search string shows all items (no filtering)\n- Search filters by datablock names only (not file paths or other properties)\n- For Data Remap, a group is shown if the search matches either the base name or any item name in the group\n- The search UI should be visually consistent with Blender's standard search patterns (icon + text field)",
+  "name": "Add Search to Datablock Browsers",
+  "todos": [
+    {
+      "content": "Add search_filter StringProperty to BST_PathProperties class",
+      "status": "pending",
+      "id": "add_pathman_search_property"
+    },
+    {
+      "content": "Add search StringProperties for each data type (images, materials, fonts, worlds) in register_dataremap_properties()",
+      "status": "pending",
+      "id": "add_dataremap_search_properties"
+    },
+    {
+      "content": "Add search text input field in PathMan panel before the image list",
+      "status": "pending",
+      "id": "add_pathman_search_ui"
+    },
+    {
+      "content": "Add search text input fields in draw_data_duplicates() for each data type",
+      "status": "pending",
+      "id": "add_dataremap_search_ui"
+    },
+    {
+      "content": "Implement filtering logic in PathMan to filter images by search string",
+      "status": "pending",
+      "id": "implement_pathman_filtering"
+    },
+    {
+      "content": "Implement filtering logic in Data Remap with helper function to filter groups",
+      "status": "pending",
+      "id": "implement_dataremap_filtering"
+    },
+    {
+      "content": "Add search_matches_group() helper function for Data Remap filtering",
+      "status": "pending",
+      "id": "add_search_helper_function"
+    }
+  ],
+  "overview": "Add real-time search functionality to filter datablocks by name in both the Bulk Path Management panel (PathMan) and the Bulk Data Remap panel, with case-insensitive matching."
+}
+```
+Additional data:
+
+```json
+{
+  "reviewData": {
+    "status": "Requested",
+    "selectedOption": "none",
+    "isShowingInput": false
+  },
+  "planUri": "c:\\Users\\Nathan\\.cursor\\plans\\add_search_to_datablock_browsers_0a3bfb0f.plan.md",
+  "hasOpenedEditor": true
+}
+```
+Result:
+
+```json
+{
+  "rejected": {}
+}
+```
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+_**User**_
+
+Implement the plan as specified, it is attached for your reference. Do NOT edit the plan file itself.
+
+To-do's from the plan have already been created. Do not create them again. Mark them as in_progress as you work, starting with the first one. Don't stop until you have completed all the to-dos.
+
+---
+
+_**Agent (model default, mode Agent)**_
+
+
+Reviewing the relevant sections, then implementing the search functionality.
+
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_path_management.py</summary>
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_data_remap.py</summary>
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_path_management.py</summary>
+
+</details>
+</tool-use>
+
+---
+
+
+Implementing step by step, starting with the search properties:
+
+
+---
+
+<tool-use data-tool-type="task" data-tool-name="todo_write">
+<details><summary>Tool use: **todo_write** • Todo List</summary>
+
+- [-] Add search_filter StringProperty to BST_PathProperties class
+- [ ] Add search StringProperties for each data type (images, materials, fonts, worlds) in register_dataremap_properties()
+- [ ] Add search text input field in PathMan panel before the image list
+- [ ] Add search text input fields in draw_data_duplicates() for each data type
+- [ ] Implement filtering logic in PathMan to filter images by search string
+- [ ] Implement filtering logic in Data Remap with helper function to filter groups
+- [ ] Add search_matches_group() helper function for Data Remap filtering
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="edit_file_v2">
+<details>
+<summary>Tool use: **edit_file_v2**</summary>
+
+
+Parameters:
+
+```json
+{
+  "relativeWorkspacePath": "E:\\Rainys_Bulk_Scene_Tools\\panels\\bulk_path_management.py"
+}
+```
+Additional data:
+
+```json
+{
+  "codeblockId": "c1a652b7-a4f2-481d-a747-1dec7d75b0e0"
+}
+```
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="task" data-tool-name="todo_write">
+<details><summary>Tool use: **todo_write** • Todo List</summary>
+
+- [x] Add search_filter StringProperty to BST_PathProperties class
+- [-] Add search StringProperties for each data type (images, materials, fonts, worlds) in register_dataremap_properties()
+- [ ] Add search text input field in PathMan panel before the image list
+- [ ] Add search text input fields in draw_data_duplicates() for each data type
+- [ ] Implement filtering logic in PathMan to filter images by search string
+- [ ] Implement filtering logic in Data Remap with helper function to filter groups
+- [ ] Add search_matches_group() helper function for Data Remap filtering
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="edit_file_v2">
+<details>
+<summary>Tool use: **edit_file_v2**</summary>
+
+
+Parameters:
+
+```json
+{
+  "relativeWorkspacePath": "E:\\Rainys_Bulk_Scene_Tools\\panels\\bulk_data_remap.py"
+}
+```
+Additional data:
+
+```json
+{
+  "codeblockId": "454a7afa-295d-43ce-ae91-f6227d638e60"
+}
+```
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="task" data-tool-name="todo_write">
+<details><summary>Tool use: **todo_write** • Todo List</summary>
+
+- [x] Add search_filter StringProperty to BST_PathProperties class
+- [x] Add search StringProperties for each data type (images, materials, fonts, worlds) in register_dataremap_properties()
+- [ ] Add search text input field in PathMan panel before the image list
+- [ ] Add search text input fields in draw_data_duplicates() for each data type
+- [ ] Implement filtering logic in PathMan to filter images by search string
+- [ ] Implement filtering logic in Data Remap with helper function to filter groups
+- [-] Add search_matches_group() helper function for Data Remap filtering
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_data_remap.py</summary>
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="edit_file_v2">
+<details>
+<summary>Tool use: **edit_file_v2**</summary>
+
+
+Parameters:
+
+```json
+{
+  "relativeWorkspacePath": "E:\\Rainys_Bulk_Scene_Tools\\panels\\bulk_data_remap.py"
+}
+```
+Additional data:
+
+```json
+{
+  "codeblockId": "f461e79b-68c4-4449-a931-6c43b1ca887e"
+}
+```
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="task" data-tool-name="todo_write">
+<details><summary>Tool use: **todo_write** • Todo List</summary>
+
+- [x] Add search_filter StringProperty to BST_PathProperties class
+- [x] Add search StringProperties for each data type (images, materials, fonts, worlds) in register_dataremap_properties()
+- [-] Add search text input field in PathMan panel before the image list
+- [ ] Add search text input fields in draw_data_duplicates() for each data type
+- [ ] Implement filtering logic in PathMan to filter images by search string
+- [ ] Implement filtering logic in Data Remap with helper function to filter groups
+- [x] Add search_matches_group() helper function for Data Remap filtering
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="edit_file_v2">
+<details>
+<summary>Tool use: **edit_file_v2**</summary>
+
+
+Parameters:
+
+```json
+{
+  "relativeWorkspacePath": "E:\\Rainys_Bulk_Scene_Tools\\panels\\bulk_path_management.py"
+}
+```
+Additional data:
+
+```json
+{
+  "codeblockId": "2c0abf18-f6aa-4cbe-81b0-c62427d371bc"
+}
+```
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="task" data-tool-name="todo_write">
+<details><summary>Tool use: **todo_write** • Todo List</summary>
+
+- [x] Add search_filter StringProperty to BST_PathProperties class
+- [x] Add search StringProperties for each data type (images, materials, fonts, worlds) in register_dataremap_properties()
+- [x] Add search text input field in PathMan panel before the image list
+- [ ] Add search text input fields in draw_data_duplicates() for each data type
+- [-] Implement filtering logic in PathMan to filter images by search string
+- [ ] Implement filtering logic in Data Remap with helper function to filter groups
+- [x] Add search_matches_group() helper function for Data Remap filtering
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="edit_file_v2">
+<details>
+<summary>Tool use: **edit_file_v2**</summary>
+
+
+Parameters:
+
+```json
+{
+  "relativeWorkspacePath": "E:\\Rainys_Bulk_Scene_Tools\\panels\\bulk_path_management.py"
+}
+```
+Additional data:
+
+```json
+{
+  "codeblockId": "089d7404-5e42-49db-8173-cc2e8730859b"
+}
+```
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="task" data-tool-name="todo_write">
+<details><summary>Tool use: **todo_write** • Todo List</summary>
+
+- [x] Add search_filter StringProperty to BST_PathProperties class
+- [x] Add search StringProperties for each data type (images, materials, fonts, worlds) in register_dataremap_properties()
+- [x] Add search text input field in PathMan panel before the image list
+- [-] Add search text input fields in draw_data_duplicates() for each data type
+- [x] Implement filtering logic in PathMan to filter images by search string
+- [ ] Implement filtering logic in Data Remap with helper function to filter groups
+- [x] Add search_matches_group() helper function for Data Remap filtering
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_data_remap.py</summary>
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="edit_file_v2">
+<details>
+<summary>Tool use: **edit_file_v2**</summary>
+
+
+Parameters:
+
+```json
+{
+  "relativeWorkspacePath": "E:\\Rainys_Bulk_Scene_Tools\\panels\\bulk_data_remap.py"
+}
+```
+Additional data:
+
+```json
+{
+  "codeblockId": "c53b358d-0c35-43af-87d6-421495be3046"
+}
+```
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="task" data-tool-name="todo_write">
+<details><summary>Tool use: **todo_write** • Todo List</summary>
+
+- [x] Add search_filter StringProperty to BST_PathProperties class
+- [x] Add search StringProperties for each data type (images, materials, fonts, worlds) in register_dataremap_properties()
+- [x] Add search text input field in PathMan panel before the image list
+- [x] Add search text input fields in draw_data_duplicates() for each data type
+- [x] Implement filtering logic in PathMan to filter images by search string
+- [-] Implement filtering logic in Data Remap with helper function to filter groups
+- [x] Add search_matches_group() helper function for Data Remap filtering
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_data_remap.py</summary>
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="edit_file_v2">
+<details>
+<summary>Tool use: **edit_file_v2**</summary>
+
+
+Parameters:
+
+```json
+{
+  "relativeWorkspacePath": "E:\\Rainys_Bulk_Scene_Tools\\panels\\bulk_data_remap.py"
+}
+```
+Additional data:
+
+```json
+{
+  "codeblockId": "7e0f0396-0581-4af4-81d3-1304aa47145d"
+}
+```
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="task" data-tool-name="todo_write">
+<details><summary>Tool use: **todo_write** • Todo List</summary>
+
+- [x] Add search_filter StringProperty to BST_PathProperties class
+- [x] Add search StringProperties for each data type (images, materials, fonts, worlds) in register_dataremap_properties()
+- [x] Add search text input field in PathMan panel before the image list
+- [x] Add search text input fields in draw_data_duplicates() for each data type
+- [x] Implement filtering logic in PathMan to filter images by search string
+- [x] Implement filtering logic in Data Remap with helper function to filter groups
+- [x] Add search_matches_group() helper function for Data Remap filtering
+
+</details>
+</tool-use>
+
+---
+
+
+Checking for linting errors:
+
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="read_lints">
+<details>
+<summary>Tool use: **read_lints**</summary>
+
+
+Parameters:
+
+```json
+{
+  "paths": [
+    "panels/bulk_path_management.py",
+    "panels/bulk_data_remap.py"
+  ]
+}
+```
+Result:
+
+```json
+{
+  "linterErrorsByFile": [
+    {
+      "relativeWorkspacePath": "panels/bulk_path_management.py"
+    },
+    {
+      "relativeWorkspacePath": "panels/bulk_data_remap.py"
+    }
+  ]
+}
+```
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+
+Verifying key implementation sections:
+
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_path_management.py</summary>
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_data_remap.py</summary>
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_data_remap.py</summary>
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_path_management.py</summary>
+
+</details>
+</tool-use>
+
+---
+
+
+Verifying the filtering logic is correctly implemented:
+
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_path_management.py</summary>
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_data_remap.py</summary>
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_data_remap.py</summary>
+
+</details>
+</tool-use>
+
+---
+
+
+## Implementation Summary
+
+1. **Added search properties**:
+   - Added `search_filter` to `BST_PathProperties` in PathMan
+   - Added `dataremap_search_images`, `dataremap_search_materials`, `dataremap_search_fonts`, and `dataremap_search_worlds` to scene properties in Data Remap
+
+2. **Added search UI elements**:
+   - PathMan: Search input field with icons before the image list
+   - Data Remap: Search input fields for each data type section
+
+3. **Implemented filtering logic**:
+   - PathMan: Filters images by name (case-insensitive) in real time
+   - Data Remap: Filters groups using `search_matches_group()` helper function that checks both base names and item names
+
+4. **Added helper function**:
+   - `search_matches_group()` checks if the search string matches the group's base name or any item name in the group (case-insensitive)
+
+All todos are completed. The search functionality:
+- Filters in real time as the user types
+- Uses case-insensitive matching
+- Shows all items when the search field is empty
+- Works for both PathMan (images) and Data Remap (all data types)
+
+No linting errors were found. The implementation is ready to use.
+
+---
+
+_**User**_
+
+@blender (530-725) 
+
+---
+
+_**Agent (model default, mode Agent)**_
+
+
+Fixing the error: `layout.prop()` doesn't accept an `icon` parameter. Removing `icon='SEARCH'` from the `prop()` calls in both files.
+
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_path_management.py</summary>
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="edit_file_v2">
+<details>
+<summary>Tool use: **edit_file_v2**</summary>
+
+
+Parameters:
+
+```json
+{
+  "relativeWorkspacePath": "E:\\Rainys_Bulk_Scene_Tools\\panels\\bulk_path_management.py"
+}
+```
+Additional data:
+
+```json
+{
+  "codeblockId": "a1401742-71b4-4c48-bd1d-fbb182673974"
+}
+```
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_data_remap.py</summary>
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="edit_file_v2">
+<details>
+<summary>Tool use: **edit_file_v2**</summary>
+
+
+Parameters:
+
+```json
+{
+  "relativeWorkspacePath": "E:\\Rainys_Bulk_Scene_Tools\\panels\\bulk_data_remap.py"
+}
+```
+Additional data:
+
+```json
+{
+  "codeblockId": "6cfdd359-45f0-4106-913d-5cdf713afcbc"
+}
+```
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="read_lints">
+<details>
+<summary>Tool use: **read_lints**</summary>
+
+
+Parameters:
+
+```json
+{
+  "paths": [
+    "panels/bulk_path_management.py",
+    "panels/bulk_data_remap.py"
+  ]
+}
+```
+Result:
+
+```json
+{
+  "linterErrorsByFile": [
+    {
+      "relativeWorkspacePath": "panels/bulk_path_management.py"
+    },
+    {
+      "relativeWorkspacePath": "panels/bulk_data_remap.py"
+    }
+  ]
+}
+```
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+
+Fixed the error: `layout.prop()` doesn't accept an `icon` parameter. Removed `icon='SEARCH'` from both `prop()` calls in PathMan and Data Remap. The search icon is already shown via the `VIEWZOOM` icon on the label.
+
+The search functionality should work now. The error was caused by passing an invalid icon parameter to `prop()`, which only accepts `text` and other property-specific parameters, not icon enums.
 
 ---
 

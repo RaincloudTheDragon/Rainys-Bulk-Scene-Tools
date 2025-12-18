@@ -258,6 +258,13 @@ class BST_PathProperties(PropertyGroup):
         default=True
     ) # type: ignore
     
+    # Search filter for images
+    search_filter: StringProperty(
+        name="Search Filter",
+        description="Filter images by name (case-insensitive)",
+        default=""
+    ) # type: ignore
+    
     # Smart pathing properties
     smart_base_path: StringProperty(
         name="Base Path",
@@ -1584,6 +1591,11 @@ class NODE_PT_bulk_path_tools(Panel):
             # Sorting option
             row = box.row()
             row.prop(path_props, "sort_by_selected", text="Sort by Selected")
+            
+            # Search filter
+            row = box.row()
+            row.label(text="", icon='VIEWZOOM')
+            row.prop(path_props, "search_filter", text="")
 
             box.separator()
             
@@ -1597,6 +1609,12 @@ class NODE_PT_bulk_path_tools(Panel):
                 else:
                     # Use original order
                     sorted_images = bpy.data.images
+                
+                # Filter by search string if provided
+                search_filter = path_props.search_filter
+                if search_filter:
+                    search_lower = search_filter.lower()
+                    sorted_images = [img for img in sorted_images if search_lower in img.name.lower()]
                 
                 for img in sorted_images:
                     # Add bst_selected attribute if it doesn't exist
