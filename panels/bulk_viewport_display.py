@@ -395,9 +395,14 @@ class VIEWPORT_OT_RefreshMaterialPreviews(bpy.types.Operator):
             if hasattr(material, 'preview_ensure'):
                 try:
                     preview = material.preview_ensure()
-                    # Don't access icon_id immediately - it may trigger async operations that crash
-                    # Just calling preview_ensure() is sufficient to trigger preview generation
-                    # The icon_id will be available later when Blender finishes generating it
+                    # In Blender 4.2/4.5, accessing icon_id is safe and helps ensure generation
+                    # In Blender 5.0+, we skip this to avoid crashes
+                    if not version.is_version_5_0() and preview and hasattr(preview, 'icon_id'):
+                        try:
+                            _ = preview.icon_id
+                        except Exception:
+                            # If icon_id access fails, that's okay - preview_ensure() is enough
+                            pass
                 except Exception as exc:
                     # Preview generation may fail for some materials - this is acceptable
                     print(f"BST preview refresh: Could not generate preview for {material.name}: {exc}")
