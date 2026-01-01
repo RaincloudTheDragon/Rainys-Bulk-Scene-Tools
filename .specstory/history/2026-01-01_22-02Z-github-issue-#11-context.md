@@ -1171,3 +1171,223 @@ This maintains backward compatibility and avoids the crash in 5.0.
 
 ---
 
+_**User (2026-01-01 22:09Z)**_
+
+add these changes to the readme and bump 0.14.1
+
+---
+
+_**Agent (model default, mode Agent)**_
+
+
+
+---
+
+
+Updating the README with the changes and bumping the version to 0.14.1:
+
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file">
+<details><summary>Tool use: **read_file** • Read file: readme.md</summary>
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file">
+<details><summary>Tool use: **read_file** • Read file: blender_manifest.toml</summary>
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file">
+<details><summary>Tool use: **read_file** • Read file: changelog.md</summary>
+
+</details>
+</tool-use>
+
+---
+
+
+
+---
+
+
+Updating the version and adding the changes to the changelog:
+
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="search_replace">
+
+<details><summary>Tool use: **search_replace** • Edit file: blender_manifest.toml</summary>
+
+**Chunk 1**
+Lines added: 1, lines removed: 1
+
+```diff
+@@ -4,5 +4,5 @@
+  name = "Raincloud's Bulk Scene Tools"
+  tagline = "Bulk utilities for optimizing scene data"
+- version = "0.14.0"
++ version = "0.14.1"
+  type = "add-on"
+  
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="search_replace">
+
+<details><summary>Tool use: **search_replace** • Edit file: changelog.md</summary>
+
+**Chunk 1**
+Lines added: 8, lines removed: undefined
+
+```diff
+@@ -1,2 +1,10 @@
++ # v0.14.1
++   - Fixed crash in Blender 5.0 when refreshing material previews (#11)
++     - Removed problematic batch preview operators that caused EXCEPTION_ACCESS_VIOLATION crashes
++     - Removed immediate icon_id access after preview generation (unsafe in Blender 5.0)
++     - Added version-specific handling: Blender 4.2/4.5 use optimized path, Blender 5.0+ uses safer path
++     - Improved cleanup with better error handling and material reference clearing
++     - Reduced CPU usage by avoiding expensive batch operations
++ 
+  # v0.14.0
+    - Added operator to select all images with absolute paths (#3)
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="generic" data-tool-name="read_lints">
+<details>
+          <summary>Tool use: **read_lints** • Read lints for 2 files</summary>
+      
+Lint paths:
+
+- `blender_manifest.toml`
+- `changelog.md`
+
+Lint results
+
+
+**No lint errors found**
+</details>
+</tool-use>
+
+---
+
+
+
+---
+
+
+Updated the version to 0.14.1 and added the changes to the changelog. The README doesn't include version-specific details; the changelog covers this. If you want a brief note in the README (e.g., a "Recent Updates" section), I can add it.
+
+**Summary of changes:**
+- Version bumped to **0.14.1** in `blender_manifest.toml`
+- Added changelog entry for v0.14.1 documenting:
+  - Fix for Blender 5.0 crash (#11)
+  - Version-specific optimizations for 4.2/4.5 vs 5.0+
+  - Performance improvements (reduced CPU usage)
+  - Better error handling and cleanup
+
+The changelog now documents the fix and improvements.
+
+---
+
+_**User (2026-01-01 22:09Z)**_
+
+make the changelog more concise. thx for mentioning the issue.
+
+---
+
+_**Agent (model default, mode Agent)**_
+
+
+
+---
+
+
+Making the changelog entry more concise:
+
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file">
+<details><summary>Tool use: **read_file** • Read file: changelog.md</summary>
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="search_replace">
+
+<details><summary>Tool use: **search_replace** • Edit file: changelog.md</summary>
+
+**Chunk 1**
+Lines added: 3, lines removed: 5
+
+```diff
+@@ -1,9 +1,7 @@
+  # v0.14.1
+    - Fixed crash in Blender 5.0 when refreshing material previews (#11)
+-     - Removed problematic batch preview operators that caused EXCEPTION_ACCESS_VIOLATION crashes
+-     - Removed immediate icon_id access after preview generation (unsafe in Blender 5.0)
+-     - Added version-specific handling: Blender 4.2/4.5 use optimized path, Blender 5.0+ uses safer path
+-     - Improved cleanup with better error handling and material reference clearing
+-     - Reduced CPU usage by avoiding expensive batch operations
++     - Removed problematic batch preview operators and unsafe icon_id access that caused crashes
++     - Added version-specific optimizations for 4.2/4.5 vs 5.0+ compatibility
++     - Improved cleanup and reduced CPU usage
+  
+  # v0.14.0
+```
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="generic" data-tool-name="read_lints">
+<details>
+          <summary>Tool use: **read_lints** • Read lints for 1 file</summary>
+      
+Lint paths:
+
+- `changelog.md`
+
+Lint results
+
+
+**No lint errors found**
+</details>
+</tool-use>
+
+---
+
+
+
+---
+
+
+Condensed the changelog entry while keeping the essential details: the fix, issue reference, and main improvements.
+
+---
+
