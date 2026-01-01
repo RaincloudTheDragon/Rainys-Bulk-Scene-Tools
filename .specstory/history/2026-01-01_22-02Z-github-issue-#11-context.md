@@ -1012,3 +1012,28 @@ The crash was caused by accessing `preview.icon_id` immediately after preview ge
 
 ---
 
+_**User (2026-01-01 22:09Z)**_
+
+Wow, that's much safer and much less CPU intensive. Thx!
+
+---
+
+_**Agent (model default, mode Agent)**_
+
+
+
+---
+
+
+The fix is safer and more efficient:
+
+1. **Less CPU intensive**: We removed the batch preview operators (`previews_batch_generate()`, `previews_ensure()`) that were regenerating all previews at once. Now we only call `preview_ensure()` per material, which triggers generation on demand.
+
+2. **No immediate icon access**: We stopped accessing `preview.icon_id` right after generation, which was triggering expensive async operations and causing the crash.
+
+3. **Cleaner resource management**: Clearing material assignments immediately prevents keeping unnecessary references and reduces memory pressure.
+
+The operator should now work reliably in Blender 5.0 without crashes or excessive CPU usage. If you run into any other issues, let me know.
+
+---
+
