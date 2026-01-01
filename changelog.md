@@ -1,3 +1,9 @@
+# v0.14.1
+  - Fixed crash in Blender 5.0 when refreshing material previews (#11)
+    - Removed problematic batch preview operators and unsafe icon_id access that caused crashes
+    - Added version-specific optimizations for 4.2/4.5 vs 5.0+ compatibility
+    - Improved cleanup and reduced CPU usage
+
 # v0.14.0
   - Added operator to select all images with absolute paths (#3)
   - Added search functionality to filter datablocks in PathMan and Data Remapper panels (#4)
