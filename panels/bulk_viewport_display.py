@@ -6,6 +6,7 @@ from enum import Enum
 import colorsys  # Add colorsys for RGB to HSV conversion
 from ..ops.select_diffuse_nodes import select_diffuse_nodes  # Import the specific function
 from ..utils import compat
+from ..utils import version
 
 # Material processing status enum
 class MaterialStatus(Enum):
@@ -276,14 +277,29 @@ class VIEWPORT_OT_RefreshMaterialPreviews(bpy.types.Operator):
 
     def execute(self, context):
         forced_count = 0
-        try:
-            bpy.ops.wm.previews_clear()
-            bpy.ops.wm.previews_batch_generate()
-            bpy.ops.wm.previews_ensure()
-        except Exception as exc:
-            self.report({'WARNING'}, f"Pre-clearing previews failed: {exc}")
+        
+        # Skip the preview clearing operators in Blender 5.0 - they can cause crashes
+        # Instead, we'll just regenerate previews for each material individually
+        # This is safer and avoids the EXCEPTION_ACCESS_VIOLATION crashes
+        if not version.is_version_5_0():
+            # Only use these operators in older Blender versions
+            try:
+                if hasattr(bpy.context, 'temp_override'):
+                    with bpy.context.temp_override():
+                        if hasattr(bpy.ops.wm, 'previews_clear'):
+                            bpy.ops.wm.previews_clear()
+                else:
+                    if hasattr(bpy.ops.wm, 'previews_clear'):
+                        bpy.ops.wm.previews_clear()
+            except Exception as exc:
+                # These operations are optional - continue even if they fail
+                print(f"BST preview refresh: Pre-clearing previews failed (non-fatal): {exc}")
         
         temp_obj = self._create_preview_object(context)
+        
+        if not temp_obj:
+            self.report({'ERROR'}, "Failed to create preview object. Cannot refresh material previews.")
+            return {'CANCELLED'}
         
         try:
             for material in bpy.data.materials:
@@ -291,7 +307,7 @@ class VIEWPORT_OT_RefreshMaterialPreviews(bpy.types.Operator):
                     continue
                 
                 try:
-                    self._force_preview(material, temp_obj)
+                    self._force_preview(material, temp_obj, context)
                     forced_count += 1
                 except Exception as exc:
                     print(f"BST preview refresh: failed for {material.name}: {exc}")
@@ -303,36 +319,101 @@ class VIEWPORT_OT_RefreshMaterialPreviews(bpy.types.Operator):
         return {'FINISHED'}
 
     def _create_preview_object(self, context):
-        mesh = bpy.data.meshes.new("BST_PreviewMesh")
-        mesh.from_pydata(
-            [(0, 0, 0), (1, 0, 0), (0, 1, 0), (0, 0, 1)],
-            [],
-            [(0, 1, 2), (0, 2, 3), (0, 3, 1), (1, 3, 2)]
-        )
-        obj = bpy.data.objects.new("BST_PreviewObject", mesh)
-        obj.hide_viewport = True
-        obj.hide_render = True
-        context.scene.collection.objects.link(obj)
-        return obj
+        """Create a temporary preview object for material preview generation."""
+        try:
+            mesh = bpy.data.meshes.new("BST_PreviewMesh")
+            mesh.from_pydata(
+                [(0, 0, 0), (1, 0, 0), (0, 1, 0), (0, 0, 1)],
+                [],
+                [(0, 1, 2), (0, 2, 3), (0, 3, 1), (1, 3, 2)]
+            )
+            obj = bpy.data.objects.new("BST_PreviewObject", mesh)
+            obj.hide_viewport = True
+            obj.hide_render = True
+            
+            # Link to scene collection - may fail in some contexts
+            try:
+                context.scene.collection.objects.link(obj)
+            except Exception:
+                # Fallback: try master collection or view layer
+                if hasattr(context, 'view_layer') and hasattr(context.view_layer, 'active_layer_collection'):
+                    context.view_layer.active_layer_collection.collection.objects.link(obj)
+                elif hasattr(bpy.context, 'scene') and hasattr(bpy.context.scene, 'collection'):
+                    bpy.context.scene.collection.objects.link(obj)
+            
+            return obj
+        except Exception as exc:
+            print(f"BST preview refresh: Failed to create preview object: {exc}")
+            return None
 
     def _cleanup_preview_object(self, obj):
+        """Safely cleanup the preview object with proper error handling."""
         if not obj:
             return
-        mesh = obj.data
-        bpy.data.objects.remove(obj, do_unlink=True)
-        if mesh:
-            bpy.data.meshes.remove(mesh, do_unlink=True)
+        
+        try:
+            # Clear any material assignments first to avoid dangling references
+            if hasattr(obj, 'data') and obj.data and hasattr(obj.data, 'materials'):
+                try:
+                    obj.data.materials.clear()
+                except Exception:
+                    pass
+            
+            # Get mesh reference before removing object
+            mesh = obj.data if hasattr(obj, 'data') else None
+            
+            # Remove object
+            try:
+                bpy.data.objects.remove(obj, do_unlink=True)
+            except Exception as exc:
+                print(f"BST preview refresh: Failed to remove preview object: {exc}")
+            
+            # Remove mesh if it still exists
+            if mesh and mesh.name in bpy.data.meshes:
+                try:
+                    bpy.data.meshes.remove(mesh, do_unlink=True)
+                except Exception as exc:
+                    print(f"BST preview refresh: Failed to remove preview mesh: {exc}")
+        except Exception as exc:
+            print(f"BST preview refresh: Error during cleanup: {exc}")
 
-    def _force_preview(self, material, temp_obj):
-        if temp_obj.data.materials:
-            temp_obj.data.materials[0] = material
-        else:
-            temp_obj.data.materials.append(material)
-        material.preview_render_type = 'SPHERE'
-        preview = material.preview_ensure()
-        if preview:
-            # Touch icon id to ensure generation
-            _ = preview.icon_id
+    def _force_preview(self, material, temp_obj, context):
+        """Force preview generation for a material with proper error handling."""
+        try:
+            # Assign material to temp object
+            if temp_obj.data.materials:
+                temp_obj.data.materials[0] = material
+            else:
+                temp_obj.data.materials.append(material)
+            
+            # Set preview render type if available
+            if hasattr(material, 'preview_render_type'):
+                material.preview_render_type = 'SPHERE'
+            
+            # Ensure preview exists - this may fail in some Blender versions
+            # In Blender 5.0, accessing icon_id immediately after preview_ensure() can cause crashes
+            if hasattr(material, 'preview_ensure'):
+                try:
+                    preview = material.preview_ensure()
+                    # Don't access icon_id immediately - it may trigger async operations that crash
+                    # Just calling preview_ensure() is sufficient to trigger preview generation
+                    # The icon_id will be available later when Blender finishes generating it
+                except Exception as exc:
+                    # Preview generation may fail for some materials - this is acceptable
+                    print(f"BST preview refresh: Could not generate preview for {material.name}: {exc}")
+                    # Try alternative method: force update by accessing preview property
+                    if hasattr(material, 'preview'):
+                        try:
+                            _ = material.preview
+                        except Exception:
+                            pass
+            
+            # Clear material assignment to avoid keeping references
+            if temp_obj.data.materials:
+                temp_obj.data.materials.clear()
+        except Exception as exc:
+            # Re-raise to be caught by caller
+            raise exc
 
 
 def correct_viewport_color(color):
