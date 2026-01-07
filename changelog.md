@@ -1,3 +1,7 @@
+# v0.15.0 2026-01-07
+  - Refactored all class, function, and constant names to use consistent RBST_ prefix system with module-specific sub-prefixes
+  - Added Data-Block Utils integration: Merge Duplicates button in Bulk Data Remap panel that automates finding and merging duplicates across Node Groups, Materials, Lights, Images, and Meshes
+
 # v0.14.1
   - Fixed crash in Blender 5.0 when refreshing material previews (#11)
     - Removed problematic batch preview operators and unsafe icon_id access that caused crashes

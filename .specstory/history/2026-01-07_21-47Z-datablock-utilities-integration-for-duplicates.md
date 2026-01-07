@@ -23653,15 +23653,13 @@ _**User**_
 _**Agent (model default, mode Agent)**_
 
 
+Checking `bulk_viewport_display.py` for the missing class definition:
+
 
 ---
 
-<tool-use data-tool-type="unknown" data-tool-name="read_file_v2">
-<details>
-<summary>Tool use: **read_file_v2**</summary>
-
-Status: **loading**
-
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_viewport_display.py</summary>
 
 </details>
 </tool-use>
@@ -23672,7 +23670,51 @@ Status: **loading**
 <details>
 <summary>Tool use: **ripgrep_raw_search**</summary>
 
-Status: **loading**
+
+Parameters:
+
+```json
+{
+  "pattern": "class.*SelectInEditor|RBST_ViewDisp_OT_SelectInEditor",
+  "path": "E:\\Rainys_Bulk_Scene_Tools\\panels\\bulk_viewport_display.py",
+  "caseInsensitive": false
+}
+```
+Result:
+
+```json
+{
+  "success": {
+    "pattern": "class.*SelectInEditor|RBST_ViewDisp_OT_SelectInEditor",
+    "path": "E:\\Rainys_Bulk_Scene_Tools\\panels\\bulk_viewport_display.py",
+    "outputMode": "content",
+    "workspaceResults": {
+      "E:\\Rainys_Bulk_Scene_Tools": {
+        "content": {
+          "matches": [
+            {
+              "file": "panels\\bulk_viewport_display.py",
+              "matches": [
+                {
+                  "lineNumber": 957,
+                  "content": "class MATERIAL_OT_SelectInEditor(bpy.types.Operator):"
+                },
+                {
+                  "lineNumber": 1097,
+                  "content": "    RBST_ViewDisp_OT_SelectInEditor,"
+                }
+              ]
+            }
+          ],
+          "totalLines": 2,
+          "totalMatchedLines": 2
+        }
+      }
+    }
+  }
+}
+```
+Status: **completed**
 
 
 </details>
@@ -23680,18 +23722,16 @@ Status: **loading**
 
 ---
 
-<tool-use data-tool-type="unknown" data-tool-name="read_file_v2">
-<details>
-<summary>Tool use: **read_file_v2**</summary>
-
-Status: **loading**
-
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_viewport_display.py</summary>
 
 </details>
 </tool-use>
 
 ---
 
+
+The class `MATERIAL_OT_SelectInEditor` wasn't renamed because it didn't have the `BST_` prefix. Renaming it:
 
 
 ---
@@ -23699,8 +23739,6 @@ Status: **loading**
 <tool-use data-tool-type="write" data-tool-name="edit_file_v2">
 
 <details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_viewport_display.py</summary>
-
-Status: **loading**
 
 </details>
 
@@ -23712,11 +23750,1117 @@ Status: **loading**
 <details>
 <summary>Tool use: **read_lints**</summary>
 
-Status: **loading**
+
+Parameters:
+
+```json
+{
+  "paths": [
+    "panels/bulk_viewport_display.py"
+  ]
+}
+```
+Result:
+
+```json
+{
+  "linterErrorsByFile": [
+    {
+      "relativeWorkspacePath": "panels/bulk_viewport_display.py"
+    }
+  ]
+}
+```
+Status: **completed**
 
 
 </details>
 </tool-use>
+
+---
+
+
+Checking for other classes that might have been missed:
+
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search">
+<details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+
+Parameters:
+
+```json
+{
+  "pattern": "^class [A-Z].*\\(.*Operator\\)|^class [A-Z].*\\(.*Panel\\)",
+  "path": "E:\\Rainys_Bulk_Scene_Tools\\panels\\bulk_viewport_display.py",
+  "caseInsensitive": false
+}
+```
+Result:
+
+```json
+{
+  "success": {
+    "pattern": "^class [A-Z].*\\(.*Operator\\)|^class [A-Z].*\\(.*Panel\\)",
+    "path": "E:\\Rainys_Bulk_Scene_Tools\\panels\\bulk_viewport_display.py",
+    "outputMode": "content",
+    "workspaceResults": {
+      "E:\\Rainys_Bulk_Scene_Tools": {
+        "content": {
+          "matches": [
+            {
+              "file": "panels\\bulk_viewport_display.py",
+              "matches": [
+                {
+                  "lineNumber": 108,
+                  "content": "class RBST_ViewDisp_OT_SetViewportColors(bpy.types.Operator):"
+                },
+                {
+                  "lineNumber": 272,
+                  "content": "class RBST_ViewDisp_OT_RefreshMaterialPreviews(bpy.types.Operator):"
+                },
+                {
+                  "lineNumber": 836,
+                  "content": "class RBST_ViewDisp_PT_BulkViewportDisplay(bpy.types.Panel):"
+                },
+                {
+                  "lineNumber": 957,
+                  "content": "class RBST_ViewDisp_OT_SelectInEditor(bpy.types.Operator):"
+                },
+                {
+                  "lineNumber": 1078,
+                  "content": "class RBST_ViewDisp_OT_SelectDiffuseNodes(bpy.types.Operator):"
+                }
+              ]
+            }
+          ],
+          "totalLines": 5,
+          "totalMatchedLines": 5
+        }
+      }
+    }
+  }
+}
+```
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search">
+<details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+
+Parameters:
+
+```json
+{
+  "pattern": "^class [A-Z].*\\(.*Operator\\)|^class [A-Z].*\\(.*Panel\\)",
+  "path": "E:\\Rainys_Bulk_Scene_Tools\\panels",
+  "caseInsensitive": false
+}
+```
+Result:
+
+```json
+{
+  "success": {
+    "pattern": "^class [A-Z].*\\(.*Operator\\)|^class [A-Z].*\\(.*Panel\\)",
+    "path": "E:\\Rainys_Bulk_Scene_Tools\\panels",
+    "outputMode": "content",
+    "workspaceResults": {
+      "E:\\Rainys_Bulk_Scene_Tools": {
+        "content": {
+          "matches": [
+            {
+              "file": "panels/bulk_data_remap.py",
+              "matches": [
+                {
+                  "lineNumber": 596,
+                  "content": "class RBST_DatRem_OT_RemapData(bpy.types.Operator):"
+                },
+                {
+                  "lineNumber": 666,
+                  "content": "class RBST_DatRem_OT_MergeDuplicatesWithDBU(bpy.types.Operator):"
+                },
+                {
+                  "lineNumber": 738,
+                  "content": "class RBST_DatRem_OT_PurgeUnused(bpy.types.Operator):"
+                },
+                {
+                  "lineNumber": 753,
+                  "content": "class RBST_DatRem_OT_ToggleGroupExclusion(bpy.types.Operator):"
+                },
+                {
+                  "lineNumber": 787,
+                  "content": "class RBST_DatRem_OT_SelectAllGroups(bpy.types.Operator):"
+                },
+                {
+                  "lineNumber": 837,
+                  "content": "class RBST_DatRem_OT_ToggleGroupSelection(bpy.types.Operator):"
+                },
+                {
+                  "lineNumber": 1121,
+                  "content": "class RBST_DatRem_PT_BulkDataRemap(bpy.types.Panel):"
+                },
+                {
+                  "lineNumber": 1403,
+                  "content": "class RBST_DatRem_OT_ToggleDataType(bpy.types.Operator):"
+                },
+                {
+                  "lineNumber": 1428,
+                  "content": "class RBST_DatRem_OT_ToggleGroupExpansion(bpy.types.Operator):"
+                },
+                {
+                  "lineNumber": 1474,
+                  "content": "class RBST_DatRem_OT_OpenLinkedFile(bpy.types.Operator):"
+                },
+                {
+                  "lineNumber": 1503,
+                  "content": "class RBST_DatRem_OT_RenameDatablock(bpy.types.Operator):"
+                }
+              ]
+            },
+            {
+              "file": "panels/bulk_path_management.py",
+              "matches": [
+                {
+                  "lineNumber": 8,
+                  "content": "class RBST_PathMan_OT_summary_dialog(bpy.types.Operator):"
+                },
+                {
+                  "lineNumber": 331,
+                  "content": "class RBST_PathMan_OT_remap_path(Operator):"
+                },
+                {
+                  "lineNumber": 377,
+                  "content": "class RBST_PathMan_OT_toggle_select_all(Operator):"
+                },
+                {
+                  "lineNumber": 397,
+                  "content": "class RBST_OT_bulk_remap(Operator):"
+                },
+                {
+                  "lineNumber": 496,
+                  "content": "class RBST_PathMan_OT_toggle_path_edit(Operator):"
+                },
+                {
+                  "lineNumber": 538,
+                  "content": "class RBST_PathMan_OT_select_material_images(Operator):"
+                },
+                {
+                  "lineNumber": 572,
+                  "content": "class RBST_OT_select_active_images(Operator):"
+                },
+                {
+                  "lineNumber": 606,
+                  "content": "class RBST_PathMan_OT_select_absolute_images(Operator):"
+                },
+                {
+                  "lineNumber": 661,
+                  "content": "class RBST_PathMan_OT_rename_datablock(Operator):"
+                },
+                {
+                  "lineNumber": 709,
+                  "content": "class RBST_OT_toggle_image_selection(Operator):"
+                },
+                {
+                  "lineNumber": 762,
+                  "content": "class RBST_PathMan_OT_reuse_material_path(Operator):"
+                },
+                {
+                  "lineNumber": 796,
+                  "content": "class RBST_PathMan_OT_reuse_blend_name(Operator):"
+                },
+                {
+                  "lineNumber": 820,
+                  "content": "class RBST_OT_make_paths_relative(Operator):"
+                },
+                {
+                  "lineNumber": 832,
+                  "content": "class RBST_PathMan_OT_make_paths_absolute(Operator):"
+                },
+                {
+                  "lineNumber": 844,
+                  "content": "class RBST_PathMan_OT_pack_images(Operator):"
+                },
+                {
+                  "lineNumber": 886,
+                  "content": "class RBST_PathMan_OT_unpack_images(Operator):"
+                },
+                {
+                  "lineNumber": 921,
+                  "content": "class RBST_PathMan_OT_remove_packed_images(Operator):"
+                },
+                {
+                  "lineNumber": 956,
+                  "content": "class RBST_PathMan_OT_save_all_images(Operator):"
+                },
+                {
+                  "lineNumber": 1062,
+                  "content": "class RBST_PathMan_OT_remove_extensions(Operator):"
+                },
+                {
+                  "lineNumber": 1151,
+                  "content": "class RBST_PathMan_OT_rename_flat_colors(Operator):"
+                },
+                {
+                  "lineNumber": 1357,
+                  "content": "class RBST_PathMan_OT_cancel_operation(Operator):"
+                },
+                {
+                  "lineNumber": 1436,
+                  "content": "class RBST_PathMan_PT_bulk_path_tools(Panel):"
+                },
+                {
+                  "lineNumber": 1646,
+                  "content": "class RBST_PathMan_PT_bulk_path_subpanel(Panel):"
+                }
+              ]
+            },
+            {
+              "file": "panels\\bulk_path_management.py",
+              "matches": [
+                {
+                  "lineNumber": 8,
+                  "content": "class RBST_PathMan_OT_summary_dialog(bpy.types.Operator):"
+                },
+                {
+                  "lineNumber": 331,
+                  "content": "class RBST_PathMan_OT_remap_path(Operator):"
+                },
+                {
+                  "lineNumber": 377,
+                  "content": "class RBST_PathMan_OT_toggle_select_all(Operator):"
+                },
+                {
+                  "lineNumber": 397,
+                  "content": "class RBST_OT_bulk_remap(Operator):"
+                },
+                {
+                  "lineNumber": 496,
+                  "content": "class RBST_PathMan_OT_toggle_path_edit(Operator):"
+                },
+                {
+                  "lineNumber": 538,
+                  "content": "class RBST_PathMan_OT_select_material_images(Operator):"
+                },
+                {
+                  "lineNumber": 572,
+                  "content": "class RBST_OT_select_active_images(Operator):"
+                },
+                {
+                  "lineNumber": 606,
+                  "content": "class RBST_PathMan_OT_select_absolute_images(Operator):"
+                },
+                {
+                  "lineNumber": 661,
+                  "content": "class RBST_PathMan_OT_rename_datablock(Operator):"
+                },
+                {
+                  "lineNumber": 709,
+                  "content": "class RBST_OT_toggle_image_selection(Operator):"
+                },
+                {
+                  "lineNumber": 762,
+                  "content": "class RBST_PathMan_OT_reuse_material_path(Operator):"
+                },
+                {
+                  "lineNumber": 796,
+                  "content": "class RBST_PathMan_OT_reuse_blend_name(Operator):"
+                },
+                {
+                  "lineNumber": 820,
+                  "content": "class RBST_OT_make_paths_relative(Operator):"
+                },
+                {
+                  "lineNumber": 832,
+                  "content": "class RBST_PathMan_OT_make_paths_absolute(Operator):"
+                },
+                {
+                  "lineNumber": 844,
+                  "content": "class RBST_PathMan_OT_pack_images(Operator):"
+                },
+                {
+                  "lineNumber": 886,
+                  "content": "class RBST_PathMan_OT_unpack_images(Operator):"
+                },
+                {
+                  "lineNumber": 921,
+                  "content": "class RBST_PathMan_OT_remove_packed_images(Operator):"
+                },
+                {
+                  "lineNumber": 956,
+                  "content": "class RBST_PathMan_OT_save_all_images(Operator):"
+                },
+                {
+                  "lineNumber": 1062,
+                  "content": "class RBST_PathMan_OT_remove_extensions(Operator):"
+                },
+                {
+                  "lineNumber": 1151,
+                  "content": "class RBST_PathMan_OT_rename_flat_colors(Operator):"
+                },
+                {
+                  "lineNumber": 1357,
+                  "content": "class RBST_PathMan_OT_cancel_operation(Operator):"
+                },
+                {
+                  "lineNumber": 1436,
+                  "content": "class RBST_PathMan_PT_bulk_path_tools(Panel):"
+                },
+                {
+                  "lineNumber": 1646,
+                  "content": "class RBST_PathMan_PT_bulk_path_subpanel(Panel):"
+                }
+              ]
+            },
+            {
+              "file": "panels\\bulk_scene_general.py",
+              "matches": [
+                {
+                  "lineNumber": 12,
+                  "content": "class RBST_SceneGen_PT_BulkSceneGeneral(bpy.types.Panel):"
+                }
+              ]
+            },
+            {
+              "file": "panels/bulk_scene_general.py",
+              "matches": [
+                {
+                  "lineNumber": 12,
+                  "content": "class RBST_SceneGen_PT_BulkSceneGeneral(bpy.types.Panel):"
+                }
+              ]
+            },
+            {
+              "file": "panels/bulk_viewport_display.py",
+              "matches": [
+                {
+                  "lineNumber": 108,
+                  "content": "class RBST_ViewDisp_OT_SetViewportColors(bpy.types.Operator):"
+                },
+                {
+                  "lineNumber": 272,
+                  "content": "class RBST_ViewDisp_OT_RefreshMaterialPreviews(bpy.types.Operator):"
+                },
+                {
+                  "lineNumber": 836,
+                  "content": "class RBST_ViewDisp_PT_BulkViewportDisplay(bpy.types.Panel):"
+                },
+                {
+                  "lineNumber": 957,
+                  "content": "class RBST_ViewDisp_OT_SelectInEditor(bpy.types.Operator):"
+                },
+                {
+                  "lineNumber": 1078,
+                  "content": "class RBST_ViewDisp_OT_SelectDiffuseNodes(bpy.types.Operator):"
+                }
+              ]
+            },
+            {
+              "file": "panels\\bulk_data_remap.py",
+              "matches": [
+                {
+                  "lineNumber": 596,
+                  "content": "class RBST_DatRem_OT_RemapData(bpy.types.Operator):"
+                },
+                {
+                  "lineNumber": 666,
+                  "content": "class RBST_DatRem_OT_MergeDuplicatesWithDBU(bpy.types.Operator):"
+                },
+                {
+                  "lineNumber": 738,
+                  "content": "class RBST_DatRem_OT_PurgeUnused(bpy.types.Operator):"
+                },
+                {
+                  "lineNumber": 753,
+                  "content": "class RBST_DatRem_OT_ToggleGroupExclusion(bpy.types.Operator):"
+                },
+                {
+                  "lineNumber": 787,
+                  "content": "class RBST_DatRem_OT_SelectAllGroups(bpy.types.Operator):"
+                },
+                {
+                  "lineNumber": 837,
+                  "content": "class RBST_DatRem_OT_ToggleGroupSelection(bpy.types.Operator):"
+                },
+                {
+                  "lineNumber": 1121,
+                  "content": "class RBST_DatRem_PT_BulkDataRemap(bpy.types.Panel):"
+                },
+                {
+                  "lineNumber": 1403,
+                  "content": "class RBST_DatRem_OT_ToggleDataType(bpy.types.Operator):"
+                },
+                {
+                  "lineNumber": 1428,
+                  "content": "class RBST_DatRem_OT_ToggleGroupExpansion(bpy.types.Operator):"
+                },
+                {
+                  "lineNumber": 1474,
+                  "content": "class RBST_DatRem_OT_OpenLinkedFile(bpy.types.Operator):"
+                },
+                {
+                  "lineNumber": 1503,
+                  "content": "class RBST_DatRem_OT_RenameDatablock(bpy.types.Operator):"
+                }
+              ]
+            },
+            {
+              "file": "panels\\bulk_viewport_display.py",
+              "matches": [
+                {
+                  "lineNumber": 108,
+                  "content": "class RBST_ViewDisp_OT_SetViewportColors(bpy.types.Operator):"
+                },
+                {
+                  "lineNumber": 272,
+                  "content": "class RBST_ViewDisp_OT_RefreshMaterialPreviews(bpy.types.Operator):"
+                },
+                {
+                  "lineNumber": 836,
+                  "content": "class RBST_ViewDisp_PT_BulkViewportDisplay(bpy.types.Panel):"
+                },
+                {
+                  "lineNumber": 957,
+                  "content": "class RBST_ViewDisp_OT_SelectInEditor(bpy.types.Operator):"
+                },
+                {
+                  "lineNumber": 1078,
+                  "content": "class RBST_ViewDisp_OT_SelectDiffuseNodes(bpy.types.Operator):"
+                }
+              ]
+            }
+          ],
+          "totalLines": 80,
+          "totalMatchedLines": 80
+        }
+      }
+    }
+  }
+}
+```
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+
+Fixing classes in `bulk_path_management.py` that are missing the `PathMan` module prefix:
+
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_path_management.py</summary>
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_path_management.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_path_management.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_path_management.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_path_management.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search">
+<details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+
+Parameters:
+
+```json
+{
+  "pattern": "RBST_OT_|RBST_PathMan_OT_",
+  "path": "E:\\Rainys_Bulk_Scene_Tools\\panels\\bulk_path_management.py",
+  "caseInsensitive": false
+}
+```
+Result:
+
+```json
+{
+  "success": {
+    "pattern": "RBST_OT_|RBST_PathMan_OT_",
+    "path": "E:\\Rainys_Bulk_Scene_Tools\\panels\\bulk_path_management.py",
+    "outputMode": "content",
+    "workspaceResults": {
+      "E:\\Rainys_Bulk_Scene_Tools": {
+        "content": {
+          "matches": [
+            {
+              "file": "panels\\bulk_path_management.py",
+              "matches": [
+                {
+                  "lineNumber": 8,
+                  "content": "class RBST_PathMan_OT_summary_dialog(bpy.types.Operator):"
+                },
+                {
+                  "lineNumber": 331,
+                  "content": "class RBST_PathMan_OT_remap_path(Operator):"
+                },
+                {
+                  "lineNumber": 377,
+                  "content": "class RBST_PathMan_OT_toggle_select_all(Operator):"
+                },
+                {
+                  "lineNumber": 397,
+                  "content": "class RBST_PathMan_OT_bulk_remap(Operator):"
+                },
+                {
+                  "lineNumber": 496,
+                  "content": "class RBST_PathMan_OT_toggle_path_edit(Operator):"
+                },
+                {
+                  "lineNumber": 538,
+                  "content": "class RBST_PathMan_OT_select_material_images(Operator):"
+                },
+                {
+                  "lineNumber": 572,
+                  "content": "class RBST_PathMan_OT_select_active_images(Operator):"
+                },
+                {
+                  "lineNumber": 606,
+                  "content": "class RBST_PathMan_OT_select_absolute_images(Operator):"
+                },
+                {
+                  "lineNumber": 661,
+                  "content": "class RBST_PathMan_OT_rename_datablock(Operator):"
+                },
+                {
+                  "lineNumber": 709,
+                  "content": "class RBST_PathMan_OT_toggle_image_selection(Operator):"
+                },
+                {
+                  "lineNumber": 762,
+                  "content": "class RBST_PathMan_OT_reuse_material_path(Operator):"
+                },
+                {
+                  "lineNumber": 796,
+                  "content": "class RBST_PathMan_OT_reuse_blend_name(Operator):"
+                },
+                {
+                  "lineNumber": 820,
+                  "content": "class RBST_PathMan_OT_make_paths_relative(Operator):"
+                },
+                {
+                  "lineNumber": 832,
+                  "content": "class RBST_PathMan_OT_make_paths_absolute(Operator):"
+                },
+                {
+                  "lineNumber": 844,
+                  "content": "class RBST_PathMan_OT_pack_images(Operator):"
+                },
+                {
+                  "lineNumber": 886,
+                  "content": "class RBST_PathMan_OT_unpack_images(Operator):"
+                },
+                {
+                  "lineNumber": 921,
+                  "content": "class RBST_PathMan_OT_remove_packed_images(Operator):"
+                },
+                {
+                  "lineNumber": 956,
+                  "content": "class RBST_PathMan_OT_save_all_images(Operator):"
+                },
+                {
+                  "lineNumber": 1062,
+                  "content": "class RBST_PathMan_OT_remove_extensions(Operator):"
+                },
+                {
+                  "lineNumber": 1151,
+                  "content": "class RBST_PathMan_OT_rename_flat_colors(Operator):"
+                },
+                {
+                  "lineNumber": 1357,
+                  "content": "class RBST_PathMan_OT_cancel_operation(Operator):"
+                },
+                {
+                  "lineNumber": 1664,
+                  "content": "    RBST_OT_remap_path,"
+                },
+                {
+                  "lineNumber": 1665,
+                  "content": "    RBST_OT_toggle_select_all,"
+                },
+                {
+                  "lineNumber": 1666,
+                  "content": "    RBST_OT_bulk_remap,"
+                },
+                {
+                  "lineNumber": 1667,
+                  "content": "    RBST_OT_toggle_path_edit,"
+                },
+                {
+                  "lineNumber": 1668,
+                  "content": "    RBST_OT_select_material_images,"
+                },
+                {
+                  "lineNumber": 1669,
+                  "content": "    RBST_OT_select_active_images,"
+                },
+                {
+                  "lineNumber": 1670,
+                  "content": "    RBST_OT_select_absolute_images,"
+                },
+                {
+                  "lineNumber": 1671,
+                  "content": "    RBST_OT_rename_datablock,"
+                },
+                {
+                  "lineNumber": 1672,
+                  "content": "    RBST_OT_toggle_image_selection,"
+                },
+                {
+                  "lineNumber": 1673,
+                  "content": "    RBST_OT_reuse_material_path,"
+                },
+                {
+                  "lineNumber": 1674,
+                  "content": "    RBST_OT_reuse_blend_name,"
+                },
+                {
+                  "lineNumber": 1675,
+                  "content": "    RBST_OT_make_paths_relative,"
+                },
+                {
+                  "lineNumber": 1676,
+                  "content": "    RBST_OT_make_paths_absolute,"
+                },
+                {
+                  "lineNumber": 1677,
+                  "content": "    RBST_OT_pack_images,"
+                },
+                {
+                  "lineNumber": 1678,
+                  "content": "    RBST_OT_unpack_images,"
+                },
+                {
+                  "lineNumber": 1679,
+                  "content": "    RBST_OT_remove_packed_images,"
+                },
+                {
+                  "lineNumber": 1680,
+                  "content": "    RBST_OT_save_all_images,"
+                },
+                {
+                  "lineNumber": 1681,
+                  "content": "    RBST_OT_remove_extensions,"
+                },
+                {
+                  "lineNumber": 1682,
+                  "content": "    RBST_OT_rename_flat_colors,"
+                },
+                {
+                  "lineNumber": 1683,
+                  "content": "    RBST_OT_cancel_operation,"
+                }
+              ]
+            }
+          ],
+          "totalLines": 41,
+          "totalMatchedLines": 41
+        }
+      }
+    }
+  }
+}
+```
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_path_management.py</summary>
+
+</details>
+</tool-use>
+
+---
+
+
+Updating the classes tuple in `bulk_path_management.py` to use the correct class names:
+
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_path_management.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search">
+<details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+
+Parameters:
+
+```json
+{
+  "pattern": "RBST_PathProperties|REMOVE_EXT_OT_summary_dialog|NODE_PT_bulk_path_tools|VIEW3D_PT_bulk_path_subpanel",
+  "path": "E:\\Rainys_Bulk_Scene_Tools\\panels\\bulk_path_management.py",
+  "caseInsensitive": false
+}
+```
+Result:
+
+```json
+{
+  "success": {
+    "pattern": "RBST_PathProperties|REMOVE_EXT_OT_summary_dialog|NODE_PT_bulk_path_tools|VIEW3D_PT_bulk_path_subpanel",
+    "path": "E:\\Rainys_Bulk_Scene_Tools\\panels\\bulk_path_management.py",
+    "outputMode": "content",
+    "workspaceResults": {
+      "E:\\Rainys_Bulk_Scene_Tools": {
+        "content": {}
+      }
+    }
+  }
+}
+```
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="read_lints">
+<details>
+<summary>Tool use: **read_lints**</summary>
+
+
+Parameters:
+
+```json
+{
+  "paths": [
+    "panels/bulk_path_management.py"
+  ]
+}
+```
+Result:
+
+```json
+{
+  "linterErrorsByFile": [
+    {
+      "relativeWorkspacePath": "panels/bulk_path_management.py"
+    }
+  ]
+}
+```
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+
+Checking for any remaining references to old class names:
+
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search">
+<details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+
+Parameters:
+
+```json
+{
+  "pattern": "RBST_PathMan_PT_bulk_path_tools\\.draw",
+  "path": "E:\\Rainys_Bulk_Scene_Tools\\panels\\bulk_path_management.py",
+  "caseInsensitive": false
+}
+```
+Result:
+
+```json
+{
+  "success": {
+    "pattern": "RBST_PathMan_PT_bulk_path_tools\\.draw",
+    "path": "E:\\Rainys_Bulk_Scene_Tools\\panels\\bulk_path_management.py",
+    "outputMode": "content",
+    "workspaceResults": {
+      "E:\\Rainys_Bulk_Scene_Tools": {
+        "content": {
+          "matches": [
+            {
+              "file": "panels\\bulk_path_management.py",
+              "matches": [
+                {
+                  "lineNumber": 1658,
+                  "content": "        RBST_PathMan_PT_bulk_path_tools.draw(self, context)"
+                }
+              ]
+            }
+          ],
+          "totalLines": 1,
+          "totalMatchedLines": 1
+        }
+      }
+    }
+  }
+}
+```
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_path_management.py</summary>
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="read_lints">
+<details>
+<summary>Tool use: **read_lints**</summary>
+
+
+Parameters:
+
+```json
+{
+  "paths": [
+    "__init__.py",
+    "panels",
+    "ops"
+  ]
+}
+```
+Result:
+
+```json
+{
+  "linterErrorsByFile": [
+    {
+      "relativeWorkspacePath": "__init__.py"
+    },
+    {
+      "relativeWorkspacePath": "panels"
+    },
+    {
+      "relativeWorkspacePath": "ops"
+    }
+  ]
+}
+```
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+
+All references look correct. The issue was that `MATERIAL_OT_SelectInEditor` wasn't renamed because it didn't have the `BST_` prefix. It's now `RBST_ViewDisp_OT_SelectInEditor` and matches the classes tuple.
+
+**Fixed:**
+- Renamed `MATERIAL_OT_SelectInEditor` → `RBST_ViewDisp_OT_SelectInEditor`
+- Updated classes in `bulk_path_management.py` that were missing the `PathMan` prefix
+- Updated the classes tuple in `bulk_path_management.py` to use the correct class names
+
+The addon should now load without errors. All classes are properly renamed with the `RBST_` prefix and module-specific sub-prefixes.
+
+---
+
+_**User**_
+
+bump 0.15.0 and update changelog concisely. check the last 2 commits.
+
+---
+
+_**Agent (model default, mode Agent)**_
+
+
+Checking the current version, changelog, and recent commits:
+
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: E:\Rainys_Bulk_Scene_Tools\blender_manifest.toml</summary>
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: E:\Rainys_Bulk_Scene_Tools\changelog.md</summary>
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="shell" data-tool-name="run_terminal_command_v2">
+<details><summary>Tool use: **run_terminal_command_v2** • Run command: cd E:\Rainys_Bulk_Scene_Tools && git log --oneline -2</summary>
+
+```bash
+cd E:\Rainys_Bulk_Scene_Tools && git log --oneline -2
+```
+
+```
+15ae5a7 The Great Refactor
+ece391e integrate DBU merge duplicates
+
+```
+</details>
+</tool-use>
+
+---
+
+
+Updating the version to 0.15.0 and adding a concise changelog entry:
+
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: E:\Rainys_Bulk_Scene_Tools\blender_manifest.toml</summary>
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\blender_manifest.toml</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\changelog.md</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="read_lints">
+<details>
+<summary>Tool use: **read_lints**</summary>
+
+
+Parameters:
+
+```json
+{
+  "paths": [
+    "blender_manifest.toml",
+    "changelog.md"
+  ]
+}
+```
+Result:
+
+```json
+{
+  "linterErrorsByFile": [
+    {
+      "relativeWorkspacePath": "blender_manifest.toml"
+    },
+    {
+      "relativeWorkspacePath": "changelog.md"
+    }
+  ]
+}
+```
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+
+Updated the version to 0.15.0 and added a concise changelog entry covering:
+
+1. **The Great Refactor** — refactored all names to the RBST_ prefix system
+2. **DBU integration** — added the Merge Duplicates button in Bulk Data Remap
+
+The changelog entry is concise and highlights both major changes from the last 2 commits.
 
 ---
 
