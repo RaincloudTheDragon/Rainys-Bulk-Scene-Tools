@@ -2,7 +2,7 @@ import bpy
 import re
 from ..utils import compat
 
-class RENAME_OT_summary_dialog(bpy.types.Operator):
+class RBST_RenameImg_OT_summary_dialog(bpy.types.Operator):
     """Show rename operation summary"""
     bl_idname = "bst.rename_summary_dialog"
     bl_label = "Rename Summary"
@@ -66,7 +66,7 @@ class RENAME_OT_summary_dialog(bpy.types.Operator):
     def invoke(self, context, event):
         return context.window_manager.invoke_popup(self, width=500)
 
-class Rename_images_by_mat(bpy.types.Operator):
+class RBST_RenameImg_OT_Rename_images_by_mat(bpy.types.Operator):
     bl_idname = "bst.rename_images_by_mat"
     bl_label = "Rename Images by Material"
     bl_description = "Rename selected images based on their material usage, preserving texture type suffixes"
@@ -500,8 +500,8 @@ class Rename_images_by_mat(bpy.types.Operator):
 
 # Registration classes - need to register both operators
 classes = (
-    RENAME_OT_summary_dialog,
-    Rename_images_by_mat,
+    RBST_RenameImg_OT_summary_dialog,
+    RBST_RenameImg_OT_Rename_images_by_mat,
 )
 
 def register():

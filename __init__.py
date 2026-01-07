@@ -5,15 +5,15 @@ from .panels import bulk_viewport_display
 from .panels import bulk_data_remap
 from .panels import bulk_path_management
 from .panels import bulk_scene_general
-from .ops.AutoMatExtractor import AutoMatExtractor, AUTOMAT_OT_summary_dialog
-from .ops.Rename_images_by_mat import Rename_images_by_mat, RENAME_OT_summary_dialog
-from .ops.FreeGPU import BST_FreeGPU
+from .ops.AutoMatExtractor import RBST_AutoMat_OT_AutoMatExtractor, RBST_AutoMat_OT_summary_dialog
+from .ops.Rename_images_by_mat import RBST_RenameImg_OT_Rename_images_by_mat, RBST_RenameImg_OT_summary_dialog
+from .ops.FreeGPU import RBST_FreeGPU
 from .ops import ghost_buster
 from . import rainys_repo_bootstrap
 from .utils import compat
 
 # Addon preferences class for update settings
-class BST_AddonPreferences(AddonPreferences):
+class RBST_AddonPreferences(AddonPreferences):
     bl_idname = __package__
 
     # AutoMat Extractor settings
@@ -48,12 +48,12 @@ class VIEW3D_PT_BulkSceneTools(Panel):
 # List of all classes in this module
 classes = (
     VIEW3D_PT_BulkSceneTools,
-    BST_AddonPreferences,
-    AutoMatExtractor,
-    AUTOMAT_OT_summary_dialog,
-    Rename_images_by_mat,
-    RENAME_OT_summary_dialog,
-    BST_FreeGPU,
+    RBST_AddonPreferences,
+    RBST_AutoMat_OT_AutoMatExtractor,
+    RBST_AutoMat_OT_summary_dialog,
+    RBST_RenameImg_OT_Rename_images_by_mat,
+    RBST_RenameImg_OT_summary_dialog,
+    RBST_FreeGPU,
 )
 
 def register():

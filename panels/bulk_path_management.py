@@ -5,7 +5,7 @@ import os
 import re
 from ..utils import compat
 
-class REMOVE_EXT_OT_summary_dialog(bpy.types.Operator):
+class RBST_PathMan_OT_summary_dialog(bpy.types.Operator):
     """Show remove extensions operation summary"""
     bl_idname = "remove_ext.summary_dialog"
     bl_label = "Remove Extensions Summary"
@@ -204,7 +204,7 @@ def bulk_remap_paths(mapping_dict):
     return (success_count, failed_list)
 
 # Properties for path management
-class BST_PathProperties(PropertyGroup):
+class RBST_PathMan_PG_PathProperties(PropertyGroup):
     # Active image pointer
     active_image: PointerProperty(
         name="Image",
@@ -328,7 +328,7 @@ class BST_PathProperties(PropertyGroup):
     )
 
 # Operator to remap a single datablock path
-class BST_OT_remap_path(Operator):
+class RBST_PathMan_OT_remap_path(Operator):
     bl_idname = "bst.remap_path"
     bl_label = "Remap Path"
     bl_description = "Change the filepath and filepath_raw for a datablock"
@@ -374,7 +374,7 @@ class BST_OT_remap_path(Operator):
         return context.window_manager.invoke_props_dialog(self)
 
 # Operator to toggle all image selections
-class BST_OT_toggle_select_all(Operator):
+class RBST_PathMan_OT_toggle_select_all(Operator):
     bl_idname = "bst.toggle_select_all"
     bl_label = "Toggle All"
     bl_description = "Toggle selection of all datablocks"
@@ -394,7 +394,7 @@ class BST_OT_toggle_select_all(Operator):
         return {'FINISHED'}
 
 # Operator to remap multiple paths at once
-class BST_OT_bulk_remap(Operator):
+class RBST_PathMan_OT_bulk_remap(Operator):
     bl_idname = "bst.bulk_remap"
     bl_label = "Remap Paths"
     bl_description = "Apply the new path to all selected datablocks"
@@ -493,7 +493,7 @@ class BST_OT_bulk_remap(Operator):
         return 0.05  # Process next item in 0.05 seconds (50ms) for better stability
 
 # Operator to toggle path editing mode
-class BST_OT_toggle_path_edit(Operator):
+class RBST_PathMan_OT_toggle_path_edit(Operator):
     bl_idname = "bst.toggle_path_edit"
     bl_label = "Toggle Path Edit"
     bl_description = "Toggle between view and edit mode for paths"
@@ -535,7 +535,7 @@ class BST_OT_toggle_path_edit(Operator):
         return {'FINISHED'}
 
 # Operator to select all images used in the current material
-class BST_OT_select_material_images(Operator):
+class RBST_PathMan_OT_select_material_images(Operator):
     bl_idname = "bst.select_material_images"
     bl_label = "Select Material Images"
     bl_description = "Select all images used in the current material in the node editor"
@@ -569,7 +569,7 @@ class BST_OT_select_material_images(Operator):
         return {'FINISHED'}
 
 # Operator to select active/selected image texture nodes
-class BST_OT_select_active_images(Operator):
+class RBST_PathMan_OT_select_active_images(Operator):
     bl_idname = "bst.select_active_images"
     bl_label = "Select Active Images"
     bl_description = "Select all images from currently selected texture nodes in the node editor"
@@ -603,7 +603,7 @@ class BST_OT_select_active_images(Operator):
         return {'FINISHED'}
 
 # Operator to select all images with absolute paths
-class BST_OT_select_absolute_images(Operator):
+class RBST_PathMan_OT_select_absolute_images(Operator):
     bl_idname = "bst.select_absolute_images"
     bl_label = "Select Absolute Images"
     bl_description = "Select all images with absolute file paths"
@@ -658,7 +658,7 @@ class BST_OT_select_absolute_images(Operator):
         return {'FINISHED'}
 
 # Add a class for renaming datablocks
-class BST_OT_rename_datablock(Operator):
+class RBST_PathMan_OT_rename_datablock(Operator):
     """Click to rename datablock"""
     bl_idname = "bst.rename_datablock"
     bl_label = "Rename Datablock"
@@ -706,7 +706,7 @@ class BST_OT_rename_datablock(Operator):
             return {'CANCELLED'}
 
 # Update class for shift+click selection
-class BST_OT_toggle_image_selection(Operator):
+class RBST_PathMan_OT_toggle_image_selection(Operator):
     """Toggle whether this image should be included in bulk operations"""
     bl_idname = "bst.toggle_image_selection"
     bl_label = "Toggle Image Selection"
@@ -759,7 +759,7 @@ class BST_OT_toggle_image_selection(Operator):
         return {'FINISHED'}
 
 # Add new operator for reusing material name in path
-class BST_OT_reuse_material_path(Operator):
+class RBST_PathMan_OT_reuse_material_path(Operator):
     """Use the active material's name in the path"""
     bl_idname = "bst.reuse_material_path"
     bl_label = "Use Material Path"
@@ -793,7 +793,7 @@ class BST_OT_reuse_material_path(Operator):
             return {'CANCELLED'}
 
 # Add new operator for reusing blend file name in path
-class BST_OT_reuse_blend_name(Operator):
+class RBST_PathMan_OT_reuse_blend_name(Operator):
     """Use the current blend file name in the path"""
     bl_idname = "bst.reuse_blend_name"
     bl_label = "Use Blend Name"
@@ -817,7 +817,7 @@ class BST_OT_reuse_blend_name(Operator):
             return {'CANCELLED'}
 
 # Make Paths Relative Operator
-class BST_OT_make_paths_relative(Operator):
+class RBST_PathMan_OT_make_paths_relative(Operator):
     bl_idname = "bst.make_paths_relative"
     bl_label = "Make Paths Relative"
     bl_description = "Convert absolute paths to relative paths for all datablocks"
@@ -829,7 +829,7 @@ class BST_OT_make_paths_relative(Operator):
         return {'FINISHED'}
 
 # Make Paths Absolute Operator
-class BST_OT_make_paths_absolute(Operator):
+class RBST_PathMan_OT_make_paths_absolute(Operator):
     bl_idname = "bst.make_paths_absolute"
     bl_label = "Make Paths Absolute"
     bl_description = "Convert relative paths to absolute paths for all datablocks"
@@ -841,7 +841,7 @@ class BST_OT_make_paths_absolute(Operator):
         return {'FINISHED'}
 
 # Pack Images Operator
-class BST_OT_pack_images(Operator):
+class RBST_PathMan_OT_pack_images(Operator):
     bl_idname = "bst.pack_images"
     bl_label = "Pack Images"
     bl_description = "Pack selected images into the .blend file"
@@ -883,7 +883,7 @@ class BST_OT_pack_images(Operator):
         return {'FINISHED'}
 
 # Unpack Images Operator
-class BST_OT_unpack_images(Operator):
+class RBST_PathMan_OT_unpack_images(Operator):
     bl_idname = "bst.unpack_images"
     bl_label = "Unpack Images (Use Local)"
     bl_description = "Unpack selected images to their file paths using the 'USE_LOCAL' option"
@@ -918,7 +918,7 @@ class BST_OT_unpack_images(Operator):
         return {'FINISHED'}
 
 # Remove Packed Images Operator
-class BST_OT_remove_packed_images(Operator):
+class RBST_PathMan_OT_remove_packed_images(Operator):
     bl_idname = "bst.remove_packed_images"
     bl_label = "Remove Packed Data"
     bl_description = "Remove packed image data without saving to disk"
@@ -953,7 +953,7 @@ class BST_OT_remove_packed_images(Operator):
         return {'FINISHED'}
 
 # Save All Images Operator
-class BST_OT_save_all_images(Operator):
+class RBST_PathMan_OT_save_all_images(Operator):
     bl_idname = "bst.save_all_images"
     bl_label = "Save All Images"
     bl_description = "Save all selected images to image paths"
@@ -1059,7 +1059,7 @@ class BST_OT_save_all_images(Operator):
         return 0.05  # Process next item in 0.05 seconds (50ms) for better stability
 
 # Remove Extensions Operator
-class BST_OT_remove_extensions(Operator):
+class RBST_PathMan_OT_remove_extensions(Operator):
     bl_idname = "bst.remove_extensions"
     bl_label = "Remove Extensions"
     bl_description = "Remove common file extensions from selected image datablock names."
@@ -1148,7 +1148,7 @@ class BST_OT_remove_extensions(Operator):
                                                   removal_details=details_text.strip())
 
 # Add new operator for flat color texture renaming
-class BST_OT_rename_flat_colors(Operator):
+class RBST_PathMan_OT_rename_flat_colors(Operator):
     """Rename flat color textures to their hex color values"""
     bl_idname = "bst.rename_flat_colors"
     bl_label = "Rename Flat Colors"
@@ -1354,7 +1354,7 @@ class BST_OT_rename_flat_colors(Operator):
         return 0.05  # Process next item in 0.05 seconds (50ms) for better stability
 
 # Cancel Operation Operator
-class BST_OT_cancel_operation(Operator):
+class RBST_PathMan_OT_cancel_operation(Operator):
     bl_idname = "bst.cancel_operation"
     bl_label = "Cancel Operation"
     bl_description = "Cancel the currently running operation"
@@ -1433,9 +1433,9 @@ def get_combined_path(context, datablock_name, extension=""):
     return path + datablock_name + extension
 
 # Panel for Shader Editor sidebar
-class NODE_PT_bulk_path_tools(Panel):
+class RBST_PathMan_PT_bulk_path_tools(Panel):
     bl_label = "Bulk Pathing"
-    bl_idname = "NODE_PT_bulk_path_tools"
+    bl_idname = "RBST_PathMan_PT_bulk_path_tools"
     bl_space_type = 'NODE_EDITOR'
     bl_region_type = 'UI'
     bl_category = 'Node'
@@ -1643,9 +1643,9 @@ class NODE_PT_bulk_path_tools(Panel):
                 box.label(text="No images in blend file")
 
 # Sub-panel for existing Bulk Scene Tools
-class VIEW3D_PT_bulk_path_subpanel(Panel):
+class RBST_PathMan_PT_bulk_path_subpanel(Panel):
     bl_label = "Bulk Path Management"
-    bl_idname = "VIEW3D_PT_bulk_path_subpanel"
+    bl_idname = "RBST_PathMan_PT_bulk_path_subpanel"
     bl_space_type = 'VIEW_3D'
     bl_region_type = 'UI'
     bl_category = 'Edit'
@@ -1655,34 +1655,34 @@ class VIEW3D_PT_bulk_path_subpanel(Panel):
     
     def draw(self, context):
         # Use the same draw function as the NODE_EDITOR panel
-        NODE_PT_bulk_path_tools.draw(self, context)
+        RBST_PathMan_PT_bulk_path_tools.draw(self, context)
 
 # Registration function for this module
 classes = (
-    REMOVE_EXT_OT_summary_dialog,
-    BST_PathProperties,
-    BST_OT_remap_path,
-    BST_OT_toggle_select_all,
-    BST_OT_bulk_remap,
-    BST_OT_toggle_path_edit,
-    BST_OT_select_material_images,
-    BST_OT_select_active_images,
-    BST_OT_select_absolute_images,
-    BST_OT_rename_datablock,
-    BST_OT_toggle_image_selection,
-    BST_OT_reuse_material_path,
-    BST_OT_reuse_blend_name,
-    BST_OT_make_paths_relative,
-    BST_OT_make_paths_absolute,
-    BST_OT_pack_images,
-    BST_OT_unpack_images,
-    BST_OT_remove_packed_images,
-    BST_OT_save_all_images,
-    BST_OT_remove_extensions,
-    BST_OT_rename_flat_colors,
-    BST_OT_cancel_operation,
-    NODE_PT_bulk_path_tools,
-    VIEW3D_PT_bulk_path_subpanel,
+    RBST_PathMan_OT_summary_dialog,
+    RBST_PathMan_PG_PathProperties,
+    RBST_PathMan_OT_remap_path,
+    RBST_PathMan_OT_toggle_select_all,
+    RBST_PathMan_OT_bulk_remap,
+    RBST_PathMan_OT_toggle_path_edit,
+    RBST_PathMan_OT_select_material_images,
+    RBST_PathMan_OT_select_active_images,
+    RBST_PathMan_OT_select_absolute_images,
+    RBST_PathMan_OT_rename_datablock,
+    RBST_PathMan_OT_toggle_image_selection,
+    RBST_PathMan_OT_reuse_material_path,
+    RBST_PathMan_OT_reuse_blend_name,
+    RBST_PathMan_OT_make_paths_relative,
+    RBST_PathMan_OT_make_paths_absolute,
+    RBST_PathMan_OT_pack_images,
+    RBST_PathMan_OT_unpack_images,
+    RBST_PathMan_OT_remove_packed_images,
+    RBST_PathMan_OT_save_all_images,
+    RBST_PathMan_OT_remove_extensions,
+    RBST_PathMan_OT_rename_flat_colors,
+    RBST_PathMan_OT_cancel_operation,
+    RBST_PathMan_PT_bulk_path_tools,
+    RBST_PathMan_PT_bulk_path_subpanel,
 )
 
 def register():
@@ -1690,7 +1690,7 @@ def register():
         compat.safe_register_class(cls)
     
     # Register properties
-    bpy.types.Scene.bst_path_props = PointerProperty(type=BST_PathProperties)
+    bpy.types.Scene.bst_path_props = PointerProperty(type=RBST_PathMan_PG_PathProperties)
     
     # Add custom property to images for selection
     bpy.types.Image.bst_selected = BoolProperty(

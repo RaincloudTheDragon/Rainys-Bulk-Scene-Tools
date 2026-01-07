@@ -1,6 +1,6 @@
 import bpy
 
-class BST_FreeGPU(bpy.types.Operator):
+class RBST_FreeGPU(bpy.types.Operator):
     bl_idname = "bst.free_gpu"
     bl_label = "Free VRAM"
     bl_description = "Unallocate all material images from VRAM"

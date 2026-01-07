@@ -9,7 +9,7 @@ from ..utils import compat
 from ..utils import version
 
 # Material processing status enum
-class MaterialStatus(Enum):
+class RBST_ViewDisp_RBST_ViewDisp_MaterialStatus(Enum):
     PENDING = 0
     PROCESSING = 1
     COMPLETED = 2
@@ -27,7 +27,7 @@ material_queue = []
 current_index = 0
 
 # Scene properties for viewport display settings
-def register_viewport_properties():
+def RBST_ViewDisp_register_properties():
     bpy.types.Scene.viewport_colors_selected_only = bpy.props.BoolProperty(  # type: ignore
         name="Selected Objects Only",
         description="Apply viewport colors only to materials in selected objects",
@@ -105,7 +105,7 @@ def unregister_viewport_properties():
     del bpy.types.Scene.viewport_colors_show_advanced
     del bpy.types.Scene.show_material_results
 
-class VIEWPORT_OT_SetViewportColors(bpy.types.Operator):
+class RBST_ViewDisp_OT_SetViewportColors(bpy.types.Operator):
     """Set Viewport Display colors from BSDF base color or texture"""
     bl_idname = "bst.set_viewport_colors"
     bl_label = "Set Viewport Colors"
@@ -253,11 +253,11 @@ class VIEWPORT_OT_SetViewportColors(bpy.types.Operator):
         failed_count = 0
         
         for _, status in material_results.values():
-            if status == MaterialStatus.PREVIEW_BASED:
+            if status == RBST_ViewDisp_MaterialStatus.PREVIEW_BASED:
                 preview_count += 1
-            elif status == MaterialStatus.COMPLETED:
+            elif status == RBST_ViewDisp_MaterialStatus.COMPLETED:
                 node_count += 1
-            elif status == MaterialStatus.FAILED:
+            elif status == RBST_ViewDisp_MaterialStatus.FAILED:
                 failed_count += 1
         
         # Use a popup menu instead of self.report since this might be called from a timer
@@ -269,7 +269,7 @@ class VIEWPORT_OT_SetViewportColors(bpy.types.Operator):
         bpy.context.window_manager.popup_menu(draw_popup, title="Processing Complete", icon='INFO')
 
 
-class VIEWPORT_OT_RefreshMaterialPreviews(bpy.types.Operator):
+class RBST_ViewDisp_OT_RefreshMaterialPreviews(bpy.types.Operator):
     """Regenerate material previews to avoid stale thumbnails"""
     bl_idname = "bst.refresh_material_previews"
     bl_label = "Refresh Material Previews"
@@ -321,13 +321,13 @@ class VIEWPORT_OT_RefreshMaterialPreviews(bpy.types.Operator):
     def _create_preview_object(self, context):
         """Create a temporary preview object for material preview generation."""
         try:
-            mesh = bpy.data.meshes.new("BST_PreviewMesh")
+            mesh = bpy.data.meshes.new("RBST_PreviewMesh")
             mesh.from_pydata(
                 [(0, 0, 0), (1, 0, 0), (0, 1, 0), (0, 0, 1)],
                 [],
                 [(0, 1, 2), (0, 2, 3), (0, 3, 1), (1, 3, 2)]
             )
-            obj = bpy.data.objects.new("BST_PreviewObject", mesh)
+            obj = bpy.data.objects.new("RBST_PreviewObject", mesh)
             obj.hide_viewport = True
             obj.hide_render = True
             
@@ -459,11 +459,11 @@ def process_material(material, use_vectorized=True):
     """Process a material to determine its viewport color"""
     if not material:
         print(f"Material is None, using fallback color")
-        return (1, 1, 1), MaterialStatus.PREVIEW_BASED
+        return (1, 1, 1), RBST_ViewDisp_MaterialStatus.PREVIEW_BASED
     
     if material.is_grease_pencil:
         print(f"Material {material.name}: is a grease pencil material, using fallback color")
-        return (1, 1, 1), MaterialStatus.PREVIEW_BASED
+        return (1, 1, 1), RBST_ViewDisp_MaterialStatus.PREVIEW_BASED
     
     try:
         # Get color from material thumbnail
@@ -479,14 +479,14 @@ def process_material(material, use_vectorized=True):
             corrected_color = correct_viewport_color(color)
             print(f"Material {material.name}: Corrected thumbnail color = {corrected_color}")
             
-            return corrected_color, MaterialStatus.PREVIEW_BASED
+            return corrected_color, RBST_ViewDisp_MaterialStatus.PREVIEW_BASED
         else:
             print(f"Material {material.name}: Could not extract color from thumbnail, using fallback color")
-            return (1, 1, 1), MaterialStatus.PREVIEW_BASED
+            return (1, 1, 1), RBST_ViewDisp_MaterialStatus.PREVIEW_BASED
         
     except Exception as e:
         print(f"Error processing material {material.name}: {e}")
-        return (1, 1, 1), MaterialStatus.FAILED
+        return (1, 1, 1), RBST_ViewDisp_MaterialStatus.FAILED
 
 def get_average_color(image, use_vectorized=True):
     """Calculate the average color of an image"""
@@ -805,38 +805,38 @@ def find_diffuse_texture(material):
 
 def get_status_icon(status):
     """Get the icon for a material status"""
-    if status == MaterialStatus.PENDING:
+    if status == RBST_ViewDisp_MaterialStatus.PENDING:
         return 'TRIA_RIGHT'
-    elif status == MaterialStatus.PROCESSING:
+    elif status == RBST_ViewDisp_MaterialStatus.PROCESSING:
         return 'SORTTIME'
-    elif status == MaterialStatus.COMPLETED:
+    elif status == RBST_ViewDisp_MaterialStatus.COMPLETED:
         return 'CHECKMARK'
-    elif status == MaterialStatus.PREVIEW_BASED:
+    elif status == RBST_ViewDisp_MaterialStatus.PREVIEW_BASED:
         return 'IMAGE_DATA'
-    elif status == MaterialStatus.FAILED:
+    elif status == RBST_ViewDisp_MaterialStatus.FAILED:
         return 'ERROR'
     else:
         return 'QUESTION'
 
 def get_status_text(status):
     """Get the text for a material status"""
-    if status == MaterialStatus.PENDING:
+    if status == RBST_ViewDisp_MaterialStatus.PENDING:
         return "Pending"
-    elif status == MaterialStatus.PROCESSING:
+    elif status == RBST_ViewDisp_MaterialStatus.PROCESSING:
         return "Processing"
-    elif status == MaterialStatus.COMPLETED:
+    elif status == RBST_ViewDisp_MaterialStatus.COMPLETED:
         return "Node-based"
-    elif status == MaterialStatus.PREVIEW_BASED:
+    elif status == RBST_ViewDisp_MaterialStatus.PREVIEW_BASED:
         return "Thumbnail-based"
-    elif status == MaterialStatus.FAILED:
+    elif status == RBST_ViewDisp_MaterialStatus.FAILED:
         return "Failed"
     else:
         return "Unknown"
 
-class VIEW3D_PT_BulkViewportDisplay(bpy.types.Panel):
+class RBST_ViewDisp_PT_BulkViewportDisplay(bpy.types.Panel):
     """Bulk Viewport Display Panel"""
     bl_label = "Bulk Viewport Display"
-    bl_idname = "VIEW3D_PT_bulk_viewport_display"
+    bl_idname = "RBST_ViewDisp_PT_bulk_viewport_display"
     bl_space_type = 'VIEW_3D'
     bl_region_type = 'UI'
     bl_category = 'Edit'
@@ -913,9 +913,9 @@ class VIEW3D_PT_BulkViewportDisplay(bpy.types.Panel):
                     color, status = material_results[material_name]
                     
                     # Update counts
-                    if status == MaterialStatus.PREVIEW_BASED:
+                    if status == RBST_ViewDisp_MaterialStatus.PREVIEW_BASED:
                         preview_count += 1
-                    elif status == MaterialStatus.FAILED:
+                    elif status == RBST_ViewDisp_MaterialStatus.FAILED:
                         failed_count += 1
                     
                     row = col.row(align=True)
@@ -954,7 +954,7 @@ class VIEW3D_PT_BulkViewportDisplay(bpy.types.Panel):
         layout.separator()
         layout.operator("bst.select_diffuse_nodes", icon='NODE_TEXTURE')
 
-class MATERIAL_OT_SelectInEditor(bpy.types.Operator):
+class RBST_ViewDisp_OT_SelectInEditor(bpy.types.Operator):
     """Select this material in the editor"""
     bl_idname = "bst.select_in_editor"
     bl_label = "Select Material"
@@ -1075,7 +1075,7 @@ def get_color_from_preview(material, use_vectorized=True):
         else:
             return None
 
-class VIEWPORT_OT_SelectDiffuseNodes(bpy.types.Operator):
+class RBST_ViewDisp_OT_SelectDiffuseNodes(bpy.types.Operator):
     bl_idname = "bst.select_diffuse_nodes"
     bl_label = "Set Texture Display"
     bl_description = "Select the most relevant diffuse/base color image texture node in each material"
@@ -1091,11 +1091,11 @@ class VIEWPORT_OT_SelectDiffuseNodes(bpy.types.Operator):
 
 # List of all classes in this module
 classes = (
-    VIEWPORT_OT_SetViewportColors,
-    VIEWPORT_OT_RefreshMaterialPreviews,
-    VIEW3D_PT_BulkViewportDisplay,
-    MATERIAL_OT_SelectInEditor,
-    VIEWPORT_OT_SelectDiffuseNodes,
+    RBST_ViewDisp_OT_SetViewportColors,
+    RBST_ViewDisp_OT_RefreshMaterialPreviews,
+    RBST_ViewDisp_PT_BulkViewportDisplay,
+    RBST_ViewDisp_OT_SelectInEditor,
+    RBST_ViewDisp_OT_SelectDiffuseNodes,
 )
 
 # Registration
@@ -1104,12 +1104,12 @@ def register():
         compat.safe_register_class(cls)
     
     # Register properties
-    register_viewport_properties()
+    RBST_ViewDisp_register_properties()
 
 def unregister():
     # Unregister properties
     try:
-        unregister_viewport_properties()
+        RBST_ViewDisp_unregister_properties()
     except Exception:
         pass
     # Unregister classes

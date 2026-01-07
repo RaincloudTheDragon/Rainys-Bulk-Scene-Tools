@@ -369,7 +369,7 @@ def main(delete_low_priority=False):
     print(f"Object ghosts removed: {object_ghosts_removed}")
     print("="*80)
 
-class GhostBuster(bpy.types.Operator):
+class RBST_Bustin_OT_GhostBuster(bpy.types.Operator):
     """Conservative cleanup of ghost data (unused WGT objects, empty collections)"""
     bl_idname = "bst.ghost_buster"
     bl_label = "Ghost Buster"
@@ -388,7 +388,7 @@ class GhostBuster(bpy.types.Operator):
             self.report({'ERROR'}, f"Ghost buster failed: {str(e)}")
             return {'CANCELLED'}
 
-class GhostDetector(bpy.types.Operator):
+class RBST_Bustin_OT_GhostDetector(bpy.types.Operator):
     """Detect and analyze ghost data without removing it"""
     bl_idname = "bst.ghost_detector"
     bl_label = "Ghost Detector"
@@ -606,7 +606,7 @@ class GhostDetector(bpy.types.Operator):
         self.analyze_ghost_data()
         return context.window_manager.invoke_popup(self, width=500)
 
-class ResyncEnforce(bpy.types.Operator):
+class RBST_Bustin_OT_ResyncEnforce(bpy.types.Operator):
     """Resync Enforce: Fix broken library override hierarchies by rebuilding from linked references"""
     bl_idname = "bst.resync_enforce"
     bl_label = "Resync Enforce"
@@ -674,9 +674,9 @@ class ResyncEnforce(bpy.types.Operator):
 
 # List of classes to register
 classes = (
-    GhostBuster,
-    GhostDetector,
-    ResyncEnforce,
+    RBST_Bustin_OT_GhostBuster,
+    RBST_Bustin_OT_GhostDetector,
+    RBST_Bustin_OT_ResyncEnforce,
 )
 
 def register():
