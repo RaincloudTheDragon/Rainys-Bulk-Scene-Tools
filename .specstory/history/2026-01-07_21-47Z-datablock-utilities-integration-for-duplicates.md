@@ -16161,3 +16161,7562 @@ The implementation is working as intended. The DBU addon handles its own user fe
 
 ---
 
+_**User**_
+
+Let's reconfigure all our definitions and classes. I want everything to start with `BST_`, and each op/panel should have its own prefix too. e.g. BST_DatRem_has_linked_datablocks. Is that a good system?
+
+---
+
+_**Agent (model default, mode Plan)**_
+
+
+Reviewing the current naming structure to plan a consistent `BST_` prefix system:
+
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_data_remap.py</summary>
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search">
+<details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+
+Parameters:
+
+```json
+{
+  "pattern": "^class |^def |^[A-Z_]+ = ",
+  "path": "E:\\Rainys_Bulk_Scene_Tools\\panels\\bulk_data_remap.py",
+  "caseInsensitive": false
+}
+```
+Result:
+
+```json
+{
+  "success": {
+    "pattern": "^class |^def |^[A-Z_]+ = ",
+    "path": "E:\\Rainys_Bulk_Scene_Tools\\panels\\bulk_data_remap.py",
+    "outputMode": "content",
+    "workspaceResults": {
+      "E:\\Rainys_Bulk_Scene_Tools": {
+        "content": {
+          "matches": [
+            {
+              "file": "panels\\bulk_data_remap.py",
+              "matches": [
+                {
+                  "lineNumber": 12,
+                  "content": "NUMBERED_SUFFIX_PATTERN = re.compile(r'(.*?)[._](\\d{3,})$')"
+                },
+                {
+                  "lineNumber": 15,
+                  "content": "def has_linked_datablocks(data_collection):"
+                },
+                {
+                  "lineNumber": 23,
+                  "content": "def register_dataremap_properties():"
+                },
+                {
+                  "lineNumber": 139,
+                  "content": "def unregister_dataremap_properties():"
+                },
+                {
+                  "lineNumber": 165,
+                  "content": "def get_base_name(name):"
+                },
+                {
+                  "lineNumber": 172,
+                  "content": "def find_data_groups(data_collection):"
+                },
+                {
+                  "lineNumber": 197,
+                  "content": "def find_target_data(data_group):"
+                },
+                {
+                  "lineNumber": 225,
+                  "content": "def clean_data_names(data_collection):"
+                },
+                {
+                  "lineNumber": 245,
+                  "content": "def remap_data_blocks(context, remap_images, remap_materials, remap_fonts, remap_worlds):"
+                },
+                {
+                  "lineNumber": 596,
+                  "content": "class DATAREMAP_OT_RemapData(bpy.types.Operator):"
+                },
+                {
+                  "lineNumber": 666,
+                  "content": "class BST_OT_MergeDuplicatesWithDBU(bpy.types.Operator):"
+                },
+                {
+                  "lineNumber": 738,
+                  "content": "class DATAREMAP_OT_PurgeUnused(bpy.types.Operator):"
+                },
+                {
+                  "lineNumber": 753,
+                  "content": "class DATAREMAP_OT_ToggleGroupExclusion(bpy.types.Operator):"
+                },
+                {
+                  "lineNumber": 787,
+                  "content": "class DATAREMAP_OT_SelectAllGroups(bpy.types.Operator):"
+                },
+                {
+                  "lineNumber": 837,
+                  "content": "class DATAREMAP_OT_ToggleGroupSelection(bpy.types.Operator):"
+                },
+                {
+                  "lineNumber": 944,
+                  "content": "def draw_drag_selectable_checkbox(layout, context, data_type, group_key):"
+                },
+                {
+                  "lineNumber": 960,
+                  "content": "def search_matches_group(group, search_string):"
+                },
+                {
+                  "lineNumber": 976,
+                  "content": "def draw_data_duplicates(layout, context, data_type, data_groups):"
+                },
+                {
+                  "lineNumber": 1121,
+                  "content": "class VIEW3D_PT_BulkDataRemap(bpy.types.Panel):"
+                },
+                {
+                  "lineNumber": 1403,
+                  "content": "class DATAREMAP_OT_ToggleDataType(bpy.types.Operator):"
+                },
+                {
+                  "lineNumber": 1428,
+                  "content": "class DATAREMAP_OT_ToggleGroupExpansion(bpy.types.Operator):"
+                },
+                {
+                  "lineNumber": 1463,
+                  "content": "def get_linked_file_paths(data_collection):"
+                },
+                {
+                  "lineNumber": 1474,
+                  "content": "class DATAREMAP_OT_OpenLinkedFile(bpy.types.Operator):"
+                },
+                {
+                  "lineNumber": 1503,
+                  "content": "class DATAREMAP_OT_RenameDatablock(bpy.types.Operator):"
+                },
+                {
+                  "lineNumber": 1589,
+                  "content": "def register():"
+                },
+                {
+                  "lineNumber": 1595,
+                  "content": "def unregister():"
+                }
+              ]
+            }
+          ],
+          "totalLines": 26,
+          "totalMatchedLines": 26
+        }
+      }
+    }
+  }
+}
+```
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="list_dir_v2">
+<details>
+<summary>Tool use: **list_dir_v2**</summary>
+
+
+Parameters:
+
+```json
+{
+  "targetDirectory": "E:\\Rainys_Bulk_Scene_Tools\\panels"
+}
+```
+Result:
+
+```json
+{
+  "directoryTreeRoot": {
+    "absPath": "E:\\Rainys_Bulk_Scene_Tools\\panels",
+    "childrenFiles": [
+      {
+        "name": "bulk_data_remap.py"
+      },
+      {
+        "name": "bulk_path_management.py"
+      },
+      {
+        "name": "bulk_scene_general.py"
+      },
+      {
+        "name": "bulk_viewport_display.py"
+      }
+    ],
+    "childrenWereProcessed": true
+  }
+}
+```
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="list_dir_v2">
+<details>
+<summary>Tool use: **list_dir_v2**</summary>
+
+
+Parameters:
+
+```json
+{
+  "targetDirectory": "E:\\Rainys_Bulk_Scene_Tools\\ops"
+}
+```
+Result:
+
+```json
+{
+  "directoryTreeRoot": {
+    "absPath": "E:\\Rainys_Bulk_Scene_Tools\\ops",
+    "childrenFiles": [
+      {
+        "name": "AutoMatExtractor.py"
+      },
+      {
+        "name": "convert_relations_to_constraint.py"
+      },
+      {
+        "name": "create_ortho_camera.py"
+      },
+      {
+        "name": "delete_single_keyframe_actions.py"
+      },
+      {
+        "name": "find_material_users.py"
+      },
+      {
+        "name": "flat_color_texture_renamer.py"
+      },
+      {
+        "name": "FreeGPU.py"
+      },
+      {
+        "name": "ghost_buster.py"
+      },
+      {
+        "name": "NoSubdiv.py"
+      },
+      {
+        "name": "remove_custom_split_normals.py"
+      },
+      {
+        "name": "remove_unused_material_slots.py"
+      },
+      {
+        "name": "Rename_images_by_mat.py"
+      },
+      {
+        "name": "select_diffuse_nodes.py"
+      },
+      {
+        "name": "spawn_scene_structure.py"
+      }
+    ],
+    "childrenWereProcessed": true
+  }
+}
+```
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+
+Checking other panel files to understand the scope:
+
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search">
+<details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+
+Parameters:
+
+```json
+{
+  "pattern": "^class |^def [A-Z]",
+  "path": "E:\\Rainys_Bulk_Scene_Tools\\panels\\bulk_path_management.py",
+  "caseInsensitive": false
+}
+```
+Result:
+
+```json
+{
+  "success": {
+    "pattern": "^class |^def [A-Z]",
+    "path": "E:\\Rainys_Bulk_Scene_Tools\\panels\\bulk_path_management.py",
+    "outputMode": "content",
+    "workspaceResults": {
+      "E:\\Rainys_Bulk_Scene_Tools": {
+        "content": {
+          "matches": [
+            {
+              "file": "panels\\bulk_path_management.py",
+              "matches": [
+                {
+                  "lineNumber": 8,
+                  "content": "class REMOVE_EXT_OT_summary_dialog(bpy.types.Operator):"
+                },
+                {
+                  "lineNumber": 207,
+                  "content": "class BST_PathProperties(PropertyGroup):"
+                },
+                {
+                  "lineNumber": 331,
+                  "content": "class BST_OT_remap_path(Operator):"
+                },
+                {
+                  "lineNumber": 377,
+                  "content": "class BST_OT_toggle_select_all(Operator):"
+                },
+                {
+                  "lineNumber": 397,
+                  "content": "class BST_OT_bulk_remap(Operator):"
+                },
+                {
+                  "lineNumber": 496,
+                  "content": "class BST_OT_toggle_path_edit(Operator):"
+                },
+                {
+                  "lineNumber": 538,
+                  "content": "class BST_OT_select_material_images(Operator):"
+                },
+                {
+                  "lineNumber": 572,
+                  "content": "class BST_OT_select_active_images(Operator):"
+                },
+                {
+                  "lineNumber": 606,
+                  "content": "class BST_OT_select_absolute_images(Operator):"
+                },
+                {
+                  "lineNumber": 661,
+                  "content": "class BST_OT_rename_datablock(Operator):"
+                },
+                {
+                  "lineNumber": 709,
+                  "content": "class BST_OT_toggle_image_selection(Operator):"
+                },
+                {
+                  "lineNumber": 762,
+                  "content": "class BST_OT_reuse_material_path(Operator):"
+                },
+                {
+                  "lineNumber": 796,
+                  "content": "class BST_OT_reuse_blend_name(Operator):"
+                },
+                {
+                  "lineNumber": 820,
+                  "content": "class BST_OT_make_paths_relative(Operator):"
+                },
+                {
+                  "lineNumber": 832,
+                  "content": "class BST_OT_make_paths_absolute(Operator):"
+                },
+                {
+                  "lineNumber": 844,
+                  "content": "class BST_OT_pack_images(Operator):"
+                },
+                {
+                  "lineNumber": 886,
+                  "content": "class BST_OT_unpack_images(Operator):"
+                },
+                {
+                  "lineNumber": 921,
+                  "content": "class BST_OT_remove_packed_images(Operator):"
+                },
+                {
+                  "lineNumber": 956,
+                  "content": "class BST_OT_save_all_images(Operator):"
+                },
+                {
+                  "lineNumber": 1062,
+                  "content": "class BST_OT_remove_extensions(Operator):"
+                }
+              ]
+            }
+          ],
+          "totalLines": 20,
+          "totalMatchedLines": 20,
+          "clientTruncated": true
+        }
+      }
+    }
+  }
+}
+```
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search">
+<details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+
+Parameters:
+
+```json
+{
+  "pattern": "^class |^def [A-Z]",
+  "path": "E:\\Rainys_Bulk_Scene_Tools\\panels\\bulk_viewport_display.py",
+  "caseInsensitive": false
+}
+```
+Result:
+
+```json
+{
+  "success": {
+    "pattern": "^class |^def [A-Z]",
+    "path": "E:\\Rainys_Bulk_Scene_Tools\\panels\\bulk_viewport_display.py",
+    "outputMode": "content",
+    "workspaceResults": {
+      "E:\\Rainys_Bulk_Scene_Tools": {
+        "content": {
+          "matches": [
+            {
+              "file": "panels\\bulk_viewport_display.py",
+              "matches": [
+                {
+                  "lineNumber": 12,
+                  "content": "class MaterialStatus(Enum):"
+                },
+                {
+                  "lineNumber": 108,
+                  "content": "class VIEWPORT_OT_SetViewportColors(bpy.types.Operator):"
+                },
+                {
+                  "lineNumber": 272,
+                  "content": "class VIEWPORT_OT_RefreshMaterialPreviews(bpy.types.Operator):"
+                },
+                {
+                  "lineNumber": 836,
+                  "content": "class VIEW3D_PT_BulkViewportDisplay(bpy.types.Panel):"
+                },
+                {
+                  "lineNumber": 957,
+                  "content": "class MATERIAL_OT_SelectInEditor(bpy.types.Operator):"
+                },
+                {
+                  "lineNumber": 1078,
+                  "content": "class VIEWPORT_OT_SelectDiffuseNodes(bpy.types.Operator):"
+                }
+              ]
+            }
+          ],
+          "totalLines": 6,
+          "totalMatchedLines": 6
+        }
+      }
+    }
+  }
+}
+```
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: E:\Rainys_Bulk_Scene_Tools\__init__.py</summary>
+
+</details>
+</tool-use>
+
+---
+
+
+Clarifying scope and proposing a consistent naming system. Asking a few questions:
+
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="ask_question">
+<details>
+<summary>Tool use: **ask_question**</summary>
+
+
+Parameters:
+
+```json
+{
+  "questions": [
+    {
+      "id": "scope",
+      "prompt": "Should this naming convention apply to all files in the project, or just start with bulk_data_remap.py?",
+      "options": [
+        {
+          "id": "all_files",
+          "label": "All files (panels, ops, etc.)"
+        },
+        {
+          "id": "just_dataremap",
+          "label": "Just bulk_data_remap.py first"
+        },
+        {
+          "id": "all_panels",
+          "label": "All panel files first, then ops"
+        }
+      ]
+    },
+    {
+      "id": "constants",
+      "prompt": "Should constants (like NUMBERED_SUFFIX_PATTERN) also follow this naming convention?",
+      "options": [
+        {
+          "id": "yes",
+          "label": "Yes, include constants"
+        },
+        {
+          "id": "no",
+          "label": "No, keep constants as-is"
+        }
+      ]
+    }
+  ]
+}
+```
+Additional data:
+
+```json
+{
+  "status": "submitted",
+  "currentSelections": {
+    "scope": [
+      "all_files"
+    ],
+    "constants": [
+      "yes"
+    ]
+  }
+}
+```
+Result:
+
+```json
+{
+  "answers": [
+    {
+      "questionId": "scope",
+      "selectedOptionIds": [
+        "all_files"
+      ]
+    },
+    {
+      "questionId": "constants",
+      "selectedOptionIds": [
+        "yes"
+      ]
+    }
+  ]
+}
+```
+User decision: **accepted**
+
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+
+Proposing a naming system and creating a plan. Checking a few more files to understand the structure:
+
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search">
+<details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+
+Parameters:
+
+```json
+{
+  "pattern": "^class |^def [A-Z]|^[A-Z_]+ = ",
+  "path": "E:\\Rainys_Bulk_Scene_Tools\\panels\\bulk_scene_general.py",
+  "caseInsensitive": false
+}
+```
+Result:
+
+```json
+{
+  "success": {
+    "pattern": "^class |^def [A-Z]|^[A-Z_]+ = ",
+    "path": "E:\\Rainys_Bulk_Scene_Tools\\panels\\bulk_scene_general.py",
+    "outputMode": "content",
+    "workspaceResults": {
+      "E:\\Rainys_Bulk_Scene_Tools": {
+        "content": {
+          "matches": [
+            {
+              "file": "panels\\bulk_scene_general.py",
+              "matches": [
+                {
+                  "lineNumber": 12,
+                  "content": "class BulkSceneGeneral(bpy.types.Panel):"
+                }
+              ]
+            }
+          ],
+          "totalLines": 1,
+          "totalMatchedLines": 1
+        }
+      }
+    }
+  }
+}
+```
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search">
+<details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+
+Parameters:
+
+```json
+{
+  "pattern": "^class |^def [A-Z]",
+  "path": "E:\\Rainys_Bulk_Scene_Tools\\ops\\ghost_buster.py",
+  "caseInsensitive": false
+}
+```
+Result:
+
+```json
+{
+  "success": {
+    "pattern": "^class |^def [A-Z]",
+    "path": "E:\\Rainys_Bulk_Scene_Tools\\ops\\ghost_buster.py",
+    "outputMode": "content",
+    "workspaceResults": {
+      "E:\\Rainys_Bulk_Scene_Tools": {
+        "content": {
+          "matches": [
+            {
+              "file": "ops\\ghost_buster.py",
+              "matches": [
+                {
+                  "lineNumber": 372,
+                  "content": "class GhostBuster(bpy.types.Operator):"
+                },
+                {
+                  "lineNumber": 391,
+                  "content": "class GhostDetector(bpy.types.Operator):"
+                },
+                {
+                  "lineNumber": 609,
+                  "content": "class ResyncEnforce(bpy.types.Operator):"
+                }
+              ]
+            }
+          ],
+          "totalLines": 3,
+          "totalMatchedLines": 3
+        }
+      }
+    }
+  }
+}
+```
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+
+Proposing a naming system and creating a plan. Proposed module prefixes:
+
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="create_plan">
+<details>
+<summary>Tool use: **create_plan**</summary>
+
+
+Parameters:
+
+```json
+{
+  "plan": "# Refactor All Names to BST_ Prefix System\n\n## Naming Convention\n\n### Format\n- **Functions**: &#96;BST_&lt;Module&gt;_&lt;function_name&gt;&#96;\n- **Classes (Operators)**: &#96;BST_&lt;Module&gt;_OT_&lt;ClassName&gt;&#96;\n- **Classes (Panels)**: &#96;BST_&lt;Module&gt;_PT_&lt;ClassName&gt;&#96;\n- **Constants**: &#96;BST_&lt;Module&gt;_&lt;CONSTANT_NAME&gt;&#96;\n- **Property Groups**: &#96;BST_&lt;Module&gt;_PG_&lt;ClassName&gt;&#96;\n\n### Module Prefixes\n- &#96;bulk_data_remap.py&#96; → &#96;DatRem&#96; (Data Remap)\n- &#96;bulk_path_management.py&#96; → &#96;PathMgmt&#96; (Path Management)\n- &#96;bulk_viewport_display.py&#96; → &#96;Viewport&#96; (Viewport Display)\n- &#96;bulk_scene_general.py&#96; → &#96;SceneGen&#96; (Scene General)\n- &#96;ops/ghost_buster.py&#96; → &#96;GhostBust&#96; (Ghost Buster)\n- &#96;ops/AutoMatExtractor.py&#96; → &#96;AutoMat&#96; (AutoMat Extractor)\n- &#96;ops/Rename_images_by_mat.py&#96; → &#96;RenameImg&#96; (Rename Images)\n- &#96;ops/FreeGPU.py&#96; → &#96;FreeGPU&#96; (Free GPU)\n- Other ops files → Determine per file\n\n## Implementation Strategy\n\n### Phase 1: bulk_data_remap.py\n1. Rename all functions:\n   - &#96;has_linked_datablocks&#96; → &#96;BST_DatRem_has_linked_datablocks&#96;\n   - &#96;register_dataremap_properties&#96; → &#96;BST_DatRem_register_properties&#96;\n   - &#96;get_base_name&#96; → &#96;BST_DatRem_get_base_name&#96;\n   - &#96;find_data_groups&#96; → &#96;BST_DatRem_find_data_groups&#96;\n   - &#96;find_target_data&#96; → &#96;BST_DatRem_find_target_data&#96;\n   - &#96;clean_data_names&#96; → &#96;BST_DatRem_clean_data_names&#96;\n   - &#96;remap_data_blocks&#96; → &#96;BST_DatRem_remap_data_blocks&#96;\n   - &#96;draw_drag_selectable_checkbox&#96; → &#96;BST_DatRem_draw_drag_selectable_checkbox&#96;\n   - &#96;search_matches_group&#96; → &#96;BST_DatRem_search_matches_group&#96;\n   - &#96;draw_data_duplicates&#96; → &#96;BST_DatRem_draw_data_duplicates&#96;\n   - &#96;get_linked_file_paths&#96; → &#96;BST_DatRem_get_linked_file_paths&#96;\n\n2. Rename all classes:\n   - &#96;DATAREMAP_OT_RemapData&#96; → &#96;BST_DatRem_OT_RemapData&#96;\n   - &#96;BST_OT_MergeDuplicatesWithDBU&#96; → &#96;BST_DatRem_OT_MergeDuplicatesWithDBU&#96;\n   - &#96;DATAREMAP_OT_PurgeUnused&#96; → &#96;BST_DatRem_OT_PurgeUnused&#96;\n   - &#96;DATAREMAP_OT_ToggleGroupExclusion&#96; → &#96;BST_DatRem_OT_ToggleGroupExclusion&#96;\n   - &#96;DATAREMAP_OT_SelectAllGroups&#96; → &#96;BST_DatRem_OT_SelectAllGroups&#96;\n   - &#96;DATAREMAP_OT_ToggleGroupSelection&#96; → &#96;BST_DatRem_OT_ToggleGroupSelection&#96;\n   - &#96;VIEW3D_PT_BulkDataRemap&#96; → &#96;BST_DatRem_PT_BulkDataRemap&#96;\n   - &#96;DATAREMAP_OT_ToggleDataType&#96; → &#96;BST_DatRem_OT_ToggleDataType&#96;\n   - &#96;DATAREMAP_OT_ToggleGroupExpansion&#96; → &#96;BST_DatRem_OT_ToggleGroupExpansion&#96;\n   - &#96;DATAREMAP_OT_OpenLinkedFile&#96; → &#96;BST_DatRem_OT_OpenLinkedFile&#96;\n   - &#96;DATAREMAP_OT_RenameDatablock&#96; → &#96;BST_DatRem_OT_RenameDatablock&#96;\n\n3. Rename constants:\n   - &#96;NUMBERED_SUFFIX_PATTERN&#96; → &#96;BST_DatRem_NUMBERED_SUFFIX_PATTERN&#96;\n\n4. Update all references:\n   - Update function calls throughout the file\n   - Update class references in &#96;classes&#96; tuple\n   - Update operator &#96;bl_idname&#96; values (keep &#96;bst.&#96; prefix for operators)\n   - Update panel &#96;bl_idname&#96; values\n\n### Phase 2: Other Panel Files\nApply same pattern to:\n- &#96;bulk_path_management.py&#96; (prefix: &#96;PathMgmt&#96;)\n- &#96;bulk_viewport_display.py&#96; (prefix: &#96;Viewport&#96;)\n- &#96;bulk_scene_general.py&#96; (prefix: &#96;SceneGen&#96;)\n\n### Phase 3: Ops Files\nApply same pattern to:\n- &#96;ops/ghost_buster.py&#96; (prefix: &#96;GhostBust&#96;)\n- &#96;ops/AutoMatExtractor.py&#96; (prefix: &#96;AutoMat&#96;)\n- &#96;ops/Rename_images_by_mat.py&#96; (prefix: &#96;RenameImg&#96;)\n- &#96;ops/FreeGPU.py&#96; (prefix: &#96;FreeGPU&#96;)\n- Other ops files as needed\n\n### Phase 4: Update Imports\nUpdate all import statements in:\n- &#96;__init__.py&#96;\n- Cross-file imports between modules\n- Any external references\n\n## Important Notes\n\n1. **Operator bl_idname**: Keep the &#96;bst.&#96; prefix (e.g., &#96;bst.bulk_data_remap&#96;) - these are user-facing identifiers\n2. **Panel bl_idname**: Update to match new class names (e.g., &#96;BST_DatRem_PT_bulk_data_remap&#96;)\n3. **Property names**: Scene properties (like &#96;dataremap_images&#96;) should remain unchanged as they're registered to Blender's type system\n4. **Backward compatibility**: This is a breaking change - ensure all references are updated\n\n## Files to Modify\n\n### Primary Files\n- [&#96;panels/bulk_data_remap.py&#96;](panels/bulk_data_remap.py) - ~30+ renames\n- [&#96;panels/bulk_path_management.py&#96;](panels/bulk_path_management.py) - ~20+ renames\n- [&#96;panels/bulk_viewport_display.py&#96;](panels/bulk_viewport_display.py) - ~10+ renames\n- [&#96;panels/bulk_scene_general.py&#96;](panels/bulk_scene_general.py) - ~5+ renames\n- [&#96;ops/ghost_buster.py&#96;](ops/ghost_buster.py) - ~5+ renames\n- [&#96;ops/AutoMatExtractor.py&#96;](ops/AutoMatExtractor.py) - ~3+ renames\n- [&#96;ops/Rename_images_by_mat.py&#96;](ops/Rename_images_by_mat.py) - ~3+ renames\n- [&#96;ops/FreeGPU.py&#96;](ops/FreeGPU.py) - ~2+ renames\n- [&#96;__init__.py&#96;](__init__.py) - Update imports\n\n### Secondary Files\n- Other ops files as they're encountered\n- Any utility files that reference renamed functions/classes",
+  "name": "Refactor All Names to BST_ Prefix System",
+  "todos": [
+    {
+      "content": "Refactor bulk_data_remap.py: rename all functions, classes, and constants to BST_DatRem_ prefix",
+      "status": "pending",
+      "id": "refactor-dataremap"
+    },
+    {
+      "content": "Refactor bulk_path_management.py: rename all functions, classes, and constants to BST_PathMgmt_ prefix",
+      "status": "pending",
+      "id": "refactor-pathmgmt"
+    },
+    {
+      "content": "Refactor bulk_viewport_display.py: rename all functions, classes, and constants to BST_Viewport_ prefix",
+      "status": "pending",
+      "id": "refactor-viewport"
+    },
+    {
+      "content": "Refactor bulk_scene_general.py: rename all functions, classes, and constants to BST_SceneGen_ prefix",
+      "status": "pending",
+      "id": "refactor-scenegen"
+    },
+    {
+      "content": "Refactor ops files: rename classes in ghost_buster.py, AutoMatExtractor.py, Rename_images_by_mat.py, FreeGPU.py, and other ops files",
+      "status": "pending",
+      "id": "refactor-ops"
+    },
+    {
+      "content": "Update all import statements in __init__.py and cross-file imports",
+      "status": "pending",
+      "id": "update-imports"
+    },
+    {
+      "content": "Verify all classes are properly registered and operator/panel IDs are correct",
+      "status": "pending",
+      "id": "verify-registration"
+    }
+  ],
+  "overview": "Refactor all classes, functions, and constants across the entire project to use a consistent BST_ prefix system with module-specific sub-prefixes (e.g., BST_DatRem_ for Data Remap module)."
+}
+```
+Additional data:
+
+```json
+{
+  "reviewData": {
+    "status": "Requested",
+    "selectedOption": "none",
+    "isShowingInput": false
+  },
+  "planUri": "file:///c%3A/Users/Nathan/.cursor/plans/refactor_all_names_to_bst_prefix_system_4a01cb66.plan.md",
+  "hasOpenedEditor": true
+}
+```
+Result:
+
+```json
+{
+  "rejected": {}
+}
+```
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+_**User**_
+
+path management is PathMan. bulk viewport display should be ViewDisp. Ghost Buster should just be Bustin.
+
+---
+
+_**Agent (model default, mode Plan)**_
+
+
+Updating the plan with the corrected module prefixes:
+
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: c:\Users\Nathan\.cursor\plans\refactor_all_names_to_bst_prefix_system_4a01cb66.plan.md</summary>
+
+</details>
+</tool-use>
+
+---
+
+
+Updating the plan with the corrected module prefixes:
+
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: c:\Users\Nathan\.cursor\plans\refactor_all_names_to_bst_prefix_system_4a01cb66.plan.md</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: c:\Users\Nathan\.cursor\plans\refactor_all_names_to_bst_prefix_system_4a01cb66.plan.md</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: c:\Users\Nathan\.cursor\plans\refactor_all_names_to_bst_prefix_system_4a01cb66.plan.md</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: c:\Users\Nathan\.cursor\plans\refactor_all_names_to_bst_prefix_system_4a01cb66.plan.md</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+
+Updated the plan with the corrected module prefixes:
+
+- `bulk_path_management.py` → `PathMan` (was `PathMgmt`)
+- `bulk_viewport_display.py` → `ViewDisp` (was `Viewport`)
+- `ops/ghost_buster.py` → `Bustin` (was `GhostBust`)
+
+The plan now reflects these prefixes. Examples:
+- Functions in path management: `BST_PathMan_<function_name>`
+- Classes in viewport display: `BST_ViewDisp_OT_<class_name>`
+- Classes in ghost buster: `BST_Bustin_OT_<class_name>`
+
+Ready for implementation when you approve.
+
+---
+
+_**User**_
+
+Implement the plan as specified, it is attached for your reference. Do NOT edit the plan file itself.
+
+To-do's from the plan have already been created. Do not create them again. Mark them as in_progress as you work, starting with the first one. Don't stop until you have completed all the to-dos.
+
+---
+
+_**Agent (model default, mode Agent)**_
+
+
+Starting Phase 1: refactoring `bulk_data_remap.py`. Reviewing the file to identify all items to rename:
+
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_data_remap.py</summary>
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search">
+<details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+
+Parameters:
+
+```json
+{
+  "pattern": "^def |^class |^[A-Z_]+ = ",
+  "path": "E:\\Rainys_Bulk_Scene_Tools\\panels\\bulk_data_remap.py",
+  "caseInsensitive": false
+}
+```
+Result:
+
+```json
+{
+  "success": {
+    "pattern": "^def |^class |^[A-Z_]+ = ",
+    "path": "E:\\Rainys_Bulk_Scene_Tools\\panels\\bulk_data_remap.py",
+    "outputMode": "content",
+    "workspaceResults": {
+      "E:\\Rainys_Bulk_Scene_Tools": {
+        "content": {
+          "matches": [
+            {
+              "file": "panels\\bulk_data_remap.py",
+              "matches": [
+                {
+                  "lineNumber": 12,
+                  "content": "NUMBERED_SUFFIX_PATTERN = re.compile(r'(.*?)[._](\\d{3,})$')"
+                },
+                {
+                  "lineNumber": 15,
+                  "content": "def has_linked_datablocks(data_collection):"
+                },
+                {
+                  "lineNumber": 23,
+                  "content": "def register_dataremap_properties():"
+                },
+                {
+                  "lineNumber": 139,
+                  "content": "def unregister_dataremap_properties():"
+                },
+                {
+                  "lineNumber": 165,
+                  "content": "def get_base_name(name):"
+                },
+                {
+                  "lineNumber": 172,
+                  "content": "def find_data_groups(data_collection):"
+                },
+                {
+                  "lineNumber": 197,
+                  "content": "def find_target_data(data_group):"
+                },
+                {
+                  "lineNumber": 225,
+                  "content": "def clean_data_names(data_collection):"
+                },
+                {
+                  "lineNumber": 245,
+                  "content": "def remap_data_blocks(context, remap_images, remap_materials, remap_fonts, remap_worlds):"
+                },
+                {
+                  "lineNumber": 596,
+                  "content": "class DATAREMAP_OT_RemapData(bpy.types.Operator):"
+                },
+                {
+                  "lineNumber": 666,
+                  "content": "class BST_OT_MergeDuplicatesWithDBU(bpy.types.Operator):"
+                },
+                {
+                  "lineNumber": 738,
+                  "content": "class DATAREMAP_OT_PurgeUnused(bpy.types.Operator):"
+                },
+                {
+                  "lineNumber": 753,
+                  "content": "class DATAREMAP_OT_ToggleGroupExclusion(bpy.types.Operator):"
+                },
+                {
+                  "lineNumber": 787,
+                  "content": "class DATAREMAP_OT_SelectAllGroups(bpy.types.Operator):"
+                },
+                {
+                  "lineNumber": 837,
+                  "content": "class DATAREMAP_OT_ToggleGroupSelection(bpy.types.Operator):"
+                },
+                {
+                  "lineNumber": 944,
+                  "content": "def draw_drag_selectable_checkbox(layout, context, data_type, group_key):"
+                },
+                {
+                  "lineNumber": 960,
+                  "content": "def search_matches_group(group, search_string):"
+                },
+                {
+                  "lineNumber": 976,
+                  "content": "def draw_data_duplicates(layout, context, data_type, data_groups):"
+                },
+                {
+                  "lineNumber": 1121,
+                  "content": "class VIEW3D_PT_BulkDataRemap(bpy.types.Panel):"
+                },
+                {
+                  "lineNumber": 1403,
+                  "content": "class DATAREMAP_OT_ToggleDataType(bpy.types.Operator):"
+                },
+                {
+                  "lineNumber": 1428,
+                  "content": "class DATAREMAP_OT_ToggleGroupExpansion(bpy.types.Operator):"
+                },
+                {
+                  "lineNumber": 1463,
+                  "content": "def get_linked_file_paths(data_collection):"
+                },
+                {
+                  "lineNumber": 1474,
+                  "content": "class DATAREMAP_OT_OpenLinkedFile(bpy.types.Operator):"
+                },
+                {
+                  "lineNumber": 1503,
+                  "content": "class DATAREMAP_OT_RenameDatablock(bpy.types.Operator):"
+                },
+                {
+                  "lineNumber": 1589,
+                  "content": "def register():"
+                },
+                {
+                  "lineNumber": 1595,
+                  "content": "def unregister():"
+                }
+              ]
+            }
+          ],
+          "totalLines": 26,
+          "totalMatchedLines": 26
+        }
+      }
+    }
+  }
+}
+```
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="task" data-tool-name="todo_write">
+<details><summary>Tool use: **todo_write** • Todo List</summary>
+
+- [-] Refactor bulk_data_remap.py: rename all functions, classes, and constants to BST_DatRem_ prefix
+- [ ] Refactor bulk_path_management.py: rename all functions, classes, and constants to BST_PathMgmt_ prefix
+- [ ] Refactor bulk_viewport_display.py: rename all functions, classes, and constants to BST_Viewport_ prefix
+- [ ] Refactor bulk_scene_general.py: rename all functions, classes, and constants to BST_SceneGen_ prefix
+- [ ] Refactor ops files: rename classes in ghost_buster.py, AutoMatExtractor.py, Rename_images_by_mat.py, FreeGPU.py, and other ops files
+- [ ] Update all import statements in __init__.py and cross-file imports
+- [ ] Verify all classes are properly registered and operator/panel IDs are correct
+
+</details>
+</tool-use>
+
+---
+
+
+Starting Phase 1: refactoring `bulk_data_remap.py`. Renaming the constant first, then functions and classes, then updating references.
+
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_data_remap.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_data_remap.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_data_remap.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_data_remap.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_data_remap.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_data_remap.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_data_remap.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_data_remap.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_data_remap.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+
+Continuing with the remaining functions:
+
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_data_remap.py</summary>
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_data_remap.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_data_remap.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_data_remap.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_data_remap.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+
+Updating all function call references throughout the file:
+
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search">
+<details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+
+Parameters:
+
+```json
+{
+  "pattern": "has_linked_datablocks|register_dataremap_properties|unregister_dataremap_properties|get_base_name|find_data_groups|find_target_data|clean_data_names|remap_data_blocks|draw_drag_selectable_checkbox|search_matches_group|draw_data_duplicates|get_linked_file_paths|NUMBERED_SUFFIX_PATTERN",
+  "path": "E:\\Rainys_Bulk_Scene_Tools\\panels\\bulk_data_remap.py",
+  "caseInsensitive": false
+}
+```
+Result:
+
+```json
+{
+  "success": {
+    "pattern": "has_linked_datablocks|register_dataremap_properties|unregister_dataremap_properties|get_base_name|find_data_groups|find_target_data|clean_data_names|remap_data_blocks|draw_drag_selectable_checkbox|search_matches_group|draw_data_duplicates|get_linked_file_paths|NUMBERED_SUFFIX_PATTERN",
+    "path": "E:\\Rainys_Bulk_Scene_Tools\\panels\\bulk_data_remap.py",
+    "outputMode": "content",
+    "workspaceResults": {
+      "E:\\Rainys_Bulk_Scene_Tools": {
+        "content": {
+          "matches": [
+            {
+              "file": "panels\\bulk_data_remap.py",
+              "matches": [
+                {
+                  "lineNumber": 12,
+                  "content": "BST_DatRem_NUMBERED_SUFFIX_PATTERN = re.compile(r'(.*?)[._](\\d{3,})$')"
+                },
+                {
+                  "lineNumber": 15,
+                  "content": "def BST_DatRem_has_linked_datablocks(data_collection):"
+                },
+                {
+                  "lineNumber": 165,
+                  "content": "def BST_DatRem_get_base_name(name):"
+                },
+                {
+                  "lineNumber": 167,
+                  "content": "    match = BST_DatRem_NUMBERED_SUFFIX_PATTERN.match(name)"
+                },
+                {
+                  "lineNumber": 172,
+                  "content": "def BST_DatRem_find_data_groups(data_collection):"
+                },
+                {
+                  "lineNumber": 185,
+                  "content": "        base_name = BST_DatRem_get_base_name(data.name)"
+                },
+                {
+                  "lineNumber": 197,
+                  "content": "def BST_DatRem_find_target_data(data_group):"
+                },
+                {
+                  "lineNumber": 208,
+                  "content": "        if get_base_name(data.name) == data.name:"
+                },
+                {
+                  "lineNumber": 216,
+                  "content": "        match = NUMBERED_SUFFIX_PATTERN.match(data.name)"
+                },
+                {
+                  "lineNumber": 225,
+                  "content": "def BST_DatRem_clean_data_names(data_collection):"
+                },
+                {
+                  "lineNumber": 238,
+                  "content": "        base_name = get_base_name(data.name)"
+                },
+                {
+                  "lineNumber": 245,
+                  "content": "def BST_DatRem_remap_data_blocks(context, remap_images, remap_materials, remap_fonts, remap_worlds):"
+                },
+                {
+                  "lineNumber": 253,
+                  "content": "        image_groups = find_data_groups(bpy.data.images)"
+                },
+                {
+                  "lineNumber": 259,
+                  "content": "            target_image = find_target_data(images)"
+                },
+                {
+                  "lineNumber": 262,
+                  "content": "            if get_base_name(target_image.name) != target_image.name:"
+                },
+                {
+                  "lineNumber": 264,
+                  "content": "                    target_image.name = get_base_name(target_image.name)"
+                },
+                {
+                  "lineNumber": 326,
+                  "content": "        cleaned_count += clean_data_names(bpy.data.images)"
+                },
+                {
+                  "lineNumber": 331,
+                  "content": "        material_groups = find_data_groups(bpy.data.materials)"
+                },
+                {
+                  "lineNumber": 337,
+                  "content": "            target_material = find_target_data(materials)"
+                },
+                {
+                  "lineNumber": 340,
+                  "content": "            if get_base_name(target_material.name) != target_material.name:"
+                },
+                {
+                  "lineNumber": 342,
+                  "content": "                    target_material.name = get_base_name(target_material.name)"
+                },
+                {
+                  "lineNumber": 446,
+                  "content": "        cleaned_count += clean_data_names(bpy.data.materials)"
+                },
+                {
+                  "lineNumber": 451,
+                  "content": "        font_groups = find_data_groups(bpy.data.fonts)"
+                },
+                {
+                  "lineNumber": 457,
+                  "content": "            target_font = find_target_data(fonts)"
+                },
+                {
+                  "lineNumber": 460,
+                  "content": "            if get_base_name(target_font.name) != target_font.name:"
+                },
+                {
+                  "lineNumber": 462,
+                  "content": "                    target_font.name = get_base_name(target_font.name)"
+                },
+                {
+                  "lineNumber": 522,
+                  "content": "        cleaned_count += clean_data_names(bpy.data.fonts)"
+                },
+                {
+                  "lineNumber": 527,
+                  "content": "        world_groups = find_data_groups(bpy.data.worlds)"
+                },
+                {
+                  "lineNumber": 533,
+                  "content": "            target_world = find_target_data(worlds)"
+                },
+                {
+                  "lineNumber": 536,
+                  "content": "            if get_base_name(target_world.name) != target_world.name:"
+                },
+                {
+                  "lineNumber": 538,
+                  "content": "                    target_world.name = get_base_name(target_world.name)"
+                },
+                {
+                  "lineNumber": 588,
+                  "content": "        cleaned_count += clean_data_names(bpy.data.worlds)"
+                },
+                {
+                  "lineNumber": 610,
+                  "content": "        image_groups = find_data_groups(bpy.data.images) if remap_images else {}"
+                },
+                {
+                  "lineNumber": 611,
+                  "content": "        material_groups = find_data_groups(bpy.data.materials) if remap_materials else {}"
+                },
+                {
+                  "lineNumber": 612,
+                  "content": "        font_groups = find_data_groups(bpy.data.fonts) if remap_fonts else {}"
+                },
+                {
+                  "lineNumber": 613,
+                  "content": "        world_groups = find_data_groups(bpy.data.worlds) if remap_worlds else {}"
+                },
+                {
+                  "lineNumber": 623,
+                  "content": "                                and get_base_name(img.name) != img.name)"
+                },
+                {
+                  "lineNumber": 628,
+                  "content": "                                and get_base_name(mat.name) != mat.name)"
+                },
+                {
+                  "lineNumber": 633,
+                  "content": "                                and get_base_name(font.name) != font.name)"
+                },
+                {
+                  "lineNumber": 638,
+                  "content": "                                and get_base_name(world.name) != world.name)"
+                },
+                {
+                  "lineNumber": 645,
+                  "content": "        remapped_count, cleaned_count = remap_data_blocks("
+                },
+                {
+                  "lineNumber": 813,
+                  "content": "            data_groups = find_data_groups(bpy.data.images)"
+                },
+                {
+                  "lineNumber": 815,
+                  "content": "            data_groups = find_data_groups(bpy.data.materials)"
+                },
+                {
+                  "lineNumber": 817,
+                  "content": "            data_groups = find_data_groups(bpy.data.fonts)"
+                },
+                {
+                  "lineNumber": 819,
+                  "content": "            data_groups = find_data_groups(bpy.data.worlds)"
+                },
+                {
+                  "lineNumber": 878,
+                  "content": "                data_groups = list(find_data_groups(bpy.data.images).keys())"
+                },
+                {
+                  "lineNumber": 880,
+                  "content": "                data_groups = list(find_data_groups(bpy.data.materials).keys())"
+                },
+                {
+                  "lineNumber": 882,
+                  "content": "                data_groups = list(find_data_groups(bpy.data.fonts).keys())"
+                },
+                {
+                  "lineNumber": 884,
+                  "content": "                data_groups = list(find_data_groups(bpy.data.worlds).keys())"
+                },
+                {
+                  "lineNumber": 944,
+                  "content": "def BST_DatRem_draw_drag_selectable_checkbox(layout, context, data_type, group_key):"
+                },
+                {
+                  "lineNumber": 960,
+                  "content": "def BST_DatRem_search_matches_group(group, search_string):"
+                },
+                {
+                  "lineNumber": 976,
+                  "content": "def BST_DatRem_draw_data_duplicates(layout, context, data_type, data_groups):"
+                },
+                {
+                  "lineNumber": 1020,
+                  "content": "        group_items = [group for group in group_items if search_matches_group(group, search_string)]"
+                },
+                {
+                  "lineNumber": 1040,
+                  "content": "            draw_drag_selectable_checkbox(row, context, data_type, base_name)"
+                },
+                {
+                  "lineNumber": 1054,
+                  "content": "            target_item = find_target_data(items)"
+                },
+                {
+                  "lineNumber": 1143,
+                  "content": "        if context.scene.dataremap_images and has_linked_datablocks(bpy.data.images):"
+                },
+                {
+                  "lineNumber": 1146,
+                  "content": "            linked_paths.update(get_linked_file_paths(bpy.data.images))"
+                },
+                {
+                  "lineNumber": 1148,
+                  "content": "        if context.scene.dataremap_materials and has_linked_datablocks(bpy.data.materials):"
+                },
+                {
+                  "lineNumber": 1151,
+                  "content": "            linked_paths.update(get_linked_file_paths(bpy.data.materials))"
+                },
+                {
+                  "lineNumber": 1153,
+                  "content": "        if context.scene.dataremap_fonts and has_linked_datablocks(bpy.data.fonts):"
+                },
+                {
+                  "lineNumber": 1156,
+                  "content": "            linked_paths.update(get_linked_file_paths(bpy.data.fonts))"
+                },
+                {
+                  "lineNumber": 1158,
+                  "content": "        if context.scene.dataremap_worlds and has_linked_datablocks(bpy.data.worlds):"
+                },
+                {
+                  "lineNumber": 1161,
+                  "content": "            linked_paths.update(get_linked_file_paths(bpy.data.worlds))"
+                },
+                {
+                  "lineNumber": 1191,
+                  "content": "        image_groups = find_data_groups(bpy.data.images)"
+                },
+                {
+                  "lineNumber": 1192,
+                  "content": "        material_groups = find_data_groups(bpy.data.materials)"
+                },
+                {
+                  "lineNumber": 1193,
+                  "content": "        font_groups = find_data_groups(bpy.data.fonts)"
+                },
+                {
+                  "lineNumber": 1194,
+                  "content": "        world_groups = find_data_groups(bpy.data.worlds)"
+                },
+                {
+                  "lineNumber": 1201,
+                  "content": "        image_numbered = sum(1 for img in bpy.data.images if img.users &gt; 0 and get_base_name(img.name) != img.name)"
+                },
+                {
+                  "lineNumber": 1202,
+                  "content": "        material_numbered = sum(1 for mat in bpy.data.materials if mat.users &gt; 0 and get_base_name(mat.name) != mat.name)"
+                },
+                {
+                  "lineNumber": 1203,
+                  "content": "        font_numbered = sum(1 for font in bpy.data.fonts if font.users &gt; 0 and get_base_name(font.name) != font.name)"
+                },
+                {
+                  "lineNumber": 1204,
+                  "content": "        world_numbered = sum(1 for world in bpy.data.worlds if world.users &gt; 0 and get_base_name(world.name) != world.name)"
+                },
+                {
+                  "lineNumber": 1240,
+                  "content": "            draw_data_duplicates(col, context, \"images\", image_groups)"
+                },
+                {
+                  "lineNumber": 1271,
+                  "content": "            draw_data_duplicates(col, context, \"materials\", material_groups)"
+                },
+                {
+                  "lineNumber": 1302,
+                  "content": "            draw_data_duplicates(col, context, \"fonts\", font_groups)"
+                },
+                {
+                  "lineNumber": 1333,
+                  "content": "            draw_data_duplicates(col, context, \"worlds\", world_groups)"
+                },
+                {
+                  "lineNumber": 1463,
+                  "content": "def BST_DatRem_get_linked_file_paths(data_collection):"
+                },
+                {
+                  "lineNumber": 1590,
+                  "content": "    register_dataremap_properties()"
+                },
+                {
+                  "lineNumber": 1600,
+                  "content": "        unregister_dataremap_properties()"
+                }
+              ]
+            }
+          ],
+          "totalLines": 78,
+          "totalMatchedLines": 78
+        }
+      }
+    }
+  }
+}
+```
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+
+Replacing all function call references:
+
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_data_remap.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_data_remap.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_data_remap.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_data_remap.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_data_remap.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_data_remap.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_data_remap.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_data_remap.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+The string to replace was not found in the file.
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_data_remap.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_data_remap.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+The string to replace was not found in the file.
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_data_remap.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_data_remap.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+The string to replace was not found in the file.
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_data_remap.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_data_remap.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+The string to replace was not found in the file.
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_data_remap.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_data_remap.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_data_remap.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_data_remap.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_data_remap.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_data_remap.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_data_remap.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_data_remap.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_data_remap.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_data_remap.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_data_remap.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_data_remap.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_data_remap.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_data_remap.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_data_remap.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_data_remap.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_data_remap.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_data_remap.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_data_remap.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_data_remap.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_data_remap.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+
+Renaming all classes:
+
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_data_remap.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_data_remap.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_data_remap.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_data_remap.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_data_remap.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_data_remap.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_data_remap.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_data_remap.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_data_remap.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_data_remap.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_data_remap.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+
+Updating the panel bl_idname and the classes tuple:
+
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_data_remap.py</summary>
+
+</details>
+</tool-use>
+
+---
+
+The string to replace was not found in the file.
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_data_remap.py</summary>
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_data_remap.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search">
+<details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+
+Parameters:
+
+```json
+{
+  "pattern": "VIEW3D_PT_bulk_data_remap",
+  "path": "E:\\Rainys_Bulk_Scene_Tools",
+  "caseInsensitive": false
+}
+```
+Result:
+
+```json
+{
+  "success": {
+    "pattern": "VIEW3D_PT_bulk_data_remap",
+    "path": "E:\\Rainys_Bulk_Scene_Tools",
+    "outputMode": "content",
+    "workspaceResults": {
+      "E:\\Rainys_Bulk_Scene_Tools": {
+        "content": {
+          "matches": [
+            {
+              "file": "panels\\bulk_data_remap.py",
+              "matches": [
+                {
+                  "lineNumber": 1124,
+                  "content": "    bl_idname = \"VIEW3D_PT_bulk_data_remap\""
+                }
+              ]
+            },
+            {
+              "file": ".specstory/history/2025-12-18_23-07Z-github-issue-#3-integration.md",
+              "matches": [
+                {
+                  "lineNumber": 10022,
+                  "content": "        \"contents\": \"class VIEW3D_PT_BulkDataRemap(bpy.types.Panel):\\n    \\\"\\\"\\\"Bulk Data Remap Panel\\\"\\\"\\\"\\n    bl_label = \\\"Bulk Data Remap\\\"\\n    bl_idname = \\\"VIEW3D_PT_bulk_data_remap\\\"\\n    bl_space_type = 'VIEW_3D'\\n    bl_region_type = 'UI'\\n    bl_category = 'Edit'\\n    bl_parent_id = \\\"VIEW3D_PT_bulk_scene_tools\\\"\\n    bl_order = 2\\n    \\n    def draw(self, context):\\n        layout = self.layout\\n        \\n        # Data Remapper section\\n        box = layout.box()\\n        box.label(text=\\\"Data Remapper\\\")\\n        \\n        # Check for linked datablocks and create a separate warning section if found\\n        linked_datablocks_found = False\\n        linked_types = []\\n        linked_paths = set()\\n        \\n        if context.scene.dataremap_images and has_linked_datablocks(bpy.data.images):\\n            linked_datablocks_found = True\\n            linked_types.append(\\\"images\\\")\\n            linked_paths.update(get_linked_file_paths(bpy.data.images))\\n            \\n        "
+                },
+                {
+                  "lineNumber": 10039,
+                  "content": "            \"text\": \"    bl_idname = \\\"VIEW3D_PT_bulk_data_remap\\\"\","
+                }
+              ]
+            },
+            {
+              "file": "panels/bulk_data_remap.py",
+              "matches": [
+                {
+                  "lineNumber": 1124,
+                  "content": "    bl_idname = \"VIEW3D_PT_bulk_data_remap\""
+                }
+              ]
+            }
+          ],
+          "totalLines": 4,
+          "totalMatchedLines": 4
+        }
+      }
+    }
+  }
+}
+```
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+
+Fixing the panel class name:
+
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_data_remap.py</summary>
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_data_remap.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_data_remap.py</summary>
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="generic" data-tool-name="read_lints">
+<details>
+          <summary>Tool use: **read_lints** • Read lints for 1 file</summary>
+      
+Lint paths:
+
+- `panels/bulk_data_remap.py`
+
+Lint results
+
+Lint errors for `panels/bulk_data_remap.py`
+
+
+| Message | Range | Severity |
+|-------|-------|----------|
+| "get_base_name" is not defined | 262:16-262:29 | DIAGNOSTIC_SEVERITY_WARNING |
+| "get_base_name" is not defined | 264:41-264:54 | DIAGNOSTIC_SEVERITY_WARNING |
+| "get_base_name" is not defined | 340:16-340:29 | DIAGNOSTIC_SEVERITY_WARNING |
+| "get_base_name" is not defined | 342:44-342:57 | DIAGNOSTIC_SEVERITY_WARNING |
+| "get_base_name" is not defined | 460:16-460:29 | DIAGNOSTIC_SEVERITY_WARNING |
+| "get_base_name" is not defined | 462:40-462:53 | DIAGNOSTIC_SEVERITY_WARNING |
+| "get_base_name" is not defined | 536:16-536:29 | DIAGNOSTIC_SEVERITY_WARNING |
+| "get_base_name" is not defined | 538:41-538:54 | DIAGNOSTIC_SEVERITY_WARNING |
+| "get_base_name" is not defined | 623:37-623:50 | DIAGNOSTIC_SEVERITY_WARNING |
+| "find_data_groups" is not defined | 813:27-813:43 | DIAGNOSTIC_SEVERITY_WARNING |
+| "find_data_groups" is not defined | 815:27-815:43 | DIAGNOSTIC_SEVERITY_WARNING |
+| "find_data_groups" is not defined | 817:27-817:43 | DIAGNOSTIC_SEVERITY_WARNING |
+| "find_data_groups" is not defined | 819:27-819:43 | DIAGNOSTIC_SEVERITY_WARNING |
+| "BST_DatRem_OT_MergeDuplicatesWithDBU" is not defined | 1576:5-1576:41 | DIAGNOSTIC_SEVERITY_WARNING |
+| "BST_DatRem_OT_SelectAllGroups" is not defined | 1580:5-1580:34 | DIAGNOSTIC_SEVERITY_WARNING |
+| "BST_DatRem_PT_BulkDataRemap" is not defined | 1581:5-1581:32 | DIAGNOSTIC_SEVERITY_WARNING |
+
+
+</details>
+</tool-use>
+
+---
+
+
+Fixing remaining references:
+
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_data_remap.py</summary>
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_data_remap.py</summary>
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search">
+<details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+
+Parameters:
+
+```json
+{
+  "pattern": "\\bget_base_name\\b|\\bfind_data_groups\\b",
+  "path": "E:\\Rainys_Bulk_Scene_Tools\\panels\\bulk_data_remap.py",
+  "caseInsensitive": false
+}
+```
+Result:
+
+```json
+{
+  "success": {
+    "pattern": "\\bget_base_name\\b|\\bfind_data_groups\\b",
+    "path": "E:\\Rainys_Bulk_Scene_Tools\\panels\\bulk_data_remap.py",
+    "outputMode": "content",
+    "workspaceResults": {
+      "E:\\Rainys_Bulk_Scene_Tools": {
+        "content": {
+          "matches": [
+            {
+              "file": "panels\\bulk_data_remap.py",
+              "matches": [
+                {
+                  "lineNumber": 262,
+                  "content": "            if get_base_name(target_image.name) != target_image.name:"
+                },
+                {
+                  "lineNumber": 264,
+                  "content": "                    target_image.name = get_base_name(target_image.name)"
+                },
+                {
+                  "lineNumber": 340,
+                  "content": "            if get_base_name(target_material.name) != target_material.name:"
+                },
+                {
+                  "lineNumber": 342,
+                  "content": "                    target_material.name = get_base_name(target_material.name)"
+                },
+                {
+                  "lineNumber": 460,
+                  "content": "            if get_base_name(target_font.name) != target_font.name:"
+                },
+                {
+                  "lineNumber": 462,
+                  "content": "                    target_font.name = get_base_name(target_font.name)"
+                },
+                {
+                  "lineNumber": 536,
+                  "content": "            if get_base_name(target_world.name) != target_world.name:"
+                },
+                {
+                  "lineNumber": 538,
+                  "content": "                    target_world.name = get_base_name(target_world.name)"
+                },
+                {
+                  "lineNumber": 623,
+                  "content": "                                and get_base_name(img.name) != img.name)"
+                },
+                {
+                  "lineNumber": 813,
+                  "content": "            data_groups = find_data_groups(bpy.data.images)"
+                },
+                {
+                  "lineNumber": 815,
+                  "content": "            data_groups = find_data_groups(bpy.data.materials)"
+                },
+                {
+                  "lineNumber": 817,
+                  "content": "            data_groups = find_data_groups(bpy.data.fonts)"
+                },
+                {
+                  "lineNumber": 819,
+                  "content": "            data_groups = find_data_groups(bpy.data.worlds)"
+                }
+              ]
+            }
+          ],
+          "totalLines": 13,
+          "totalMatchedLines": 13
+        }
+      }
+    }
+  }
+}
+```
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+
+Fixing the remaining references:
+
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_data_remap.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_data_remap.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_data_remap.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="generic" data-tool-name="read_lints">
+<details>
+          <summary>Tool use: **read_lints** • Read lints for 1 file</summary>
+      
+Lint paths:
+
+- `panels/bulk_data_remap.py`
+
+Lint results
+
+Lint errors for `panels/bulk_data_remap.py`
+
+
+| Message | Range | Severity |
+|-------|-------|----------|
+| "get_base_name" is not defined | 460:16-460:29 | DIAGNOSTIC_SEVERITY_WARNING |
+| "get_base_name" is not defined | 462:40-462:53 | DIAGNOSTIC_SEVERITY_WARNING |
+| "get_base_name" is not defined | 536:16-536:29 | DIAGNOSTIC_SEVERITY_WARNING |
+| "get_base_name" is not defined | 538:41-538:54 | DIAGNOSTIC_SEVERITY_WARNING |
+| "get_base_name" is not defined | 623:37-623:50 | DIAGNOSTIC_SEVERITY_WARNING |
+| "find_data_groups" is not defined | 813:27-813:43 | DIAGNOSTIC_SEVERITY_WARNING |
+| "find_data_groups" is not defined | 815:27-815:43 | DIAGNOSTIC_SEVERITY_WARNING |
+| "find_data_groups" is not defined | 817:27-817:43 | DIAGNOSTIC_SEVERITY_WARNING |
+| "find_data_groups" is not defined | 819:27-819:43 | DIAGNOSTIC_SEVERITY_WARNING |
+| "BST_DatRem_OT_MergeDuplicatesWithDBU" is not defined | 1576:5-1576:41 | DIAGNOSTIC_SEVERITY_WARNING |
+| "BST_DatRem_OT_SelectAllGroups" is not defined | 1580:5-1580:34 | DIAGNOSTIC_SEVERITY_WARNING |
+
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_data_remap.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_data_remap.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+
+Checking the file to see what's happening:
+
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_data_remap.py</summary>
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_data_remap.py</summary>
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_data_remap.py</summary>
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_data_remap.py</summary>
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_data_remap.py</summary>
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_data_remap.py</summary>
+
+</details>
+</tool-use>
+
+---
+
+
+Fixing the remaining issues:
+
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_data_remap.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_data_remap.py</summary>
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search">
+<details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+
+Parameters:
+
+```json
+{
+  "pattern": "^class BST_OT_MergeDuplicatesWithDBU|^class DATAREMAP_OT_SelectAllGroups",
+  "path": "E:\\Rainys_Bulk_Scene_Tools\\panels\\bulk_data_remap.py",
+  "caseInsensitive": false
+}
+```
+Result:
+
+```json
+{
+  "success": {
+    "pattern": "^class BST_OT_MergeDuplicatesWithDBU|^class DATAREMAP_OT_SelectAllGroups",
+    "path": "E:\\Rainys_Bulk_Scene_Tools\\panels\\bulk_data_remap.py",
+    "outputMode": "content",
+    "workspaceResults": {
+      "E:\\Rainys_Bulk_Scene_Tools": {
+        "content": {
+          "matches": [
+            {
+              "file": "panels\\bulk_data_remap.py",
+              "matches": [
+                {
+                  "lineNumber": 666,
+                  "content": "class BST_OT_MergeDuplicatesWithDBU(bpy.types.Operator):"
+                },
+                {
+                  "lineNumber": 787,
+                  "content": "class DATAREMAP_OT_SelectAllGroups(bpy.types.Operator):"
+                }
+              ]
+            }
+          ],
+          "totalLines": 2,
+          "totalMatchedLines": 2
+        }
+      }
+    }
+  }
+}
+```
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+
+Fixing the remaining class names:
+
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_data_remap.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_data_remap.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="generic" data-tool-name="read_lints">
+<details>
+          <summary>Tool use: **read_lints** • Read lints for 1 file</summary>
+      
+Lint paths:
+
+- `panels/bulk_data_remap.py`
+
+Lint results
+
+Lint errors for `panels/bulk_data_remap.py`
+
+
+| Message | Range | Severity |
+|-------|-------|----------|
+| "get_base_name" is not defined | 340:16-340:29 | DIAGNOSTIC_SEVERITY_WARNING |
+| "get_base_name" is not defined | 342:44-342:57 | DIAGNOSTIC_SEVERITY_WARNING |
+| "BST_DatRem_OT_SelectAllGroups" is not defined | 1580:5-1580:34 | DIAGNOSTIC_SEVERITY_WARNING |
+
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="task" data-tool-name="todo_write">
+<details><summary>Tool use: **todo_write** • Todo List</summary>
+
+- [x] Refactor bulk_data_remap.py: rename all functions, classes, and constants to BST_DatRem_ prefix
+- [ ] Refactor bulk_path_management.py: rename all functions, classes, and constants to BST_PathMgmt_ prefix
+- [ ] Refactor bulk_viewport_display.py: rename all functions, classes, and constants to BST_Viewport_ prefix
+- [ ] Refactor bulk_scene_general.py: rename all functions, classes, and constants to BST_SceneGen_ prefix
+- [ ] Refactor ops files: rename classes in ghost_buster.py, AutoMatExtractor.py, Rename_images_by_mat.py, FreeGPU.py, and other ops files
+- [ ] Update all import statements in __init__.py and cross-file imports
+- [ ] Verify all classes are properly registered and operator/panel IDs are correct
+
+</details>
+</tool-use>
+
+---
+
+
+Checking and fixing the remaining linter errors:
+
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_data_remap.py</summary>
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_data_remap.py</summary>
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search">
+<details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+
+Parameters:
+
+```json
+{
+  "pattern": "class BST_DatRem_OT_SelectAllGroups",
+  "path": "E:\\Rainys_Bulk_Scene_Tools\\panels\\bulk_data_remap.py",
+  "caseInsensitive": false
+}
+```
+Result:
+
+```json
+{
+  "success": {
+    "pattern": "class BST_DatRem_OT_SelectAllGroups",
+    "path": "E:\\Rainys_Bulk_Scene_Tools\\panels\\bulk_data_remap.py",
+    "outputMode": "content",
+    "workspaceResults": {
+      "E:\\Rainys_Bulk_Scene_Tools": {
+        "content": {
+          "matches": [
+            {
+              "file": "panels\\bulk_data_remap.py",
+              "matches": [
+                {
+                  "lineNumber": 787,
+                  "content": "class BST_DatRem_OT_SelectAllGroups(bpy.types.Operator):"
+                }
+              ]
+            }
+          ],
+          "totalLines": 1,
+          "totalMatchedLines": 1
+        }
+      }
+    }
+  }
+}
+```
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_data_remap.py</summary>
+
+</details>
+</tool-use>
+
+---
+
+
+Fixing the remaining `get_base_name` references:
+
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_data_remap.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="generic" data-tool-name="read_lints">
+<details>
+          <summary>Tool use: **read_lints** • Read lints for 1 file</summary>
+      
+Lint paths:
+
+- `panels/bulk_data_remap.py`
+
+Lint results
+
+Lint errors for `panels/bulk_data_remap.py`
+
+
+| Message | Range | Severity |
+|-------|-------|----------|
+| "get_base_name" is not defined | 340:16-340:29 | DIAGNOSTIC_SEVERITY_WARNING |
+| "get_base_name" is not defined | 342:44-342:57 | DIAGNOSTIC_SEVERITY_WARNING |
+
+
+</details>
+</tool-use>
+
+---
+
+
+Checking the file again:
+
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_data_remap.py</summary>
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search">
+<details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+
+Parameters:
+
+```json
+{
+  "pattern": "\\bget_base_name\\b",
+  "path": "E:\\Rainys_Bulk_Scene_Tools\\panels\\bulk_data_remap.py",
+  "caseInsensitive": false
+}
+```
+Result:
+
+```json
+{
+  "success": {
+    "pattern": "\\bget_base_name\\b",
+    "path": "E:\\Rainys_Bulk_Scene_Tools\\panels\\bulk_data_remap.py",
+    "outputMode": "content",
+    "workspaceResults": {
+      "E:\\Rainys_Bulk_Scene_Tools": {
+        "content": {}
+      }
+    }
+  }
+}
+```
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+
+The file looks correct. The linter errors may be stale. Phase 1 for `bulk_data_remap.py` is complete. Moving to Phase 2: other panel files. Starting with `bulk_path_management.py`:
+
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search">
+<details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+
+Parameters:
+
+```json
+{
+  "pattern": "^class |^def [A-Z]|^[A-Z_]+ = ",
+  "path": "E:\\Rainys_Bulk_Scene_Tools\\panels\\bulk_path_management.py",
+  "caseInsensitive": false
+}
+```
+Result:
+
+```json
+{
+  "success": {
+    "pattern": "^class |^def [A-Z]|^[A-Z_]+ = ",
+    "path": "E:\\Rainys_Bulk_Scene_Tools\\panels\\bulk_path_management.py",
+    "outputMode": "content",
+    "workspaceResults": {
+      "E:\\Rainys_Bulk_Scene_Tools": {
+        "content": {
+          "matches": [
+            {
+              "file": "panels\\bulk_path_management.py",
+              "matches": [
+                {
+                  "lineNumber": 8,
+                  "content": "class REMOVE_EXT_OT_summary_dialog(bpy.types.Operator):"
+                },
+                {
+                  "lineNumber": 207,
+                  "content": "class BST_PathProperties(PropertyGroup):"
+                },
+                {
+                  "lineNumber": 331,
+                  "content": "class BST_OT_remap_path(Operator):"
+                },
+                {
+                  "lineNumber": 377,
+                  "content": "class BST_OT_toggle_select_all(Operator):"
+                },
+                {
+                  "lineNumber": 397,
+                  "content": "class BST_OT_bulk_remap(Operator):"
+                },
+                {
+                  "lineNumber": 496,
+                  "content": "class BST_OT_toggle_path_edit(Operator):"
+                },
+                {
+                  "lineNumber": 538,
+                  "content": "class BST_OT_select_material_images(Operator):"
+                },
+                {
+                  "lineNumber": 572,
+                  "content": "class BST_OT_select_active_images(Operator):"
+                },
+                {
+                  "lineNumber": 606,
+                  "content": "class BST_OT_select_absolute_images(Operator):"
+                },
+                {
+                  "lineNumber": 661,
+                  "content": "class BST_OT_rename_datablock(Operator):"
+                },
+                {
+                  "lineNumber": 709,
+                  "content": "class BST_OT_toggle_image_selection(Operator):"
+                },
+                {
+                  "lineNumber": 762,
+                  "content": "class BST_OT_reuse_material_path(Operator):"
+                },
+                {
+                  "lineNumber": 796,
+                  "content": "class BST_OT_reuse_blend_name(Operator):"
+                },
+                {
+                  "lineNumber": 820,
+                  "content": "class BST_OT_make_paths_relative(Operator):"
+                },
+                {
+                  "lineNumber": 832,
+                  "content": "class BST_OT_make_paths_absolute(Operator):"
+                },
+                {
+                  "lineNumber": 844,
+                  "content": "class BST_OT_pack_images(Operator):"
+                },
+                {
+                  "lineNumber": 886,
+                  "content": "class BST_OT_unpack_images(Operator):"
+                },
+                {
+                  "lineNumber": 921,
+                  "content": "class BST_OT_remove_packed_images(Operator):"
+                },
+                {
+                  "lineNumber": 956,
+                  "content": "class BST_OT_save_all_images(Operator):"
+                },
+                {
+                  "lineNumber": 1062,
+                  "content": "class BST_OT_remove_extensions(Operator):"
+                },
+                {
+                  "lineNumber": 1151,
+                  "content": "class BST_OT_rename_flat_colors(Operator):"
+                },
+                {
+                  "lineNumber": 1357,
+                  "content": "class BST_OT_cancel_operation(Operator):"
+                },
+                {
+                  "lineNumber": 1436,
+                  "content": "class NODE_PT_bulk_path_tools(Panel):"
+                },
+                {
+                  "lineNumber": 1646,
+                  "content": "class VIEW3D_PT_bulk_path_subpanel(Panel):"
+                }
+              ]
+            }
+          ],
+          "totalLines": 24,
+          "totalMatchedLines": 24
+        }
+      }
+    }
+  }
+}
+```
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="task" data-tool-name="todo_write">
+<details><summary>Tool use: **todo_write** • Todo List</summary>
+
+- [x] Refactor bulk_data_remap.py: rename all functions, classes, and constants to BST_DatRem_ prefix
+- [-] Refactor bulk_path_management.py: rename all functions, classes, and constants to BST_PathMgmt_ prefix
+- [ ] Refactor bulk_viewport_display.py: rename all functions, classes, and constants to BST_Viewport_ prefix
+- [ ] Refactor bulk_scene_general.py: rename all functions, classes, and constants to BST_SceneGen_ prefix
+- [ ] Refactor ops files: rename classes in ghost_buster.py, AutoMatExtractor.py, Rename_images_by_mat.py, FreeGPU.py, and other ops files
+- [ ] Update all import statements in __init__.py and cross-file imports
+- [ ] Verify all classes are properly registered and operator/panel IDs are correct
+
+</details>
+</tool-use>
+
+---
+
+
+Refactoring `bulk_path_management.py` with the `PathMan` prefix. Checking the file structure:
+
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_path_management.py</summary>
+
+</details>
+</tool-use>
+
+---
+
+
+Refactoring `bulk_path_management.py` with the `PathMan` prefix. Renaming classes systematically:
+
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_path_management.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_path_management.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_path_management.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_path_management.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_path_management.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_path_management.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_path_management.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_path_management.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_path_management.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_path_management.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_path_management.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_path_management.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_path_management.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_path_management.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_path_management.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_path_management.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_path_management.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_path_management.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_path_management.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_path_management.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_path_management.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_path_management.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_path_management.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_path_management.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+
+Updating panel bl_idname values and the classes tuple. Checking for references to update:
+
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search">
+<details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+
+Parameters:
+
+```json
+{
+  "pattern": "bl_idname|REMOVE_EXT_OT_summary_dialog|BST_PathProperties|BST_OT_|NODE_PT_bulk_path_tools|VIEW3D_PT_bulk_path_subpanel",
+  "path": "E:\\Rainys_Bulk_Scene_Tools\\panels\\bulk_path_management.py",
+  "caseInsensitive": false
+}
+```
+Result:
+
+```json
+{
+  "success": {
+    "pattern": "bl_idname|REMOVE_EXT_OT_summary_dialog|BST_PathProperties|BST_OT_|NODE_PT_bulk_path_tools|VIEW3D_PT_bulk_path_subpanel",
+    "path": "E:\\Rainys_Bulk_Scene_Tools\\panels\\bulk_path_management.py",
+    "outputMode": "content",
+    "workspaceResults": {
+      "E:\\Rainys_Bulk_Scene_Tools": {
+        "content": {
+          "matches": [
+            {
+              "file": "panels\\bulk_path_management.py",
+              "matches": [
+                {
+                  "lineNumber": 10,
+                  "content": "    bl_idname = \"remove_ext.summary_dialog\""
+                },
+                {
+                  "lineNumber": 332,
+                  "content": "    bl_idname = \"bst.remap_path\""
+                },
+                {
+                  "lineNumber": 378,
+                  "content": "    bl_idname = \"bst.toggle_select_all\""
+                },
+                {
+                  "lineNumber": 397,
+                  "content": "class BST_OT_bulk_remap(Operator):"
+                },
+                {
+                  "lineNumber": 398,
+                  "content": "    bl_idname = \"bst.bulk_remap\""
+                },
+                {
+                  "lineNumber": 497,
+                  "content": "    bl_idname = \"bst.toggle_path_edit\""
+                },
+                {
+                  "lineNumber": 539,
+                  "content": "    bl_idname = \"bst.select_material_images\""
+                },
+                {
+                  "lineNumber": 572,
+                  "content": "class BST_OT_select_active_images(Operator):"
+                },
+                {
+                  "lineNumber": 573,
+                  "content": "    bl_idname = \"bst.select_active_images\""
+                },
+                {
+                  "lineNumber": 607,
+                  "content": "    bl_idname = \"bst.select_absolute_images\""
+                },
+                {
+                  "lineNumber": 663,
+                  "content": "    bl_idname = \"bst.rename_datablock\""
+                },
+                {
+                  "lineNumber": 709,
+                  "content": "class BST_OT_toggle_image_selection(Operator):"
+                },
+                {
+                  "lineNumber": 711,
+                  "content": "    bl_idname = \"bst.toggle_image_selection\""
+                },
+                {
+                  "lineNumber": 764,
+                  "content": "    bl_idname = \"bst.reuse_material_path\""
+                },
+                {
+                  "lineNumber": 798,
+                  "content": "    bl_idname = \"bst.reuse_blend_name\""
+                },
+                {
+                  "lineNumber": 820,
+                  "content": "class BST_OT_make_paths_relative(Operator):"
+                },
+                {
+                  "lineNumber": 821,
+                  "content": "    bl_idname = \"bst.make_paths_relative\""
+                },
+                {
+                  "lineNumber": 833,
+                  "content": "    bl_idname = \"bst.make_paths_absolute\""
+                },
+                {
+                  "lineNumber": 845,
+                  "content": "    bl_idname = \"bst.pack_images\""
+                },
+                {
+                  "lineNumber": 887,
+                  "content": "    bl_idname = \"bst.unpack_images\""
+                },
+                {
+                  "lineNumber": 922,
+                  "content": "    bl_idname = \"bst.remove_packed_images\""
+                },
+                {
+                  "lineNumber": 957,
+                  "content": "    bl_idname = \"bst.save_all_images\""
+                },
+                {
+                  "lineNumber": 1063,
+                  "content": "    bl_idname = \"bst.remove_extensions\""
+                },
+                {
+                  "lineNumber": 1153,
+                  "content": "    bl_idname = \"bst.rename_flat_colors\""
+                },
+                {
+                  "lineNumber": 1358,
+                  "content": "    bl_idname = \"bst.cancel_operation\""
+                },
+                {
+                  "lineNumber": 1438,
+                  "content": "    bl_idname = \"NODE_PT_bulk_path_tools\""
+                },
+                {
+                  "lineNumber": 1648,
+                  "content": "    bl_idname = \"VIEW3D_PT_bulk_path_subpanel\""
+                },
+                {
+                  "lineNumber": 1658,
+                  "content": "        NODE_PT_bulk_path_tools.draw(self, context)"
+                },
+                {
+                  "lineNumber": 1662,
+                  "content": "    REMOVE_EXT_OT_summary_dialog,"
+                },
+                {
+                  "lineNumber": 1663,
+                  "content": "    BST_PathProperties,"
+                },
+                {
+                  "lineNumber": 1664,
+                  "content": "    BST_OT_remap_path,"
+                },
+                {
+                  "lineNumber": 1665,
+                  "content": "    BST_OT_toggle_select_all,"
+                },
+                {
+                  "lineNumber": 1666,
+                  "content": "    BST_OT_bulk_remap,"
+                },
+                {
+                  "lineNumber": 1667,
+                  "content": "    BST_OT_toggle_path_edit,"
+                },
+                {
+                  "lineNumber": 1668,
+                  "content": "    BST_OT_select_material_images,"
+                },
+                {
+                  "lineNumber": 1669,
+                  "content": "    BST_OT_select_active_images,"
+                },
+                {
+                  "lineNumber": 1670,
+                  "content": "    BST_OT_select_absolute_images,"
+                },
+                {
+                  "lineNumber": 1671,
+                  "content": "    BST_OT_rename_datablock,"
+                },
+                {
+                  "lineNumber": 1672,
+                  "content": "    BST_OT_toggle_image_selection,"
+                },
+                {
+                  "lineNumber": 1673,
+                  "content": "    BST_OT_reuse_material_path,"
+                },
+                {
+                  "lineNumber": 1674,
+                  "content": "    BST_OT_reuse_blend_name,"
+                },
+                {
+                  "lineNumber": 1675,
+                  "content": "    BST_OT_make_paths_relative,"
+                },
+                {
+                  "lineNumber": 1676,
+                  "content": "    BST_OT_make_paths_absolute,"
+                },
+                {
+                  "lineNumber": 1677,
+                  "content": "    BST_OT_pack_images,"
+                },
+                {
+                  "lineNumber": 1678,
+                  "content": "    BST_OT_unpack_images,"
+                },
+                {
+                  "lineNumber": 1679,
+                  "content": "    BST_OT_remove_packed_images,"
+                },
+                {
+                  "lineNumber": 1680,
+                  "content": "    BST_OT_save_all_images,"
+                },
+                {
+                  "lineNumber": 1681,
+                  "content": "    BST_OT_remove_extensions,"
+                },
+                {
+                  "lineNumber": 1682,
+                  "content": "    BST_OT_rename_flat_colors,"
+                },
+                {
+                  "lineNumber": 1683,
+                  "content": "    BST_OT_cancel_operation,"
+                }
+              ]
+            }
+          ],
+          "totalLines": 50,
+          "totalMatchedLines": 50,
+          "clientTruncated": true
+        }
+      }
+    }
+  }
+}
+```
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_path_management.py</summary>
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_path_management.py</summary>
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search">
+<details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+
+Parameters:
+
+```json
+{
+  "pattern": "^classes =|^def register|^def unregister",
+  "path": "E:\\Rainys_Bulk_Scene_Tools\\panels\\bulk_path_management.py",
+  "caseInsensitive": false
+}
+```
+Result:
+
+```json
+{
+  "success": {
+    "pattern": "^classes =|^def register|^def unregister",
+    "path": "E:\\Rainys_Bulk_Scene_Tools\\panels\\bulk_path_management.py",
+    "outputMode": "content",
+    "workspaceResults": {
+      "E:\\Rainys_Bulk_Scene_Tools": {
+        "content": {
+          "matches": [
+            {
+              "file": "panels\\bulk_path_management.py",
+              "matches": [
+                {
+                  "lineNumber": 1661,
+                  "content": "classes = ("
+                },
+                {
+                  "lineNumber": 1688,
+                  "content": "def register():"
+                },
+                {
+                  "lineNumber": 1704,
+                  "content": "def unregister():"
+                }
+              ]
+            }
+          ],
+          "totalLines": 3,
+          "totalMatchedLines": 3
+        }
+      }
+    }
+  }
+}
+```
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+
+Updating panel bl_idname values and the classes tuple:
+
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_path_management.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_path_management.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_path_management.py</summary>
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_path_management.py</summary>
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search">
+<details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+
+Parameters:
+
+```json
+{
+  "pattern": "BST_PathProperties|NODE_PT_bulk_path_tools",
+  "path": "E:\\Rainys_Bulk_Scene_Tools\\panels\\bulk_path_management.py",
+  "caseInsensitive": false
+}
+```
+Result:
+
+```json
+{
+  "success": {
+    "pattern": "BST_PathProperties|NODE_PT_bulk_path_tools",
+    "path": "E:\\Rainys_Bulk_Scene_Tools\\panels\\bulk_path_management.py",
+    "outputMode": "content",
+    "workspaceResults": {
+      "E:\\Rainys_Bulk_Scene_Tools": {
+        "content": {
+          "matches": [
+            {
+              "file": "panels\\bulk_path_management.py",
+              "matches": [
+                {
+                  "lineNumber": 1658,
+                  "content": "        NODE_PT_bulk_path_tools.draw(self, context)"
+                },
+                {
+                  "lineNumber": 1663,
+                  "content": "    BST_PathProperties,"
+                },
+                {
+                  "lineNumber": 1684,
+                  "content": "    NODE_PT_bulk_path_tools,"
+                },
+                {
+                  "lineNumber": 1693,
+                  "content": "    bpy.types.Scene.bst_path_props = PointerProperty(type=BST_PathProperties)"
+                }
+              ]
+            }
+          ],
+          "totalLines": 4,
+          "totalMatchedLines": 4
+        }
+      }
+    }
+  }
+}
+```
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+
+Updating remaining references:
+
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_path_management.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_path_management.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="task" data-tool-name="todo_write">
+<details><summary>Tool use: **todo_write** • Todo List</summary>
+
+- [x] Refactor bulk_data_remap.py: rename all functions, classes, and constants to BST_DatRem_ prefix
+- [x] Refactor bulk_path_management.py: rename all functions, classes, and constants to BST_PathMgmt_ prefix
+- [-] Refactor bulk_viewport_display.py: rename all functions, classes, and constants to BST_Viewport_ prefix
+- [ ] Refactor bulk_scene_general.py: rename all functions, classes, and constants to BST_SceneGen_ prefix
+- [ ] Refactor ops files: rename classes in ghost_buster.py, AutoMatExtractor.py, Rename_images_by_mat.py, FreeGPU.py, and other ops files
+- [ ] Update all import statements in __init__.py and cross-file imports
+- [ ] Verify all classes are properly registered and operator/panel IDs are correct
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_path_management.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+
+Refactoring `bulk_viewport_display.py` with the `ViewDisp` prefix:
+
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search">
+<details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+
+Parameters:
+
+```json
+{
+  "pattern": "^class |^def [A-Z]|^[A-Z_]+ = ",
+  "path": "E:\\Rainys_Bulk_Scene_Tools\\panels\\bulk_viewport_display.py",
+  "caseInsensitive": false
+}
+```
+Result:
+
+```json
+{
+  "success": {
+    "pattern": "^class |^def [A-Z]|^[A-Z_]+ = ",
+    "path": "E:\\Rainys_Bulk_Scene_Tools\\panels\\bulk_viewport_display.py",
+    "outputMode": "content",
+    "workspaceResults": {
+      "E:\\Rainys_Bulk_Scene_Tools": {
+        "content": {
+          "matches": [
+            {
+              "file": "panels\\bulk_viewport_display.py",
+              "matches": [
+                {
+                  "lineNumber": 12,
+                  "content": "class MaterialStatus(Enum):"
+                },
+                {
+                  "lineNumber": 108,
+                  "content": "class VIEWPORT_OT_SetViewportColors(bpy.types.Operator):"
+                },
+                {
+                  "lineNumber": 272,
+                  "content": "class VIEWPORT_OT_RefreshMaterialPreviews(bpy.types.Operator):"
+                },
+                {
+                  "lineNumber": 836,
+                  "content": "class VIEW3D_PT_BulkViewportDisplay(bpy.types.Panel):"
+                },
+                {
+                  "lineNumber": 957,
+                  "content": "class MATERIAL_OT_SelectInEditor(bpy.types.Operator):"
+                },
+                {
+                  "lineNumber": 1078,
+                  "content": "class VIEWPORT_OT_SelectDiffuseNodes(bpy.types.Operator):"
+                }
+              ]
+            }
+          ],
+          "totalLines": 6,
+          "totalMatchedLines": 6
+        }
+      }
+    }
+  }
+}
+```
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_viewport_display.py</summary>
+
+</details>
+</tool-use>
+
+---
+
+
+Renaming classes and functions in `bulk_viewport_display.py`:
+
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_viewport_display.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search">
+<details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+
+Parameters:
+
+```json
+{
+  "pattern": "def unregister_viewport_properties|MaterialStatus|register_viewport_properties",
+  "path": "E:\\Rainys_Bulk_Scene_Tools\\panels\\bulk_viewport_display.py",
+  "caseInsensitive": false
+}
+```
+Result:
+
+```json
+{
+  "success": {
+    "pattern": "def unregister_viewport_properties|MaterialStatus|register_viewport_properties",
+    "path": "E:\\Rainys_Bulk_Scene_Tools\\panels\\bulk_viewport_display.py",
+    "outputMode": "content",
+    "workspaceResults": {
+      "E:\\Rainys_Bulk_Scene_Tools": {
+        "content": {
+          "matches": [
+            {
+              "file": "panels\\bulk_viewport_display.py",
+              "matches": [
+                {
+                  "lineNumber": 12,
+                  "content": "class MaterialStatus(Enum):"
+                },
+                {
+                  "lineNumber": 30,
+                  "content": "def register_viewport_properties():"
+                },
+                {
+                  "lineNumber": 97,
+                  "content": "def unregister_viewport_properties():"
+                },
+                {
+                  "lineNumber": 256,
+                  "content": "            if status == MaterialStatus.PREVIEW_BASED:"
+                },
+                {
+                  "lineNumber": 258,
+                  "content": "            elif status == MaterialStatus.COMPLETED:"
+                },
+                {
+                  "lineNumber": 260,
+                  "content": "            elif status == MaterialStatus.FAILED:"
+                },
+                {
+                  "lineNumber": 462,
+                  "content": "        return (1, 1, 1), MaterialStatus.PREVIEW_BASED"
+                },
+                {
+                  "lineNumber": 466,
+                  "content": "        return (1, 1, 1), MaterialStatus.PREVIEW_BASED"
+                },
+                {
+                  "lineNumber": 482,
+                  "content": "            return corrected_color, MaterialStatus.PREVIEW_BASED"
+                },
+                {
+                  "lineNumber": 485,
+                  "content": "            return (1, 1, 1), MaterialStatus.PREVIEW_BASED"
+                },
+                {
+                  "lineNumber": 489,
+                  "content": "        return (1, 1, 1), MaterialStatus.FAILED"
+                },
+                {
+                  "lineNumber": 808,
+                  "content": "    if status == MaterialStatus.PENDING:"
+                },
+                {
+                  "lineNumber": 810,
+                  "content": "    elif status == MaterialStatus.PROCESSING:"
+                },
+                {
+                  "lineNumber": 812,
+                  "content": "    elif status == MaterialStatus.COMPLETED:"
+                },
+                {
+                  "lineNumber": 814,
+                  "content": "    elif status == MaterialStatus.PREVIEW_BASED:"
+                },
+                {
+                  "lineNumber": 816,
+                  "content": "    elif status == MaterialStatus.FAILED:"
+                },
+                {
+                  "lineNumber": 823,
+                  "content": "    if status == MaterialStatus.PENDING:"
+                },
+                {
+                  "lineNumber": 825,
+                  "content": "    elif status == MaterialStatus.PROCESSING:"
+                },
+                {
+                  "lineNumber": 827,
+                  "content": "    elif status == MaterialStatus.COMPLETED:"
+                },
+                {
+                  "lineNumber": 829,
+                  "content": "    elif status == MaterialStatus.PREVIEW_BASED:"
+                },
+                {
+                  "lineNumber": 831,
+                  "content": "    elif status == MaterialStatus.FAILED:"
+                },
+                {
+                  "lineNumber": 916,
+                  "content": "                    if status == MaterialStatus.PREVIEW_BASED:"
+                },
+                {
+                  "lineNumber": 918,
+                  "content": "                    elif status == MaterialStatus.FAILED:"
+                },
+                {
+                  "lineNumber": 1107,
+                  "content": "    register_viewport_properties()"
+                },
+                {
+                  "lineNumber": 1112,
+                  "content": "        unregister_viewport_properties()"
+                }
+              ]
+            }
+          ],
+          "totalLines": 25,
+          "totalMatchedLines": 25
+        }
+      }
+    }
+  }
+}
+```
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_viewport_display.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search">
+<details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+
+Parameters:
+
+```json
+{
+  "pattern": "^classes =|bl_idname|MaterialStatus|register_viewport_properties|unregister_viewport_properties",
+  "path": "E:\\Rainys_Bulk_Scene_Tools\\panels\\bulk_viewport_display.py",
+  "caseInsensitive": false
+}
+```
+Result:
+
+```json
+{
+  "success": {
+    "pattern": "^classes =|bl_idname|MaterialStatus|register_viewport_properties|unregister_viewport_properties",
+    "path": "E:\\Rainys_Bulk_Scene_Tools\\panels\\bulk_viewport_display.py",
+    "outputMode": "content",
+    "workspaceResults": {
+      "E:\\Rainys_Bulk_Scene_Tools": {
+        "content": {
+          "matches": [
+            {
+              "file": "panels\\bulk_viewport_display.py",
+              "matches": [
+                {
+                  "lineNumber": 12,
+                  "content": "class BST_ViewDisp_MaterialStatus(Enum):"
+                },
+                {
+                  "lineNumber": 97,
+                  "content": "def unregister_viewport_properties():"
+                },
+                {
+                  "lineNumber": 110,
+                  "content": "    bl_idname = \"bst.set_viewport_colors\""
+                },
+                {
+                  "lineNumber": 256,
+                  "content": "            if status == MaterialStatus.PREVIEW_BASED:"
+                },
+                {
+                  "lineNumber": 258,
+                  "content": "            elif status == MaterialStatus.COMPLETED:"
+                },
+                {
+                  "lineNumber": 260,
+                  "content": "            elif status == MaterialStatus.FAILED:"
+                },
+                {
+                  "lineNumber": 274,
+                  "content": "    bl_idname = \"bst.refresh_material_previews\""
+                },
+                {
+                  "lineNumber": 462,
+                  "content": "        return (1, 1, 1), MaterialStatus.PREVIEW_BASED"
+                },
+                {
+                  "lineNumber": 466,
+                  "content": "        return (1, 1, 1), MaterialStatus.PREVIEW_BASED"
+                },
+                {
+                  "lineNumber": 482,
+                  "content": "            return corrected_color, MaterialStatus.PREVIEW_BASED"
+                },
+                {
+                  "lineNumber": 485,
+                  "content": "            return (1, 1, 1), MaterialStatus.PREVIEW_BASED"
+                },
+                {
+                  "lineNumber": 489,
+                  "content": "        return (1, 1, 1), MaterialStatus.FAILED"
+                },
+                {
+                  "lineNumber": 808,
+                  "content": "    if status == MaterialStatus.PENDING:"
+                },
+                {
+                  "lineNumber": 810,
+                  "content": "    elif status == MaterialStatus.PROCESSING:"
+                },
+                {
+                  "lineNumber": 812,
+                  "content": "    elif status == MaterialStatus.COMPLETED:"
+                },
+                {
+                  "lineNumber": 814,
+                  "content": "    elif status == MaterialStatus.PREVIEW_BASED:"
+                },
+                {
+                  "lineNumber": 816,
+                  "content": "    elif status == MaterialStatus.FAILED:"
+                },
+                {
+                  "lineNumber": 823,
+                  "content": "    if status == MaterialStatus.PENDING:"
+                },
+                {
+                  "lineNumber": 825,
+                  "content": "    elif status == MaterialStatus.PROCESSING:"
+                },
+                {
+                  "lineNumber": 827,
+                  "content": "    elif status == MaterialStatus.COMPLETED:"
+                },
+                {
+                  "lineNumber": 829,
+                  "content": "    elif status == MaterialStatus.PREVIEW_BASED:"
+                },
+                {
+                  "lineNumber": 831,
+                  "content": "    elif status == MaterialStatus.FAILED:"
+                },
+                {
+                  "lineNumber": 839,
+                  "content": "    bl_idname = \"VIEW3D_PT_bulk_viewport_display\""
+                },
+                {
+                  "lineNumber": 916,
+                  "content": "                    if status == MaterialStatus.PREVIEW_BASED:"
+                },
+                {
+                  "lineNumber": 918,
+                  "content": "                    elif status == MaterialStatus.FAILED:"
+                },
+                {
+                  "lineNumber": 959,
+                  "content": "    bl_idname = \"bst.select_in_editor\""
+                },
+                {
+                  "lineNumber": 1079,
+                  "content": "    bl_idname = \"bst.select_diffuse_nodes\""
+                },
+                {
+                  "lineNumber": 1093,
+                  "content": "classes = ("
+                },
+                {
+                  "lineNumber": 1107,
+                  "content": "    register_viewport_properties()"
+                },
+                {
+                  "lineNumber": 1112,
+                  "content": "        unregister_viewport_properties()"
+                }
+              ]
+            }
+          ],
+          "totalLines": 30,
+          "totalMatchedLines": 30
+        }
+      }
+    }
+  }
+}
+```
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_viewport_display.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_viewport_display.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_viewport_display.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_viewport_display.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_viewport_display.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+
+Updating all references:
+
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_viewport_display.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_viewport_display.py</summary>
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search">
+<details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+
+Parameters:
+
+```json
+{
+  "pattern": "^classes = \\(",
+  "path": "E:\\Rainys_Bulk_Scene_Tools\\panels\\bulk_viewport_display.py",
+  "contextAfter": 10,
+  "caseInsensitive": false
+}
+```
+Result:
+
+```json
+{
+  "success": {
+    "pattern": "^classes = \\(",
+    "path": "E:\\Rainys_Bulk_Scene_Tools\\panels\\bulk_viewport_display.py",
+    "outputMode": "content",
+    "workspaceResults": {
+      "E:\\Rainys_Bulk_Scene_Tools": {
+        "content": {
+          "matches": [
+            {
+              "file": "panels\\bulk_viewport_display.py",
+              "matches": [
+                {
+                  "lineNumber": 1093,
+                  "content": "classes = ("
+                },
+                {
+                  "lineNumber": 1094,
+                  "content": "    VIEWPORT_OT_SetViewportColors,",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1095,
+                  "content": "    VIEWPORT_OT_RefreshMaterialPreviews,",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1096,
+                  "content": "    VIEW3D_PT_BulkViewportDisplay,",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1097,
+                  "content": "    MATERIAL_OT_SelectInEditor,",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1098,
+                  "content": "    VIEWPORT_OT_SelectDiffuseNodes,",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1099,
+                  "content": ")",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1100,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1101,
+                  "content": "# Registration",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1102,
+                  "content": "def register():",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 1103,
+                  "content": "    for cls in classes:",
+                  "isContextLine": true
+                }
+              ]
+            }
+          ],
+          "totalLines": 11,
+          "totalMatchedLines": 1
+        }
+      }
+    }
+  }
+}
+```
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_viewport_display.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_viewport_display.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_viewport_display.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_viewport_display.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+
+Updating the classes tuple:
+
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_viewport_display.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="task" data-tool-name="todo_write">
+<details><summary>Tool use: **todo_write** • Todo List</summary>
+
+- [x] Refactor bulk_data_remap.py: rename all functions, classes, and constants to BST_DatRem_ prefix
+- [x] Refactor bulk_path_management.py: rename all functions, classes, and constants to BST_PathMgmt_ prefix
+- [x] Refactor bulk_viewport_display.py: rename all functions, classes, and constants to BST_Viewport_ prefix
+- [-] Refactor bulk_scene_general.py: rename all functions, classes, and constants to BST_SceneGen_ prefix
+- [ ] Refactor ops files: rename classes in ghost_buster.py, AutoMatExtractor.py, Rename_images_by_mat.py, FreeGPU.py, and other ops files
+- [ ] Update all import statements in __init__.py and cross-file imports
+- [ ] Verify all classes are properly registered and operator/panel IDs are correct
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_scene_general.py</summary>
+
+</details>
+</tool-use>
+
+---
+
+
+Refactoring `bulk_scene_general.py`:
+
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_scene_general.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="task" data-tool-name="todo_write">
+<details><summary>Tool use: **todo_write** • Todo List</summary>
+
+- [x] Refactor bulk_data_remap.py: rename all functions, classes, and constants to BST_DatRem_ prefix
+- [x] Refactor bulk_path_management.py: rename all functions, classes, and constants to BST_PathMgmt_ prefix
+- [x] Refactor bulk_viewport_display.py: rename all functions, classes, and constants to BST_Viewport_ prefix
+- [x] Refactor bulk_scene_general.py: rename all functions, classes, and constants to BST_SceneGen_ prefix
+- [-] Refactor ops files: rename classes in ghost_buster.py, AutoMatExtractor.py, Rename_images_by_mat.py, FreeGPU.py, and other ops files
+- [ ] Update all import statements in __init__.py and cross-file imports
+- [ ] Verify all classes are properly registered and operator/panel IDs are correct
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: E:\Rainys_Bulk_Scene_Tools\ops\ghost_buster.py</summary>
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_scene_general.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+
+Refactoring ops files, starting with `ghost_buster.py` using the `Bustin` prefix:
+
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search">
+<details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+
+Parameters:
+
+```json
+{
+  "pattern": "^class ",
+  "path": "E:\\Rainys_Bulk_Scene_Tools\\ops\\ghost_buster.py",
+  "caseInsensitive": false
+}
+```
+Result:
+
+```json
+{
+  "success": {
+    "pattern": "^class ",
+    "path": "E:\\Rainys_Bulk_Scene_Tools\\ops\\ghost_buster.py",
+    "outputMode": "content",
+    "workspaceResults": {
+      "E:\\Rainys_Bulk_Scene_Tools": {
+        "content": {
+          "matches": [
+            {
+              "file": "ops\\ghost_buster.py",
+              "matches": [
+                {
+                  "lineNumber": 372,
+                  "content": "class GhostBuster(bpy.types.Operator):"
+                },
+                {
+                  "lineNumber": 391,
+                  "content": "class GhostDetector(bpy.types.Operator):"
+                },
+                {
+                  "lineNumber": 609,
+                  "content": "class ResyncEnforce(bpy.types.Operator):"
+                }
+              ]
+            }
+          ],
+          "totalLines": 3,
+          "totalMatchedLines": 3
+        }
+      }
+    }
+  }
+}
+```
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\ops\ghost_buster.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search">
+<details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+
+Parameters:
+
+```json
+{
+  "pattern": "class GhostDetector|class ResyncEnforce",
+  "path": "E:\\Rainys_Bulk_Scene_Tools\\ops\\ghost_buster.py",
+  "caseInsensitive": false
+}
+```
+Result:
+
+```json
+{
+  "success": {
+    "pattern": "class GhostDetector|class ResyncEnforce",
+    "path": "E:\\Rainys_Bulk_Scene_Tools\\ops\\ghost_buster.py",
+    "outputMode": "content",
+    "workspaceResults": {
+      "E:\\Rainys_Bulk_Scene_Tools": {
+        "content": {
+          "matches": [
+            {
+              "file": "ops\\ghost_buster.py",
+              "matches": [
+                {
+                  "lineNumber": 391,
+                  "content": "class GhostDetector(bpy.types.Operator):"
+                },
+                {
+                  "lineNumber": 609,
+                  "content": "class ResyncEnforce(bpy.types.Operator):"
+                }
+              ]
+            }
+          ],
+          "totalLines": 2,
+          "totalMatchedLines": 2
+        }
+      }
+    }
+  }
+}
+```
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search">
+<details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+
+Parameters:
+
+```json
+{
+  "pattern": "class ResyncEnforce",
+  "path": "E:\\Rainys_Bulk_Scene_Tools\\ops\\ghost_buster.py",
+  "caseInsensitive": false
+}
+```
+Result:
+
+```json
+{
+  "success": {
+    "pattern": "class ResyncEnforce",
+    "path": "E:\\Rainys_Bulk_Scene_Tools\\ops\\ghost_buster.py",
+    "outputMode": "content",
+    "workspaceResults": {
+      "E:\\Rainys_Bulk_Scene_Tools": {
+        "content": {
+          "matches": [
+            {
+              "file": "ops\\ghost_buster.py",
+              "matches": [
+                {
+                  "lineNumber": 609,
+                  "content": "class ResyncEnforce(bpy.types.Operator):"
+                }
+              ]
+            }
+          ],
+          "totalLines": 1,
+          "totalMatchedLines": 1
+        }
+      }
+    }
+  }
+}
+```
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: E:\Rainys_Bulk_Scene_Tools\ops\ghost_buster.py</summary>
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search">
+<details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+
+Parameters:
+
+```json
+{
+  "pattern": "^classes =|GhostBuster|GhostDetector|ResyncEnforce",
+  "path": "E:\\Rainys_Bulk_Scene_Tools\\ops\\ghost_buster.py",
+  "caseInsensitive": false
+}
+```
+Result:
+
+```json
+{
+  "success": {
+    "pattern": "^classes =|GhostBuster|GhostDetector|ResyncEnforce",
+    "path": "E:\\Rainys_Bulk_Scene_Tools\\ops\\ghost_buster.py",
+    "outputMode": "content",
+    "workspaceResults": {
+      "E:\\Rainys_Bulk_Scene_Tools": {
+        "content": {
+          "matches": [
+            {
+              "file": "ops\\ghost_buster.py",
+              "matches": [
+                {
+                  "lineNumber": 372,
+                  "content": "class GhostBuster(bpy.types.Operator):"
+                },
+                {
+                  "lineNumber": 391,
+                  "content": "class GhostDetector(bpy.types.Operator):"
+                },
+                {
+                  "lineNumber": 609,
+                  "content": "class ResyncEnforce(bpy.types.Operator):"
+                },
+                {
+                  "lineNumber": 676,
+                  "content": "classes = ("
+                },
+                {
+                  "lineNumber": 677,
+                  "content": "    GhostBuster,"
+                },
+                {
+                  "lineNumber": 678,
+                  "content": "    GhostDetector,"
+                },
+                {
+                  "lineNumber": 679,
+                  "content": "    ResyncEnforce,"
+                }
+              ]
+            }
+          ],
+          "totalLines": 7,
+          "totalMatchedLines": 7
+        }
+      }
+    }
+  }
+}
+```
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\ops\ghost_buster.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+
+Renaming the remaining classes and updating references:
+
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\ops\ghost_buster.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: E:\Rainys_Bulk_Scene_Tools\ops\ghost_buster.py</summary>
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search">
+<details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+
+Parameters:
+
+```json
+{
+  "pattern": "from.*ghost_buster import|GhostBuster|GhostDetector|ResyncEnforce",
+  "path": "E:\\Rainys_Bulk_Scene_Tools",
+  "caseInsensitive": false
+}
+```
+Result:
+
+```json
+{
+  "success": {
+    "pattern": "from.*ghost_buster import|GhostBuster|GhostDetector|ResyncEnforce",
+    "path": "E:\\Rainys_Bulk_Scene_Tools",
+    "outputMode": "content",
+    "workspaceResults": {
+      "E:\\Rainys_Bulk_Scene_Tools": {
+        "content": {
+          "matches": [
+            {
+              "file": "ops/ghost_buster.py",
+              "matches": [
+                {
+                  "lineNumber": 372,
+                  "content": "class BST_Bustin_OT_GhostBuster(bpy.types.Operator):"
+                },
+                {
+                  "lineNumber": 391,
+                  "content": "class BST_Bustin_OT_GhostDetector(bpy.types.Operator):"
+                },
+                {
+                  "lineNumber": 609,
+                  "content": "class ResyncEnforce(bpy.types.Operator):"
+                },
+                {
+                  "lineNumber": 677,
+                  "content": "    GhostBuster,"
+                },
+                {
+                  "lineNumber": 678,
+                  "content": "    GhostDetector,"
+                },
+                {
+                  "lineNumber": 679,
+                  "content": "    ResyncEnforce,"
+                }
+              ]
+            },
+            {
+              "file": ".specstory/history/2025-12-18_23-07Z-github-issue-#3-integration.md",
+              "matches": [
+                {
+                  "lineNumber": 781,
+                  "content": "        \"contents\": \"# Note: main() is called by the operator, not automatically\\n\\n# List of classes to register\\nclasses = (\\n    GhostBuster,\\n    GhostDetector,\\n    ResyncEnforce,\\n)\\n\\ndef register():\\n    for cls in classes:\\n        compat.safe_register_class(cls)\\n\\ndef unregister():\\n    for cls in reversed(classes):\\n        compat.safe_unregister_class(cls)\","
+                },
+                {
+                  "lineNumber": 800,
+                  "content": "            \"text\": \"    GhostBuster,\","
+                },
+                {
+                  "lineNumber": 804,
+                  "content": "            \"text\": \"    GhostDetector,\","
+                },
+                {
+                  "lineNumber": 808,
+                  "content": "            \"text\": \"    ResyncEnforce,\","
+                }
+              ]
+            },
+            {
+              "file": "ops\\ghost_buster.py",
+              "matches": [
+                {
+                  "lineNumber": 372,
+                  "content": "class BST_Bustin_OT_GhostBuster(bpy.types.Operator):"
+                },
+                {
+                  "lineNumber": 391,
+                  "content": "class BST_Bustin_OT_GhostDetector(bpy.types.Operator):"
+                },
+                {
+                  "lineNumber": 609,
+                  "content": "class ResyncEnforce(bpy.types.Operator):"
+                },
+                {
+                  "lineNumber": 677,
+                  "content": "    GhostBuster,"
+                },
+                {
+                  "lineNumber": 678,
+                  "content": "    GhostDetector,"
+                },
+                {
+                  "lineNumber": 679,
+                  "content": "    ResyncEnforce,"
+                }
+              ]
+            },
+            {
+              "file": "panels\\bulk_data_remap.py",
+              "matches": [
+                {
+                  "lineNumber": 8,
+                  "content": "from ..ops.ghost_buster import GhostBuster, GhostDetector, ResyncEnforce"
+                }
+              ]
+            },
+            {
+              "file": "panels/bulk_data_remap.py",
+              "matches": [
+                {
+                  "lineNumber": 8,
+                  "content": "from ..ops.ghost_buster import GhostBuster, GhostDetector, ResyncEnforce"
+                }
+              ]
+            }
+          ],
+          "totalLines": 18,
+          "totalMatchedLines": 18
+        }
+      }
+    }
+  }
+}
+```
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\ops\ghost_buster.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+
+Fixing the remaining reference and updating the import:
+
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: E:\Rainys_Bulk_Scene_Tools\ops\ghost_buster.py</summary>
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_data_remap.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search">
+<details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+
+Parameters:
+
+```json
+{
+  "pattern": "GhostBuster|GhostDetector|ResyncEnforce",
+  "path": "E:\\Rainys_Bulk_Scene_Tools\\panels\\bulk_data_remap.py",
+  "caseInsensitive": false
+}
+```
+Result:
+
+```json
+{
+  "success": {
+    "pattern": "GhostBuster|GhostDetector|ResyncEnforce",
+    "path": "E:\\Rainys_Bulk_Scene_Tools\\panels\\bulk_data_remap.py",
+    "outputMode": "content",
+    "workspaceResults": {
+      "E:\\Rainys_Bulk_Scene_Tools": {
+        "content": {
+          "matches": [
+            {
+              "file": "panels\\bulk_data_remap.py",
+              "matches": [
+                {
+                  "lineNumber": 8,
+                  "content": "from ..ops.ghost_buster import GhostBuster, GhostDetector, ResyncEnforce"
+                }
+              ]
+            }
+          ],
+          "totalLines": 1,
+          "totalMatchedLines": 1
+        }
+      }
+    }
+  }
+}
+```
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: E:\Rainys_Bulk_Scene_Tools\__init__.py</summary>
+
+</details>
+</tool-use>
+
+---
+
+
+Checking for references to the old class names and updating them. Then updating imports in `__init__.py` and other ops files:
+
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search">
+<details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+
+Parameters:
+
+```json
+{
+  "pattern": "GhostBuster|GhostDetector|ResyncEnforce",
+  "path": "E:\\Rainys_Bulk_Scene_Tools\\panels\\bulk_data_remap.py",
+  "caseInsensitive": false
+}
+```
+Result:
+
+```json
+{
+  "success": {
+    "pattern": "GhostBuster|GhostDetector|ResyncEnforce",
+    "path": "E:\\Rainys_Bulk_Scene_Tools\\panels\\bulk_data_remap.py",
+    "outputMode": "content",
+    "workspaceResults": {
+      "E:\\Rainys_Bulk_Scene_Tools": {
+        "content": {
+          "matches": [
+            {
+              "file": "panels\\bulk_data_remap.py",
+              "matches": [
+                {
+                  "lineNumber": 8,
+                  "content": "from ..ops.ghost_buster import BST_Bustin_OT_GhostBuster, BST_Bustin_OT_GhostDetector, BST_Bustin_OT_ResyncEnforce"
+                }
+              ]
+            }
+          ],
+          "totalLines": 1,
+          "totalMatchedLines": 1
+        }
+      }
+    }
+  }
+}
+```
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_data_remap.py</summary>
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search">
+<details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+
+Parameters:
+
+```json
+{
+  "pattern": "bst.ghost_buster|bst.ghost_detector|bst.resync_enforce",
+  "path": "E:\\Rainys_Bulk_Scene_Tools\\panels\\bulk_data_remap.py",
+  "caseInsensitive": false
+}
+```
+Result:
+
+```json
+{
+  "success": {
+    "pattern": "bst.ghost_buster|bst.ghost_detector|bst.resync_enforce",
+    "path": "E:\\Rainys_Bulk_Scene_Tools\\panels\\bulk_data_remap.py",
+    "outputMode": "content",
+    "workspaceResults": {
+      "E:\\Rainys_Bulk_Scene_Tools": {
+        "content": {
+          "matches": [
+            {
+              "file": "panels\\bulk_data_remap.py",
+              "matches": [
+                {
+                  "lineNumber": 1390,
+                  "content": "        row.operator(\"bst.ghost_detector\", text=\"Ghost Detector\", icon='ZOOM_IN')"
+                },
+                {
+                  "lineNumber": 1391,
+                  "content": "        row.operator(\"bst.ghost_buster\", text=\"Ghost Buster\", icon='GHOST_ENABLED')"
+                },
+                {
+                  "lineNumber": 1400,
+                  "content": "        row.operator(\"bst.resync_enforce\", text=\"Resync Enforce\", icon='FILE_REFRESH')"
+                }
+              ]
+            }
+          ],
+          "totalLines": 3,
+          "totalMatchedLines": 3
+        }
+      }
+    }
+  }
+}
+```
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search">
+<details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+
+Parameters:
+
+```json
+{
+  "pattern": "^class |^def [A-Z]",
+  "path": "E:\\Rainys_Bulk_Scene_Tools\\ops\\AutoMatExtractor.py",
+  "caseInsensitive": false
+}
+```
+Result:
+
+```json
+{
+  "success": {
+    "pattern": "^class |^def [A-Z]",
+    "path": "E:\\Rainys_Bulk_Scene_Tools\\ops\\AutoMatExtractor.py",
+    "outputMode": "content",
+    "workspaceResults": {
+      "E:\\Rainys_Bulk_Scene_Tools": {
+        "content": {
+          "matches": [
+            {
+              "file": "ops\\AutoMatExtractor.py",
+              "matches": [
+                {
+                  "lineNumber": 12,
+                  "content": "class AUTOMAT_OT_summary_dialog(bpy.types.Operator):"
+                },
+                {
+                  "lineNumber": 65,
+                  "content": "class AutoMatExtractor(bpy.types.Operator):"
+                }
+              ]
+            }
+          ],
+          "totalLines": 2,
+          "totalMatchedLines": 2
+        }
+      }
+    }
+  }
+}
+```
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search">
+<details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+
+Parameters:
+
+```json
+{
+  "pattern": "^class |^def [A-Z]",
+  "path": "E:\\Rainys_Bulk_Scene_Tools\\ops\\Rename_images_by_mat.py",
+  "caseInsensitive": false
+}
+```
+Result:
+
+```json
+{
+  "success": {
+    "pattern": "^class |^def [A-Z]",
+    "path": "E:\\Rainys_Bulk_Scene_Tools\\ops\\Rename_images_by_mat.py",
+    "outputMode": "content",
+    "workspaceResults": {
+      "E:\\Rainys_Bulk_Scene_Tools": {
+        "content": {
+          "matches": [
+            {
+              "file": "ops\\Rename_images_by_mat.py",
+              "matches": [
+                {
+                  "lineNumber": 5,
+                  "content": "class RENAME_OT_summary_dialog(bpy.types.Operator):"
+                },
+                {
+                  "lineNumber": 69,
+                  "content": "class Rename_images_by_mat(bpy.types.Operator):"
+                }
+              ]
+            }
+          ],
+          "totalLines": 2,
+          "totalMatchedLines": 2
+        }
+      }
+    }
+  }
+}
+```
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search">
+<details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+
+Parameters:
+
+```json
+{
+  "pattern": "^class |^def [A-Z]",
+  "path": "E:\\Rainys_Bulk_Scene_Tools\\ops\\FreeGPU.py",
+  "caseInsensitive": false
+}
+```
+Result:
+
+```json
+{
+  "success": {
+    "pattern": "^class |^def [A-Z]",
+    "path": "E:\\Rainys_Bulk_Scene_Tools\\ops\\FreeGPU.py",
+    "outputMode": "content",
+    "workspaceResults": {
+      "E:\\Rainys_Bulk_Scene_Tools": {
+        "content": {
+          "matches": [
+            {
+              "file": "ops\\FreeGPU.py",
+              "matches": [
+                {
+                  "lineNumber": 3,
+                  "content": "class BST_FreeGPU(bpy.types.Operator):"
+                }
+              ]
+            }
+          ],
+          "totalLines": 1,
+          "totalMatchedLines": 1
+        }
+      }
+    }
+  }
+}
+```
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+
+Renaming classes in the remaining ops files:
+
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\ops\AutoMatExtractor.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\ops\Rename_images_by_mat.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search">
+<details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+
+Parameters:
+
+```json
+{
+  "pattern": "^classes =|AutoMatExtractor|AUTOMAT_OT_summary_dialog|Rename_images_by_mat|RENAME_OT_summary_dialog|BST_FreeGPU",
+  "path": "E:\\Rainys_Bulk_Scene_Tools",
+  "caseInsensitive": false
+}
+```
+Result:
+
+```json
+{
+  "success": {
+    "pattern": "^classes =|AutoMatExtractor|AUTOMAT_OT_summary_dialog|Rename_images_by_mat|RENAME_OT_summary_dialog|BST_FreeGPU",
+    "path": "E:\\Rainys_Bulk_Scene_Tools",
+    "outputMode": "content",
+    "workspaceResults": {
+      "E:\\Rainys_Bulk_Scene_Tools": {
+        "content": {
+          "matches": [
+            {
+              "file": "ops/ghost_buster.py",
+              "matches": [
+                {
+                  "lineNumber": 676,
+                  "content": "classes = ("
+                }
+              ]
+            },
+            {
+              "file": ".specstory/history/2025-12-18_23-07Z-github-issue-#3-integration.md",
+              "matches": [
+                {
+                  "lineNumber": 55,
+                  "content": "&lt;details&gt;&lt;summary&gt;Tool use: **read_file_v2** • Read file: E:\\Rainys_Bulk_Scene_Tools\\ops\\Rename_images_by_mat.py&lt;/summary&gt;"
+                },
+                {
+                  "lineNumber": 82,
+                  "content": "        \"name\": \"AutoMatExtractor.py\""
+                },
+                {
+                  "lineNumber": 115,
+                  "content": "        \"name\": \"Rename_images_by_mat.py\""
+                },
+                {
+                  "lineNumber": 555,
+                  "content": "        \"contents\": \"# List of all classes in this module\\nclasses = (\\n    VIEW3D_PT_BulkSceneTools,\\n    BST_AddonPreferences,\\n    AutoMatExtractor,\\n    AUTOMAT_OT_summary_dialog,\\n    Rename_images_by_mat,\\n    RENAME_OT_summary_dialog,\\n    BST_FreeGPU,\\n)\\n\\ndef register():\\n    # Register classes from this module (do this first to ensure preferences are available)\\n    for cls in classes:\\n        compat.safe_register_class(cls)\\n    \\n    # Print debug info about preferences\\n    try:\\n        prefs = bpy.context.preferences.addons.get(__package__)\\n        if prefs:\\n            print(f\\\"Addon preferences registered successfully: {prefs}\\\")\\n        else:\\n            print(\\\"WARNING: Addon preferences not found after registration!\\\")\\n            print(f\\\"Available addons: {', '.join(bpy.context.preferences.addons.keys())}\\\")\\n    except Exception as e:\\n        print(f\\\"Error accessing preferences: {str(e)}\\\")\\n    \\n    # Register modules\\n    bulk_scene_general.register()"
+                },
+                {
+                  "lineNumber": 575,
+                  "content": "            \"text\": \"    AutoMatExtractor,\","
+                },
+                {
+                  "lineNumber": 579,
+                  "content": "            \"text\": \"    AUTOMAT_OT_summary_dialog,\","
+                },
+                {
+                  "lineNumber": 583,
+                  "content": "            \"text\": \"    Rename_images_by_mat,\","
+                },
+                {
+                  "lineNumber": 587,
+                  "content": "            \"text\": \"    RENAME_OT_summary_dialog,\","
+                },
+                {
+                  "lineNumber": 591,
+                  "content": "            \"text\": \"    BST_FreeGPU,\","
+                },
+                {
+                  "lineNumber": 1344,
+                  "content": "        \"relativeWorkspacePath\": \".\\\\ops\\\\Rename_images_by_mat.py\","
+                },
+                {
+                  "lineNumber": 1355,
+                  "content": "        \"contents\": \"# Registration classes - need to register both operators\\nclasses = (\\n    RENAME_OT_summary_dialog,\\n    Rename_images_by_mat,\\n)\\n\\ndef register():\\n    for cls in classes:\\n        compat.safe_register_class(cls)\\n\\ndef unregister():\\n    for cls in reversed(classes):\\n        compat.safe_unregister_class(cls)\","
+                },
+                {
+                  "lineNumber": 1367,
+                  "content": "            \"text\": \"    RENAME_OT_summary_dialog,\","
+                },
+                {
+                  "lineNumber": 1371,
+                  "content": "            \"text\": \"    Rename_images_by_mat,\","
+                },
+                {
+                  "lineNumber": 1418,
+                  "content": "        \"relativeWorkspacePath\": \".\\\\ops\\\\AutoMatExtractor.py\","
+                },
+                {
+                  "lineNumber": 1429,
+                  "content": "        \"contents\": \"# Must register the new dialog class as well\\nclasses = (\\n    AUTOMAT_OT_summary_dialog,\\n    AutoMatExtractor,\\n)\\n\\ndef register():\\n    for cls in classes:\\n        compat.safe_register_class(cls)\\n\\ndef unregister():\\n    for cls in reversed(classes):\\n        compat.safe_unregister_class(cls)\","
+                },
+                {
+                  "lineNumber": 1441,
+                  "content": "            \"text\": \"    AUTOMAT_OT_summary_dialog,\","
+                },
+                {
+                  "lineNumber": 1445,
+                  "content": "            \"text\": \"    AutoMatExtractor,\","
+                },
+                {
+                  "lineNumber": 2030,
+                  "content": "        \"contents\": \"import bpy # type: ignore\\nfrom bpy.types import AddonPreferences, Panel # type: ignore\\nfrom bpy.props import BoolProperty # type: ignore\\nfrom .panels import bulk_viewport_display\\nfrom .panels import bulk_data_remap\\nfrom .panels import bulk_path_management\\nfrom .panels import bulk_scene_general\\nfrom .ops.AutoMatExtractor import AutoMatExtractor, AUTOMAT_OT_summary_dialog\\nfrom .ops.Rename_images_by_mat import Rename_images_by_mat, RENAME_OT_summary_dialog\\nfrom .ops.FreeGPU import BST_FreeGPU\\nfrom .ops import ghost_buster\\nfrom . import rainys_repo_bootstrap\\nfrom .utils import compat\\n\\n# Addon preferences class for update settings\\nclass BST_AddonPreferences(AddonPreferences):\\n    bl_idname = __package__\\n\\n    # AutoMat Extractor settings\\n    automat_common_outside_blend: BoolProperty(\\n        name=\\\"Place 'common' folder outside 'blend' folder\\\",\\n        description=\\\"If enabled, the 'common' folder for shared textures will be placed directly in 'tex"
+                },
+                {
+                  "lineNumber": 2062,
+                  "content": "            \"text\": \"from .ops.AutoMatExtractor import AutoMatExtractor, AUTOMAT_OT_summary_dialog\","
+                },
+                {
+                  "lineNumber": 2066,
+                  "content": "            \"text\": \"from .ops.Rename_images_by_mat import Rename_images_by_mat, RENAME_OT_summary_dialog\","
+                },
+                {
+                  "lineNumber": 2070,
+                  "content": "            \"text\": \"from .ops.FreeGPU import BST_FreeGPU\","
+                },
+                {
+                  "lineNumber": 3834,
+                  "content": "        \"relativeWorkspacePath\": \".\\\\ops\\\\AutoMatExtractor.py\","
+                },
+                {
+                  "lineNumber": 3843,
+                  "content": "        \"contents\": \"class AutoMatExtractor(bpy.types.Operator):\\ndef _process_step(self):\\n\\n            \\n            if img.name.startswith('#'):\\n                # Flat colors go to FlatColors subfolder\\n                base_folder = f\\\"//textures\\\\\\\\{common_path_part}\\\\\\\\FlatColors\\\"\\n            else:\\n                # Check material usage for this image\\n                materials_using_image = self.material_mapping.get(img.name, [])\\n                \\n                if not materials_using_image:\\n                    # No materials found, put in common folder\\n                    base_folder = f\\\"//textures\\\\\\\\{common_path_part}\\\"\\n                    print(f\\\"DEBUG: {img.name} - No materials found, using common folder\\\")\\n                elif len(materials_using_image) == 1:\\n                    # Used by exactly one material, organize by material name\\n                    material_name = self.sanitize_filename(materials_using_image[0])\\n                    base_folder = f\\\"//"
+                },
+                {
+                  "lineNumber": 3870,
+                  "content": "            \"text\": \"class AutoMatExtractor(bpy.types.Operator):\","
+                },
+                {
+                  "lineNumber": 5110,
+                  "content": "        \"relativeWorkspacePath\": \".\\\\ops\\\\AutoMatExtractor.py\","
+                },
+                {
+                  "lineNumber": 5119,
+                  "content": "        \"contents\": \"class AutoMatExtractor(bpy.types.Operator):\\n\\n\\n    def sanitize_filename(self, filename):\\n        \\\"\\\"\\\"Sanitize filename/folder name for filesystem compatibility\\\"\\\"\\\"\\n        # First, remove potential file extensions, including numerical ones like .001\\n        base_name = re.sub(r'\\\\.\\\\d{3}$', '', filename) # Remove .001, .002 etc.\\n        base_name = os.path.splitext(base_name)[0] # Remove standard extensions\\n        \\n        # Remove or replace invalid characters for Windows/Mac/Linux\\n        sanitized = re.sub(r'[&amp;lt;&amp;gt;:\\\"/\\\\\\\\|?*]', '_', base_name)\\n        # Remove leading/trailing spaces and dots\\n        sanitized = sanitized.strip(' .')\\n        # Ensure it's not empty\\n        if not sanitized:\\n            sanitized = \\\"unnamed\\\"\\n        return sanitized\\n    \\n    def get_image_material_mapping(self, images):\\n        \\\"\\\"\\\"Create mapping of image names to materials that use them\\\"\\\"\\\"\\n        image_to_materials = {}\\n        \\n        # I"
+                },
+                {
+                  "lineNumber": 5136,
+                  "content": "            \"text\": \"class AutoMatExtractor(bpy.types.Operator):\","
+                },
+                {
+                  "lineNumber": 5327,
+                  "content": "        \"relativeWorkspacePath\": \".\\\\ops\\\\AutoMatExtractor.py\","
+                },
+                {
+                  "lineNumber": 5336,
+                  "content": "        \"contents\": \"class AutoMatExtractor(bpy.types.Operator):\\ndef _process_step(self):\\n\\n            \\n        elif self.current_step == 3:\\n            # Step 4: Build path mapping\\n            if self.current_index &amp;gt;= len(self.selected_images):\\n                # Path building complete, move to remapping\\n                self.current_step = 4\\n                self.current_index = 0\\n                props.operation_status = \\\"Remapping image paths...\\\"\\n                props.operation_progress = 70.0\\n                return 0.01\\n            \\n            # Build path for current image\\n            img = self.selected_images[self.current_index]\\n            props.operation_status = f\\\"Building path for {img.name}...\\\"\\n            \\n            # Get blend file name - respect user preference if set\\n            if props.use_blend_subfolder:\\n                blend_name = props.blend_subfolder\\n                if not blend_name:\\n                    # Fall back to filename if no"
+                },
+                {
+                  "lineNumber": 5363,
+                  "content": "            \"text\": \"class AutoMatExtractor(bpy.types.Operator):\","
+                },
+                {
+                  "lineNumber": 5564,
+                  "content": "        \"relativeWorkspacePath\": \".\\\\ops\\\\Rename_images_by_mat.py\","
+                },
+                {
+                  "lineNumber": 5573,
+                  "content": "        \"contents\": \"class Rename_images_by_mat(bpy.types.Operator):\\n\\n    \\n    def extract_texture_suffix(self, name):\\n        \\\"\\\"\\\"Extract texture type suffix from image name (case-insensitive)\\\"\\\"\\\"\\n        # Comprehensive list of texture suffixes\\n        suffixes = [\\n            # Standard PBR suffixes\\n            'diffuse', 'basecolor', 'base_color', 'albedo', 'color', 'col',\\n            'normal', 'norm', 'nrm', 'bump',\\n            'roughness', 'rough', 'rgh',\\n            'metallic', 'metal', 'mtl',\\n            'specular', 'spec', 'spc',\\n            'ao', 'ambient_occlusion', 'ambientocclusion', 'occlusion',\\n            'gradao',\\n            'height', 'displacement', 'disp', 'displace',\\n            'opacity', 'alpha', 'mask',\\n            'emission', 'emissive', 'emit',\\n            'subsurface', 'sss', 'transmission',\\n            \\n            # Character Creator / iClone suffixes\\n            'base', 'diffusemap', 'normalmap', 'roughnessmap', 'metallicmap',\\n   "
+                },
+                {
+                  "lineNumber": 5590,
+                  "content": "            \"text\": \"class Rename_images_by_mat(bpy.types.Operator):\","
+                },
+                {
+                  "lineNumber": 5892,
+                  "content": "        \"relativeWorkspacePath\": \".\\\\ops\\\\Rename_images_by_mat.py\","
+                },
+                {
+                  "lineNumber": 5901,
+                  "content": "        \"contents\": \"class Rename_images_by_mat(bpy.types.Operator):\\ndef show_summary_dialog(self, context, total_selected, renamed_count, shared_count, unused_count, cc3iid_count, flatcolor_count, already_correct_count, unrecognized_suffix_count, renamed_list):\\nrename_details=details_text.strip())\\n    \\n    def get_image_material_mapping(self, images):\\n        \\\"\\\"\\\"Create mapping of image names to materials that use them\\\"\\\"\\\"\\n        image_to_materials = {}\\n        \\n        # Initialize mapping\\n        for img in images:\\n            image_to_materials[img.name] = []\\n        \\n        # Check all materials for image usage\\n        for material in bpy.data.materials:\\n            if not material.use_nodes:\\n                continue\\n                \\n            material_images = set()\\n            \\n            # Find all image texture nodes in this material\\n            for node in material.node_tree.nodes:\\n                if node.type == 'TEX_IMAGE' and node.image:\\n    "
+                },
+                {
+                  "lineNumber": 5918,
+                  "content": "            \"text\": \"class Rename_images_by_mat(bpy.types.Operator):\","
+                },
+                {
+                  "lineNumber": 6056,
+                  "content": "        \"relativeWorkspacePath\": \".\\\\ops\\\\AutoMatExtractor.py\","
+                },
+                {
+                  "lineNumber": 6065,
+                  "content": "        \"contents\": \"class AutoMatExtractor(bpy.types.Operator):\\n\\n\\n    def is_udim_image(self, image):\\n        \\\"\\\"\\\"Return True when the image contains UDIM/tiled data\\\"\\\"\\\"\\n        has_tiles = hasattr(image, \\\"source\\\") and image.source == 'TILED'\\n        tiles_attr = getattr(image, \\\"tiles\\\", None)\\n        if tiles_attr and len(tiles_attr) &amp;gt; 1:\\n            return True\\n        return has_tiles\\n\\n    def build_udim_mapping(self, base_folder, base_name, extension, image):\\n        \\\"\\\"\\\"Create a path mapping structure for UDIM images\\\"\\\"\\\"\\n        udim_token = \\\"&amp;lt;UDIM&amp;gt;\\\"\\n        template_filename = f\\\"{base_name}.{udim_token}{extension}\\\"\\n        template_path = f\\\"{base_folder}\\\\\\\\{template_filename}\\\"\\n        tile_paths = {}\\n\\n        tiles = getattr(image, \\\"tiles\\\", [])\\n        for tile in tiles:\\n            tile_number = str(getattr(tile, \\\"number\\\", \\\"1001\\\"))\\n            tile_filename = f\\\"{base_name}.{tile_number}{extension}\\\"\\n            tile_paths["
+                },
+                {
+                  "lineNumber": 6082,
+                  "content": "            \"text\": \"class AutoMatExtractor(bpy.types.Operator):\","
+                },
+                {
+                  "lineNumber": 6546,
+                  "content": "        \"relativeWorkspacePath\": \".\\\\ops\\\\AutoMatExtractor.py\","
+                },
+                {
+                  "lineNumber": 6556,
+                  "content": "        \"contents\": \"class AutoMatExtractor(bpy.types.Operator):\\n\\n\\n    def _save_udim_tiles_individually(self, image, mapping):\\n        \\\"\\\"\\\"Fallback saving routine when image.save() fails on UDIMs\\\"\\\"\\\"\\n        tile_paths = mapping.get(\\\"tiles\\\", {})\\n        any_saved = False\\n\\n        for tile in getattr(image, \\\"tiles\\\", []):\\n            tile_number = str(getattr(tile, \\\"number\\\", \\\"1001\\\"))\\n            target_path = tile_paths.get(tile_number)\\n            if not target_path:\\n                continue\\n            try:\\n                ensure_directory_for_path(target_path)\\n                self._save_tile_via_image_editor(image, tile_number, target_path)\\n                any_saved = True\\n            except Exception as e:\\n                print(f\\\"DEBUG: Failed to save UDIM tile {tile_number} for {image.name}: {e}\\\")\\n\\n        return any_saved\\n\\n    def _save_tile_via_image_editor(self, image, tile_number, filepath):\\n        \\\"\\\"\\\"Use an IMAGE_EDITOR override to save"
+                },
+                {
+                  "lineNumber": 6573,
+                  "content": "            \"text\": \"class AutoMatExtractor(bpy.types.Operator):\","
+                },
+                {
+                  "lineNumber": 6757,
+                  "content": "            \"text\": \"    AUTOMAT_OT_summary_dialog,\","
+                },
+                {
+                  "lineNumber": 6761,
+                  "content": "            \"text\": \"    AutoMatExtractor,\","
+                },
+                {
+                  "lineNumber": 7340,
+                  "content": "        \"relativeWorkspacePath\": \".\\\\ops\\\\Rename_images_by_mat.py\","
+                },
+                {
+                  "lineNumber": 7349,
+                  "content": "        \"contents\": \"class Rename_images_by_mat(bpy.types.Operator):\\ndef execute(self, context):\\n        # Get selected images\\n\\n        \\n        for img in selected_images:\\n            # Skip CC3 ID textures (ignore case)\\n            if img.name.lower().startswith('cc3iid'):\\n                cc3iid_count += 1\\n                print(f\\\"DEBUG: Skipped CC3 ID texture: {img.name}\\\")\\n                continue\\n            \\n            # Skip flat color textures (start with #)\\n            if img.name.startswith('#'):\\n                flatcolor_count += 1\\n                print(f\\\"DEBUG: Skipped flat color texture: {img.name}\\\")\\n                continue\\n                \\n            materials = image_to_materials.get(img.name, [])\\n            \\n            if len(materials) == 0:\\n                # Unused image - skip\\n                unused_count += 1\\n                print(f\\\"DEBUG: Skipped unused image: {img.name}\\\")\\n                continue\\n            elif len(materials) =="
+                },
+                {
+                  "lineNumber": 7376,
+                  "content": "            \"text\": \"class Rename_images_by_mat(bpy.types.Operator):\","
+                },
+                {
+                  "lineNumber": 7799,
+                  "content": "        \"relativeWorkspacePath\": \".\\\\ops\\\\AutoMatExtractor.py\","
+                },
+                {
+                  "lineNumber": 7808,
+                  "content": "        \"contents\": \"class AutoMatExtractor(bpy.types.Operator):\\ndef _process_step(self):\\n\\n            \\n        elif self.current_step == 4:\\n            # Step 5: Remap paths\\n            if self.current_index &amp;gt;= len(self.path_mapping):\\n                # Remapping complete, move to saving\\n                self.current_step = 5\\n                self.current_index = 0\\n                props.operation_status = \\\"Saving images to new locations...\\\"\\n                props.operation_progress = 85.0\\n                return 0.01\\n            \\n            # Remap current image\\n            img_name = list(self.path_mapping.keys())[self.current_index]\\n            mapping_entry = self.path_mapping[img_name]\\n            props.operation_status = f\\\"Remapping {img_name}...\\\"\\n            \\n            if isinstance(mapping_entry, dict) and mapping_entry.get(\\\"udim\\\"):\\n                success = set_image_paths(\\n                    img_name,\\n                    mapping_entry.get(\\\"templ"
+                },
+                {
+                  "lineNumber": 7835,
+                  "content": "            \"text\": \"class AutoMatExtractor(bpy.types.Operator):\","
+                },
+                {
+                  "lineNumber": 8465,
+                  "content": "              \"file\": \"ops/AutoMatExtractor.py\","
+                }
+              ]
+            },
+            {
+              "file": "panels/bulk_scene_general.py",
+              "matches": [
+                {
+                  "lineNumber": 64,
+                  "content": "classes = ("
+                }
+              ]
+            },
+            {
+              "file": "panels/bulk_path_management.py",
+              "matches": [
+                {
+                  "lineNumber": 1661,
+                  "content": "classes = ("
+                }
+              ]
+            },
+            {
+              "file": "ops\\ghost_buster.py",
+              "matches": [
+                {
+                  "lineNumber": 676,
+                  "content": "classes = ("
+                }
+              ]
+            },
+            {
+              "file": "ops/Rename_images_by_mat.py",
+              "matches": [
+                {
+                  "lineNumber": 5,
+                  "content": "class RENAME_OT_summary_dialog(bpy.types.Operator):"
+                },
+                {
+                  "lineNumber": 69,
+                  "content": "class Rename_images_by_mat(bpy.types.Operator):"
+                },
+                {
+                  "lineNumber": 502,
+                  "content": "classes = ("
+                },
+                {
+                  "lineNumber": 503,
+                  "content": "    RENAME_OT_summary_dialog,"
+                },
+                {
+                  "lineNumber": 504,
+                  "content": "    Rename_images_by_mat,"
+                }
+              ]
+            },
+            {
+              "file": "panels/bulk_data_remap.py",
+              "matches": [
+                {
+                  "lineNumber": 1574,
+                  "content": "classes = ("
+                }
+              ]
+            },
+            {
+              "file": "panels\\bulk_viewport_display.py",
+              "matches": [
+                {
+                  "lineNumber": 1093,
+                  "content": "classes = ("
+                }
+              ]
+            },
+            {
+              "file": "ops\\AutoMatExtractor.py",
+              "matches": [
+                {
+                  "lineNumber": 65,
+                  "content": "class AutoMatExtractor(bpy.types.Operator):"
+                },
+                {
+                  "lineNumber": 67,
+                  "content": "    bl_label = \"AutoMatExtractor\""
+                },
+                {
+                  "lineNumber": 541,
+                  "content": "classes = ("
+                },
+                {
+                  "lineNumber": 542,
+                  "content": "    AUTOMAT_OT_summary_dialog,"
+                },
+                {
+                  "lineNumber": 543,
+                  "content": "    AutoMatExtractor,"
+                }
+              ]
+            },
+            {
+              "file": "ops/AutoMatExtractor.py",
+              "matches": [
+                {
+                  "lineNumber": 65,
+                  "content": "class AutoMatExtractor(bpy.types.Operator):"
+                },
+                {
+                  "lineNumber": 67,
+                  "content": "    bl_label = \"AutoMatExtractor\""
+                },
+                {
+                  "lineNumber": 541,
+                  "content": "classes = ("
+                },
+                {
+                  "lineNumber": 542,
+                  "content": "    AUTOMAT_OT_summary_dialog,"
+                },
+                {
+                  "lineNumber": 543,
+                  "content": "    AutoMatExtractor,"
+                }
+              ]
+            },
+            {
+              "file": "panels/bulk_viewport_display.py",
+              "matches": [
+                {
+                  "lineNumber": 1093,
+                  "content": "classes = ("
+                }
+              ]
+            },
+            {
+              "file": "ops/FreeGPU.py",
+              "matches": [
+                {
+                  "lineNumber": 3,
+                  "content": "class BST_FreeGPU(bpy.types.Operator):"
+                }
+              ]
+            },
+            {
+              "file": ".specstory/history/2026-01-01_22-02Z-github-issue-#11-context.md",
+              "matches": [
+                {
+                  "lineNumber": 42,
+                  "content": "| &#96;ops/AutoMatExtractor.py&#96; | L11-537 |"
+                },
+                {
+                  "lineNumber": 147,
+                  "content": "| &#96;ops/AutoMatExtractor.py&#96; | L11-537 |"
+                },
+                {
+                  "lineNumber": 227,
+                  "content": "| &#96;ops/AutoMatExtractor.py&#96; | L62-543 |"
+                },
+                {
+                  "lineNumber": 230,
+                  "content": "| &#96;ops/AutoMatExtractor.py&#96; | L11-537 |"
+                },
+                {
+                  "lineNumber": 235,
+                  "content": "| &#96;ops/AutoMatExtractor.py&#96; | L62-537 |"
+                },
+                {
+                  "lineNumber": 745,
+                  "content": "| &#96;ops/AutoMatExtractor.py&#96; | L62-537 |"
+                },
+                {
+                  "lineNumber": 746,
+                  "content": "| &#96;ops/Rename_images_by_mat.py&#96; | L66-497 |"
+                }
+              ]
+            },
+            {
+              "file": "panels\\bulk_path_management.py",
+              "matches": [
+                {
+                  "lineNumber": 1661,
+                  "content": "classes = ("
+                }
+              ]
+            },
+            {
+              "file": "__init__.py",
+              "matches": [
+                {
+                  "lineNumber": 8,
+                  "content": "from .ops.AutoMatExtractor import AutoMatExtractor, AUTOMAT_OT_summary_dialog"
+                },
+                {
+                  "lineNumber": 9,
+                  "content": "from .ops.Rename_images_by_mat import Rename_images_by_mat, RENAME_OT_summary_dialog"
+                },
+                {
+                  "lineNumber": 10,
+                  "content": "from .ops.FreeGPU import BST_FreeGPU"
+                },
+                {
+                  "lineNumber": 49,
+                  "content": "classes = ("
+                },
+                {
+                  "lineNumber": 52,
+                  "content": "    AutoMatExtractor,"
+                },
+                {
+                  "lineNumber": 53,
+                  "content": "    AUTOMAT_OT_summary_dialog,"
+                },
+                {
+                  "lineNumber": 54,
+                  "content": "    Rename_images_by_mat,"
+                },
+                {
+                  "lineNumber": 55,
+                  "content": "    RENAME_OT_summary_dialog,"
+                },
+                {
+                  "lineNumber": 56,
+                  "content": "    BST_FreeGPU,"
+                }
+              ]
+            },
+            {
+              "file": "panels\\bulk_scene_general.py",
+              "matches": [
+                {
+                  "lineNumber": 64,
+                  "content": "classes = ("
+                }
+              ]
+            },
+            {
+              "file": "panels\\bulk_data_remap.py",
+              "matches": [
+                {
+                  "lineNumber": 1574,
+                  "content": "classes = ("
+                }
+              ]
+            }
+          ],
+          "totalLines": 93,
+          "totalMatchedLines": 93
+        }
+      }
+    }
+  }
+}
+```
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: E:\Rainys_Bulk_Scene_Tools\__init__.py</summary>
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\ops\AutoMatExtractor.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\ops\Rename_images_by_mat.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+
+Updating classes tuples and imports:
+
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search">
+<details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+
+Parameters:
+
+```json
+{
+  "pattern": "^classes = ",
+  "path": "E:\\Rainys_Bulk_Scene_Tools\\ops\\AutoMatExtractor.py",
+  "contextAfter": 5,
+  "caseInsensitive": false
+}
+```
+Result:
+
+```json
+{
+  "success": {
+    "pattern": "^classes = ",
+    "path": "E:\\Rainys_Bulk_Scene_Tools\\ops\\AutoMatExtractor.py",
+    "outputMode": "content",
+    "workspaceResults": {
+      "E:\\Rainys_Bulk_Scene_Tools": {
+        "content": {
+          "matches": [
+            {
+              "file": "ops\\AutoMatExtractor.py",
+              "matches": [
+                {
+                  "lineNumber": 541,
+                  "content": "classes = ("
+                },
+                {
+                  "lineNumber": 542,
+                  "content": "    AUTOMAT_OT_summary_dialog,",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 543,
+                  "content": "    AutoMatExtractor,",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 544,
+                  "content": ")",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 545,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 546,
+                  "content": "def register():",
+                  "isContextLine": true
+                }
+              ]
+            }
+          ],
+          "totalLines": 6,
+          "totalMatchedLines": 1
+        }
+      }
+    }
+  }
+}
+```
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search">
+<details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+
+Parameters:
+
+```json
+{
+  "pattern": "^classes = ",
+  "path": "E:\\Rainys_Bulk_Scene_Tools\\ops\\Rename_images_by_mat.py",
+  "contextAfter": 5,
+  "caseInsensitive": false
+}
+```
+Result:
+
+```json
+{
+  "success": {
+    "pattern": "^classes = ",
+    "path": "E:\\Rainys_Bulk_Scene_Tools\\ops\\Rename_images_by_mat.py",
+    "outputMode": "content",
+    "workspaceResults": {
+      "E:\\Rainys_Bulk_Scene_Tools": {
+        "content": {
+          "matches": [
+            {
+              "file": "ops\\Rename_images_by_mat.py",
+              "matches": [
+                {
+                  "lineNumber": 502,
+                  "content": "classes = ("
+                },
+                {
+                  "lineNumber": 503,
+                  "content": "    RENAME_OT_summary_dialog,",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 504,
+                  "content": "    Rename_images_by_mat,",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 505,
+                  "content": ")",
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 506,
+                  "isContextLine": true
+                },
+                {
+                  "lineNumber": 507,
+                  "content": "def register():",
+                  "isContextLine": true
+                }
+              ]
+            }
+          ],
+          "totalLines": 6,
+          "totalMatchedLines": 1
+        }
+      }
+    }
+  }
+}
+```
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\ops\AutoMatExtractor.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\ops\Rename_images_by_mat.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\__init__.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: E:\Rainys_Bulk_Scene_Tools\ops\FreeGPU.py</summary>
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\__init__.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+
+`BST_FreeGPU` already has the BST prefix. Checking if it needs renaming per the plan, then updating imports and verifying:
+
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search">
+<details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+
+Parameters:
+
+```json
+{
+  "pattern": "MATERIAL_USERS_OT_summary_dialog|FindMaterialUsers",
+  "path": "E:\\Rainys_Bulk_Scene_Tools",
+  "caseInsensitive": false
+}
+```
+Result:
+
+```json
+{
+  "success": {
+    "pattern": "MATERIAL_USERS_OT_summary_dialog|FindMaterialUsers",
+    "path": "E:\\Rainys_Bulk_Scene_Tools",
+    "outputMode": "content",
+    "workspaceResults": {
+      "E:\\Rainys_Bulk_Scene_Tools": {
+        "content": {
+          "matches": [
+            {
+              "file": "ops/find_material_users.py",
+              "matches": [
+                {
+                  "lineNumber": 3,
+                  "content": "class MATERIAL_USERS_OT_summary_dialog(bpy.types.Operator):"
+                },
+                {
+                  "lineNumber": 73,
+                  "content": "class FindMaterialUsers(bpy.types.Operator):"
+                }
+              ]
+            },
+            {
+              "file": "panels/bulk_scene_general.py",
+              "matches": [
+                {
+                  "lineNumber": 7,
+                  "content": "from ..ops.find_material_users import FindMaterialUsers, MATERIAL_USERS_OT_summary_dialog"
+                },
+                {
+                  "lineNumber": 71,
+                  "content": "    FindMaterialUsers,"
+                },
+                {
+                  "lineNumber": 72,
+                  "content": "    MATERIAL_USERS_OT_summary_dialog,"
+                }
+              ]
+            },
+            {
+              "file": "panels\\bulk_scene_general.py",
+              "matches": [
+                {
+                  "lineNumber": 7,
+                  "content": "from ..ops.find_material_users import FindMaterialUsers, MATERIAL_USERS_OT_summary_dialog"
+                },
+                {
+                  "lineNumber": 71,
+                  "content": "    FindMaterialUsers,"
+                },
+                {
+                  "lineNumber": 72,
+                  "content": "    MATERIAL_USERS_OT_summary_dialog,"
+                }
+              ]
+            },
+            {
+              "file": ".specstory/history/2025-12-18_23-07Z-github-issue-#3-integration.md",
+              "matches": [
+                {
+                  "lineNumber": 181,
+                  "content": "        \"contents\": \"# List of all classes in this module\\nclasses = (\\n    BulkSceneGeneral,\\n    NoSubdiv,  # Add NoSubdiv operator class\\n    RemoveCustomSplitNormals,\\n    CreateOrthoCamera,\\n    SpawnSceneStructure,\\n    DeleteSingleKeyframeActions,\\n    FindMaterialUsers,\\n    MATERIAL_USERS_OT_summary_dialog,\\n    RemoveUnusedMaterialSlots,\\n    ConvertRelationsToConstraint,\\n)\\n\\n# Registration\\ndef register():\\n    for cls in classes:\\n        compat.safe_register_class(cls)\\n    # Register the window manager property for the checkbox\\n    bpy.types.WindowManager.bst_no_subdiv_only_selected = bpy.props.BoolProperty(\\n        name=\\\"Selected Only\\\",\\n        description=\\\"Apply only to selected objects\\\",\\n        default=True\\n    )\\n    # Register temporary material property for Find Material Users operator\\n    bpy.types.Scene.bst_temp_material = bpy.props.PointerProperty(\\n        name=\\\"Temporary Material\\\",\\n        description=\\\"Temporary material selection for Find Mate"
+                },
+                {
+                  "lineNumber": 230,
+                  "content": "            \"text\": \"    FindMaterialUsers,\","
+                },
+                {
+                  "lineNumber": 234,
+                  "content": "            \"text\": \"    MATERIAL_USERS_OT_summary_dialog,\","
+                },
+                {
+                  "lineNumber": 1922,
+                  "content": "        \"contents\": \"import bpy\\nfrom ..ops.NoSubdiv import NoSubdiv\\nfrom ..ops.remove_custom_split_normals import RemoveCustomSplitNormals\\nfrom ..ops.create_ortho_camera import CreateOrthoCamera\\nfrom ..ops.spawn_scene_structure import SpawnSceneStructure\\nfrom ..ops.delete_single_keyframe_actions import DeleteSingleKeyframeActions\\nfrom ..ops.find_material_users import FindMaterialUsers, MATERIAL_USERS_OT_summary_dialog\\nfrom ..ops.remove_unused_material_slots import RemoveUnusedMaterialSlots\\nfrom ..ops.convert_relations_to_constraint import ConvertRelationsToConstraint\\nfrom ..utils import compat\\n\\nclass BulkSceneGeneral(bpy.types.Panel):\\n    \\\"\\\"\\\"Bulk Scene General Panel\\\"\\\"\\\"\\n    bl_label = \\\"Scene General\\\"\\n    bl_idname = \\\"VIEW3D_PT_bulk_scene_general\\\"\\n    bl_space_type = 'VIEW_3D'\\n    bl_region_type = 'UI'\\n    bl_category = 'Edit'\\n    bl_parent_id = \\\"VIEW3D_PT_bulk_scene_tools\\\"\\n    bl_order = 0  # This will make it appear at the very top of the main panel\\n    "
+                },
+                {
+                  "lineNumber": 1950,
+                  "content": "            \"text\": \"from ..ops.find_material_users import FindMaterialUsers, MATERIAL_USERS_OT_summary_dialog\","
+                }
+              ]
+            }
+          ],
+          "totalLines": 13,
+          "totalMatchedLines": 13
+        }
+      }
+    }
+  }
+}
+```
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: E:\Rainys_Bulk_Scene_Tools\ops\find_material_users.py</summary>
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="task" data-tool-name="todo_write">
+<details><summary>Tool use: **todo_write** • Todo List</summary>
+
+- [x] Refactor bulk_data_remap.py: rename all functions, classes, and constants to BST_DatRem_ prefix
+- [x] Refactor bulk_path_management.py: rename all functions, classes, and constants to BST_PathMgmt_ prefix
+- [x] Refactor bulk_viewport_display.py: rename all functions, classes, and constants to BST_Viewport_ prefix
+- [x] Refactor bulk_scene_general.py: rename all functions, classes, and constants to BST_SceneGen_ prefix
+- [x] Refactor ops files: rename classes in ghost_buster.py, AutoMatExtractor.py, Rename_images_by_mat.py, FreeGPU.py, and other ops files
+- [-] Update all import statements in __init__.py and cross-file imports
+- [ ] Verify all classes are properly registered and operator/panel IDs are correct
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search">
+<details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+
+Parameters:
+
+```json
+{
+  "pattern": "from.*find_material_users|MATERIAL_USERS_OT_summary_dialog|FindMaterialUsers",
+  "path": "E:\\Rainys_Bulk_Scene_Tools",
+  "caseInsensitive": false
+}
+```
+Result:
+
+```json
+{
+  "success": {
+    "pattern": "from.*find_material_users|MATERIAL_USERS_OT_summary_dialog|FindMaterialUsers",
+    "path": "E:\\Rainys_Bulk_Scene_Tools",
+    "outputMode": "content",
+    "workspaceResults": {
+      "E:\\Rainys_Bulk_Scene_Tools": {
+        "content": {
+          "matches": [
+            {
+              "file": "ops/find_material_users.py",
+              "matches": [
+                {
+                  "lineNumber": 3,
+                  "content": "class MATERIAL_USERS_OT_summary_dialog(bpy.types.Operator):"
+                },
+                {
+                  "lineNumber": 73,
+                  "content": "class FindMaterialUsers(bpy.types.Operator):"
+                }
+              ]
+            },
+            {
+              "file": "panels/bulk_scene_general.py",
+              "matches": [
+                {
+                  "lineNumber": 7,
+                  "content": "from ..ops.find_material_users import FindMaterialUsers, MATERIAL_USERS_OT_summary_dialog"
+                },
+                {
+                  "lineNumber": 71,
+                  "content": "    FindMaterialUsers,"
+                },
+                {
+                  "lineNumber": 72,
+                  "content": "    MATERIAL_USERS_OT_summary_dialog,"
+                }
+              ]
+            },
+            {
+              "file": "panels\\bulk_scene_general.py",
+              "matches": [
+                {
+                  "lineNumber": 7,
+                  "content": "from ..ops.find_material_users import FindMaterialUsers, MATERIAL_USERS_OT_summary_dialog"
+                },
+                {
+                  "lineNumber": 71,
+                  "content": "    FindMaterialUsers,"
+                },
+                {
+                  "lineNumber": 72,
+                  "content": "    MATERIAL_USERS_OT_summary_dialog,"
+                }
+              ]
+            },
+            {
+              "file": ".specstory/history/2025-12-18_23-07Z-github-issue-#3-integration.md",
+              "matches": [
+                {
+                  "lineNumber": 181,
+                  "content": "        \"contents\": \"# List of all classes in this module\\nclasses = (\\n    BulkSceneGeneral,\\n    NoSubdiv,  # Add NoSubdiv operator class\\n    RemoveCustomSplitNormals,\\n    CreateOrthoCamera,\\n    SpawnSceneStructure,\\n    DeleteSingleKeyframeActions,\\n    FindMaterialUsers,\\n    MATERIAL_USERS_OT_summary_dialog,\\n    RemoveUnusedMaterialSlots,\\n    ConvertRelationsToConstraint,\\n)\\n\\n# Registration\\ndef register():\\n    for cls in classes:\\n        compat.safe_register_class(cls)\\n    # Register the window manager property for the checkbox\\n    bpy.types.WindowManager.bst_no_subdiv_only_selected = bpy.props.BoolProperty(\\n        name=\\\"Selected Only\\\",\\n        description=\\\"Apply only to selected objects\\\",\\n        default=True\\n    )\\n    # Register temporary material property for Find Material Users operator\\n    bpy.types.Scene.bst_temp_material = bpy.props.PointerProperty(\\n        name=\\\"Temporary Material\\\",\\n        description=\\\"Temporary material selection for Find Mate"
+                },
+                {
+                  "lineNumber": 230,
+                  "content": "            \"text\": \"    FindMaterialUsers,\","
+                },
+                {
+                  "lineNumber": 234,
+                  "content": "            \"text\": \"    MATERIAL_USERS_OT_summary_dialog,\","
+                },
+                {
+                  "lineNumber": 1922,
+                  "content": "        \"contents\": \"import bpy\\nfrom ..ops.NoSubdiv import NoSubdiv\\nfrom ..ops.remove_custom_split_normals import RemoveCustomSplitNormals\\nfrom ..ops.create_ortho_camera import CreateOrthoCamera\\nfrom ..ops.spawn_scene_structure import SpawnSceneStructure\\nfrom ..ops.delete_single_keyframe_actions import DeleteSingleKeyframeActions\\nfrom ..ops.find_material_users import FindMaterialUsers, MATERIAL_USERS_OT_summary_dialog\\nfrom ..ops.remove_unused_material_slots import RemoveUnusedMaterialSlots\\nfrom ..ops.convert_relations_to_constraint import ConvertRelationsToConstraint\\nfrom ..utils import compat\\n\\nclass BulkSceneGeneral(bpy.types.Panel):\\n    \\\"\\\"\\\"Bulk Scene General Panel\\\"\\\"\\\"\\n    bl_label = \\\"Scene General\\\"\\n    bl_idname = \\\"VIEW3D_PT_bulk_scene_general\\\"\\n    bl_space_type = 'VIEW_3D'\\n    bl_region_type = 'UI'\\n    bl_category = 'Edit'\\n    bl_parent_id = \\\"VIEW3D_PT_bulk_scene_tools\\\"\\n    bl_order = 0  # This will make it appear at the very top of the main panel\\n    "
+                },
+                {
+                  "lineNumber": 1950,
+                  "content": "            \"text\": \"from ..ops.find_material_users import FindMaterialUsers, MATERIAL_USERS_OT_summary_dialog\","
+                }
+              ]
+            }
+          ],
+          "totalLines": 13,
+          "totalMatchedLines": 13
+        }
+      }
+    }
+  }
+}
+```
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+
+Updating the import in `bulk_scene_general.py` and completing the import updates:
+
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_scene_general.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="task" data-tool-name="todo_write">
+<details><summary>Tool use: **todo_write** • Todo List</summary>
+
+- [x] Refactor bulk_data_remap.py: rename all functions, classes, and constants to BST_DatRem_ prefix
+- [x] Refactor bulk_path_management.py: rename all functions, classes, and constants to BST_PathMgmt_ prefix
+- [x] Refactor bulk_viewport_display.py: rename all functions, classes, and constants to BST_Viewport_ prefix
+- [x] Refactor bulk_scene_general.py: rename all functions, classes, and constants to BST_SceneGen_ prefix
+- [x] Refactor ops files: rename classes in ghost_buster.py, AutoMatExtractor.py, Rename_images_by_mat.py, FreeGPU.py, and other ops files
+- [x] Update all import statements in __init__.py and cross-file imports
+- [-] Verify all classes are properly registered and operator/panel IDs are correct
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="read_lints">
+<details>
+<summary>Tool use: **read_lints**</summary>
+
+
+Parameters:
+
+```json
+{
+  "paths": [
+    "__init__.py",
+    "panels",
+    "ops"
+  ]
+}
+```
+Result:
+
+```json
+{
+  "linterErrorsByFile": [
+    {
+      "relativeWorkspacePath": "__init__.py"
+    },
+    {
+      "relativeWorkspacePath": "panels"
+    },
+    {
+      "relativeWorkspacePath": "ops"
+    }
+  ]
+}
+```
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+
+No linter errors. Verifying registration and completing the task:
+
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search">
+<details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+
+Parameters:
+
+```json
+{
+  "pattern": "bl_idname.*=.*\\\"bst\\.|bl_idname.*=.*\\\"VIEW3D_PT_|bl_idname.*=.*\\\"NODE_PT_",
+  "path": "E:\\Rainys_Bulk_Scene_Tools\\panels",
+  "caseInsensitive": false
+}
+```
+Result:
+
+```json
+{
+  "success": {
+    "pattern": "bl_idname.*=.*\\\"bst\\.|bl_idname.*=.*\\\"VIEW3D_PT_|bl_idname.*=.*\\\"NODE_PT_",
+    "path": "E:\\Rainys_Bulk_Scene_Tools\\panels",
+    "outputMode": "content",
+    "workspaceResults": {
+      "E:\\Rainys_Bulk_Scene_Tools": {
+        "content": {
+          "matches": [
+            {
+              "file": "panels/bulk_viewport_display.py",
+              "matches": [
+                {
+                  "lineNumber": 110,
+                  "content": "    bl_idname = \"bst.set_viewport_colors\""
+                },
+                {
+                  "lineNumber": 274,
+                  "content": "    bl_idname = \"bst.refresh_material_previews\""
+                },
+                {
+                  "lineNumber": 959,
+                  "content": "    bl_idname = \"bst.select_in_editor\""
+                },
+                {
+                  "lineNumber": 1079,
+                  "content": "    bl_idname = \"bst.select_diffuse_nodes\""
+                }
+              ]
+            },
+            {
+              "file": "panels/bulk_path_management.py",
+              "matches": [
+                {
+                  "lineNumber": 332,
+                  "content": "    bl_idname = \"bst.remap_path\""
+                },
+                {
+                  "lineNumber": 378,
+                  "content": "    bl_idname = \"bst.toggle_select_all\""
+                },
+                {
+                  "lineNumber": 398,
+                  "content": "    bl_idname = \"bst.bulk_remap\""
+                },
+                {
+                  "lineNumber": 497,
+                  "content": "    bl_idname = \"bst.toggle_path_edit\""
+                },
+                {
+                  "lineNumber": 539,
+                  "content": "    bl_idname = \"bst.select_material_images\""
+                },
+                {
+                  "lineNumber": 573,
+                  "content": "    bl_idname = \"bst.select_active_images\""
+                },
+                {
+                  "lineNumber": 607,
+                  "content": "    bl_idname = \"bst.select_absolute_images\""
+                },
+                {
+                  "lineNumber": 663,
+                  "content": "    bl_idname = \"bst.rename_datablock\""
+                },
+                {
+                  "lineNumber": 711,
+                  "content": "    bl_idname = \"bst.toggle_image_selection\""
+                },
+                {
+                  "lineNumber": 764,
+                  "content": "    bl_idname = \"bst.reuse_material_path\""
+                },
+                {
+                  "lineNumber": 798,
+                  "content": "    bl_idname = \"bst.reuse_blend_name\""
+                },
+                {
+                  "lineNumber": 821,
+                  "content": "    bl_idname = \"bst.make_paths_relative\""
+                },
+                {
+                  "lineNumber": 833,
+                  "content": "    bl_idname = \"bst.make_paths_absolute\""
+                },
+                {
+                  "lineNumber": 845,
+                  "content": "    bl_idname = \"bst.pack_images\""
+                },
+                {
+                  "lineNumber": 887,
+                  "content": "    bl_idname = \"bst.unpack_images\""
+                },
+                {
+                  "lineNumber": 922,
+                  "content": "    bl_idname = \"bst.remove_packed_images\""
+                },
+                {
+                  "lineNumber": 957,
+                  "content": "    bl_idname = \"bst.save_all_images\""
+                },
+                {
+                  "lineNumber": 1063,
+                  "content": "    bl_idname = \"bst.remove_extensions\""
+                },
+                {
+                  "lineNumber": 1153,
+                  "content": "    bl_idname = \"bst.rename_flat_colors\""
+                },
+                {
+                  "lineNumber": 1358,
+                  "content": "    bl_idname = \"bst.cancel_operation\""
+                }
+              ]
+            },
+            {
+              "file": "panels/bulk_data_remap.py",
+              "matches": [
+                {
+                  "lineNumber": 598,
+                  "content": "    bl_idname = \"bst.bulk_data_remap\""
+                },
+                {
+                  "lineNumber": 668,
+                  "content": "    bl_idname = \"bst.merge_duplicates_dbu\""
+                },
+                {
+                  "lineNumber": 740,
+                  "content": "    bl_idname = \"bst.purge_unused_data\""
+                },
+                {
+                  "lineNumber": 755,
+                  "content": "    bl_idname = \"bst.toggle_group_exclusion\""
+                },
+                {
+                  "lineNumber": 789,
+                  "content": "    bl_idname = \"bst.select_all_data_groups\""
+                },
+                {
+                  "lineNumber": 839,
+                  "content": "    bl_idname = \"bst.toggle_group_selection\""
+                },
+                {
+                  "lineNumber": 1405,
+                  "content": "    bl_idname = \"bst.toggle_data_type\""
+                },
+                {
+                  "lineNumber": 1430,
+                  "content": "    bl_idname = \"bst.toggle_group_expansion\""
+                },
+                {
+                  "lineNumber": 1476,
+                  "content": "    bl_idname = \"bst.open_linked_file\""
+                },
+                {
+                  "lineNumber": 1505,
+                  "content": "    bl_idname = \"bst.rename_datablock_remap\""
+                }
+              ]
+            },
+            {
+              "file": "panels\\bulk_data_remap.py",
+              "matches": [
+                {
+                  "lineNumber": 598,
+                  "content": "    bl_idname = \"bst.bulk_data_remap\""
+                },
+                {
+                  "lineNumber": 668,
+                  "content": "    bl_idname = \"bst.merge_duplicates_dbu\""
+                },
+                {
+                  "lineNumber": 740,
+                  "content": "    bl_idname = \"bst.purge_unused_data\""
+                },
+                {
+                  "lineNumber": 755,
+                  "content": "    bl_idname = \"bst.toggle_group_exclusion\""
+                },
+                {
+                  "lineNumber": 789,
+                  "content": "    bl_idname = \"bst.select_all_data_groups\""
+                },
+                {
+                  "lineNumber": 839,
+                  "content": "    bl_idname = \"bst.toggle_group_selection\""
+                },
+                {
+                  "lineNumber": 1405,
+                  "content": "    bl_idname = \"bst.toggle_data_type\""
+                },
+                {
+                  "lineNumber": 1430,
+                  "content": "    bl_idname = \"bst.toggle_group_expansion\""
+                },
+                {
+                  "lineNumber": 1476,
+                  "content": "    bl_idname = \"bst.open_linked_file\""
+                },
+                {
+                  "lineNumber": 1505,
+                  "content": "    bl_idname = \"bst.rename_datablock_remap\""
+                }
+              ]
+            },
+            {
+              "file": "panels\\bulk_path_management.py",
+              "matches": [
+                {
+                  "lineNumber": 332,
+                  "content": "    bl_idname = \"bst.remap_path\""
+                },
+                {
+                  "lineNumber": 378,
+                  "content": "    bl_idname = \"bst.toggle_select_all\""
+                },
+                {
+                  "lineNumber": 398,
+                  "content": "    bl_idname = \"bst.bulk_remap\""
+                },
+                {
+                  "lineNumber": 497,
+                  "content": "    bl_idname = \"bst.toggle_path_edit\""
+                },
+                {
+                  "lineNumber": 539,
+                  "content": "    bl_idname = \"bst.select_material_images\""
+                },
+                {
+                  "lineNumber": 573,
+                  "content": "    bl_idname = \"bst.select_active_images\""
+                },
+                {
+                  "lineNumber": 607,
+                  "content": "    bl_idname = \"bst.select_absolute_images\""
+                },
+                {
+                  "lineNumber": 663,
+                  "content": "    bl_idname = \"bst.rename_datablock\""
+                },
+                {
+                  "lineNumber": 711,
+                  "content": "    bl_idname = \"bst.toggle_image_selection\""
+                },
+                {
+                  "lineNumber": 764,
+                  "content": "    bl_idname = \"bst.reuse_material_path\""
+                },
+                {
+                  "lineNumber": 798,
+                  "content": "    bl_idname = \"bst.reuse_blend_name\""
+                },
+                {
+                  "lineNumber": 821,
+                  "content": "    bl_idname = \"bst.make_paths_relative\""
+                },
+                {
+                  "lineNumber": 833,
+                  "content": "    bl_idname = \"bst.make_paths_absolute\""
+                },
+                {
+                  "lineNumber": 845,
+                  "content": "    bl_idname = \"bst.pack_images\""
+                },
+                {
+                  "lineNumber": 887,
+                  "content": "    bl_idname = \"bst.unpack_images\""
+                },
+                {
+                  "lineNumber": 922,
+                  "content": "    bl_idname = \"bst.remove_packed_images\""
+                },
+                {
+                  "lineNumber": 957,
+                  "content": "    bl_idname = \"bst.save_all_images\""
+                },
+                {
+                  "lineNumber": 1063,
+                  "content": "    bl_idname = \"bst.remove_extensions\""
+                },
+                {
+                  "lineNumber": 1153,
+                  "content": "    bl_idname = \"bst.rename_flat_colors\""
+                },
+                {
+                  "lineNumber": 1358,
+                  "content": "    bl_idname = \"bst.cancel_operation\""
+                }
+              ]
+            },
+            {
+              "file": "panels\\bulk_viewport_display.py",
+              "matches": [
+                {
+                  "lineNumber": 110,
+                  "content": "    bl_idname = \"bst.set_viewport_colors\""
+                },
+                {
+                  "lineNumber": 274,
+                  "content": "    bl_idname = \"bst.refresh_material_previews\""
+                },
+                {
+                  "lineNumber": 959,
+                  "content": "    bl_idname = \"bst.select_in_editor\""
+                },
+                {
+                  "lineNumber": 1079,
+                  "content": "    bl_idname = \"bst.select_diffuse_nodes\""
+                }
+              ]
+            }
+          ],
+          "totalLines": 68,
+          "totalMatchedLines": 68
+        }
+      }
+    }
+  }
+}
+```
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="task" data-tool-name="todo_write">
+<details><summary>Tool use: **todo_write** • Todo List</summary>
+
+- [x] Refactor bulk_data_remap.py: rename all functions, classes, and constants to BST_DatRem_ prefix
+- [x] Refactor bulk_path_management.py: rename all functions, classes, and constants to BST_PathMgmt_ prefix
+- [x] Refactor bulk_viewport_display.py: rename all functions, classes, and constants to BST_Viewport_ prefix
+- [x] Refactor bulk_scene_general.py: rename all functions, classes, and constants to BST_SceneGen_ prefix
+- [x] Refactor ops files: rename classes in ghost_buster.py, AutoMatExtractor.py, Rename_images_by_mat.py, FreeGPU.py, and other ops files
+- [x] Update all import statements in __init__.py and cross-file imports
+- [x] Verify all classes are properly registered and operator/panel IDs are correct
+
+</details>
+</tool-use>
+
+---
+
+
+## Summary
+
+Refactored all names to use the `BST_` prefix system with module-specific sub-prefixes:
+
+### Completed refactoring:
+
+1. **bulk_data_remap.py** → `BST_DatRem_` prefix
+   - All functions, classes, and constants renamed
+   - Panel bl_idname updated
+
+2. **bulk_path_management.py** → `BST_PathMan_` prefix
+   - All classes renamed (operators and panels)
+   - Property group renamed to `BST_PathMan_PG_PathProperties`
+   - Panel bl_idname values updated
+
+3. **bulk_viewport_display.py** → `BST_ViewDisp_` prefix
+   - All classes and enum renamed
+   - Functions renamed
+   - Panel bl_idname updated
+
+4. **bulk_scene_general.py** → `BST_SceneGen_` prefix
+   - Panel class renamed
+
+5. **ops files**:
+   - `ghost_buster.py` → `BST_Bustin_` prefix (3 classes)
+   - `AutoMatExtractor.py` → `BST_AutoMat_` prefix (2 classes)
+   - `Rename_images_by_mat.py` → `BST_RenameImg_` prefix (2 classes)
+   - `FreeGPU.py` → Already had `BST_` prefix (kept as `BST_FreeGPU`)
+
+6. **Imports updated**:
+   - `__init__.py` imports updated
+   - Cross-file imports updated (e.g., `bulk_data_remap.py` importing from `ghost_buster.py`)
+
+7. **Registration verified**:
+   - All classes tuples updated
+   - Operator `bl_idname` values kept as `bst.*` (user-facing)
+   - Panel `bl_idname` values updated to match new class names
+   - No linter errors
+
+All todos are complete. The codebase now uses a consistent `BST_<Module>_` naming convention throughout.
+
+---
+
+_**User**_
+
+actually, can we change every `BST_` to `RBST_` ?
+
+---
+
+_**Agent (model default, mode Agent)**_
+
+
+Replacing all `BST_` prefixes with `RBST_` across the codebase:
+
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search">
+<details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+
+Parameters:
+
+```json
+{
+  "pattern": "\\bBST_",
+  "path": "E:\\Rainys_Bulk_Scene_Tools",
+  "outputMode": "files_with_matches",
+  "caseInsensitive": false
+}
+```
+Result:
+
+```json
+{
+  "success": {
+    "pattern": "\\bBST_",
+    "path": "E:\\Rainys_Bulk_Scene_Tools",
+    "outputMode": "files_with_matches",
+    "workspaceResults": {
+      "E:\\Rainys_Bulk_Scene_Tools": {
+        "files": {
+          "files": [
+            "panels\\bulk_data_remap.py",
+            "panels\\bulk_scene_general.py",
+            "panels\\bulk_path_management.py",
+            ".specstory/history/2025-12-18_23-07Z-github-issue-#3-integration.md",
+            "panels/bulk_path_management.py",
+            "panels/bulk_viewport_display.py",
+            "ops/FreeGPU.py",
+            "ops\\ghost_buster.py",
+            "ops\\Rename_images_by_mat.py",
+            "__init__.py",
+            "panels\\bulk_viewport_display.py",
+            ".specstory/history/2026-01-01_22-02Z-github-issue-#11-context.md",
+            "ops\\AutoMatExtractor.py"
+          ],
+          "totalFiles": 13
+        }
+      }
+    }
+  }
+}
+```
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: E:\Rainys_Bulk_Scene_Tools\__init__.py</summary>
+
+</details>
+</tool-use>
+
+---
+
+
+Replacing all `BST_` with `RBST_` across all files:
+
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\__init__.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_data_remap.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_path_management.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_viewport_display.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_scene_general.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\ops\ghost_buster.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\ops\AutoMatExtractor.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\ops\Rename_images_by_mat.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\ops\FreeGPU.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="read_lints">
+<details>
+<summary>Tool use: **read_lints**</summary>
+
+
+Parameters:
+
+```json
+{
+  "paths": [
+    "__init__.py",
+    "panels",
+    "ops"
+  ]
+}
+```
+Result:
+
+```json
+{
+  "linterErrorsByFile": [
+    {
+      "relativeWorkspacePath": "__init__.py"
+    },
+    {
+      "relativeWorkspacePath": "panels"
+    },
+    {
+      "relativeWorkspacePath": "ops"
+    }
+  ]
+}
+```
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+
+Verifying the replacements worked correctly:
+
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search">
+<details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+
+Parameters:
+
+```json
+{
+  "pattern": "\\bBST_",
+  "path": "E:\\Rainys_Bulk_Scene_Tools",
+  "outputMode": "count",
+  "caseInsensitive": false
+}
+```
+Result:
+
+```json
+{
+  "success": {
+    "pattern": "\\bBST_",
+    "path": "E:\\Rainys_Bulk_Scene_Tools",
+    "outputMode": "count",
+    "workspaceResults": {
+      "E:\\Rainys_Bulk_Scene_Tools": {
+        "count": {
+          "counts": [
+            {
+              "file": ".specstory/history/2026-01-01_22-02Z-github-issue-#11-context.md",
+              "count": 4
+            },
+            {
+              "file": ".specstory/history/2025-12-18_23-07Z-github-issue-#3-integration.md",
+              "count": 145
+            }
+          ],
+          "totalFiles": 2,
+          "totalMatches": 149
+        }
+      }
+    }
+  }
+}
+```
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search">
+<details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+
+Parameters:
+
+```json
+{
+  "pattern": "\\bRBST_",
+  "path": "E:\\Rainys_Bulk_Scene_Tools",
+  "outputMode": "count",
+  "caseInsensitive": false
+}
+```
+Result:
+
+```json
+{
+  "success": {
+    "pattern": "\\bRBST_",
+    "path": "E:\\Rainys_Bulk_Scene_Tools",
+    "outputMode": "count",
+    "workspaceResults": {
+      "E:\\Rainys_Bulk_Scene_Tools": {
+        "count": {
+          "counts": [
+            {
+              "file": "panels\\bulk_scene_general.py",
+              "count": 3
+            },
+            {
+              "file": "__init__.py",
+              "count": 12
+            },
+            {
+              "file": "ops\\ghost_buster.py",
+              "count": 6
+            },
+            {
+              "file": "panels\\bulk_viewport_display.py",
+              "count": 36
+            },
+            {
+              "file": "panels\\bulk_data_remap.py",
+              "count": 106
+            },
+            {
+              "file": "panels\\bulk_path_management.py",
+              "count": 49
+            },
+            {
+              "file": "ops\\Rename_images_by_mat.py",
+              "count": 4
+            },
+            {
+              "file": "ops\\AutoMatExtractor.py",
+              "count": 4
+            },
+            {
+              "file": "ops\\FreeGPU.py",
+              "count": 1
+            }
+          ],
+          "totalFiles": 9,
+          "totalMatches": 221
+        }
+      }
+    }
+  }
+}
+```
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: E:\Rainys_Bulk_Scene_Tools\__init__.py</summary>
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_data_remap.py</summary>
+
+</details>
+</tool-use>
+
+---
+
+
+Verifying the classes tuple is updated:
+
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: E:\Rainys_Bulk_Scene_Tools\__init__.py</summary>
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search">
+<details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+
+Parameters:
+
+```json
+{
+  "pattern": "class.*RBST_|def.*RBST_",
+  "path": "E:\\Rainys_Bulk_Scene_Tools",
+  "caseInsensitive": false
+}
+```
+Result:
+
+```json
+{
+  "success": {
+    "pattern": "class.*RBST_|def.*RBST_",
+    "path": "E:\\Rainys_Bulk_Scene_Tools",
+    "outputMode": "content",
+    "workspaceResults": {
+      "E:\\Rainys_Bulk_Scene_Tools": {
+        "content": {
+          "matches": [
+            {
+              "file": "ops\\AutoMatExtractor.py"
+            },
+            {
+              "file": "__init__.py",
+              "matches": [
+                {
+                  "lineNumber": 16,
+                  "content": "class RBST_AddonPreferences(AddonPreferences):"
+                }
+              ]
+            },
+            {
+              "file": "panels\\bulk_viewport_display.py"
+            },
+            {
+              "file": "panels\\bulk_path_management.py",
+              "matches": [
+                {
+                  "lineNumber": 8,
+                  "content": "class RBST_PathMan_OT_summary_dialog(bpy.types.Operator):"
+                }
+              ]
+            },
+            {
+              "file": "panels\\bulk_scene_general.py"
+            },
+            {
+              "file": "ops\\Rename_images_by_mat.py"
+            },
+            {
+              "file": "panels\\bulk_data_remap.py",
+              "matches": [
+                {
+                  "lineNumber": 15,
+                  "content": "def RBST_DatRem_has_linked_datablocks(data_collection):"
+                },
+                {
+                  "lineNumber": 23,
+                  "content": "def RBST_DatRem_register_properties():"
+                },
+                {
+                  "lineNumber": 139,
+                  "content": "def RBST_DatRem_unregister_properties():"
+                },
+                {
+                  "lineNumber": 165,
+                  "content": "def RBST_DatRem_get_base_name(name):"
+                },
+                {
+                  "lineNumber": 172,
+                  "content": "def RBST_DatRem_find_data_groups(data_collection):"
+                },
+                {
+                  "lineNumber": 197,
+                  "content": "def RBST_DatRem_find_target_data(data_group):"
+                },
+                {
+                  "lineNumber": 225,
+                  "content": "def RBST_DatRem_clean_data_names(data_collection):"
+                },
+                {
+                  "lineNumber": 245,
+                  "content": "def RBST_DatRem_remap_data_blocks(context, remap_images, remap_materials, remap_fonts, remap_worlds):"
+                },
+                {
+                  "lineNumber": 596,
+                  "content": "class RBST_DatRem_OT_RemapData(bpy.types.Operator):"
+                }
+              ]
+            },
+            {
+              "file": "ops\\FreeGPU.py"
+            },
+            {
+              "file": "ops\\ghost_buster.py"
+            }
+          ],
+          "totalLines": 11,
+          "totalMatchedLines": 11,
+          "clientTruncated": true
+        }
+      }
+    }
+  }
+}
+```
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+
+Checking panel bl_idname values for any `BST_` references:
+
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search">
+<details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+
+Parameters:
+
+```json
+{
+  "pattern": "bl_idname.*BST_|bl_idname.*RBST_",
+  "path": "E:\\Rainys_Bulk_Scene_Tools\\panels",
+  "caseInsensitive": false
+}
+```
+Result:
+
+```json
+{
+  "success": {
+    "pattern": "bl_idname.*BST_|bl_idname.*RBST_",
+    "path": "E:\\Rainys_Bulk_Scene_Tools\\panels",
+    "outputMode": "content",
+    "workspaceResults": {
+      "E:\\Rainys_Bulk_Scene_Tools": {
+        "content": {
+          "matches": [
+            {
+              "file": "panels\\bulk_path_management.py",
+              "matches": [
+                {
+                  "lineNumber": 1438,
+                  "content": "    bl_idname = \"RBST_PathMan_PT_bulk_path_tools\""
+                },
+                {
+                  "lineNumber": 1648,
+                  "content": "    bl_idname = \"RBST_PathMan_PT_bulk_path_subpanel\""
+                }
+              ]
+            },
+            {
+              "file": "panels/bulk_path_management.py",
+              "matches": [
+                {
+                  "lineNumber": 1438,
+                  "content": "    bl_idname = \"RBST_PathMan_PT_bulk_path_tools\""
+                },
+                {
+                  "lineNumber": 1648,
+                  "content": "    bl_idname = \"RBST_PathMan_PT_bulk_path_subpanel\""
+                }
+              ]
+            },
+            {
+              "file": "panels/bulk_viewport_display.py",
+              "matches": [
+                {
+                  "lineNumber": 839,
+                  "content": "    bl_idname = \"RBST_ViewDisp_PT_bulk_viewport_display\""
+                }
+              ]
+            },
+            {
+              "file": "panels\\bulk_scene_general.py",
+              "matches": [
+                {
+                  "lineNumber": 15,
+                  "content": "    bl_idname = \"RBST_SceneGen_PT_bulk_scene_general\""
+                }
+              ]
+            },
+            {
+              "file": "panels\\bulk_data_remap.py",
+              "matches": [
+                {
+                  "lineNumber": 1124,
+                  "content": "    bl_idname = \"RBST_DatRem_PT_bulk_data_remap\""
+                }
+              ]
+            },
+            {
+              "file": "panels\\bulk_viewport_display.py",
+              "matches": [
+                {
+                  "lineNumber": 839,
+                  "content": "    bl_idname = \"RBST_ViewDisp_PT_bulk_viewport_display\""
+                }
+              ]
+            }
+          ],
+          "totalLines": 8,
+          "totalMatchedLines": 8
+        }
+      }
+    }
+  }
+}
+```
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_data_remap.py</summary>
+
+</details>
+</tool-use>
+
+---
+
+
+Replaced all `BST_` prefixes with `RBST_` across the codebase.
+
+**Updated files:**
+- `__init__.py` - All class names and imports
+- `panels/bulk_data_remap.py` - All functions, classes, constants, and panel bl_idname
+- `panels/bulk_path_management.py` - All classes and panel bl_idname values
+- `panels/bulk_viewport_display.py` - All classes, functions, enum, and panel bl_idname
+- `panels/bulk_scene_general.py` - Panel class and bl_idname
+- `ops/ghost_buster.py` - All operator classes
+- `ops/AutoMatExtractor.py` - All operator classes
+- `ops/Rename_images_by_mat.py` - All operator classes
+- `ops/FreeGPU.py` - Operator class
+
+**Verification:**
+- All class names updated (e.g., `RBST_DatRem_OT_RemapData`, `RBST_PathMan_PG_PathProperties`)
+- All function names updated (e.g., `RBST_DatRem_has_linked_datablocks`)
+- All constants updated (e.g., `RBST_DatRem_NUMBERED_SUFFIX_PATTERN`)
+- All imports updated
+- All panel `bl_idname` values updated (e.g., `RBST_DatRem_PT_bulk_data_remap`)
+- No linter errors
+- Operator `bl_idname` values remain as `bst.*` (user-facing identifiers, unchanged)
+
+The only remaining `BST_` references are in `.specstory` history files (documentation only, no code impact). The refactoring is complete.
+
+---
+
+_**User**_
+
+@blender (988-1020) 
+
+---
+
+_**Agent (model default, mode Agent)**_
+
+
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="read_file_v2">
+<details>
+<summary>Tool use: **read_file_v2**</summary>
+
+Status: **loading**
+
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search">
+<details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+Status: **loading**
+
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="read_file_v2">
+<details>
+<summary>Tool use: **read_file_v2**</summary>
+
+Status: **loading**
+
+
+</details>
+</tool-use>
+
+---
+
+
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_viewport_display.py</summary>
+
+Status: **loading**
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="read_lints">
+<details>
+<summary>Tool use: **read_lints**</summary>
+
+Status: **loading**
+
+
+</details>
+</tool-use>
+
+---
+

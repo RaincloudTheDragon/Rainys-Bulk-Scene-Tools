@@ -4,15 +4,15 @@ from ..ops.remove_custom_split_normals import RemoveCustomSplitNormals
 from ..ops.create_ortho_camera import CreateOrthoCamera
 from ..ops.spawn_scene_structure import SpawnSceneStructure
 from ..ops.delete_single_keyframe_actions import DeleteSingleKeyframeActions
-from ..ops.find_material_users import FindMaterialUsers, MATERIAL_USERS_OT_summary_dialog
+from ..ops.find_material_users import FindMaterialUsers, MATERIAL_USERS_OT_summary_dialog  # TODO: Rename these classes
 from ..ops.remove_unused_material_slots import RemoveUnusedMaterialSlots
 from ..ops.convert_relations_to_constraint import ConvertRelationsToConstraint
 from ..utils import compat
 
-class BulkSceneGeneral(bpy.types.Panel):
+class RBST_SceneGen_PT_BulkSceneGeneral(bpy.types.Panel):
     """Bulk Scene General Panel"""
     bl_label = "Scene General"
-    bl_idname = "VIEW3D_PT_bulk_scene_general"
+    bl_idname = "RBST_SceneGen_PT_bulk_scene_general"
     bl_space_type = 'VIEW_3D'
     bl_region_type = 'UI'
     bl_category = 'Edit'
@@ -62,7 +62,7 @@ class BulkSceneGeneral(bpy.types.Panel):
 
 # List of all classes in this module
 classes = (
-    BulkSceneGeneral,
+    RBST_SceneGen_PT_BulkSceneGeneral,
     NoSubdiv,  # Add NoSubdiv operator class
     RemoveCustomSplitNormals,
     CreateOrthoCamera,

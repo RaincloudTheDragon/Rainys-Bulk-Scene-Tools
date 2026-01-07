@@ -9,7 +9,7 @@ from ..panels.bulk_path_management import (
 )
 from ..utils import compat
 
-class AUTOMAT_OT_summary_dialog(bpy.types.Operator):
+class RBST_AutoMat_OT_summary_dialog(bpy.types.Operator):
     """Show AutoMat Extractor operation summary"""
     bl_idname = "bst.automat_summary_dialog"
     bl_label = "AutoMat Extractor Summary"
@@ -62,7 +62,7 @@ class AUTOMAT_OT_summary_dialog(bpy.types.Operator):
     def invoke(self, context, event):
         return context.window_manager.invoke_popup(self, width=500)
 
-class AutoMatExtractor(bpy.types.Operator):
+class RBST_AutoMat_OT_AutoMatExtractor(bpy.types.Operator):
     bl_idname = "bst.automatextractor"
     bl_label = "AutoMatExtractor"
     bl_description = "Pack selected images and extract them with organized paths by blend file and material"
@@ -539,8 +539,8 @@ class AutoMatExtractor(bpy.types.Operator):
 
 # Must register the new dialog class as well
 classes = (
-    AUTOMAT_OT_summary_dialog,
-    AutoMatExtractor,
+    RBST_AutoMat_OT_summary_dialog,
+    RBST_AutoMat_OT_AutoMatExtractor,
 )
 
 def register():
