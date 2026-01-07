@@ -662,6 +662,78 @@ class DATAREMAP_OT_RemapData(bpy.types.Operator):
         
         return {'FINISHED'}
 
+# Add a new operator for merging duplicates using data-block utilities
+class BST_OT_MergeDuplicatesWithDBU(bpy.types.Operator):
+    """Merge duplicates using data-block utilities addon for all supported data types"""
+    bl_idname = "bst.merge_duplicates_dbu"
+    bl_label = "Merge Duplicates (DBU)"
+    bl_options = {'REGISTER', 'UNDO'}
+    
+    def execute(self, context):
+        # Check if data-block utilities addon is installed
+        if not hasattr(context.scene, 'dbu_similar_settings'):
+            self.report({'ERROR'}, "Data-block utilities addon is not installed or enabled")
+            return {'CANCELLED'}
+        
+        # Data types to process in order
+        data_types = ['NODETREE', 'MATERIAL', 'LIGHT', 'IMAGE', 'MESH']
+        type_labels = {
+            'NODETREE': 'Node Groups',
+            'MATERIAL': 'Materials',
+            'LIGHT': 'Lights',
+            'IMAGE': 'Images',
+            'MESH': 'Meshes'
+        }
+        
+        total_merged = 0
+        processed_types = []
+        
+        try:
+            settings = context.scene.dbu_similar_settings
+            
+            for id_type in data_types:
+                # Set the id_type
+                settings.id_type = id_type
+                
+                # Find similar and duplicates
+                try:
+                    bpy.ops.scene.dbu_find_similar_and_duplicates()
+                except Exception as e:
+                    self.report({'WARNING'}, f"Failed to find duplicates for {type_labels[id_type]}: {str(e)}")
+                    continue
+                
+                # Check if any duplicates were found
+                if not settings.duplicates:
+                    continue
+                
+                # Count items to be merged (each group has duplicates, so count items - groups)
+                # Each group keeps one item, so we count (total items - number of groups)
+                total_items = sum(len(group.group) for group in settings.duplicates)
+                num_groups = len(settings.duplicates)
+                items_to_remove = total_items - num_groups  # One item per group is kept
+                
+                # Merge duplicates
+                try:
+                    bpy.ops.scene.dbu_merge_duplicates()
+                    total_merged += items_to_remove
+                    processed_types.append(f"{type_labels[id_type]} ({items_to_remove})")
+                except Exception as e:
+                    self.report({'WARNING'}, f"Failed to merge duplicates for {type_labels[id_type]}: {str(e)}")
+                    continue
+            
+            # Report results
+            if total_merged > 0:
+                types_str = ", ".join(processed_types)
+                self.report({'INFO'}, f"Merged {total_merged} duplicate(s) across: {types_str}")
+            else:
+                self.report({'INFO'}, "No duplicates found to merge")
+            
+            return {'FINISHED'}
+            
+        except Exception as e:
+            self.report({'ERROR'}, f"Error during merge operation: {str(e)}")
+            return {'CANCELLED'}
+
 # Add a new operator for purging unused data
 class DATAREMAP_OT_PurgeUnused(bpy.types.Operator):
     """Purge all unused data-blocks from the file (equivalent to File > Clean Up > Purge Unused Data)"""
@@ -1265,6 +1337,23 @@ class VIEW3D_PT_BulkDataRemap(bpy.types.Panel):
         row.scale_y = 1.5
         row.operator("bst.bulk_data_remap")
         
+        # Add Data-Block Utils Integration section
+        box.separator()
+        dbu_box = box.box()
+        dbu_box.label(text="Data-Block Utils Integration")
+        dbu_col = dbu_box.column()
+        dbu_col.label(text="Merge duplicates using data-block utilities addon")
+        dbu_col.label(text="Processes: Node Groups, Materials, Lights, Images, Meshes")
+        
+        # Check if data-block utilities addon is available
+        if hasattr(context.scene, 'dbu_similar_settings'):
+            dbu_row = dbu_box.row()
+            dbu_row.scale_y = 1.5
+            dbu_row.operator("bst.merge_duplicates_dbu", text="Merge Duplicates (DBU)", icon='FILE_PARENT')
+        else:
+            dbu_box.alert = True
+            dbu_box.label(text="Data-block utilities addon not installed", icon='ERROR')
+        
         # Show total counts
         total_duplicates = image_duplicates + material_duplicates + font_duplicates + world_duplicates
         total_numbered = image_numbered + material_numbered + font_numbered + world_numbered
@@ -1484,6 +1573,7 @@ class DATAREMAP_OT_RenameDatablock(bpy.types.Operator):
 # List of all classes in this module
 classes = (
     DATAREMAP_OT_RemapData,
+    BST_OT_MergeDuplicatesWithDBU,
     DATAREMAP_OT_PurgeUnused,
     DATAREMAP_OT_ToggleDataType,
     DATAREMAP_OT_ToggleGroupExclusion,
