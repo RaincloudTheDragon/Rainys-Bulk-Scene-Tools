@@ -41764,3 +41764,4519 @@ To-do's from the plan have already been created. Do not create them again. Mark 
 
 ---
 
+_**Agent (model default, mode Agent)**_
+
+
+Implementing the fix. Updating `sanitize_filename` to handle CC/iC Pack textures correctly.
+
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: E:\Rainys_Bulk_Scene_Tools\ops\AutoMatExtractor.py</summary>
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="task" data-tool-name="todo_write">
+<details><summary>Tool use: **todo_write** • Todo List</summary>
+
+- [x] Refactor bulk_data_remap.py: rename all functions, classes, and constants to BST_DatRem_ prefix
+- [x] Refactor bulk_path_management.py: rename all functions, classes, and constants to BST_PathMgmt_ prefix
+- [x] Refactor bulk_viewport_display.py: rename all functions, classes, and constants to BST_Viewport_ prefix
+- [x] Refactor bulk_scene_general.py: rename all functions, classes, and constants to BST_SceneGen_ prefix
+- [x] Refactor ops files: rename classes in ghost_buster.py, AutoMatExtractor.py, Rename_images_by_mat.py, FreeGPU.py, and other ops files
+- [x] Update all import statements in __init__.py and cross-file imports
+- [x] Verify all classes are properly registered and operator/panel IDs are correct
+- [-] Modify sanitize_filename method to remove .001/.002 suffixes even when in middle of filename (before texture type suffixes)
+
+</details>
+</tool-use>
+
+---
+
+
+Updating `sanitize_filename` to handle CC/iC Pack textures correctly:
+
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\ops\AutoMatExtractor.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="read_lints">
+<details>
+<summary>Tool use: **read_lints**</summary>
+
+
+Parameters:
+
+```json
+{
+  "paths": [
+    "ops/AutoMatExtractor.py"
+  ]
+}
+```
+Result:
+
+```json
+{
+  "linterErrorsByFile": [
+    {
+      "relativeWorkspacePath": "ops/AutoMatExtractor.py"
+    }
+  ]
+}
+```
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+
+Fix implemented. Marking the todo as completed:
+
+
+---
+
+<tool-use data-tool-type="task" data-tool-name="todo_write">
+<details><summary>Tool use: **todo_write** • Todo List</summary>
+
+- [x] Refactor bulk_data_remap.py: rename all functions, classes, and constants to BST_DatRem_ prefix
+- [x] Refactor bulk_path_management.py: rename all functions, classes, and constants to BST_PathMgmt_ prefix
+- [x] Refactor bulk_viewport_display.py: rename all functions, classes, and constants to BST_Viewport_ prefix
+- [x] Refactor bulk_scene_general.py: rename all functions, classes, and constants to BST_SceneGen_ prefix
+- [x] Refactor ops files: rename classes in ghost_buster.py, AutoMatExtractor.py, Rename_images_by_mat.py, FreeGPU.py, and other ops files
+- [x] Update all import statements in __init__.py and cross-file imports
+- [x] Verify all classes are properly registered and operator/panel IDs are correct
+- [x] Modify sanitize_filename method to remove .001/.002 suffixes even when in middle of filename (before texture type suffixes)
+
+</details>
+</tool-use>
+
+---
+
+
+Fix implemented.
+
+## Summary
+
+Updated the `sanitize_filename` method in `ops/AutoMatExtractor.py` to handle CC/iC Pack textures.
+
+**Changes made:**
+- Removes `.001`, `.002`, etc. when followed by an underscore or space (for Pack textures)
+- Still removes them at the end (preserves existing behavior)
+- Preserves texture type suffixes like "MSMNAO Pack", "SSTM Pack", "Roughness Pack", "Flow Pack"
+
+**Result:**
+- `Std_Skin_Head.001_MSMNAO Pack.png` → `Std_Skin_Head_MSMNAO Pack`
+- `Std_Skin_Head.001_SSTM Pack.png` → `Std_Skin_Head_SSTM Pack`
+- `Std_Skin_Head.001_Roughness Pack.png` → `Std_Skin_Head_Roughness Pack`
+
+Each Pack texture now gets a unique filename that preserves its texture type, preventing overwrites. The fix uses regex lookahead `(?=[_\s])` to match `.001` patterns before underscores or spaces, ensuring the texture type suffix is preserved.
+
+No linter errors. Ready for testing.
+
+---
+
+_**User**_
+
+there's that issue fixed! next one issue #12: https://github.com/RaincloudTheDragon/Rainys-Bulk-Scene-Tools/issues/12
+let's double-check to make sure we didn't miss anything in The Great Refactor.
+
+---
+
+_**Agent (model default, mode Agent)**_
+
+
+Checking `bulk_viewport_display.py` for the `RBST_ViewDisp_MaterialStatus` issue:
+
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_viewport_display.py</summary>
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search">
+<details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+
+Parameters:
+
+```json
+{
+  "pattern": "RBST_ViewDisp_MaterialStatus|MaterialStatus",
+  "path": "E:\\Rainys_Bulk_Scene_Tools\\panels\\bulk_viewport_display.py",
+  "caseInsensitive": false
+}
+```
+Result:
+
+```json
+{
+  "success": {
+    "pattern": "RBST_ViewDisp_MaterialStatus|MaterialStatus",
+    "path": "E:\\Rainys_Bulk_Scene_Tools\\panels\\bulk_viewport_display.py",
+    "outputMode": "content",
+    "workspaceResults": {
+      "E:\\Rainys_Bulk_Scene_Tools": {
+        "content": {
+          "matches": [
+            {
+              "file": "panels\\bulk_viewport_display.py",
+              "matches": [
+                {
+                  "lineNumber": 12,
+                  "content": "class RBST_ViewDisp_RBST_ViewDisp_MaterialStatus(Enum):"
+                },
+                {
+                  "lineNumber": 256,
+                  "content": "            if status == RBST_ViewDisp_MaterialStatus.PREVIEW_BASED:"
+                },
+                {
+                  "lineNumber": 258,
+                  "content": "            elif status == RBST_ViewDisp_MaterialStatus.COMPLETED:"
+                },
+                {
+                  "lineNumber": 260,
+                  "content": "            elif status == RBST_ViewDisp_MaterialStatus.FAILED:"
+                },
+                {
+                  "lineNumber": 462,
+                  "content": "        return (1, 1, 1), RBST_ViewDisp_MaterialStatus.PREVIEW_BASED"
+                },
+                {
+                  "lineNumber": 466,
+                  "content": "        return (1, 1, 1), RBST_ViewDisp_MaterialStatus.PREVIEW_BASED"
+                },
+                {
+                  "lineNumber": 482,
+                  "content": "            return corrected_color, RBST_ViewDisp_MaterialStatus.PREVIEW_BASED"
+                },
+                {
+                  "lineNumber": 485,
+                  "content": "            return (1, 1, 1), RBST_ViewDisp_MaterialStatus.PREVIEW_BASED"
+                },
+                {
+                  "lineNumber": 489,
+                  "content": "        return (1, 1, 1), RBST_ViewDisp_MaterialStatus.FAILED"
+                },
+                {
+                  "lineNumber": 808,
+                  "content": "    if status == RBST_ViewDisp_MaterialStatus.PENDING:"
+                },
+                {
+                  "lineNumber": 810,
+                  "content": "    elif status == RBST_ViewDisp_MaterialStatus.PROCESSING:"
+                },
+                {
+                  "lineNumber": 812,
+                  "content": "    elif status == RBST_ViewDisp_MaterialStatus.COMPLETED:"
+                },
+                {
+                  "lineNumber": 814,
+                  "content": "    elif status == RBST_ViewDisp_MaterialStatus.PREVIEW_BASED:"
+                },
+                {
+                  "lineNumber": 816,
+                  "content": "    elif status == RBST_ViewDisp_MaterialStatus.FAILED:"
+                },
+                {
+                  "lineNumber": 823,
+                  "content": "    if status == RBST_ViewDisp_MaterialStatus.PENDING:"
+                },
+                {
+                  "lineNumber": 825,
+                  "content": "    elif status == RBST_ViewDisp_MaterialStatus.PROCESSING:"
+                },
+                {
+                  "lineNumber": 827,
+                  "content": "    elif status == RBST_ViewDisp_MaterialStatus.COMPLETED:"
+                },
+                {
+                  "lineNumber": 829,
+                  "content": "    elif status == RBST_ViewDisp_MaterialStatus.PREVIEW_BASED:"
+                },
+                {
+                  "lineNumber": 831,
+                  "content": "    elif status == RBST_ViewDisp_MaterialStatus.FAILED:"
+                },
+                {
+                  "lineNumber": 916,
+                  "content": "                    if status == RBST_ViewDisp_MaterialStatus.PREVIEW_BASED:"
+                },
+                {
+                  "lineNumber": 918,
+                  "content": "                    elif status == RBST_ViewDisp_MaterialStatus.FAILED:"
+                }
+              ]
+            }
+          ],
+          "totalLines": 21,
+          "totalMatchedLines": 21
+        }
+      }
+    }
+  }
+}
+```
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_viewport_display.py</summary>
+
+</details>
+</tool-use>
+
+---
+
+
+The enum class name is duplicated: `RBST_ViewDisp_RBST_ViewDisp_MaterialStatus` instead of `RBST_ViewDisp_MaterialStatus`. Fixing it:
+
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_viewport_display.py</summary>
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_viewport_display.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search">
+<details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+
+Parameters:
+
+```json
+{
+  "pattern": "RBST_ViewDisp_RBST_ViewDisp|RBST_RBST|BST_BST",
+  "path": "E:\\Rainys_Bulk_Scene_Tools",
+  "caseInsensitive": true
+}
+```
+Result:
+
+```json
+{
+  "success": {
+    "pattern": "RBST_ViewDisp_RBST_ViewDisp|RBST_RBST|BST_BST",
+    "path": "E:\\Rainys_Bulk_Scene_Tools",
+    "outputMode": "content",
+    "workspaceResults": {
+      "E:\\Rainys_Bulk_Scene_Tools": {
+        "content": {}
+      }
+    }
+  }
+}
+```
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+
+Fixed the duplicated prefix. Checking for other refactoring issues:
+
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search">
+<details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+
+Parameters:
+
+```json
+{
+  "pattern": "class.*RBST.*RBST|def.*RBST.*RBST|RBST.*RBST.*=",
+  "path": "E:\\Rainys_Bulk_Scene_Tools",
+  "caseInsensitive": false
+}
+```
+Result:
+
+```json
+{
+  "success": {
+    "pattern": "class.*RBST.*RBST|def.*RBST.*RBST|RBST.*RBST.*=",
+    "path": "E:\\Rainys_Bulk_Scene_Tools",
+    "outputMode": "content",
+    "workspaceResults": {
+      "E:\\Rainys_Bulk_Scene_Tools": {
+        "content": {
+          "matches": [
+            {
+              "file": ".specstory/history/2026-01-07_21-47Z-datablock-utilities-integration-for-duplicates.md",
+              "matches": [
+                {
+                  "lineNumber": 23389,
+                  "content": "  \"pattern\": \"class.*RBST_|def.*RBST_\","
+                },
+                {
+                  "lineNumber": 23399,
+                  "content": "    \"pattern\": \"class.*RBST_|def.*RBST_\","
+                },
+                {
+                  "lineNumber": 23635,
+                  "content": "- All class names updated (e.g., &#96;RBST_DatRem_OT_RemapData&#96;, &#96;RBST_PathMan_PG_PathProperties&#96;)"
+                },
+                {
+                  "lineNumber": 27320,
+                  "content": "        \"contents\": \"import bpy # type: ignore\\nfrom bpy.types import AddonPreferences, Panel # type: ignore\\nfrom bpy.props import BoolProperty # type: ignore\\nfrom .panels import bulk_viewport_display\\nfrom .panels import bulk_data_remap\\nfrom .panels import bulk_path_management\\nfrom .panels import bulk_scene_general\\nfrom .ops.AutoMatExtractor import RBST_AutoMat_OT_AutoMatExtractor, RBST_AutoMat_OT_summary_dialog\\nfrom .ops.Rename_images_by_mat import RBST_RenameImg_OT_Rename_images_by_mat, RBST_RenameImg_OT_summary_dialog\\nfrom .ops.FreeGPU import RBST_FreeGPU\\nfrom .ops import ghost_buster\\nfrom . import rainys_repo_bootstrap\\nfrom .utils import compat\\n\\n# Addon preferences class for update settings\\nclass RBST_AddonPreferences(AddonPreferences):\\n    bl_idname = __package__\\n\\n    # AutoMat Extractor settings\\n    automat_common_outside_blend: BoolProperty(\\n        name=\\\"Place 'common' folder outside 'blend' folder\\\",\\n        description=\\\"If enabled, the 'common' folder fo"
+                },
+                {
+                  "lineNumber": 28052,
+                  "content": "        \"contents\": \"# Pack Images Operator\\nclass RBST_PathMan_OT_pack_images(Operator):\\n    bl_idname = \\\"bst.pack_images\\\"\\n    bl_label = \\\"Pack Images\\\"\\n    bl_description = \\\"Pack selected images into the .blend file\\\"\\n    bl_options = {'REGISTER', 'UNDO'}\\n    \\n    def execute(self, context):\\n        packed_count = 0\\n        failed_count = 0\\n        \\n        # Get all selected images or all images if none selected\\n        selected_images = [img for img in bpy.data.images if hasattr(img, \\\"bst_selected\\\") and img.bst_selected]\\n        if not selected_images:\\n            selected_images = list(bpy.data.images)\\n        \\n        for img in selected_images:\\n            # Skip images that can't or shouldn't be packed\\n            if (img.packed_file or  # Already packed\\n                img.source == 'GENERATED' or  # Procedurally generated\\n                img.source == 'VIEWER' or  # Render Result, Viewer Node, etc.\\n                not img.filepath or  # No file path\\"
+                },
+                {
+                  "lineNumber": 28836,
+                  "content": "        \"contents\": \"def process_material(material, use_vectorized=True):\\n    \\\"\\\"\\\"Process a material to determine its viewport color\\\"\\\"\\\"\\n    if not material:\\n        print(f\\\"Material is None, using fallback color\\\")\\n        return (1, 1, 1), RBST_ViewDisp_MaterialStatus.PREVIEW_BASED\\n    \\n    if material.is_grease_pencil:\\n        print(f\\\"Material {material.name}: is a grease pencil material, using fallback color\\\")\\n        return (1, 1, 1), RBST_ViewDisp_MaterialStatus.PREVIEW_BASED\\n    \\n    try:\\n        # Get color from material thumbnail\\n        print(f\\\"Material {material.name}: Attempting to extract color from thumbnail\\\")\\n        \\n        # Get color from the material thumbnail\\n        color = get_color_from_preview(material, use_vectorized)\\n        \\n        if color:\\n            print(f\\\"Material {material.name}: Thumbnail color = {color}\\\")\\n            \\n            # Correct color for viewport display\\n            corrected_color = correct_viewport_colo"
+                },
+                {
+                  "lineNumber": 29549,
+                  "content": "        \"contents\": \"class RBST_AutoMat_OT_summary_dialog(bpy.types.Operator):\\n\\n    \\n    def draw(self, context):\\n        layout = self.layout\\n        \\n        layout.label(text=\\\"AutoMat Extractor - Summary\\\", icon='INFO')\\n        layout.separator()\\n        \\n        box = layout.box()\\n        col = box.column(align=True)\\n        col.label(text=f\\\"Total selected images: {self.total_selected}\\\")\\n        col.label(text=f\\\"Successfully extracted: {self.success_count}\\\", icon='CHECKMARK')\\n        \\n        if self.overwrite_skipped_count &amp;gt; 0:\\n            col.label(text=f\\\"Skipped to prevent overwrite: {self.overwrite_skipped_count}\\\", icon='ERROR')\\n        if self.failed_remap_count &amp;gt; 0:\\n            col.label(text=f\\\"Failed to remap (path issue): {self.failed_remap_count}\\\", icon='ERROR')\\n\\n        if self.overwrite_details:\\n            layout.separator()\\n            box = layout.box()\\n            box.label(text=\\\"Overwrite Conflicts (Skipped):\\\", icon='FILE_TEXT'"
+                },
+                {
+                  "lineNumber": 33365,
+                  "content": "        \"contents\": \"class RBST_AutoMat_OT_summary_dialog(bpy.types.Operator):\\n\\n    \\n    def draw(self, context):\\n        layout = self.layout\\n        \\n        layout.label(text=\\\"AutoMat Extractor - Summary\\\", icon='INFO')\\n        layout.separator()\\n        \\n        box = layout.box()\\n        col = box.column(align=True)\\n        col.label(text=f\\\"Total selected images: {self.total_selected}\\\")\\n        col.label(text=f\\\"Successfully extracted: {self.success_count}\\\", icon='CHECKMARK')\\n        \\n        if self.overwrite_skipped_count &amp;gt; 0:\\n            col.label(text=f\\\"Skipped to prevent overwrite: {self.overwrite_skipped_count}\\\", icon='ERROR')\\n        if self.failed_remap_count &amp;gt; 0:\\n            col.label(text=f\\\"Failed to remap (path issue): {self.failed_remap_count}\\\", icon='ERROR')\\n\\n        if self.overwrite_details:\\n            layout.separator()\\n            box = layout.box()\\n            box.label(text=\\\"Overwrite Conflicts (Skipped):\\\", icon='FILE_TEXT'"
+                },
+                {
+                  "lineNumber": 37792,
+                  "content": "        \"contents\": \"class RBST_PathMan_OT_remove_extensions(Operator):\\ndef execute(self, context):\\n\\n        \\n        if removal_list:\\n            print(f\\\"\\\\nDetailed removal log:\\\")\\n            for original, new, ext in removal_list:\\n                print(f\\\"  '{original}' → '{new}' (removed {ext})\\\")\\n        \\n        print(f\\\"==================================\\\\n\\\")\\n        \\n        # Show popup summary dialog\\n        self.show_summary_dialog(context, len(selected_images), removed_count, no_extension_count, linked_count, removal_list)\\n        \\n        return {'FINISHED'}\\n    \\n    def show_summary_dialog(self, context, total_selected, removed_count, no_extension_count, linked_count, removal_list):\\n        \\\"\\\"\\\"Show a popup dialog with the removal summary\\\"\\\"\\\"\\n        # Prepare detailed removal information for display\\n        details_text = \\\"\\\"\\n        if removal_list:\\n            for original, new, ext in removal_list:\\n                details_text += f\\\"'{o"
+                },
+                {
+                  "lineNumber": 38183,
+                  "content": "        \"contents\": \"# Remove Packed Images Operator\\nclass RBST_PathMan_OT_remove_packed_images(Operator):\\n    bl_idname = \\\"bst.remove_packed_images\\\"\\n    bl_label = \\\"Remove Packed Data\\\"\\n    bl_description = \\\"Remove packed image data without saving to disk\\\"\\n    bl_options = {'REGISTER', 'UNDO'}\\n    \\n    def execute(self, context):\\n        removed_count = 0\\n        failed_count = 0\\n        \\n        # Get all selected images or all images if none selected\\n        selected_images = [img for img in bpy.data.images if hasattr(img, \\\"bst_selected\\\") and img.bst_selected]\\n        if not selected_images:\\n            selected_images = list(bpy.data.images)\\n        \\n        for img in selected_images:\\n            if img.packed_file:\\n                try:\\n                    print(f\\\"DEBUG: Removing packed data for image: {img.name}\\\")\\n                    img.unpack(method='REMOVE')\\n                    removed_count += 1\\n                except Exception as e:\\n          "
+                },
+                {
+                  "lineNumber": 38356,
+                  "content": "        \"contents\": \"def RBST_DatRem_remap_data_blocks(context, remap_images, remap_materials, remap_fonts, remap_worlds):\\n    \\\"\\\"\\\"Remap redundant data blocks to their base versions like Blender's Remap Users function, and clean up names.\\\"\\\"\\\"\\n    remapped_count = 0\\n    cleaned_count = 0\\n    \\n    # Process images\\n    if remap_images:\\n        # First remap duplicates\\n        image_groups = RBST_DatRem_find_data_groups(bpy.data.images)\\n        for base_name, images in image_groups.items():\\n            # Skip excluded groups\\n            if f\\\"images:{base_name}\\\" in context.scene.excluded_remap_groups:\\n                continue\\n                \\n            target_image = RBST_DatRem_find_target_data(images)\\n            \\n            # Rename the target if it has a numbered suffix and is the youngest\\n            if RBST_DatRem_get_base_name(target_image.name) != target_image.name:\\n                try:\\n                    target_image.name = RBST_DatRem_get_base_name(tar"
+                },
+                {
+                  "lineNumber": 39649,
+                  "content": "        \"contents\": \"class RBST_PathMan_OT_bulk_remap(Operator):\\n\\n    \\n    def _process_batch(self):\\n        \\\"\\\"\\\"Process images in batches to avoid blocking the UI\\\"\\\"\\\"\\n        # Check for cancellation\\n        props = bpy.context.scene.bst_path_props\\n        if props.cancel_operation:\\n            props.is_operation_running = False\\n            props.operation_progress = 0.0\\n            props.operation_status = \\\"Operation cancelled\\\"\\n            props.cancel_operation = False\\n            return None\\n        \\n        if self.current_index &amp;gt;= len(self.selected_images):\\n            # Operation complete\\n            props = bpy.context.scene.bst_path_props\\n            props.is_operation_running = False\\n            props.operation_progress = 100.0\\n            props.operation_status = f\\\"Completed! Remapped {self.remap_count} images\\\"\\n            \\n            # Force UI update\\n            for area in bpy.context.screen.areas:\\n                area.tag_redraw()\\n    "
+                },
+                {
+                  "lineNumber": 41489,
+                  "content": "        \"contents\": \"# Registration function for this module\\nclasses = (\\n    RBST_PathMan_OT_summary_dialog,\\n    RBST_PathMan_PG_PathProperties,\\n    RBST_PathMan_OT_remap_path,\\n    RBST_PathMan_OT_toggle_select_all,\\n    RBST_PathMan_OT_bulk_remap,\\n    RBST_PathMan_OT_toggle_path_edit,\\n    RBST_PathMan_OT_select_material_images,\\n    RBST_PathMan_OT_select_active_images,\\n    RBST_PathMan_OT_select_absolute_images,\\n    RBST_PathMan_OT_rename_datablock,\\n    RBST_PathMan_OT_toggle_image_selection,\\n    RBST_PathMan_OT_reuse_material_path,\\n    RBST_PathMan_OT_reuse_blend_name,\\n    RBST_PathMan_OT_make_paths_relative,\\n    RBST_PathMan_OT_make_paths_absolute,\\n    RBST_PathMan_OT_pack_images,\\n    RBST_PathMan_OT_unpack_images,\\n    RBST_PathMan_OT_remove_packed_images,\\n    RBST_PathMan_OT_save_all_images,\\n    RBST_PathMan_OT_remove_extensions,\\n    RBST_PathMan_OT_rename_flat_colors,\\n    RBST_PathMan_OT_cancel_operation,\\n    RBST_PathMan_PT_bulk_path_tools,\\n    RBST_PathMa"
+                }
+              ]
+            }
+          ],
+          "totalLines": 13,
+          "totalMatchedLines": 13
+        }
+      }
+    }
+  }
+}
+```
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="read_lints">
+<details>
+<summary>Tool use: **read_lints**</summary>
+
+
+Parameters:
+
+```json
+{
+  "paths": [
+    "panels/bulk_viewport_display.py"
+  ]
+}
+```
+Result:
+
+```json
+{
+  "linterErrorsByFile": [
+    {
+      "relativeWorkspacePath": "panels/bulk_viewport_display.py"
+    }
+  ]
+}
+```
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="semantic_search_full">
+<details>
+<summary>Tool use: **semantic_search_full**</summary>
+
+
+Parameters:
+
+```json
+{
+  "query": "NameError undefined RBST class function enum after refactor",
+  "topK": 10,
+  "explanation": ""
+}
+```
+Result:
+
+```json
+{
+  "codeResults": [
+    {
+      "codeBlock": {
+        "relativeWorkspacePath": ".\\panels\\bulk_viewport_display.py",
+        "range": {
+          "startPosition": {},
+          "endPosition": {
+            "line": 19,
+            "column": 21
+          }
+        },
+        "contents": "import bpy # type: ignore\nimport numpy as np\nfrom time import time\nimport os\nfrom enum import Enum\nimport colorsys  # Add colorsys for RGB to HSV conversion\nfrom ..ops.select_diffuse_nodes import select_diffuse_nodes  # Import the specific function\nfrom ..utils import compat\nfrom ..utils import version\n\n# Material processing status enum\nclass RBST_ViewDisp_MaterialStatus(Enum):\n    PENDING = 0\n    PROCESSING = 1\n    COMPLETED = 2\n    FAILED = 3\n    PREVIEW_BASED = 4\n\n# Global variables to store results and track progress\nmaterial_results = {}",
+        "signatures": {},
+        "detailedLines": [
+          {
+            "text": "import bpy # type: ignore",
+            "lineNumber": 1
+          },
+          {
+            "text": "import numpy as np",
+            "lineNumber": 2
+          },
+          {
+            "text": "from time import time",
+            "lineNumber": 3
+          },
+          {
+            "text": "import os",
+            "lineNumber": 4
+          },
+          {
+            "text": "from enum import Enum",
+            "lineNumber": 5
+          },
+          {
+            "text": "import colorsys  # Add colorsys for RGB to HSV conversion",
+            "lineNumber": 6
+          },
+          {
+            "text": "from ..ops.select_diffuse_nodes import select_diffuse_nodes  # Import the specific function",
+            "lineNumber": 7
+          },
+          {
+            "text": "from ..utils import compat",
+            "lineNumber": 8
+          },
+          {
+            "text": "from ..utils import version",
+            "lineNumber": 9
+          },
+          {
+            "lineNumber": 10
+          },
+          {
+            "text": "# Material processing status enum",
+            "lineNumber": 11
+          },
+          {
+            "text": "class RBST_ViewDisp_MaterialStatus(Enum):",
+            "lineNumber": 12,
+            "isSignature": true
+          },
+          {
+            "text": "    PENDING = 0",
+            "lineNumber": 13
+          },
+          {
+            "text": "    PROCESSING = 1",
+            "lineNumber": 14
+          },
+          {
+            "text": "    COMPLETED = 2",
+            "lineNumber": 15
+          },
+          {
+            "text": "    FAILED = 3",
+            "lineNumber": 16
+          },
+          {
+            "text": "    PREVIEW_BASED = 4",
+            "lineNumber": 17,
+            "isSignature": true
+          },
+          {
+            "lineNumber": 18
+          },
+          {
+            "text": "# Global variables to store results and track progress",
+            "lineNumber": 19
+          },
+          {
+            "text": "material_results = {}",
+            "lineNumber": 20
+          }
+        ]
+      },
+      "score": 0.30940043926239014
+    },
+    {
+      "codeBlock": {
+        "relativeWorkspacePath": ".\\ops\\Rename_images_by_mat.py",
+        "range": {
+          "startPosition": {},
+          "endPosition": {
+            "line": 66
+          }
+        },
+        "contents": "import bpy\nimport re\nfrom ..utils import compat\n\nclass RBST_RenameImg_OT_summary_dialog(bpy.types.Operator):\n    \"\"\"Show rename operation summary\"\"\"\n    bl_idname = \"bst.rename_summary_dialog\"\n    bl_label = \"Rename Summary\"\n    bl_options = {'REGISTER', 'INTERNAL'}\n    \n    # Properties to store summary data\n    total_selected: bpy.props.IntProperty(default=0)\n    renamed_count: bpy.props.IntProperty(default=0)\n    shared_count: bpy.props.IntProperty(default=0)\n    unused_count: bpy.props.IntProperty(default=0)\n    cc3iid_count: bpy.props.IntProperty(default=0)\n    flatcolor_count: bpy.props.IntProperty(default=0)\n    already_correct_count: bpy.props.IntProperty(default=0)\n    unrecognized_suffix_count: bpy.props.IntProperty(default=0)\n    rename_details: bpy.props.StringProperty(default=\"\")\n    \n    def draw(self, context):\n        layout = self.layout",
+        "signatures": {},
+        "detailedLines": [
+          {
+            "text": "import bpy",
+            "lineNumber": 1
+          },
+          {
+            "text": "import re",
+            "lineNumber": 2
+          },
+          {
+            "text": "from ..utils import compat",
+            "lineNumber": 3
+          },
+          {
+            "lineNumber": 4
+          },
+          {
+            "text": "class RBST_RenameImg_OT_summary_dialog(bpy.types.Operator):",
+            "lineNumber": 5,
+            "isSignature": true
+          },
+          {
+            "text": "    \"\"\"Show rename operation summary\"\"\"",
+            "lineNumber": 6
+          },
+          {
+            "text": "    bl_idname = \"bst.rename_summary_dialog\"",
+            "lineNumber": 7
+          },
+          {
+            "text": "    bl_label = \"Rename Summary\"",
+            "lineNumber": 8
+          },
+          {
+            "text": "    bl_options = {'REGISTER', 'INTERNAL'}",
+            "lineNumber": 9
+          },
+          {
+            "text": "    ",
+            "lineNumber": 10
+          },
+          {
+            "text": "    # Properties to store summary data",
+            "lineNumber": 11
+          },
+          {
+            "text": "    total_selected: bpy.props.IntProperty(default=0)",
+            "lineNumber": 12
+          },
+          {
+            "text": "    renamed_count: bpy.props.IntProperty(default=0)",
+            "lineNumber": 13
+          },
+          {
+            "text": "    shared_count: bpy.props.IntProperty(default=0)",
+            "lineNumber": 14
+          },
+          {
+            "text": "    unused_count: bpy.props.IntProperty(default=0)",
+            "lineNumber": 15
+          },
+          {
+            "text": "    cc3iid_count: bpy.props.IntProperty(default=0)",
+            "lineNumber": 16
+          },
+          {
+            "text": "    flatcolor_count: bpy.props.IntProperty(default=0)",
+            "lineNumber": 17
+          },
+          {
+            "text": "    already_correct_count: bpy.props.IntProperty(default=0)",
+            "lineNumber": 18
+          },
+          {
+            "text": "    unrecognized_suffix_count: bpy.props.IntProperty(default=0)",
+            "lineNumber": 19
+          },
+          {
+            "text": "    rename_details: bpy.props.StringProperty(default=\"\")",
+            "lineNumber": 20
+          },
+          {
+            "text": "    ",
+            "lineNumber": 21
+          },
+          {
+            "text": "    def draw(self, context):",
+            "lineNumber": 22
+          },
+          {
+            "text": "        layout = self.layout",
+            "lineNumber": 23
+          }
+        ]
+      },
+      "score": 0.24955280125141144
+    },
+    {
+      "codeBlock": {
+        "relativeWorkspacePath": ".\\__init__.py",
+        "range": {
+          "startPosition": {
+            "line": 45,
+            "column": 68
+          },
+          "endPosition": {
+            "line": 131
+          }
+        },
+        "contents": "# List of all classes in this module\nclasses = (\n    VIEW3D_PT_BulkSceneTools,\n    RBST_AddonPreferences,\n    RBST_AutoMat_OT_AutoMatExtractor,\n    RBST_AutoMat_OT_summary_dialog,\n    RBST_RenameImg_OT_Rename_images_by_mat,\n    RBST_RenameImg_OT_summary_dialog,\n    RBST_FreeGPU,\n)\n\ndef register():\n    # Register classes from this module (do this first to ensure preferences are available)\n    for cls in classes:\n        compat.safe_register_class(cls)\n    \n    # Print debug info about preferences\n    try:\n        prefs = bpy.context.preferences.addons.get(__package__)\n        if prefs:\n            print(f\"Addon preferences registered successfully: {prefs}\")\n        else:\n            print(\"WARNING: Addon preferences not found after registration!\")\n            print(f\"Available addons: {', '.join(bpy.context.preferences.addons.keys())}\")\n    except Exception as e:\n        print(f\"Error accessing preferences: {str(e)}\")\n    \n    # Register modules\n    bulk_scene_general.register()\n    bulk_viewport_display.register()\n    bulk_data_remap.register()\n    bulk_path_management.register()\n    ghost_buster.register()\n    \n    # Add keybind for Free GPU (global context)\n    wm = bpy.context.window_manager\n    kc = wm.keyconfigs.addon\n    if kc:\n        # Use Screen keymap for global shortcuts that work everywhere\n        km = kc.keymaps.new(name='Screen', space_type='EMPTY')\n        kmi = km.keymap_items.new('bst.free_gpu', 'M', 'PRESS', ctrl=True, alt=True, shift=True)\n        # Store keymap for cleanup\n        addon_keymaps = getattr(bpy.types.Scene, '_bst_keymaps', [])\n        addon_keymaps.append((km, kmi))\n        bpy.types.Scene._bst_keymaps = addon_keymaps\n\n    rainys_repo_bootstrap.register()\n\ndef unregister():\n    # Remove keybinds\n    addon_keymaps = getattr(bpy.types.Scene, '_bst_keymaps', [])",
+        "signatures": {},
+        "detailedLines": [
+          {
+            "text": "# List of all classes in this module",
+            "lineNumber": 48
+          },
+          {
+            "text": "classes = (",
+            "lineNumber": 49
+          },
+          {
+            "text": "    VIEW3D_PT_BulkSceneTools,",
+            "lineNumber": 50
+          },
+          {
+            "text": "    RBST_AddonPreferences,",
+            "lineNumber": 51
+          },
+          {
+            "text": "    RBST_AutoMat_OT_AutoMatExtractor,",
+            "lineNumber": 52
+          },
+          {
+            "text": "    RBST_AutoMat_OT_summary_dialog,",
+            "lineNumber": 53
+          },
+          {
+            "text": "    RBST_RenameImg_OT_Rename_images_by_mat,",
+            "lineNumber": 54
+          },
+          {
+            "text": "    RBST_RenameImg_OT_summary_dialog,",
+            "lineNumber": 55
+          },
+          {
+            "text": "    RBST_FreeGPU,",
+            "lineNumber": 56
+          },
+          {
+            "text": ")",
+            "lineNumber": 57
+          },
+          {
+            "lineNumber": 58
+          },
+          {
+            "text": "def register():",
+            "lineNumber": 59,
+            "isSignature": true
+          },
+          {
+            "text": "    # Register classes from this module (do this first to ensure preferences are available)",
+            "lineNumber": 60,
+            "isSignature": true
+          },
+          {
+            "text": "    for cls in classes:",
+            "lineNumber": 61
+          },
+          {
+            "text": "        compat.safe_register_class(cls)",
+            "lineNumber": 62
+          },
+          {
+            "text": "    ",
+            "lineNumber": 63
+          },
+          {
+            "text": "    # Print debug info about preferences",
+            "lineNumber": 64
+          },
+          {
+            "text": "    try:",
+            "lineNumber": 65
+          },
+          {
+            "text": "        prefs = bpy.context.preferences.addons.get(__package__)",
+            "lineNumber": 66
+          },
+          {
+            "text": "        if prefs:",
+            "lineNumber": 67
+          },
+          {
+            "text": "            print(f\"Addon preferences registered successfully: {prefs}\")",
+            "lineNumber": 68
+          },
+          {
+            "text": "        else:",
+            "lineNumber": 69
+          },
+          {
+            "text": "            print(\"WARNING: Addon preferences not found after registration!\")",
+            "lineNumber": 70
+          },
+          {
+            "text": "            print(f\"Available addons: {', '.join(bpy.context.preferences.addons.keys())}\")",
+            "lineNumber": 71
+          },
+          {
+            "text": "    except Exception as e:",
+            "lineNumber": 72
+          },
+          {
+            "text": "        print(f\"Error accessing preferences: {str(e)}\")",
+            "lineNumber": 73
+          },
+          {
+            "text": "    ",
+            "lineNumber": 74
+          },
+          {
+            "text": "    # Register modules",
+            "lineNumber": 75
+          },
+          {
+            "text": "    bulk_scene_general.register()",
+            "lineNumber": 76
+          },
+          {
+            "text": "    bulk_viewport_display.register()",
+            "lineNumber": 77
+          },
+          {
+            "text": "    bulk_data_remap.register()",
+            "lineNumber": 78
+          },
+          {
+            "text": "    bulk_path_management.register()",
+            "lineNumber": 79
+          },
+          {
+            "text": "    ghost_buster.register()",
+            "lineNumber": 80
+          },
+          {
+            "text": "    ",
+            "lineNumber": 81
+          },
+          {
+            "text": "    # Add keybind for Free GPU (global context)",
+            "lineNumber": 82
+          },
+          {
+            "text": "    wm = bpy.context.window_manager",
+            "lineNumber": 83
+          },
+          {
+            "text": "    kc = wm.keyconfigs.addon",
+            "lineNumber": 84
+          },
+          {
+            "text": "    if kc:",
+            "lineNumber": 85
+          },
+          {
+            "text": "        # Use Screen keymap for global shortcuts that work everywhere",
+            "lineNumber": 86
+          },
+          {
+            "text": "        km = kc.keymaps.new(name='Screen', space_type='EMPTY')",
+            "lineNumber": 87
+          },
+          {
+            "text": "        kmi = km.keymap_items.new('bst.free_gpu', 'M', 'PRESS', ctrl=True, alt=True, shift=True)",
+            "lineNumber": 88
+          },
+          {
+            "text": "        # Store keymap for cleanup",
+            "lineNumber": 89
+          },
+          {
+            "text": "        addon_keymaps = getattr(bpy.types.Scene, '_bst_keymaps', [])",
+            "lineNumber": 90
+          },
+          {
+            "text": "        addon_keymaps.append((km, kmi))",
+            "lineNumber": 91
+          },
+          {
+            "text": "        bpy.types.Scene._bst_keymaps = addon_keymaps",
+            "lineNumber": 92
+          },
+          {
+            "lineNumber": 93
+          },
+          {
+            "text": "    rainys_repo_bootstrap.register()",
+            "lineNumber": 94,
+            "isSignature": true
+          },
+          {
+            "lineNumber": 95
+          },
+          {
+            "text": "def unregister():",
+            "lineNumber": 96,
+            "isSignature": true
+          },
+          {
+            "text": "    # Remove keybinds",
+            "lineNumber": 97,
+            "isSignature": true
+          },
+          {
+            "text": "    addon_keymaps = getattr(bpy.types.Scene, '_bst_keymaps', [])",
+            "lineNumber": 98
+          }
+        ]
+      },
+      "score": 0.2352934032678604
+    },
+    {
+      "codeBlock": {
+        "relativeWorkspacePath": ".\\ops\\Rename_images_by_mat.py",
+        "range": {
+          "startPosition": {
+            "line": 66,
+            "column": 67
+          },
+          "endPosition": {
+            "line": 497
+          }
+        },
+        "contents": "class RBST_RenameImg_OT_Rename_images_by_mat(bpy.types.Operator):\n    bl_idname = \"bst.rename_images_by_mat\"\n    bl_label = \"Rename Images by Material\"\n    bl_description = \"Rename selected images based on their material usage, preserving texture type suffixes\"\n    bl_options = {'REGISTER', 'UNDO'}\n\n    def execute(self, context):\n        # Get selected images\n        selected_images = [img for img in bpy.data.images if hasattr(img, \"bst_selected\") and img.bst_selected]\n        \n        if not selected_images:\n            self.report({'WARNING'}, \"No images selected for renaming\")\n            return {'CANCELLED'}\n        \n        # Get image to material mapping\n        image_to_materials = self.get_image_material_mapping(selected_images)\n        \n        renamed_count = 0\n        shared_count = 0\n        unused_count = 0\n        cc3iid_count = 0  # Track CC3 ID textures\n        flatcolor_count = 0  # Track flat color textures\n        already_correct_count = 0  # Track images already correctly named\n        unrecognized_suffix_count = 0  # Track images with unrecognized suffixes\n        renamed_list = []  # Track renamed images for debug\n        unrecognized_list = []  # Track images with unrecognized suffixes\n        \n        for img in selected_images:",
+        "signatures": {},
+        "detailedLines": [
+          {
+            "text": "class RBST_RenameImg_OT_Rename_images_by_mat(bpy.types.Operator):",
+            "lineNumber": 69,
+            "isSignature": true
+          },
+          {
+            "text": "    bl_idname = \"bst.rename_images_by_mat\"",
+            "lineNumber": 70
+          },
+          {
+            "text": "    bl_label = \"Rename Images by Material\"",
+            "lineNumber": 71
+          },
+          {
+            "text": "    bl_description = \"Rename selected images based on their material usage, preserving texture type suffixes\"",
+            "lineNumber": 72
+          },
+          {
+            "text": "    bl_options = {'REGISTER', 'UNDO'}",
+            "lineNumber": 73
+          },
+          {
+            "lineNumber": 74
+          },
+          {
+            "text": "    def execute(self, context):",
+            "lineNumber": 75
+          },
+          {
+            "text": "        # Get selected images",
+            "lineNumber": 76
+          },
+          {
+            "text": "        selected_images = [img for img in bpy.data.images if hasattr(img, \"bst_selected\") and img.bst_selected]",
+            "lineNumber": 77
+          },
+          {
+            "text": "        ",
+            "lineNumber": 78
+          },
+          {
+            "text": "        if not selected_images:",
+            "lineNumber": 79
+          },
+          {
+            "text": "            self.report({'WARNING'}, \"No images selected for renaming\")",
+            "lineNumber": 80
+          },
+          {
+            "text": "            return {'CANCELLED'}",
+            "lineNumber": 81
+          },
+          {
+            "text": "        ",
+            "lineNumber": 82
+          },
+          {
+            "text": "        # Get image to material mapping",
+            "lineNumber": 83
+          },
+          {
+            "text": "        image_to_materials = self.get_image_material_mapping(selected_images)",
+            "lineNumber": 84
+          },
+          {
+            "text": "        ",
+            "lineNumber": 85
+          },
+          {
+            "text": "        renamed_count = 0",
+            "lineNumber": 86
+          },
+          {
+            "text": "        shared_count = 0",
+            "lineNumber": 87
+          },
+          {
+            "text": "        unused_count = 0",
+            "lineNumber": 88
+          },
+          {
+            "text": "        cc3iid_count = 0  # Track CC3 ID textures",
+            "lineNumber": 89
+          },
+          {
+            "text": "        flatcolor_count = 0  # Track flat color textures",
+            "lineNumber": 90
+          },
+          {
+            "text": "        already_correct_count = 0  # Track images already correctly named",
+            "lineNumber": 91
+          },
+          {
+            "text": "        unrecognized_suffix_count = 0  # Track images with unrecognized suffixes",
+            "lineNumber": 92
+          },
+          {
+            "text": "        renamed_list = []  # Track renamed images for debug",
+            "lineNumber": 93
+          },
+          {
+            "text": "        unrecognized_list = []  # Track images with unrecognized suffixes",
+            "lineNumber": 94
+          },
+          {
+            "text": "        ",
+            "lineNumber": 95
+          },
+          {
+            "text": "        for img in selected_images:",
+            "lineNumber": 96
+          }
+        ]
+      },
+      "score": 0.22499190270900726
+    },
+    {
+      "codeBlock": {
+        "relativeWorkspacePath": ".\\panels\\bulk_data_remap.py",
+        "range": {
+          "startPosition": {
+            "line": 1502
+          },
+          "endPosition": {
+            "line": 1573,
+            "column": 9
+          }
+        },
+        "contents": "class RBST_DatRem_OT_RenameDatablock(bpy.types.Operator):\n\n    \n    def execute(self, context):\n        # Get the appropriate data collection\n        data_collection = None\n        if self.data_type == \"images\":\n            data_collection = bpy.data.images\n        elif self.data_type == \"materials\":\n            data_collection = bpy.data.materials\n        elif self.data_type == \"fonts\":\n            data_collection = bpy.data.fonts\n        elif self.data_type == \"worlds\":\n            data_collection = bpy.data.worlds\n        \n        if not data_collection:\n            self.report({'ERROR'}, \"Invalid data type\")\n            return {'CANCELLED'}\n        \n        # Find the datablock\n        datablock = data_collection.get(self.old_name)\n        if not datablock:\n            self.report({'ERROR'}, f\"Could not find {self.data_type} with name {self.old_name}\")\n            return {'CANCELLED'}\n        \n        # Check if the datablock is linked\n        if hasattr(datablock, 'library') and datablock.library is not None:\n            self.report({'ERROR'}, f\"Cannot rename linked {self.data_type}\")\n            return {'CANCELLED'}\n        \n        # Rename the datablock\n        try:\n            datablock.name = self.new_name\n            self.report({'INFO'}, f\"Renamed {self.data_type} to {self.new_name}\")\n            return {'FINISHED'}\n        except Exception as e:\n            self.report({'ERROR'}, f\"Failed to rename {self.data_type}: {str(e)}\")\n            return {'CANCELLED'}\n\n\n\n# List of all classes in this module\nclasses =",
+        "signatures": {
+          "ranges": [
+            {
+              "startPosition": {
+                "line": 1503,
+                "column": 1
+              },
+              "endPosition": {
+                "line": 1504,
+                "column": 5
+              }
+            }
+          ]
+        },
+        "detailedLines": [
+          {
+            "text": "class RBST_DatRem_OT_RenameDatablock(bpy.types.Operator):",
+            "lineNumber": 1503,
+            "isSignature": true
+          },
+          {
+            "lineNumber": 1533
+          },
+          {
+            "text": "    ",
+            "lineNumber": 1534
+          },
+          {
+            "text": "    def execute(self, context):",
+            "lineNumber": 1535
+          },
+          {
+            "text": "        # Get the appropriate data collection",
+            "lineNumber": 1536
+          },
+          {
+            "text": "        data_collection = None",
+            "lineNumber": 1537
+          },
+          {
+            "text": "        if self.data_type == \"images\":",
+            "lineNumber": 1538
+          },
+          {
+            "text": "            data_collection = bpy.data.images",
+            "lineNumber": 1539
+          },
+          {
+            "text": "        elif self.data_type == \"materials\":",
+            "lineNumber": 1540
+          },
+          {
+            "text": "            data_collection = bpy.data.materials",
+            "lineNumber": 1541
+          },
+          {
+            "text": "        elif self.data_type == \"fonts\":",
+            "lineNumber": 1542
+          },
+          {
+            "text": "            data_collection = bpy.data.fonts",
+            "lineNumber": 1543
+          },
+          {
+            "text": "        elif self.data_type == \"worlds\":",
+            "lineNumber": 1544
+          },
+          {
+            "text": "            data_collection = bpy.data.worlds",
+            "lineNumber": 1545
+          },
+          {
+            "text": "        ",
+            "lineNumber": 1546
+          },
+          {
+            "text": "        if not data_collection:",
+            "lineNumber": 1547
+          },
+          {
+            "text": "            self.report({'ERROR'}, \"Invalid data type\")",
+            "lineNumber": 1548
+          },
+          {
+            "text": "            return {'CANCELLED'}",
+            "lineNumber": 1549
+          },
+          {
+            "text": "        ",
+            "lineNumber": 1550
+          },
+          {
+            "text": "        # Find the datablock",
+            "lineNumber": 1551
+          },
+          {
+            "text": "        datablock = data_collection.get(self.old_name)",
+            "lineNumber": 1552
+          },
+          {
+            "text": "        if not datablock:",
+            "lineNumber": 1553
+          },
+          {
+            "text": "            self.report({'ERROR'}, f\"Could not find {self.data_type} with name {self.old_name}\")",
+            "lineNumber": 1554
+          },
+          {
+            "text": "            return {'CANCELLED'}",
+            "lineNumber": 1555
+          },
+          {
+            "text": "        ",
+            "lineNumber": 1556
+          },
+          {
+            "text": "        # Check if the datablock is linked",
+            "lineNumber": 1557
+          },
+          {
+            "text": "        if hasattr(datablock, 'library') and datablock.library is not None:",
+            "lineNumber": 1558
+          },
+          {
+            "text": "            self.report({'ERROR'}, f\"Cannot rename linked {self.data_type}\")",
+            "lineNumber": 1559
+          },
+          {
+            "text": "            return {'CANCELLED'}",
+            "lineNumber": 1560
+          },
+          {
+            "text": "        ",
+            "lineNumber": 1561
+          },
+          {
+            "text": "        # Rename the datablock",
+            "lineNumber": 1562
+          },
+          {
+            "text": "        try:",
+            "lineNumber": 1563
+          },
+          {
+            "text": "            datablock.name = self.new_name",
+            "lineNumber": 1564
+          },
+          {
+            "text": "            self.report({'INFO'}, f\"Renamed {self.data_type} to {self.new_name}\")",
+            "lineNumber": 1565
+          },
+          {
+            "text": "            return {'FINISHED'}",
+            "lineNumber": 1566
+          },
+          {
+            "text": "        except Exception as e:",
+            "lineNumber": 1567
+          },
+          {
+            "text": "            self.report({'ERROR'}, f\"Failed to rename {self.data_type}: {str(e)}\")",
+            "lineNumber": 1568
+          },
+          {
+            "text": "            return {'CANCELLED'}",
+            "lineNumber": 1569,
+            "isSignature": true
+          },
+          {
+            "lineNumber": 1570
+          },
+          {
+            "lineNumber": 1571
+          },
+          {
+            "lineNumber": 1572
+          },
+          {
+            "text": "# List of all classes in this module",
+            "lineNumber": 1573
+          },
+          {
+            "text": "classes =",
+            "lineNumber": 1574
+          }
+        ]
+      },
+      "score": 0.2241467982530594
+    },
+    {
+      "codeBlock": {
+        "relativeWorkspacePath": ".\\ops\\Rename_images_by_mat.py",
+        "range": {
+          "startPosition": {
+            "line": 68
+          },
+          "endPosition": {
+            "line": 497
+          }
+        },
+        "contents": "class RBST_RenameImg_OT_Rename_images_by_mat(bpy.types.Operator):\ndef execute(self, context):\n        # Get selected images\n\n                continue\n            elif len(materials) == 1:\n                # Single material usage - check suffix recognition\n                material_name = materials[0]\n                suffix = self.extract_texture_suffix(img.name)\n                original_name = img.name\n                \n                # Skip images with unrecognized suffixes (only if they have a potential suffix pattern)\n                if suffix is None and self.has_potential_suffix(img.name):\n                    unrecognized_suffix_count += 1\n                    unrecognized_list.append(img.name)\n                    print(f\"DEBUG: Skipped image with unrecognized suffix: {img.name}\")\n                    continue\n                \n                if suffix:\n                    # Capitalize the suffix properly\n                    capitalized_suffix = self.capitalize_suffix(suffix)\n                    expected_name = f\"{material_name}_{capitalized_suffix}\"\n                else:\n                    # No suffix detected, use material name only\n                    expected_name = material_name\n                \n                # Check if the image is already correctly named\n                if img.name == expected_name:\n                    already_correct_count += 1\n                    print(f\"DEBUG: Skipped already correctly named: {img.name}\")\n                    continue\n                \n                # Avoid duplicate names\n                new_name = self.ensure_unique_name(expected_name)\n                \n                img.name = new_name\n                renamed_count += 1\n                renamed_list.append((original_name, new_name, material_name, capitalized_suffix if suffix else None))\n                print(f\"DEBUG: Renamed '{original_name}' → '{new_name}' (Material: {material_name}, Suffix: {capitalized_suffix if suffix else 'none'})\")\n            else:\n                # Shared across multiple materials - skip\n                shared_count += 1",
+        "signatures": {
+          "ranges": [
+            {
+              "startPosition": {
+                "line": 69,
+                "column": 1
+              },
+              "endPosition": {
+                "line": 70,
+                "column": 5
+              }
+            },
+            {
+              "startPosition": {
+                "line": 75,
+                "column": 5
+              },
+              "endPosition": {
+                "line": 77,
+                "column": 9
+              }
+            }
+          ]
+        },
+        "detailedLines": [
+          {
+            "text": "class RBST_RenameImg_OT_Rename_images_by_mat(bpy.types.Operator):",
+            "lineNumber": 69,
+            "isSignature": true
+          },
+          {
+            "text": "def execute(self, context):",
+            "lineNumber": 75
+          },
+          {
+            "text": "        # Get selected images",
+            "lineNumber": 76
+          },
+          {
+            "lineNumber": 114
+          },
+          {
+            "text": "                continue",
+            "lineNumber": 115
+          },
+          {
+            "text": "            elif len(materials) == 1:",
+            "lineNumber": 116
+          },
+          {
+            "text": "                # Single material usage - check suffix recognition",
+            "lineNumber": 117
+          },
+          {
+            "text": "                material_name = materials[0]",
+            "lineNumber": 118
+          },
+          {
+            "text": "                suffix = self.extract_texture_suffix(img.name)",
+            "lineNumber": 119
+          },
+          {
+            "text": "                original_name = img.name",
+            "lineNumber": 120
+          },
+          {
+            "text": "                ",
+            "lineNumber": 121
+          },
+          {
+            "text": "                # Skip images with unrecognized suffixes (only if they have a potential suffix pattern)",
+            "lineNumber": 122
+          },
+          {
+            "text": "                if suffix is None and self.has_potential_suffix(img.name):",
+            "lineNumber": 123
+          },
+          {
+            "text": "                    unrecognized_suffix_count += 1",
+            "lineNumber": 124
+          },
+          {
+            "text": "                    unrecognized_list.append(img.name)",
+            "lineNumber": 125
+          },
+          {
+            "text": "                    print(f\"DEBUG: Skipped image with unrecognized suffix: {img.name}\")",
+            "lineNumber": 126
+          },
+          {
+            "text": "                    continue",
+            "lineNumber": 127
+          },
+          {
+            "text": "                ",
+            "lineNumber": 128
+          },
+          {
+            "text": "                if suffix:",
+            "lineNumber": 129
+          },
+          {
+            "text": "                    # Capitalize the suffix properly",
+            "lineNumber": 130
+          },
+          {
+            "text": "                    capitalized_suffix = self.capitalize_suffix(suffix)",
+            "lineNumber": 131
+          },
+          {
+            "text": "                    expected_name = f\"{material_name}_{capitalized_suffix}\"",
+            "lineNumber": 132
+          },
+          {
+            "text": "                else:",
+            "lineNumber": 133
+          },
+          {
+            "text": "                    # No suffix detected, use material name only",
+            "lineNumber": 134
+          },
+          {
+            "text": "                    expected_name = material_name",
+            "lineNumber": 135
+          },
+          {
+            "text": "                ",
+            "lineNumber": 136
+          },
+          {
+            "text": "                # Check if the image is already correctly named",
+            "lineNumber": 137
+          },
+          {
+            "text": "                if img.name == expected_name:",
+            "lineNumber": 138
+          },
+          {
+            "text": "                    already_correct_count += 1",
+            "lineNumber": 139
+          },
+          {
+            "text": "                    print(f\"DEBUG: Skipped already correctly named: {img.name}\")",
+            "lineNumber": 140
+          },
+          {
+            "text": "                    continue",
+            "lineNumber": 141
+          },
+          {
+            "text": "                ",
+            "lineNumber": 142
+          },
+          {
+            "text": "                # Avoid duplicate names",
+            "lineNumber": 143
+          },
+          {
+            "text": "                new_name = self.ensure_unique_name(expected_name)",
+            "lineNumber": 144
+          },
+          {
+            "text": "                ",
+            "lineNumber": 145
+          },
+          {
+            "text": "                img.name = new_name",
+            "lineNumber": 146
+          },
+          {
+            "text": "                renamed_count += 1",
+            "lineNumber": 147
+          },
+          {
+            "text": "                renamed_list.append((original_name, new_name, material_name, capitalized_suffix if suffix else None))",
+            "lineNumber": 148
+          },
+          {
+            "text": "                print(f\"DEBUG: Renamed '{original_name}' → '{new_name}' (Material: {material_name}, Suffix: {capitalized_suffix if suffix else 'none'})\")",
+            "lineNumber": 149
+          },
+          {
+            "text": "            else:",
+            "lineNumber": 150
+          },
+          {
+            "text": "                # Shared across multiple materials - skip",
+            "lineNumber": 151
+          },
+          {
+            "text": "                shared_count += 1",
+            "lineNumber": 152
+          }
+        ]
+      },
+      "score": 0.22107979655265808
+    },
+    {
+      "codeBlock": {
+        "relativeWorkspacePath": ".\\panels\\bulk_path_management.py",
+        "range": {
+          "startPosition": {
+            "line": 657,
+            "column": 27
+          },
+          "endPosition": {
+            "line": 758
+          }
+        },
+        "contents": "# Add a class for renaming datablocks\nclass RBST_PathMan_OT_rename_datablock(Operator):\n    \"\"\"Click to rename datablock\"\"\"\n    bl_idname = \"bst.rename_datablock\"\n    bl_label = \"Rename Datablock\"\n    bl_options = {'REGISTER', 'UNDO'}\n    \n    old_name: StringProperty(\n        name=\"Old Name\",\n        description=\"Current name of the datablock\",\n        default=\"\"\n    ) # type: ignore\n    \n    new_name: StringProperty(\n        name=\"New Name\",\n        description=\"New name for the datablock\",\n        default=\"\"\n    ) # type: ignore\n    \n    def invoke(self, context, event):\n        self.new_name = self.old_name\n        return context.window_manager.invoke_props_dialog(self)\n    \n    def draw(self, context):\n        layout = self.layout\n        layout.prop(self, \"new_name\", text=\"Name\")\n    \n    def execute(self, context):\n        # Find the datablock\n        datablock = bpy.data.images.get(self.old_name)\n        if not datablock:\n            self.report({'ERROR'}, f\"Could not find image with name {self.old_name}\")\n            return {'CANCELLED'}\n        \n        # Check if the datablock is linked\n        if hasattr(datablock, 'library') and datablock.library is not None:\n            self.report({'ERROR'}, \"Cannot rename linked image\")\n            return {'CANCELLED'}\n        \n        # Rename the datablock\n        try:\n            datablock.name = self.new_name\n            self.report({'INFO'}, f\"Renamed image to {self.new_name}\")\n            return {'FINISHED'}\n        except Exception as e:\n            self.report({'ERROR'}, f\"Failed to rename image: {str(e)}\")\n            return {'CANCELLED'}\n\n# Update class for shift+click selection\nclass RBST_PathMan_OT_toggle_image_selection(Operator):\n    \"\"\"Toggle whether this image should be included in bulk operations\"\"\"",
+        "signatures": {},
+        "detailedLines": [
+          {
+            "text": "# Add a class for renaming datablocks",
+            "lineNumber": 660
+          },
+          {
+            "text": "class RBST_PathMan_OT_rename_datablock(Operator):",
+            "lineNumber": 661,
+            "isSignature": true
+          },
+          {
+            "text": "    \"\"\"Click to rename datablock\"\"\"",
+            "lineNumber": 662
+          },
+          {
+            "text": "    bl_idname = \"bst.rename_datablock\"",
+            "lineNumber": 663
+          },
+          {
+            "text": "    bl_label = \"Rename Datablock\"",
+            "lineNumber": 664
+          },
+          {
+            "text": "    bl_options = {'REGISTER', 'UNDO'}",
+            "lineNumber": 665
+          },
+          {
+            "text": "    ",
+            "lineNumber": 666
+          },
+          {
+            "text": "    old_name: StringProperty(",
+            "lineNumber": 667
+          },
+          {
+            "text": "        name=\"Old Name\",",
+            "lineNumber": 668
+          },
+          {
+            "text": "        description=\"Current name of the datablock\",",
+            "lineNumber": 669
+          },
+          {
+            "text": "        default=\"\"",
+            "lineNumber": 670
+          },
+          {
+            "text": "    ) # type: ignore",
+            "lineNumber": 671
+          },
+          {
+            "text": "    ",
+            "lineNumber": 672
+          },
+          {
+            "text": "    new_name: StringProperty(",
+            "lineNumber": 673
+          },
+          {
+            "text": "        name=\"New Name\",",
+            "lineNumber": 674
+          },
+          {
+            "text": "        description=\"New name for the datablock\",",
+            "lineNumber": 675
+          },
+          {
+            "text": "        default=\"\"",
+            "lineNumber": 676
+          },
+          {
+            "text": "    ) # type: ignore",
+            "lineNumber": 677
+          },
+          {
+            "text": "    ",
+            "lineNumber": 678
+          },
+          {
+            "text": "    def invoke(self, context, event):",
+            "lineNumber": 679
+          },
+          {
+            "text": "        self.new_name = self.old_name",
+            "lineNumber": 680
+          },
+          {
+            "text": "        return context.window_manager.invoke_props_dialog(self)",
+            "lineNumber": 681
+          },
+          {
+            "text": "    ",
+            "lineNumber": 682
+          },
+          {
+            "text": "    def draw(self, context):",
+            "lineNumber": 683
+          },
+          {
+            "text": "        layout = self.layout",
+            "lineNumber": 684
+          },
+          {
+            "text": "        layout.prop(self, \"new_name\", text=\"Name\")",
+            "lineNumber": 685
+          },
+          {
+            "text": "    ",
+            "lineNumber": 686
+          },
+          {
+            "text": "    def execute(self, context):",
+            "lineNumber": 687
+          },
+          {
+            "text": "        # Find the datablock",
+            "lineNumber": 688
+          },
+          {
+            "text": "        datablock = bpy.data.images.get(self.old_name)",
+            "lineNumber": 689
+          },
+          {
+            "text": "        if not datablock:",
+            "lineNumber": 690
+          },
+          {
+            "text": "            self.report({'ERROR'}, f\"Could not find image with name {self.old_name}\")",
+            "lineNumber": 691
+          },
+          {
+            "text": "            return {'CANCELLED'}",
+            "lineNumber": 692
+          },
+          {
+            "text": "        ",
+            "lineNumber": 693
+          },
+          {
+            "text": "        # Check if the datablock is linked",
+            "lineNumber": 694
+          },
+          {
+            "text": "        if hasattr(datablock, 'library') and datablock.library is not None:",
+            "lineNumber": 695
+          },
+          {
+            "text": "            self.report({'ERROR'}, \"Cannot rename linked image\")",
+            "lineNumber": 696
+          },
+          {
+            "text": "            return {'CANCELLED'}",
+            "lineNumber": 697
+          },
+          {
+            "text": "        ",
+            "lineNumber": 698
+          },
+          {
+            "text": "        # Rename the datablock",
+            "lineNumber": 699
+          },
+          {
+            "text": "        try:",
+            "lineNumber": 700
+          },
+          {
+            "text": "            datablock.name = self.new_name",
+            "lineNumber": 701
+          },
+          {
+            "text": "            self.report({'INFO'}, f\"Renamed image to {self.new_name}\")",
+            "lineNumber": 702
+          },
+          {
+            "text": "            return {'FINISHED'}",
+            "lineNumber": 703
+          },
+          {
+            "text": "        except Exception as e:",
+            "lineNumber": 704
+          },
+          {
+            "text": "            self.report({'ERROR'}, f\"Failed to rename image: {str(e)}\")",
+            "lineNumber": 705
+          },
+          {
+            "text": "            return {'CANCELLED'}",
+            "lineNumber": 706,
+            "isSignature": true
+          },
+          {
+            "lineNumber": 707
+          },
+          {
+            "text": "# Update class for shift+click selection",
+            "lineNumber": 708
+          },
+          {
+            "text": "class RBST_PathMan_OT_toggle_image_selection(Operator):",
+            "lineNumber": 709,
+            "isSignature": true
+          },
+          {
+            "text": "    \"\"\"Toggle whether this image should be included in bulk operations\"\"\"",
+            "lineNumber": 710
+          }
+        ]
+      },
+      "score": 0.2198925018310547
+    },
+    {
+      "codeBlock": {
+        "relativeWorkspacePath": ".\\panels\\bulk_data_remap.py",
+        "range": {
+          "startPosition": {
+            "line": 242,
+            "column": 24
+          },
+          "endPosition": {
+            "line": 593
+          }
+        },
+        "contents": "def RBST_DatRem_remap_data_blocks(context, remap_images, remap_materials, remap_fonts, remap_worlds):\n    \"\"\"Remap redundant data blocks to their base versions like Blender's Remap Users function, and clean up names.\"\"\"\n    remapped_count = 0\n    cleaned_count = 0\n    \n    # Process images\n    if remap_images:\n        # First remap duplicates\n        image_groups = RBST_DatRem_find_data_groups(bpy.data.images)\n        for base_name, images in image_groups.items():\n            # Skip excluded groups\n            if f\"images:{base_name}\" in context.scene.excluded_remap_groups:\n                continue\n                \n            target_image = RBST_DatRem_find_target_data(images)\n            \n            # Rename the target if it has a numbered suffix and is the youngest\n            if RBST_DatRem_get_base_name(target_image.name) != target_image.name:\n                try:\n                    target_image.name = RBST_DatRem_get_base_name(target_image.name)\n                except AttributeError:\n                    # Skip if the target is linked and can't be renamed\n                    print(f\"Warning: Cannot rename linked image {target_image.name}\")\n                    continue\n            \n            # Try to use Blender's built-in functionality for remapping",
+        "signatures": {},
+        "detailedLines": [
+          {
+            "text": "def RBST_DatRem_remap_data_blocks(context, remap_images, remap_materials, remap_fonts, remap_worlds):",
+            "lineNumber": 245,
+            "isSignature": true
+          },
+          {
+            "text": "    \"\"\"Remap redundant data blocks to their base versions like Blender's Remap Users function, and clean up names.\"\"\"",
+            "lineNumber": 246
+          },
+          {
+            "text": "    remapped_count = 0",
+            "lineNumber": 247
+          },
+          {
+            "text": "    cleaned_count = 0",
+            "lineNumber": 248
+          },
+          {
+            "text": "    ",
+            "lineNumber": 249
+          },
+          {
+            "text": "    # Process images",
+            "lineNumber": 250
+          },
+          {
+            "text": "    if remap_images:",
+            "lineNumber": 251
+          },
+          {
+            "text": "        # First remap duplicates",
+            "lineNumber": 252
+          },
+          {
+            "text": "        image_groups = RBST_DatRem_find_data_groups(bpy.data.images)",
+            "lineNumber": 253
+          },
+          {
+            "text": "        for base_name, images in image_groups.items():",
+            "lineNumber": 254
+          },
+          {
+            "text": "            # Skip excluded groups",
+            "lineNumber": 255
+          },
+          {
+            "text": "            if f\"images:{base_name}\" in context.scene.excluded_remap_groups:",
+            "lineNumber": 256
+          },
+          {
+            "text": "                continue",
+            "lineNumber": 257
+          },
+          {
+            "text": "                ",
+            "lineNumber": 258
+          },
+          {
+            "text": "            target_image = RBST_DatRem_find_target_data(images)",
+            "lineNumber": 259
+          },
+          {
+            "text": "            ",
+            "lineNumber": 260
+          },
+          {
+            "text": "            # Rename the target if it has a numbered suffix and is the youngest",
+            "lineNumber": 261
+          },
+          {
+            "text": "            if RBST_DatRem_get_base_name(target_image.name) != target_image.name:",
+            "lineNumber": 262
+          },
+          {
+            "text": "                try:",
+            "lineNumber": 263
+          },
+          {
+            "text": "                    target_image.name = RBST_DatRem_get_base_name(target_image.name)",
+            "lineNumber": 264
+          },
+          {
+            "text": "                except AttributeError:",
+            "lineNumber": 265
+          },
+          {
+            "text": "                    # Skip if the target is linked and can't be renamed",
+            "lineNumber": 266
+          },
+          {
+            "text": "                    print(f\"Warning: Cannot rename linked image {target_image.name}\")",
+            "lineNumber": 267
+          },
+          {
+            "text": "                    continue",
+            "lineNumber": 268
+          },
+          {
+            "text": "            ",
+            "lineNumber": 269
+          },
+          {
+            "text": "            # Try to use Blender's built-in functionality for remapping",
+            "lineNumber": 270
+          }
+        ]
+      },
+      "score": 0.2141682505607605
+    },
+    {
+      "codeBlock": {
+        "relativeWorkspacePath": ".\\ops\\ghost_buster.py",
+        "range": {
+          "startPosition": {
+            "line": 670,
+            "column": 32
+          },
+          "endPosition": {
+            "line": 687,
+            "column": 41
+          }
+        },
+        "contents": "# Note: main() is called by the operator, not automatically\n\n# List of classes to register\nclasses = (\n    RBST_Bustin_OT_GhostBuster,\n    RBST_Bustin_OT_GhostDetector,\n    RBST_Bustin_OT_ResyncEnforce,\n)\n\ndef register():\n    for cls in classes:\n        compat.safe_register_class(cls)\n\ndef unregister():\n    for cls in reversed(classes):\n        compat.safe_unregister_class(cls)",
+        "signatures": {},
+        "detailedLines": [
+          {
+            "text": "# Note: main() is called by the operator, not automatically",
+            "lineNumber": 673
+          },
+          {
+            "lineNumber": 674
+          },
+          {
+            "text": "# List of classes to register",
+            "lineNumber": 675
+          },
+          {
+            "text": "classes = (",
+            "lineNumber": 676
+          },
+          {
+            "text": "    RBST_Bustin_OT_GhostBuster,",
+            "lineNumber": 677
+          },
+          {
+            "text": "    RBST_Bustin_OT_GhostDetector,",
+            "lineNumber": 678
+          },
+          {
+            "text": "    RBST_Bustin_OT_ResyncEnforce,",
+            "lineNumber": 679
+          },
+          {
+            "text": ")",
+            "lineNumber": 680
+          },
+          {
+            "lineNumber": 681
+          },
+          {
+            "text": "def register():",
+            "lineNumber": 682,
+            "isSignature": true
+          },
+          {
+            "text": "    for cls in classes:",
+            "lineNumber": 683
+          },
+          {
+            "text": "        compat.safe_register_class(cls)",
+            "lineNumber": 684,
+            "isSignature": true
+          },
+          {
+            "lineNumber": 685
+          },
+          {
+            "text": "def unregister():",
+            "lineNumber": 686,
+            "isSignature": true
+          },
+          {
+            "text": "    for cls in reversed(classes):",
+            "lineNumber": 687
+          },
+          {
+            "text": "        compat.safe_unregister_class(cls)",
+            "lineNumber": 688,
+            "isSignature": true
+          }
+        ]
+      },
+      "score": 0.21413229405879974
+    },
+    {
+      "codeBlock": {
+        "relativeWorkspacePath": ".\\panels\\bulk_path_management.py",
+        "range": {
+          "startPosition": {
+            "line": 1150
+          },
+          "endPosition": {
+            "line": 1353
+          }
+        },
+        "contents": "class RBST_PathMan_OT_rename_flat_colors(Operator):\ndef _process_batch(self):\n\n            \n            if skip_reasons:\n                # Skip this image\n                self.skipped_count += 1\n                print(f\"  SKIPPED: {', '.join(skip_reasons)}\")\n            else:\n                # Process the image\n                try:\n                    # Import the function here to avoid circular imports\n                    from ..ops.flat_color_texture_renamer import is_flat_color_image_efficient, rgb_to_hex\n                    \n                    print(f\"  Processing image...\")\n                    \n                    # Use the new efficient detection function\n                    is_flat, color = is_flat_color_image_efficient(img, max_pixels_to_check=10000)\n                    \n                    if is_flat and color:\n                        # Convert color to hex\n                        hex_color = rgb_to_hex(*color)\n                        \n                        # Check if name is already a hex color (to avoid renaming again)\n                        if not img.name.startswith('#'):\n                            self.rename_operations.append((img, img.name, hex_color, color))\n                            print(f\"  FOUND FLAT COLOR: '{img.name}' -&gt; '{hex_color}' (RGBA{color})\")\n                        else:\n                            print(f\"  SKIPPED: already hex-named\")\n                    else:\n                        print(f\"  NOT A FLAT COLOR: {img.name}\")\n                except Exception as e:\n                    # Skip this image if there's an error\n                    print(f\"  ERROR processing {img.name}: {str(e)}\")\n                    pass\n        else:\n            # Renaming phase\n            if",
+        "signatures": {
+          "ranges": [
+            {
+              "startPosition": {
+                "line": 1151,
+                "column": 1
+              },
+              "endPosition": {
+                "line": 1152,
+                "column": 5
+              }
+            },
+            {
+              "startPosition": {
+                "line": 1188,
+                "column": 5
+              },
+              "endPosition": {
+                "line": 1189,
+                "column": 9
+              }
+            }
+          ]
+        },
+        "detailedLines": [
+          {
+            "text": "class RBST_PathMan_OT_rename_flat_colors(Operator):",
+            "lineNumber": 1151,
+            "isSignature": true
+          },
+          {
+            "text": "def _process_batch(self):",
+            "lineNumber": 1188
+          },
+          {
+            "lineNumber": 1290
+          },
+          {
+            "text": "            ",
+            "lineNumber": 1291
+          },
+          {
+            "text": "            if skip_reasons:",
+            "lineNumber": 1292
+          },
+          {
+            "text": "                # Skip this image",
+            "lineNumber": 1293
+          },
+          {
+            "text": "                self.skipped_count += 1",
+            "lineNumber": 1294
+          },
+          {
+            "text": "                print(f\"  SKIPPED: {', '.join(skip_reasons)}\")",
+            "lineNumber": 1295
+          },
+          {
+            "text": "            else:",
+            "lineNumber": 1296
+          },
+          {
+            "text": "                # Process the image",
+            "lineNumber": 1297
+          },
+          {
+            "text": "                try:",
+            "lineNumber": 1298
+          },
+          {
+            "text": "                    # Import the function here to avoid circular imports",
+            "lineNumber": 1299
+          },
+          {
+            "text": "                    from ..ops.flat_color_texture_renamer import is_flat_color_image_efficient, rgb_to_hex",
+            "lineNumber": 1300
+          },
+          {
+            "text": "                    ",
+            "lineNumber": 1301
+          },
+          {
+            "text": "                    print(f\"  Processing image...\")",
+            "lineNumber": 1302
+          },
+          {
+            "text": "                    ",
+            "lineNumber": 1303
+          },
+          {
+            "text": "                    # Use the new efficient detection function",
+            "lineNumber": 1304
+          },
+          {
+            "text": "                    is_flat, color = is_flat_color_image_efficient(img, max_pixels_to_check=10000)",
+            "lineNumber": 1305
+          },
+          {
+            "text": "                    ",
+            "lineNumber": 1306
+          },
+          {
+            "text": "                    if is_flat and color:",
+            "lineNumber": 1307
+          },
+          {
+            "text": "                        # Convert color to hex",
+            "lineNumber": 1308
+          },
+          {
+            "text": "                        hex_color = rgb_to_hex(*color)",
+            "lineNumber": 1309
+          },
+          {
+            "text": "                        ",
+            "lineNumber": 1310
+          },
+          {
+            "text": "                        # Check if name is already a hex color (to avoid renaming again)",
+            "lineNumber": 1311
+          },
+          {
+            "text": "                        if not img.name.startswith('#'):",
+            "lineNumber": 1312
+          },
+          {
+            "text": "                            self.rename_operations.append((img, img.name, hex_color, color))",
+            "lineNumber": 1313
+          },
+          {
+            "text": "                            print(f\"  FOUND FLAT COLOR: '{img.name}' -&gt; '{hex_color}' (RGBA{color})\")",
+            "lineNumber": 1314
+          },
+          {
+            "text": "                        else:",
+            "lineNumber": 1315
+          },
+          {
+            "text": "                            print(f\"  SKIPPED: already hex-named\")",
+            "lineNumber": 1316
+          },
+          {
+            "text": "                    else:",
+            "lineNumber": 1317
+          },
+          {
+            "text": "                        print(f\"  NOT A FLAT COLOR: {img.name}\")",
+            "lineNumber": 1318
+          },
+          {
+            "text": "                except Exception as e:",
+            "lineNumber": 1319
+          },
+          {
+            "text": "                    # Skip this image if there's an error",
+            "lineNumber": 1320
+          },
+          {
+            "text": "                    print(f\"  ERROR processing {img.name}: {str(e)}\")",
+            "lineNumber": 1321
+          },
+          {
+            "text": "                    pass",
+            "lineNumber": 1322
+          },
+          {
+            "text": "        else:",
+            "lineNumber": 1323
+          },
+          {
+            "text": "            # Renaming phase",
+            "lineNumber": 1324
+          },
+          {
+            "text": "            if",
+            "lineNumber": 1325
+          }
+        ]
+      },
+      "score": 0.21315200626850128
+    },
+    {
+      "codeBlock": {
+        "relativeWorkspacePath": ".\\ops\\ghost_buster.py",
+        "range": {
+          "startPosition": {
+            "line": 606,
+            "column": 67
+          },
+          "endPosition": {
+            "line": 670
+          }
+        },
+        "contents": "class RBST_Bustin_OT_ResyncEnforce(bpy.types.Operator):\n    \"\"\"Resync Enforce: Fix broken library override hierarchies by rebuilding from linked references\"\"\"\n    bl_idname = \"bst.resync_enforce\"\n    bl_label = \"Resync Enforce\"\n    bl_options = {'REGISTER', 'UNDO'}\n    \n    @classmethod\n    def poll(cls, context):\n        # Only available if there are selected objects\n        return context.selected_objects\n    \n    def execute(self, context):\n        # Get selected objects\n        selected_objects = context.selected_objects.copy()\n        \n        if not selected_objects:\n            self.report({'WARNING'}, \"No objects selected for resync enforce\")\n            return {'CANCELLED'}\n        \n        # Count library override objects\n        override_objects = []\n        for obj in selected_objects:\n            if obj.override_library:\n                override_objects.append(obj)\n        \n        if not override_objects:\n            self.report({'WARNING'}, \"No library override objects found in selection\")\n            return {'CANCELLED'}\n        \n        try:",
+        "signatures": {
+          "ranges": [
+            {
+              "startPosition": {
+                "line": 391,
+                "column": 1
+              },
+              "endPosition": {
+                "line": 392,
+                "column": 5
+              }
+            }
+          ]
+        },
+        "detailedLines": [
+          {
+            "text": "class RBST_Bustin_OT_ResyncEnforce(bpy.types.Operator):",
+            "lineNumber": 609,
+            "isSignature": true
+          },
+          {
+            "text": "    \"\"\"Resync Enforce: Fix broken library override hierarchies by rebuilding from linked references\"\"\"",
+            "lineNumber": 610
+          },
+          {
+            "text": "    bl_idname = \"bst.resync_enforce\"",
+            "lineNumber": 611
+          },
+          {
+            "text": "    bl_label = \"Resync Enforce\"",
+            "lineNumber": 612
+          },
+          {
+            "text": "    bl_options = {'REGISTER', 'UNDO'}",
+            "lineNumber": 613
+          },
+          {
+            "text": "    ",
+            "lineNumber": 614
+          },
+          {
+            "text": "    @classmethod",
+            "lineNumber": 615
+          },
+          {
+            "text": "    def poll(cls, context):",
+            "lineNumber": 616
+          },
+          {
+            "text": "        # Only available if there are selected objects",
+            "lineNumber": 617
+          },
+          {
+            "text": "        return context.selected_objects",
+            "lineNumber": 618
+          },
+          {
+            "text": "    ",
+            "lineNumber": 619
+          },
+          {
+            "text": "    def execute(self, context):",
+            "lineNumber": 620
+          },
+          {
+            "text": "        # Get selected objects",
+            "lineNumber": 621
+          },
+          {
+            "text": "        selected_objects = context.selected_objects.copy()",
+            "lineNumber": 622
+          },
+          {
+            "text": "        ",
+            "lineNumber": 623
+          },
+          {
+            "text": "        if not selected_objects:",
+            "lineNumber": 624
+          },
+          {
+            "text": "            self.report({'WARNING'}, \"No objects selected for resync enforce\")",
+            "lineNumber": 625
+          },
+          {
+            "text": "            return {'CANCELLED'}",
+            "lineNumber": 626
+          },
+          {
+            "text": "        ",
+            "lineNumber": 627
+          },
+          {
+            "text": "        # Count library override objects",
+            "lineNumber": 628
+          },
+          {
+            "text": "        override_objects = []",
+            "lineNumber": 629
+          },
+          {
+            "text": "        for obj in selected_objects:",
+            "lineNumber": 630
+          },
+          {
+            "text": "            if obj.override_library:",
+            "lineNumber": 631
+          },
+          {
+            "text": "                override_objects.append(obj)",
+            "lineNumber": 632
+          },
+          {
+            "text": "        ",
+            "lineNumber": 633
+          },
+          {
+            "text": "        if not override_objects:",
+            "lineNumber": 634
+          },
+          {
+            "text": "            self.report({'WARNING'}, \"No library override objects found in selection\")",
+            "lineNumber": 635
+          },
+          {
+            "text": "            return {'CANCELLED'}",
+            "lineNumber": 636
+          },
+          {
+            "text": "        ",
+            "lineNumber": 637
+          },
+          {
+            "text": "        try:",
+            "lineNumber": 638
+          }
+        ]
+      },
+      "score": 0.21199315786361694
+    },
+    {
+      "codeBlock": {
+        "relativeWorkspacePath": ".\\__init__.py",
+        "range": {
+          "startPosition": {},
+          "endPosition": {
+            "line": 45
+          }
+        },
+        "contents": "import bpy # type: ignore\nfrom bpy.types import AddonPreferences, Panel # type: ignore\nfrom bpy.props import BoolProperty # type: ignore\nfrom .panels import bulk_viewport_display\nfrom .panels import bulk_data_remap\nfrom .panels import bulk_path_management\nfrom .panels import bulk_scene_general\nfrom .ops.AutoMatExtractor import RBST_AutoMat_OT_AutoMatExtractor, RBST_AutoMat_OT_summary_dialog\nfrom .ops.Rename_images_by_mat import RBST_RenameImg_OT_Rename_images_by_mat, RBST_RenameImg_OT_summary_dialog\nfrom .ops.FreeGPU import RBST_FreeGPU\nfrom .ops import ghost_buster\nfrom . import rainys_repo_bootstrap\nfrom .utils import compat\n\n# Addon preferences class for update settings\nclass RBST_AddonPreferences(AddonPreferences):\n    bl_idname = __package__\n\n    # AutoMat Extractor settings\n    automat_common_outside_blend: BoolProperty(\n        name=\"Place 'common' folder outside 'blend' folder\",\n        description=\"If enabled, the 'common' folder for shared textures will be placed directly in 'textures/'. If disabled, it will be placed inside 'textures/&lt;blend_name&gt;/'\",\n        default=False,\n    )\n\n    def draw(self, context):\n        layout = self.layout\n\n        # AutoMat Extractor settings\n        box = layout.box()\n        box.label(text=\"AutoMat Extractor Settings\")\n        row = box.row()\n        row.prop(self, \"automat_common_outside_blend\")\n\n# Main panel for Bulk Scene Tools\nclass VIEW3D_PT_BulkSceneTools(Panel):\n    \"\"\"Bulk Scene Tools Panel\"\"\"",
+        "signatures": {},
+        "detailedLines": [
+          {
+            "text": "import bpy # type: ignore",
+            "lineNumber": 1
+          },
+          {
+            "text": "from bpy.types import AddonPreferences, Panel # type: ignore",
+            "lineNumber": 2
+          },
+          {
+            "text": "from bpy.props import BoolProperty # type: ignore",
+            "lineNumber": 3
+          },
+          {
+            "text": "from .panels import bulk_viewport_display",
+            "lineNumber": 4
+          },
+          {
+            "text": "from .panels import bulk_data_remap",
+            "lineNumber": 5
+          },
+          {
+            "text": "from .panels import bulk_path_management",
+            "lineNumber": 6
+          },
+          {
+            "text": "from .panels import bulk_scene_general",
+            "lineNumber": 7
+          },
+          {
+            "text": "from .ops.AutoMatExtractor import RBST_AutoMat_OT_AutoMatExtractor, RBST_AutoMat_OT_summary_dialog",
+            "lineNumber": 8
+          },
+          {
+            "text": "from .ops.Rename_images_by_mat import RBST_RenameImg_OT_Rename_images_by_mat, RBST_RenameImg_OT_summary_dialog",
+            "lineNumber": 9
+          },
+          {
+            "text": "from .ops.FreeGPU import RBST_FreeGPU",
+            "lineNumber": 10
+          },
+          {
+            "text": "from .ops import ghost_buster",
+            "lineNumber": 11
+          },
+          {
+            "text": "from . import rainys_repo_bootstrap",
+            "lineNumber": 12
+          },
+          {
+            "text": "from .utils import compat",
+            "lineNumber": 13
+          },
+          {
+            "lineNumber": 14
+          },
+          {
+            "text": "# Addon preferences class for update settings",
+            "lineNumber": 15
+          },
+          {
+            "text": "class RBST_AddonPreferences(AddonPreferences):",
+            "lineNumber": 16,
+            "isSignature": true
+          },
+          {
+            "text": "    bl_idname = __package__",
+            "lineNumber": 17
+          },
+          {
+            "lineNumber": 18
+          },
+          {
+            "text": "    # AutoMat Extractor settings",
+            "lineNumber": 19
+          },
+          {
+            "text": "    automat_common_outside_blend: BoolProperty(",
+            "lineNumber": 20
+          },
+          {
+            "text": "        name=\"Place 'common' folder outside 'blend' folder\",",
+            "lineNumber": 21
+          },
+          {
+            "text": "        description=\"If enabled, the 'common' folder for shared textures will be placed directly in 'textures/'. If disabled, it will be placed inside 'textures/&lt;blend_name&gt;/'\",",
+            "lineNumber": 22
+          },
+          {
+            "text": "        default=False,",
+            "lineNumber": 23
+          },
+          {
+            "text": "    )",
+            "lineNumber": 24
+          },
+          {
+            "lineNumber": 25
+          },
+          {
+            "text": "    def draw(self, context):",
+            "lineNumber": 26
+          },
+          {
+            "text": "        layout = self.layout",
+            "lineNumber": 27
+          },
+          {
+            "lineNumber": 28
+          },
+          {
+            "text": "        # AutoMat Extractor settings",
+            "lineNumber": 29
+          },
+          {
+            "text": "        box = layout.box()",
+            "lineNumber": 30
+          },
+          {
+            "text": "        box.label(text=\"AutoMat Extractor Settings\")",
+            "lineNumber": 31
+          },
+          {
+            "text": "        row = box.row()",
+            "lineNumber": 32
+          },
+          {
+            "text": "        row.prop(self, \"automat_common_outside_blend\")",
+            "lineNumber": 33,
+            "isSignature": true
+          },
+          {
+            "lineNumber": 34
+          },
+          {
+            "text": "# Main panel for Bulk Scene Tools",
+            "lineNumber": 35
+          },
+          {
+            "text": "class VIEW3D_PT_BulkSceneTools(Panel):",
+            "lineNumber": 36,
+            "isSignature": true
+          },
+          {
+            "text": "    \"\"\"Bulk Scene Tools Panel\"\"\"",
+            "lineNumber": 37
+          }
+        ]
+      },
+      "score": 0.211885005235672
+    },
+    {
+      "codeBlock": {
+        "relativeWorkspacePath": ".\\panels\\bulk_path_management.py",
+        "range": {
+          "startPosition": {
+            "line": 1657,
+            "column": 59
+          },
+          "endPosition": {
+            "line": 1713
+          }
+        },
+        "contents": "# Registration function for this module\nclasses = (\n    RBST_PathMan_OT_summary_dialog,\n    RBST_PathMan_PG_PathProperties,\n    RBST_PathMan_OT_remap_path,\n    RBST_PathMan_OT_toggle_select_all,\n    RBST_PathMan_OT_bulk_remap,\n    RBST_PathMan_OT_toggle_path_edit,\n    RBST_PathMan_OT_select_material_images,\n    RBST_PathMan_OT_select_active_images,\n    RBST_PathMan_OT_select_absolute_images,\n    RBST_PathMan_OT_rename_datablock,\n    RBST_PathMan_OT_toggle_image_selection,\n    RBST_PathMan_OT_reuse_material_path,\n    RBST_PathMan_OT_reuse_blend_name,\n    RBST_PathMan_OT_make_paths_relative,\n    RBST_PathMan_OT_make_paths_absolute,\n    RBST_PathMan_OT_pack_images,\n    RBST_PathMan_OT_unpack_images,\n    RBST_PathMan_OT_remove_packed_images,\n    RBST_PathMan_OT_save_all_images,\n    RBST_PathMan_OT_remove_extensions,\n    RBST_PathMan_OT_rename_flat_colors,\n    RBST_PathMan_OT_cancel_operation,\n    RBST_PathMan_PT_bulk_path_tools,\n    RBST_PathMan_PT_bulk_path_subpanel,\n)\n\ndef register():\n    for cls in classes:\n        compat.safe_register_class(cls)\n    \n    # Register properties\n    bpy.types.Scene.bst_path_props = PointerProperty(type=RBST_PathMan_PG_PathProperties)\n    \n    # Add custom property to images for selection\n    bpy.types.Image.bst_selected = BoolProperty(\n        name=\"Selected for Bulk Operations\",\n        default=False\n    )\n    \n    # For debugging only\n    print(\"Bulk Path Management registered successfully\")\n\ndef unregister():\n    # Remove custom property\n    if",
+        "signatures": {},
+        "detailedLines": [
+          {
+            "text": "# Registration function for this module",
+            "lineNumber": 1660
+          },
+          {
+            "text": "classes = (",
+            "lineNumber": 1661
+          },
+          {
+            "text": "    RBST_PathMan_OT_summary_dialog,",
+            "lineNumber": 1662
+          },
+          {
+            "text": "    RBST_PathMan_PG_PathProperties,",
+            "lineNumber": 1663
+          },
+          {
+            "text": "    RBST_PathMan_OT_remap_path,",
+            "lineNumber": 1664
+          },
+          {
+            "text": "    RBST_PathMan_OT_toggle_select_all,",
+            "lineNumber": 1665
+          },
+          {
+            "text": "    RBST_PathMan_OT_bulk_remap,",
+            "lineNumber": 1666
+          },
+          {
+            "text": "    RBST_PathMan_OT_toggle_path_edit,",
+            "lineNumber": 1667
+          },
+          {
+            "text": "    RBST_PathMan_OT_select_material_images,",
+            "lineNumber": 1668
+          },
+          {
+            "text": "    RBST_PathMan_OT_select_active_images,",
+            "lineNumber": 1669
+          },
+          {
+            "text": "    RBST_PathMan_OT_select_absolute_images,",
+            "lineNumber": 1670
+          },
+          {
+            "text": "    RBST_PathMan_OT_rename_datablock,",
+            "lineNumber": 1671
+          },
+          {
+            "text": "    RBST_PathMan_OT_toggle_image_selection,",
+            "lineNumber": 1672
+          },
+          {
+            "text": "    RBST_PathMan_OT_reuse_material_path,",
+            "lineNumber": 1673
+          },
+          {
+            "text": "    RBST_PathMan_OT_reuse_blend_name,",
+            "lineNumber": 1674
+          },
+          {
+            "text": "    RBST_PathMan_OT_make_paths_relative,",
+            "lineNumber": 1675
+          },
+          {
+            "text": "    RBST_PathMan_OT_make_paths_absolute,",
+            "lineNumber": 1676
+          },
+          {
+            "text": "    RBST_PathMan_OT_pack_images,",
+            "lineNumber": 1677
+          },
+          {
+            "text": "    RBST_PathMan_OT_unpack_images,",
+            "lineNumber": 1678
+          },
+          {
+            "text": "    RBST_PathMan_OT_remove_packed_images,",
+            "lineNumber": 1679
+          },
+          {
+            "text": "    RBST_PathMan_OT_save_all_images,",
+            "lineNumber": 1680
+          },
+          {
+            "text": "    RBST_PathMan_OT_remove_extensions,",
+            "lineNumber": 1681
+          },
+          {
+            "text": "    RBST_PathMan_OT_rename_flat_colors,",
+            "lineNumber": 1682
+          },
+          {
+            "text": "    RBST_PathMan_OT_cancel_operation,",
+            "lineNumber": 1683
+          },
+          {
+            "text": "    RBST_PathMan_PT_bulk_path_tools,",
+            "lineNumber": 1684
+          },
+          {
+            "text": "    RBST_PathMan_PT_bulk_path_subpanel,",
+            "lineNumber": 1685
+          },
+          {
+            "text": ")",
+            "lineNumber": 1686
+          },
+          {
+            "lineNumber": 1687
+          },
+          {
+            "text": "def register():",
+            "lineNumber": 1688,
+            "isSignature": true
+          },
+          {
+            "text": "    for cls in classes:",
+            "lineNumber": 1689
+          },
+          {
+            "text": "        compat.safe_register_class(cls)",
+            "lineNumber": 1690
+          },
+          {
+            "text": "    ",
+            "lineNumber": 1691
+          },
+          {
+            "text": "    # Register properties",
+            "lineNumber": 1692
+          },
+          {
+            "text": "    bpy.types.Scene.bst_path_props = PointerProperty(type=RBST_PathMan_PG_PathProperties)",
+            "lineNumber": 1693
+          },
+          {
+            "text": "    ",
+            "lineNumber": 1694
+          },
+          {
+            "text": "    # Add custom property to images for selection",
+            "lineNumber": 1695
+          },
+          {
+            "text": "    bpy.types.Image.bst_selected = BoolProperty(",
+            "lineNumber": 1696
+          },
+          {
+            "text": "        name=\"Selected for Bulk Operations\",",
+            "lineNumber": 1697
+          },
+          {
+            "text": "        default=False",
+            "lineNumber": 1698
+          },
+          {
+            "text": "    )",
+            "lineNumber": 1699
+          },
+          {
+            "text": "    ",
+            "lineNumber": 1700
+          },
+          {
+            "text": "    # For debugging only",
+            "lineNumber": 1701
+          },
+          {
+            "text": "    print(\"Bulk Path Management registered successfully\")",
+            "lineNumber": 1702,
+            "isSignature": true
+          },
+          {
+            "lineNumber": 1703
+          },
+          {
+            "text": "def unregister():",
+            "lineNumber": 1704,
+            "isSignature": true
+          },
+          {
+            "text": "    # Remove custom property",
+            "lineNumber": 1705,
+            "isSignature": true
+          },
+          {
+            "text": "    if",
+            "lineNumber": 1706
+          }
+        ]
+      },
+      "score": 0.21150946617126465
+    },
+    {
+      "codeBlock": {
+        "relativeWorkspacePath": ".\\panels\\bulk_data_remap.py",
+        "range": {
+          "startPosition": {},
+          "endPosition": {
+            "line": 136
+          }
+        },
+        "contents": "import bpy # type: ignore\nimport re\nimport os\nimport sys\nimport subprocess\n\n# Import ghost buster functionality\nfrom ..ops.ghost_buster import RBST_Bustin_OT_GhostBuster, RBST_Bustin_OT_GhostDetector, RBST_Bustin_OT_ResyncEnforce\nfrom ..utils import compat\n\n# Regular expression to match numbered suffixes like .001, .002, _001, _0001, etc.\nRBST_DatRem_NUMBERED_SUFFIX_PATTERN = re.compile(r'(.*?)[._](\\d{3,})$')\n\n# Function to check if any datablocks in a collection are linked from a library\ndef RBST_DatRem_has_linked_datablocks(data_collection):\n    \"\"\"Check if any datablocks in the collection are linked from a library\"\"\"\n    for data in data_collection:\n        if data.users &gt; 0 and hasattr(data, 'library') and data.library is not None:\n            return True\n    return False\n\n# Register properties for data remap settings\ndef RBST_DatRem_register_properties():\n    bpy.types.Scene.dataremap_images",
+        "signatures": {},
+        "detailedLines": [
+          {
+            "text": "import bpy # type: ignore",
+            "lineNumber": 1
+          },
+          {
+            "text": "import re",
+            "lineNumber": 2
+          },
+          {
+            "text": "import os",
+            "lineNumber": 3
+          },
+          {
+            "text": "import sys",
+            "lineNumber": 4
+          },
+          {
+            "text": "import subprocess",
+            "lineNumber": 5
+          },
+          {
+            "lineNumber": 6
+          },
+          {
+            "text": "# Import ghost buster functionality",
+            "lineNumber": 7
+          },
+          {
+            "text": "from ..ops.ghost_buster import RBST_Bustin_OT_GhostBuster, RBST_Bustin_OT_GhostDetector, RBST_Bustin_OT_ResyncEnforce",
+            "lineNumber": 8
+          },
+          {
+            "text": "from ..utils import compat",
+            "lineNumber": 9
+          },
+          {
+            "lineNumber": 10
+          },
+          {
+            "text": "# Regular expression to match numbered suffixes like .001, .002, _001, _0001, etc.",
+            "lineNumber": 11
+          },
+          {
+            "text": "RBST_DatRem_NUMBERED_SUFFIX_PATTERN = re.compile(r'(.*?)[._](\\d{3,})$')",
+            "lineNumber": 12
+          },
+          {
+            "lineNumber": 13
+          },
+          {
+            "text": "# Function to check if any datablocks in a collection are linked from a library",
+            "lineNumber": 14
+          },
+          {
+            "text": "def RBST_DatRem_has_linked_datablocks(data_collection):",
+            "lineNumber": 15,
+            "isSignature": true
+          },
+          {
+            "text": "    \"\"\"Check if any datablocks in the collection are linked from a library\"\"\"",
+            "lineNumber": 16
+          },
+          {
+            "text": "    for data in data_collection:",
+            "lineNumber": 17
+          },
+          {
+            "text": "        if data.users &gt; 0 and hasattr(data, 'library') and data.library is not None:",
+            "lineNumber": 18
+          },
+          {
+            "text": "            return True",
+            "lineNumber": 19
+          },
+          {
+            "text": "    return False",
+            "lineNumber": 20,
+            "isSignature": true
+          },
+          {
+            "lineNumber": 21
+          },
+          {
+            "text": "# Register properties for data remap settings",
+            "lineNumber": 22
+          },
+          {
+            "text": "def RBST_DatRem_register_properties():",
+            "lineNumber": 23,
+            "isSignature": true
+          },
+          {
+            "text": "    bpy.types.Scene.dataremap_images",
+            "lineNumber": 24
+          }
+        ]
+      },
+      "score": 0.2112518548965454
+    },
+    {
+      "codeBlock": {
+        "relativeWorkspacePath": ".\\ops\\ghost_buster.py",
+        "range": {
+          "startPosition": {
+            "line": 369,
+            "column": 17
+          },
+          "endPosition": {
+            "line": 606
+          }
+        },
+        "contents": "class RBST_Bustin_OT_GhostBuster(bpy.types.Operator):\n    \"\"\"Conservative cleanup of ghost data (unused WGT objects, empty collections)\"\"\"\n    bl_idname = \"bst.ghost_buster\"\n    bl_label = \"Ghost Buster\"\n    bl_options = {'REGISTER', 'UNDO'}\n    \n    def execute(self, context):\n        try:\n            # Get the delete low priority setting from scene properties\n            delete_low_priority = getattr(context.scene, \"ghost_buster_delete_low_priority\", False)\n            \n            # Call the main ghost buster function\n            main(delete_low_priority)\n            self.report({'INFO'}, \"Ghost data cleanup completed\")\n            return {'FINISHED'}\n        except Exception as e:\n            self.report({'ERROR'}, f\"Ghost buster failed: {str(e)}\")\n            return {'CANCELLED'}\n\nclass RBST_Bustin_OT_GhostDetector(bpy.types.Operator):\n    \"\"\"Detect and analyze ghost data without removing it\"\"\"",
+        "signatures": {},
+        "detailedLines": [
+          {
+            "text": "class RBST_Bustin_OT_GhostBuster(bpy.types.Operator):",
+            "lineNumber": 372,
+            "isSignature": true
+          },
+          {
+            "text": "    \"\"\"Conservative cleanup of ghost data (unused WGT objects, empty collections)\"\"\"",
+            "lineNumber": 373
+          },
+          {
+            "text": "    bl_idname = \"bst.ghost_buster\"",
+            "lineNumber": 374
+          },
+          {
+            "text": "    bl_label = \"Ghost Buster\"",
+            "lineNumber": 375
+          },
+          {
+            "text": "    bl_options = {'REGISTER', 'UNDO'}",
+            "lineNumber": 376
+          },
+          {
+            "text": "    ",
+            "lineNumber": 377
+          },
+          {
+            "text": "    def execute(self, context):",
+            "lineNumber": 378
+          },
+          {
+            "text": "        try:",
+            "lineNumber": 379
+          },
+          {
+            "text": "            # Get the delete low priority setting from scene properties",
+            "lineNumber": 380
+          },
+          {
+            "text": "            delete_low_priority = getattr(context.scene, \"ghost_buster_delete_low_priority\", False)",
+            "lineNumber": 381
+          },
+          {
+            "text": "            ",
+            "lineNumber": 382
+          },
+          {
+            "text": "            # Call the main ghost buster function",
+            "lineNumber": 383
+          },
+          {
+            "text": "            main(delete_low_priority)",
+            "lineNumber": 384
+          },
+          {
+            "text": "            self.report({'INFO'}, \"Ghost data cleanup completed\")",
+            "lineNumber": 385
+          },
+          {
+            "text": "            return {'FINISHED'}",
+            "lineNumber": 386
+          },
+          {
+            "text": "        except Exception as e:",
+            "lineNumber": 387
+          },
+          {
+            "text": "            self.report({'ERROR'}, f\"Ghost buster failed: {str(e)}\")",
+            "lineNumber": 388
+          },
+          {
+            "text": "            return {'CANCELLED'}",
+            "lineNumber": 389,
+            "isSignature": true
+          },
+          {
+            "lineNumber": 390
+          },
+          {
+            "text": "class RBST_Bustin_OT_GhostDetector(bpy.types.Operator):",
+            "lineNumber": 391,
+            "isSignature": true
+          },
+          {
+            "text": "    \"\"\"Detect and analyze ghost data without removing it\"\"\"",
+            "lineNumber": 392
+          }
+        ]
+      },
+      "score": 0.20397156476974487
+    },
+    {
+      "codeBlock": {
+        "relativeWorkspacePath": ".\\panels\\bulk_data_remap.py",
+        "range": {
+          "startPosition": {
+            "line": 1499,
+            "column": 27
+          },
+          "endPosition": {
+            "line": 1568
+          }
+        },
+        "contents": "# Add a new operator for renaming datablocks\nclass RBST_DatRem_OT_RenameDatablock(bpy.types.Operator):\n    \"\"\"Click to rename datablock\"\"\"\n    bl_idname = \"bst.rename_datablock_remap\"\n    bl_label = \"Rename Datablock\"\n    bl_options = {'REGISTER', 'UNDO'}\n    \n    data_type: bpy.props.StringProperty(  # type: ignore\n        name=\"Data Type\",\n        description=\"Type of data (images, materials, fonts, worlds)\",\n        default=\"\"\n    )\n    \n    old_name: bpy.props.StringProperty(  # type: ignore\n        name=\"Old Name\",\n        description=\"Current name of the datablock\",\n        default=\"\"\n    )\n    \n    new_name: bpy.props.StringProperty(  # type: ignore\n        name=\"New Name\",\n        description=\"New name for the datablock\",\n        default=\"\"\n    )\n    \n    def invoke(self, context, event):\n        self.new_name = self.old_name\n        return context.window_manager.invoke_props_dialog(self)\n    \n    def draw(self, context):\n        layout = self.layout\n        layout.prop(self, \"new_name\", text=\"Name\")\n    \n    def execute(self, context):\n        # Get the appropriate data collection\n        ",
+        "signatures": {},
+        "detailedLines": [
+          {
+            "text": "# Add a new operator for renaming datablocks",
+            "lineNumber": 1502
+          },
+          {
+            "text": "class RBST_DatRem_OT_RenameDatablock(bpy.types.Operator):",
+            "lineNumber": 1503,
+            "isSignature": true
+          },
+          {
+            "text": "    \"\"\"Click to rename datablock\"\"\"",
+            "lineNumber": 1504
+          },
+          {
+            "text": "    bl_idname = \"bst.rename_datablock_remap\"",
+            "lineNumber": 1505
+          },
+          {
+            "text": "    bl_label = \"Rename Datablock\"",
+            "lineNumber": 1506
+          },
+          {
+            "text": "    bl_options = {'REGISTER', 'UNDO'}",
+            "lineNumber": 1507
+          },
+          {
+            "text": "    ",
+            "lineNumber": 1508
+          },
+          {
+            "text": "    data_type: bpy.props.StringProperty(  # type: ignore",
+            "lineNumber": 1509
+          },
+          {
+            "text": "        name=\"Data Type\",",
+            "lineNumber": 1510
+          },
+          {
+            "text": "        description=\"Type of data (images, materials, fonts, worlds)\",",
+            "lineNumber": 1511
+          },
+          {
+            "text": "        default=\"\"",
+            "lineNumber": 1512
+          },
+          {
+            "text": "    )",
+            "lineNumber": 1513
+          },
+          {
+            "text": "    ",
+            "lineNumber": 1514
+          },
+          {
+            "text": "    old_name: bpy.props.StringProperty(  # type: ignore",
+            "lineNumber": 1515
+          },
+          {
+            "text": "        name=\"Old Name\",",
+            "lineNumber": 1516
+          },
+          {
+            "text": "        description=\"Current name of the datablock\",",
+            "lineNumber": 1517
+          },
+          {
+            "text": "        default=\"\"",
+            "lineNumber": 1518
+          },
+          {
+            "text": "    )",
+            "lineNumber": 1519
+          },
+          {
+            "text": "    ",
+            "lineNumber": 1520
+          },
+          {
+            "text": "    new_name: bpy.props.StringProperty(  # type: ignore",
+            "lineNumber": 1521
+          },
+          {
+            "text": "        name=\"New Name\",",
+            "lineNumber": 1522
+          },
+          {
+            "text": "        description=\"New name for the datablock\",",
+            "lineNumber": 1523
+          },
+          {
+            "text": "        default=\"\"",
+            "lineNumber": 1524
+          },
+          {
+            "text": "    )",
+            "lineNumber": 1525
+          },
+          {
+            "text": "    ",
+            "lineNumber": 1526
+          },
+          {
+            "text": "    def invoke(self, context, event):",
+            "lineNumber": 1527
+          },
+          {
+            "text": "        self.new_name = self.old_name",
+            "lineNumber": 1528
+          },
+          {
+            "text": "        return context.window_manager.invoke_props_dialog(self)",
+            "lineNumber": 1529
+          },
+          {
+            "text": "    ",
+            "lineNumber": 1530
+          },
+          {
+            "text": "    def draw(self, context):",
+            "lineNumber": 1531
+          },
+          {
+            "text": "        layout = self.layout",
+            "lineNumber": 1532
+          },
+          {
+            "text": "        layout.prop(self, \"new_name\", text=\"Name\")",
+            "lineNumber": 1533
+          },
+          {
+            "text": "    ",
+            "lineNumber": 1534
+          },
+          {
+            "text": "    def execute(self, context):",
+            "lineNumber": 1535
+          },
+          {
+            "text": "        # Get the appropriate data collection",
+            "lineNumber": 1536
+          },
+          {
+            "text": "        ",
+            "lineNumber": 1537
+          }
+        ]
+      },
+      "score": 0.20176595449447632
+    },
+    {
+      "codeBlock": {
+        "relativeWorkspacePath": ".\\ops\\Rename_images_by_mat.py",
+        "range": {
+          "startPosition": {
+            "line": 68
+          },
+          "endPosition": {
+            "line": 497
+          }
+        },
+        "contents": "class RBST_RenameImg_OT_Rename_images_by_mat(bpy.types.Operator):\ndef extract_texture_suffix(self, name):\n\n        \n        # Then try single-word suffixes with traditional separators\n        for suffix in sorted_suffixes:\n            if ' ' not in suffix:  # Single word suffix\n                # Pattern: ends with _suffix or -suffix or .suffix\n                pattern = rf'[._-]({re.escape(suffix)})$'\n                match = re.search(pattern, base_name, re.IGNORECASE)\n                if match:\n                    return match.group(1).lower()\n        \n        # Check for numeric suffixes (like _01, _02, etc.)\n        numeric_match = re.search(r'[._-](\\d+)$', base_name)\n        if numeric_match:\n            return numeric_match.group(1)\n        \n        return None\n    \n    def ensure_unique_name(self, proposed_name):\n        \"\"\"Ensure the proposed name is unique among all images\"\"\"\n        if proposed_name not in bpy.data.images:\n            return proposed_name\n        \n        # If name exists, add numerical suffix\n        counter = 1\n        while f\"{proposed_name}.{counter:03d}\" in bpy.data.images:\n            counter += 1\n        \n        return f\"{proposed_name}.{counter:03d}\"\n    \n    def capitalize_suffix(self, suffix):\n        \"\"\"Properly capitalize texture type suffixes with correct formatting\"\"\"",
+        "signatures": {
+          "ranges": [
+            {
+              "startPosition": {
+                "line": 69,
+                "column": 1
+              },
+              "endPosition": {
+                "line": 70,
+                "column": 5
+              }
+            },
+            {
+              "startPosition": {
+                "line": 232,
+                "column": 5
+              },
+              "endPosition": {
+                "line": 233,
+                "column": 9
+              }
+            }
+          ]
+        },
+        "detailedLines": [
+          {
+            "text": "class RBST_RenameImg_OT_Rename_images_by_mat(bpy.types.Operator):",
+            "lineNumber": 69,
+            "isSignature": true
+          },
+          {
+            "text": "def extract_texture_suffix(self, name):",
+            "lineNumber": 232
+          },
+          {
+            "lineNumber": 300
+          },
+          {
+            "text": "        ",
+            "lineNumber": 301
+          },
+          {
+            "text": "        # Then try single-word suffixes with traditional separators",
+            "lineNumber": 302
+          },
+          {
+            "text": "        for suffix in sorted_suffixes:",
+            "lineNumber": 303
+          },
+          {
+            "text": "            if ' ' not in suffix:  # Single word suffix",
+            "lineNumber": 304
+          },
+          {
+            "text": "                # Pattern: ends with _suffix or -suffix or .suffix",
+            "lineNumber": 305
+          },
+          {
+            "text": "                pattern = rf'[._-]({re.escape(suffix)})$'",
+            "lineNumber": 306
+          },
+          {
+            "text": "                match = re.search(pattern, base_name, re.IGNORECASE)",
+            "lineNumber": 307
+          },
+          {
+            "text": "                if match:",
+            "lineNumber": 308
+          },
+          {
+            "text": "                    return match.group(1).lower()",
+            "lineNumber": 309
+          },
+          {
+            "text": "        ",
+            "lineNumber": 310
+          },
+          {
+            "text": "        # Check for numeric suffixes (like _01, _02, etc.)",
+            "lineNumber": 311
+          },
+          {
+            "text": "        numeric_match = re.search(r'[._-](\\d+)$', base_name)",
+            "lineNumber": 312
+          },
+          {
+            "text": "        if numeric_match:",
+            "lineNumber": 313
+          },
+          {
+            "text": "            return numeric_match.group(1)",
+            "lineNumber": 314
+          },
+          {
+            "text": "        ",
+            "lineNumber": 315
+          },
+          {
+            "text": "        return None",
+            "lineNumber": 316
+          },
+          {
+            "text": "    ",
+            "lineNumber": 317
+          },
+          {
+            "text": "    def ensure_unique_name(self, proposed_name):",
+            "lineNumber": 318
+          },
+          {
+            "text": "        \"\"\"Ensure the proposed name is unique among all images\"\"\"",
+            "lineNumber": 319
+          },
+          {
+            "text": "        if proposed_name not in bpy.data.images:",
+            "lineNumber": 320
+          },
+          {
+            "text": "            return proposed_name",
+            "lineNumber": 321
+          },
+          {
+            "text": "        ",
+            "lineNumber": 322
+          },
+          {
+            "text": "        # If name exists, add numerical suffix",
+            "lineNumber": 323
+          },
+          {
+            "text": "        counter = 1",
+            "lineNumber": 324
+          },
+          {
+            "text": "        while f\"{proposed_name}.{counter:03d}\" in bpy.data.images:",
+            "lineNumber": 325
+          },
+          {
+            "text": "            counter += 1",
+            "lineNumber": 326
+          },
+          {
+            "text": "        ",
+            "lineNumber": 327
+          },
+          {
+            "text": "        return f\"{proposed_name}.{counter:03d}\"",
+            "lineNumber": 328
+          },
+          {
+            "text": "    ",
+            "lineNumber": 329
+          },
+          {
+            "text": "    def capitalize_suffix(self, suffix):",
+            "lineNumber": 330
+          },
+          {
+            "text": "        \"\"\"Properly capitalize texture type suffixes with correct formatting\"\"\"",
+            "lineNumber": 331
+          }
+        ]
+      },
+      "score": 0.19758176803588867
+    },
+    {
+      "codeBlock": {
+        "relativeWorkspacePath": ".\\panels\\bulk_data_remap.py",
+        "range": {
+          "startPosition": {
+            "line": 194,
+            "column": 117
+          },
+          "endPosition": {
+            "line": 242
+          }
+        },
+        "contents": "def RBST_DatRem_find_target_data(data_group):\n    \"\"\"Find the target data block to remap to\"\"\"\n    # Filter out linked datablocks\n    local_data_group = [data for data in data_group if not (hasattr(data, 'library') and data.library is not None)]\n    \n    # If all datablocks are linked, return the first one (though this shouldn't happen due to earlier checks)\n    if not local_data_group:\n        return data_group[0]\n    \n    # First, try to find a data block without a numbered suffix\n    for data in local_data_group:\n        if RBST_DatRem_get_base_name(data.name) == data.name:\n            return data\n    \n    # If no unnumbered version exists, find the \"youngest\" version (highest number)\n    youngest = local_data_group[0]\n    highest_suffix = 0\n    \n    for data in local_data_group:\n        match = RBST_DatRem_NUMBERED_SUFFIX_PATTERN.match(data.name)\n        if match:\n            suffix_num = int(match.group(2))\n            if suffix_num &gt; highest_suffix:\n                highest_suffix = suffix_num\n                youngest = data\n    \n    return youngest\n\ndef RBST_DatRem_clean_data_names(data_collection):\n    \"\"\"Remove numbered suffixes from all data blocks with users\"\"\"",
+        "signatures": {},
+        "detailedLines": [
+          {
+            "text": "def RBST_DatRem_find_target_data(data_group):",
+            "lineNumber": 197,
+            "isSignature": true
+          },
+          {
+            "text": "    \"\"\"Find the target data block to remap to\"\"\"",
+            "lineNumber": 198
+          },
+          {
+            "text": "    # Filter out linked datablocks",
+            "lineNumber": 199
+          },
+          {
+            "text": "    local_data_group = [data for data in data_group if not (hasattr(data, 'library') and data.library is not None)]",
+            "lineNumber": 200
+          },
+          {
+            "text": "    ",
+            "lineNumber": 201
+          },
+          {
+            "text": "    # If all datablocks are linked, return the first one (though this shouldn't happen due to earlier checks)",
+            "lineNumber": 202
+          },
+          {
+            "text": "    if not local_data_group:",
+            "lineNumber": 203
+          },
+          {
+            "text": "        return data_group[0]",
+            "lineNumber": 204
+          },
+          {
+            "text": "    ",
+            "lineNumber": 205
+          },
+          {
+            "text": "    # First, try to find a data block without a numbered suffix",
+            "lineNumber": 206
+          },
+          {
+            "text": "    for data in local_data_group:",
+            "lineNumber": 207
+          },
+          {
+            "text": "        if RBST_DatRem_get_base_name(data.name) == data.name:",
+            "lineNumber": 208
+          },
+          {
+            "text": "            return data",
+            "lineNumber": 209
+          },
+          {
+            "text": "    ",
+            "lineNumber": 210
+          },
+          {
+            "text": "    # If no unnumbered version exists, find the \"youngest\" version (highest number)",
+            "lineNumber": 211
+          },
+          {
+            "text": "    youngest = local_data_group[0]",
+            "lineNumber": 212
+          },
+          {
+            "text": "    highest_suffix = 0",
+            "lineNumber": 213
+          },
+          {
+            "text": "    ",
+            "lineNumber": 214
+          },
+          {
+            "text": "    for data in local_data_group:",
+            "lineNumber": 215
+          },
+          {
+            "text": "        match = RBST_DatRem_NUMBERED_SUFFIX_PATTERN.match(data.name)",
+            "lineNumber": 216
+          },
+          {
+            "text": "        if match:",
+            "lineNumber": 217
+          },
+          {
+            "text": "            suffix_num = int(match.group(2))",
+            "lineNumber": 218
+          },
+          {
+            "text": "            if suffix_num &gt; highest_suffix:",
+            "lineNumber": 219
+          },
+          {
+            "text": "                highest_suffix = suffix_num",
+            "lineNumber": 220
+          },
+          {
+            "text": "                youngest = data",
+            "lineNumber": 221
+          },
+          {
+            "text": "    ",
+            "lineNumber": 222
+          },
+          {
+            "text": "    return youngest",
+            "lineNumber": 223,
+            "isSignature": true
+          },
+          {
+            "lineNumber": 224
+          },
+          {
+            "text": "def RBST_DatRem_clean_data_names(data_collection):",
+            "lineNumber": 225,
+            "isSignature": true
+          },
+          {
+            "text": "    \"\"\"Remove numbered suffixes from all data blocks with users\"\"\"",
+            "lineNumber": 226
+          }
+        ]
+      },
+      "score": 0.19551719725131989
+    },
+    {
+      "codeBlock": {
+        "relativeWorkspacePath": ".\\ops\\Rename_images_by_mat.py",
+        "range": {
+          "startPosition": {
+            "line": 68
+          },
+          "endPosition": {
+            "line": 497
+          }
+        },
+        "contents": "class RBST_RenameImg_OT_Rename_images_by_mat(bpy.types.Operator):\n\n    \n    def capitalize_suffix(self, suffix):\n        \"\"\"Properly capitalize texture type suffixes with correct formatting\"\"\"\n        # Dictionary of common texture suffixes with proper capitalization\n        suffix_mapping = {\n            # Standard PBR suffixes\n            'diffuse': 'Diffuse',\n            'basecolor': 'BaseColor',\n            'base_color': 'BaseColor',\n            'albedo': 'Albedo',\n            'color': 'Color',\n            'col': 'Color',\n            \n            'normal': 'Normal',\n            'norm': 'Normal',\n            'nrm': 'Normal',\n            'bump': 'Bump',\n            \n            'roughness': 'Roughness',\n            'rough': 'Roughness',\n            'rgh': 'Roughness',\n            \n            'metallic': 'Metallic',\n            'metal': 'Metallic',\n            'mtl': 'Metallic',\n            \n            'specular': 'Specular',\n            'spec': 'Specular',\n            'spc': 'Specular',\n            \n            'ao': 'AO',\n            'ambient_occlusion': 'AmbientOcclusion',\n            'ambientocclusion': 'AmbientOcclusion',\n            'occlusion': 'Occlusion',\n            'gradao': 'GradAO',\n            \n            'height': 'Height',\n            'displacement': 'Displacement',\n            'disp': 'Displacement',\n            'displace': 'Displacement',\n            \n            'opacity': 'Opacity',\n            'alpha': 'Alpha',\n            'mask': 'Mask',\n            'transmap': 'TransMap',\n            \n            'emission': 'Emission',\n            'emissive': 'Emission',\n            'emit': 'Emission',\n            \n            'subsurface': 'Subsurface',\n            'sss': 'SSS',\n            'transmission': 'Transmission',\n            \n            # Character Creator / iClone suffixes\n            'base': 'Base',\n            'diffusemap': 'DiffuseMap',\n            'normalmap': 'NormalMap',\n            'roughnessmap': 'RoughnessMap',\n            'metallicmap': 'MetallicMap',\n            'aomap': 'AOMap',\n            'opacitymap': 'OpacityMap',",
+        "signatures": {
+          "ranges": [
+            {
+              "startPosition": {
+                "line": 69,
+                "column": 1
+              },
+              "endPosition": {
+                "line": 70,
+                "column": 5
+              }
+            }
+          ]
+        },
+        "detailedLines": [
+          {
+            "text": "class RBST_RenameImg_OT_Rename_images_by_mat(bpy.types.Operator):",
+            "lineNumber": 69,
+            "isSignature": true
+          },
+          {
+            "lineNumber": 328
+          },
+          {
+            "text": "    ",
+            "lineNumber": 329
+          },
+          {
+            "text": "    def capitalize_suffix(self, suffix):",
+            "lineNumber": 330
+          },
+          {
+            "text": "        \"\"\"Properly capitalize texture type suffixes with correct formatting\"\"\"",
+            "lineNumber": 331
+          },
+          {
+            "text": "        # Dictionary of common texture suffixes with proper capitalization",
+            "lineNumber": 332
+          },
+          {
+            "text": "        suffix_mapping = {",
+            "lineNumber": 333
+          },
+          {
+            "text": "            # Standard PBR suffixes",
+            "lineNumber": 334
+          },
+          {
+            "text": "            'diffuse': 'Diffuse',",
+            "lineNumber": 335
+          },
+          {
+            "text": "            'basecolor': 'BaseColor',",
+            "lineNumber": 336
+          },
+          {
+            "text": "            'base_color': 'BaseColor',",
+            "lineNumber": 337
+          },
+          {
+            "text": "            'albedo': 'Albedo',",
+            "lineNumber": 338
+          },
+          {
+            "text": "            'color': 'Color',",
+            "lineNumber": 339
+          },
+          {
+            "text": "            'col': 'Color',",
+            "lineNumber": 340
+          },
+          {
+            "text": "            ",
+            "lineNumber": 341
+          },
+          {
+            "text": "            'normal': 'Normal',",
+            "lineNumber": 342
+          },
+          {
+            "text": "            'norm': 'Normal',",
+            "lineNumber": 343
+          },
+          {
+            "text": "            'nrm': 'Normal',",
+            "lineNumber": 344
+          },
+          {
+            "text": "            'bump': 'Bump',",
+            "lineNumber": 345
+          },
+          {
+            "text": "            ",
+            "lineNumber": 346
+          },
+          {
+            "text": "            'roughness': 'Roughness',",
+            "lineNumber": 347
+          },
+          {
+            "text": "            'rough': 'Roughness',",
+            "lineNumber": 348
+          },
+          {
+            "text": "            'rgh': 'Roughness',",
+            "lineNumber": 349
+          },
+          {
+            "text": "            ",
+            "lineNumber": 350
+          },
+          {
+            "text": "            'metallic': 'Metallic',",
+            "lineNumber": 351
+          },
+          {
+            "text": "            'metal': 'Metallic',",
+            "lineNumber": 352
+          },
+          {
+            "text": "            'mtl': 'Metallic',",
+            "lineNumber": 353
+          },
+          {
+            "text": "            ",
+            "lineNumber": 354
+          },
+          {
+            "text": "            'specular': 'Specular',",
+            "lineNumber": 355
+          },
+          {
+            "text": "            'spec': 'Specular',",
+            "lineNumber": 356
+          },
+          {
+            "text": "            'spc': 'Specular',",
+            "lineNumber": 357
+          },
+          {
+            "text": "            ",
+            "lineNumber": 358
+          },
+          {
+            "text": "            'ao': 'AO',",
+            "lineNumber": 359
+          },
+          {
+            "text": "            'ambient_occlusion': 'AmbientOcclusion',",
+            "lineNumber": 360
+          },
+          {
+            "text": "            'ambientocclusion': 'AmbientOcclusion',",
+            "lineNumber": 361
+          },
+          {
+            "text": "            'occlusion': 'Occlusion',",
+            "lineNumber": 362
+          },
+          {
+            "text": "            'gradao': 'GradAO',",
+            "lineNumber": 363
+          },
+          {
+            "text": "            ",
+            "lineNumber": 364
+          },
+          {
+            "text": "            'height': 'Height',",
+            "lineNumber": 365
+          },
+          {
+            "text": "            'displacement': 'Displacement',",
+            "lineNumber": 366
+          },
+          {
+            "text": "            'disp': 'Displacement',",
+            "lineNumber": 367
+          },
+          {
+            "text": "            'displace': 'Displacement',",
+            "lineNumber": 368
+          },
+          {
+            "text": "            ",
+            "lineNumber": 369
+          },
+          {
+            "text": "            'opacity': 'Opacity',",
+            "lineNumber": 370
+          },
+          {
+            "text": "            'alpha': 'Alpha',",
+            "lineNumber": 371
+          },
+          {
+            "text": "            'mask': 'Mask',",
+            "lineNumber": 372
+          },
+          {
+            "text": "            'transmap': 'TransMap',",
+            "lineNumber": 373
+          },
+          {
+            "text": "            ",
+            "lineNumber": 374
+          },
+          {
+            "text": "            'emission': 'Emission',",
+            "lineNumber": 375
+          },
+          {
+            "text": "            'emissive': 'Emission',",
+            "lineNumber": 376
+          },
+          {
+            "text": "            'emit': 'Emission',",
+            "lineNumber": 377
+          },
+          {
+            "text": "            ",
+            "lineNumber": 378
+          },
+          {
+            "text": "            'subsurface': 'Subsurface',",
+            "lineNumber": 379
+          },
+          {
+            "text": "            'sss': 'SSS',",
+            "lineNumber": 380
+          },
+          {
+            "text": "            'transmission': 'Transmission',",
+            "lineNumber": 381
+          },
+          {
+            "text": "            ",
+            "lineNumber": 382
+          },
+          {
+            "text": "            # Character Creator / iClone suffixes",
+            "lineNumber": 383
+          },
+          {
+            "text": "            'base': 'Base',",
+            "lineNumber": 384
+          },
+          {
+            "text": "            'diffusemap': 'DiffuseMap',",
+            "lineNumber": 385
+          },
+          {
+            "text": "            'normalmap': 'NormalMap',",
+            "lineNumber": 386
+          },
+          {
+            "text": "            'roughnessmap': 'RoughnessMap',",
+            "lineNumber": 387
+          },
+          {
+            "text": "            'metallicmap': 'MetallicMap',",
+            "lineNumber": 388
+          },
+          {
+            "text": "            'aomap': 'AOMap',",
+            "lineNumber": 389
+          },
+          {
+            "text": "            'opacitymap': 'OpacityMap',",
+            "lineNumber": 390
+          }
+        ]
+      },
+      "score": 0.1892075538635254
+    },
+    {
+      "codeBlock": {
+        "relativeWorkspacePath": ".\\panels\\bulk_data_remap.py",
+        "range": {
+          "startPosition": {
+            "line": 169,
+            "column": 15
+          },
+          "endPosition": {
+            "line": 222
+          }
+        },
+        "contents": "def RBST_DatRem_find_data_groups(data_collection):\n    \"\"\"Group data blocks by their base name, excluding those with no users or linked from libraries\"\"\"\n    groups = {}\n    \n    for data in data_collection:\n        # Skip datablocks with no users\n        if data.users == 0:\n            continue\n            \n        # Skip linked datablocks\n        if hasattr(data, 'library') and data.library is not None:\n            continue\n            \n        base_name = RBST_DatRem_get_base_name(data.name)\n        \n        # Only group local datablocks\n        if base_name not in groups:\n            groups[base_name] = []\n        groups[base_name].append(data)\n    \n    # Filter out groups with only one item (no duplicates)\n    # Also filter out groups where all items are linked\n    return {name: items for name, items in groups.items() \n            if len(items) &gt; 1 and any(not (hasattr(item, 'library') and item.library is not None) for item in items)}\n\ndef RBST_DatRem_find_target_data(data_group):\n    \"\"\"Find the target data block to remap to\"\"\"",
+        "signatures": {},
+        "detailedLines": [
+          {
+            "text": "def RBST_DatRem_find_data_groups(data_collection):",
+            "lineNumber": 172,
+            "isSignature": true
+          },
+          {
+            "text": "    \"\"\"Group data blocks by their base name, excluding those with no users or linked from libraries\"\"\"",
+            "lineNumber": 173
+          },
+          {
+            "text": "    groups = {}",
+            "lineNumber": 174
+          },
+          {
+            "text": "    ",
+            "lineNumber": 175
+          },
+          {
+            "text": "    for data in data_collection:",
+            "lineNumber": 176
+          },
+          {
+            "text": "        # Skip datablocks with no users",
+            "lineNumber": 177
+          },
+          {
+            "text": "        if data.users == 0:",
+            "lineNumber": 178
+          },
+          {
+            "text": "            continue",
+            "lineNumber": 179
+          },
+          {
+            "text": "            ",
+            "lineNumber": 180
+          },
+          {
+            "text": "        # Skip linked datablocks",
+            "lineNumber": 181
+          },
+          {
+            "text": "        if hasattr(data, 'library') and data.library is not None:",
+            "lineNumber": 182
+          },
+          {
+            "text": "            continue",
+            "lineNumber": 183
+          },
+          {
+            "text": "            ",
+            "lineNumber": 184
+          },
+          {
+            "text": "        base_name = RBST_DatRem_get_base_name(data.name)",
+            "lineNumber": 185
+          },
+          {
+            "text": "        ",
+            "lineNumber": 186
+          },
+          {
+            "text": "        # Only group local datablocks",
+            "lineNumber": 187
+          },
+          {
+            "text": "        if base_name not in groups:",
+            "lineNumber": 188
+          },
+          {
+            "text": "            groups[base_name] = []",
+            "lineNumber": 189
+          },
+          {
+            "text": "        groups[base_name].append(data)",
+            "lineNumber": 190
+          },
+          {
+            "text": "    ",
+            "lineNumber": 191
+          },
+          {
+            "text": "    # Filter out groups with only one item (no duplicates)",
+            "lineNumber": 192
+          },
+          {
+            "text": "    # Also filter out groups where all items are linked",
+            "lineNumber": 193
+          },
+          {
+            "text": "    return {name: items for name, items in groups.items() ",
+            "lineNumber": 194
+          },
+          {
+            "text": "            if len(items) &gt; 1 and any(not (hasattr(item, 'library') and item.library is not None) for item in items)}",
+            "lineNumber": 195,
+            "isSignature": true
+          },
+          {
+            "lineNumber": 196
+          },
+          {
+            "text": "def RBST_DatRem_find_target_data(data_group):",
+            "lineNumber": 197,
+            "isSignature": true
+          },
+          {
+            "text": "    \"\"\"Find the target data block to remap to\"\"\"",
+            "lineNumber": 198
+          }
+        ]
+      },
+      "score": 0.1889512985944748
+    },
+    {
+      "codeBlock": {
+        "relativeWorkspacePath": ".\\ops\\ghost_buster.py",
+        "range": {
+          "startPosition": {
+            "line": 608
+          },
+          "endPosition": {
+            "line": 675,
+            "column": 7
+          }
+        },
+        "contents": "class RBST_Bustin_OT_ResyncEnforce(bpy.types.Operator):\ndef execute(self, context):\n        # Get selected objects\n\n            return {'CANCELLED'}\n        \n        try:\n            # Store the current selection\n            original_selection = set(context.selected_objects)\n            \n            # Select only the override objects\n            bpy.ops.object.select_all(action='DESELECT')\n            for obj in override_objects:\n                obj.select_set(True)\n            \n            # Call Blender's resync enforce operation\n            result = bpy.ops.object.library_override_operation(\n                'INVOKE_DEFAULT',\n                type='OVERRIDE_LIBRARY_RESYNC_HIERARCHY_ENFORCE',\n                selection_set='SELECTED'\n            )\n            \n            if result == {'FINISHED'}:\n                self.report({'INFO'}, f\"Resync enforce completed on {len(override_objects)} override objects\")\n                return_code = {'FINISHED'}\n            else:\n                self.report({'WARNING'}, \"Resync enforce operation was cancelled or failed\")\n                return_code = {'CANCELLED'}\n            \n            # Restore original selection\n            bpy.ops.object.select_all(action='DESELECT')\n            for obj in original_selection:\n                if obj.name in bpy.data.objects:  # Check if object still exists\n                    obj.select_set(True)\n            \n            return return_code\n            \n        except Exception as e:\n            self.report({'ERROR'}, f\"Resync enforce failed: {str(e)}\")\n            return {'CANCELLED'}\n\n# Note: main() is called by the operator, not automatically\n\n# List of classes to register\nclasses",
+        "signatures": {
+          "ranges": [
+            {
+              "startPosition": {
+                "line": 391,
+                "column": 1
+              },
+              "endPosition": {
+                "line": 392,
+                "column": 5
+              }
+            },
+            {
+              "startPosition": {
+                "line": 609,
+                "column": 1
+              },
+              "endPosition": {
+                "line": 610,
+                "column": 5
+              }
+            }
+          ]
+        },
+        "detailedLines": [
+          {
+            "text": "class RBST_Bustin_OT_ResyncEnforce(bpy.types.Operator):",
+            "lineNumber": 609,
+            "isSignature": true
+          },
+          {
+            "text": "def execute(self, context):",
+            "lineNumber": 620
+          },
+          {
+            "text": "        # Get selected objects",
+            "lineNumber": 621
+          },
+          {
+            "lineNumber": 635
+          },
+          {
+            "text": "            return {'CANCELLED'}",
+            "lineNumber": 636
+          },
+          {
+            "text": "        ",
+            "lineNumber": 637
+          },
+          {
+            "text": "        try:",
+            "lineNumber": 638
+          },
+          {
+            "text": "            # Store the current selection",
+            "lineNumber": 639
+          },
+          {
+            "text": "            original_selection = set(context.selected_objects)",
+            "lineNumber": 640
+          },
+          {
+            "text": "            ",
+            "lineNumber": 641
+          },
+          {
+            "text": "            # Select only the override objects",
+            "lineNumber": 642
+          },
+          {
+            "text": "            bpy.ops.object.select_all(action='DESELECT')",
+            "lineNumber": 643
+          },
+          {
+            "text": "            for obj in override_objects:",
+            "lineNumber": 644
+          },
+          {
+            "text": "                obj.select_set(True)",
+            "lineNumber": 645
+          },
+          {
+            "text": "            ",
+            "lineNumber": 646
+          },
+          {
+            "text": "            # Call Blender's resync enforce operation",
+            "lineNumber": 647
+          },
+          {
+            "text": "            result = bpy.ops.object.library_override_operation(",
+            "lineNumber": 648
+          },
+          {
+            "text": "                'INVOKE_DEFAULT',",
+            "lineNumber": 649
+          },
+          {
+            "text": "                type='OVERRIDE_LIBRARY_RESYNC_HIERARCHY_ENFORCE',",
+            "lineNumber": 650
+          },
+          {
+            "text": "                selection_set='SELECTED'",
+            "lineNumber": 651
+          },
+          {
+            "text": "            )",
+            "lineNumber": 652
+          },
+          {
+            "text": "            ",
+            "lineNumber": 653
+          },
+          {
+            "text": "            if result == {'FINISHED'}:",
+            "lineNumber": 654
+          },
+          {
+            "text": "                self.report({'INFO'}, f\"Resync enforce completed on {len(override_objects)} override objects\")",
+            "lineNumber": 655
+          },
+          {
+            "text": "                return_code = {'FINISHED'}",
+            "lineNumber": 656
+          },
+          {
+            "text": "            else:",
+            "lineNumber": 657
+          },
+          {
+            "text": "                self.report({'WARNING'}, \"Resync enforce operation was cancelled or failed\")",
+            "lineNumber": 658
+          },
+          {
+            "text": "                return_code = {'CANCELLED'}",
+            "lineNumber": 659
+          },
+          {
+            "text": "            ",
+            "lineNumber": 660
+          },
+          {
+            "text": "            # Restore original selection",
+            "lineNumber": 661
+          },
+          {
+            "text": "            bpy.ops.object.select_all(action='DESELECT')",
+            "lineNumber": 662
+          },
+          {
+            "text": "            for obj in original_selection:",
+            "lineNumber": 663
+          },
+          {
+            "text": "                if obj.name in bpy.data.objects:  # Check if object still exists",
+            "lineNumber": 664
+          },
+          {
+            "text": "                    obj.select_set(True)",
+            "lineNumber": 665
+          },
+          {
+            "text": "            ",
+            "lineNumber": 666
+          },
+          {
+            "text": "            return return_code",
+            "lineNumber": 667
+          },
+          {
+            "text": "            ",
+            "lineNumber": 668
+          },
+          {
+            "text": "        except Exception as e:",
+            "lineNumber": 669
+          },
+          {
+            "text": "            self.report({'ERROR'}, f\"Resync enforce failed: {str(e)}\")",
+            "lineNumber": 670
+          },
+          {
+            "text": "            return {'CANCELLED'}",
+            "lineNumber": 671,
+            "isSignature": true
+          },
+          {
+            "lineNumber": 672
+          },
+          {
+            "text": "# Note: main() is called by the operator, not automatically",
+            "lineNumber": 673
+          },
+          {
+            "lineNumber": 674
+          },
+          {
+            "text": "# List of classes to register",
+            "lineNumber": 675
+          },
+          {
+            "text": "classes",
+            "lineNumber": 676
+          }
+        ]
+      },
+      "score": 0.18593215942382812
+    },
+    {
+      "codeBlock": {
+        "relativeWorkspacePath": ".\\panels\\bulk_data_remap.py",
+        "range": {
+          "startPosition": {
+            "line": 593,
+            "column": 40
+          },
+          "endPosition": {
+            "line": 662
+          }
+        },
+        "contents": "class RBST_DatRem_OT_RemapData(bpy.types.Operator):\n    \"\"\"Remap redundant data blocks to reduce duplicates\"\"\"\n    bl_idname = \"bst.bulk_data_remap\"\n    bl_label = \"Remap Data\"\n    bl_options = {'REGISTER', 'UNDO'}\n    \n    def execute(self, context):\n        # Get settings from scene properties\n        remap_images = context.scene.dataremap_images\n        remap_materials = context.scene.dataremap_materials\n        remap_fonts = context.scene.dataremap_fonts\n        remap_worlds = context.scene.dataremap_worlds\n        \n        # Count duplicates before remapping (only for local datablocks)\n        image_groups = RBST_DatRem_find_data_groups(bpy.data.images) if remap_images else {}\n        material_groups = RBST_DatRem_find_data_groups(bpy.data.materials) if remap_materials else {}\n        font_groups = RBST_DatRem_find_data_groups(bpy.data.fonts) if remap_fonts else {}\n        world_groups = RBST_DatRem_find_data_groups(bpy.data.worlds) if remap_worlds else {}\n        \n        total_duplicates = sum(len(group) - 1 for groups in [image_groups, material_groups, font_groups, world_groups] for group in groups.values())\n        \n        # Count data blocks with numbered suffixes (only for local datablocks)\n        total_numbered = 0\n        if remap_images:\n            total_numbered += sum(1 for img in bpy.data.images \n                                if img.users &gt; 0 \n                                and not (hasattr(img, 'library') and img.library is not None)\n                                and RBST_DatRem_get_base_name(img.name) != img.name)\n        if remap_materials:\n            total_numbered += sum(1 for mat in bpy.data.materials \n                                if mat.users &gt; 0 \n                                and not (hasattr(mat, 'library') and mat.library is not None)\n                                and RBST_DatRem_get_base_name(mat.name) != mat.name)\n        if remap_fonts:\n            total_numbered +=",
+        "signatures": {},
+        "detailedLines": [
+          {
+            "text": "class RBST_DatRem_OT_RemapData(bpy.types.Operator):",
+            "lineNumber": 596,
+            "isSignature": true
+          },
+          {
+            "text": "    \"\"\"Remap redundant data blocks to reduce duplicates\"\"\"",
+            "lineNumber": 597
+          },
+          {
+            "text": "    bl_idname = \"bst.bulk_data_remap\"",
+            "lineNumber": 598
+          },
+          {
+            "text": "    bl_label = \"Remap Data\"",
+            "lineNumber": 599
+          },
+          {
+            "text": "    bl_options = {'REGISTER', 'UNDO'}",
+            "lineNumber": 600
+          },
+          {
+            "text": "    ",
+            "lineNumber": 601
+          },
+          {
+            "text": "    def execute(self, context):",
+            "lineNumber": 602
+          },
+          {
+            "text": "        # Get settings from scene properties",
+            "lineNumber": 603
+          },
+          {
+            "text": "        remap_images = context.scene.dataremap_images",
+            "lineNumber": 604
+          },
+          {
+            "text": "        remap_materials = context.scene.dataremap_materials",
+            "lineNumber": 605
+          },
+          {
+            "text": "        remap_fonts = context.scene.dataremap_fonts",
+            "lineNumber": 606
+          },
+          {
+            "text": "        remap_worlds = context.scene.dataremap_worlds",
+            "lineNumber": 607
+          },
+          {
+            "text": "        ",
+            "lineNumber": 608
+          },
+          {
+            "text": "        # Count duplicates before remapping (only for local datablocks)",
+            "lineNumber": 609
+          },
+          {
+            "text": "        image_groups = RBST_DatRem_find_data_groups(bpy.data.images) if remap_images else {}",
+            "lineNumber": 610
+          },
+          {
+            "text": "        material_groups = RBST_DatRem_find_data_groups(bpy.data.materials) if remap_materials else {}",
+            "lineNumber": 611
+          },
+          {
+            "text": "        font_groups = RBST_DatRem_find_data_groups(bpy.data.fonts) if remap_fonts else {}",
+            "lineNumber": 612
+          },
+          {
+            "text": "        world_groups = RBST_DatRem_find_data_groups(bpy.data.worlds) if remap_worlds else {}",
+            "lineNumber": 613
+          },
+          {
+            "text": "        ",
+            "lineNumber": 614
+          },
+          {
+            "text": "        total_duplicates = sum(len(group) - 1 for groups in [image_groups, material_groups, font_groups, world_groups] for group in groups.values())",
+            "lineNumber": 615
+          },
+          {
+            "text": "        ",
+            "lineNumber": 616
+          },
+          {
+            "text": "        # Count data blocks with numbered suffixes (only for local datablocks)",
+            "lineNumber": 617
+          },
+          {
+            "text": "        total_numbered = 0",
+            "lineNumber": 618
+          },
+          {
+            "text": "        if remap_images:",
+            "lineNumber": 619
+          },
+          {
+            "text": "            total_numbered += sum(1 for img in bpy.data.images ",
+            "lineNumber": 620
+          },
+          {
+            "text": "                                if img.users &gt; 0 ",
+            "lineNumber": 621
+          },
+          {
+            "text": "                                and not (hasattr(img, 'library') and img.library is not None)",
+            "lineNumber": 622
+          },
+          {
+            "text": "                                and RBST_DatRem_get_base_name(img.name) != img.name)",
+            "lineNumber": 623
+          },
+          {
+            "text": "        if remap_materials:",
+            "lineNumber": 624
+          },
+          {
+            "text": "            total_numbered += sum(1 for mat in bpy.data.materials ",
+            "lineNumber": 625
+          },
+          {
+            "text": "                                if mat.users &gt; 0 ",
+            "lineNumber": 626
+          },
+          {
+            "text": "                                and not (hasattr(mat, 'library') and mat.library is not None)",
+            "lineNumber": 627
+          },
+          {
+            "text": "                                and RBST_DatRem_get_base_name(mat.name) != mat.name)",
+            "lineNumber": 628
+          },
+          {
+            "text": "        if remap_fonts:",
+            "lineNumber": 629
+          },
+          {
+            "text": "            total_numbered +=",
+            "lineNumber": 630
+          }
+        ]
+      },
+      "score": 0.18460804224014282
+    },
+    {
+      "codeBlock": {
+        "relativeWorkspacePath": ".\\panels\\bulk_path_management.py",
+        "range": {
+          "startPosition": {
+            "line": 1150
+          },
+          "endPosition": {
+            "line": 1368
+          }
+        },
+        "contents": "class RBST_PathMan_OT_rename_flat_colors(Operator):\ndef _process_batch(self):\n\n        else:\n            # Renaming phase\n            if self.current_index &lt; len(self.rename_operations):\n                img, original_name, hex_color, color = self.rename_operations[self.current_index]\n                \n                props = bpy.context.scene.bst_path_props\n                props.operation_status = f\"Renaming {original_name} to {hex_color} ({self.current_index + 1}/{len(self.rename_operations)})...\"\n                \n                try:\n                    img.name = hex_color\n                    self.renamed_count += 1\n                    print(f\"  RENAMED: '{original_name}' -&gt; '{hex_color}'\")\n                except Exception as e:\n                    self.failed_count += 1\n                    print(f\"  FAILED to rename '{original_name}': {str(e)}\")\n        \n        # Update progress\n        self.current_index += 1\n        if not self.renaming_phase:\n            progress = (self.current_index / len(self.images)) * 50.0  # First 50% for scanning\n        else:\n            progress = 50.0 + (self.current_index / len(self.rename_operations)) * 50.0  # Second 50% for renaming\n        \n        props = bpy.context.scene.bst_path_props\n        props.operation_progress = progress\n        \n        # Force UI update\n        for area in bpy.context.screen.areas:\n            area.tag_redraw()\n        \n        # Continue processing with shorter intervals for better responsiveness\n        return 0.05  # Process next item in 0.05 seconds (50ms) for better stability\n\n# Cancel Operation Operator\nclass RBST_PathMan_OT_cancel_operation(Operator):\n    bl_idname = \"bst.cancel_operation\"",
+        "signatures": {
+          "ranges": [
+            {
+              "startPosition": {
+                "line": 1151,
+                "column": 1
+              },
+              "endPosition": {
+                "line": 1152,
+                "column": 5
+              }
+            },
+            {
+              "startPosition": {
+                "line": 1188,
+                "column": 5
+              },
+              "endPosition": {
+                "line": 1189,
+                "column": 9
+              }
+            }
+          ]
+        },
+        "detailedLines": [
+          {
+            "text": "class RBST_PathMan_OT_rename_flat_colors(Operator):",
+            "lineNumber": 1151,
+            "isSignature": true
+          },
+          {
+            "text": "def _process_batch(self):",
+            "lineNumber": 1188
+          },
+          {
+            "lineNumber": 1322
+          },
+          {
+            "text": "        else:",
+            "lineNumber": 1323
+          },
+          {
+            "text": "            # Renaming phase",
+            "lineNumber": 1324
+          },
+          {
+            "text": "            if self.current_index &lt; len(self.rename_operations):",
+            "lineNumber": 1325
+          },
+          {
+            "text": "                img, original_name, hex_color, color = self.rename_operations[self.current_index]",
+            "lineNumber": 1326
+          },
+          {
+            "text": "                ",
+            "lineNumber": 1327
+          },
+          {
+            "text": "                props = bpy.context.scene.bst_path_props",
+            "lineNumber": 1328
+          },
+          {
+            "text": "                props.operation_status = f\"Renaming {original_name} to {hex_color} ({self.current_index + 1}/{len(self.rename_operations)})...\"",
+            "lineNumber": 1329
+          },
+          {
+            "text": "                ",
+            "lineNumber": 1330
+          },
+          {
+            "text": "                try:",
+            "lineNumber": 1331
+          },
+          {
+            "text": "                    img.name = hex_color",
+            "lineNumber": 1332
+          },
+          {
+            "text": "                    self.renamed_count += 1",
+            "lineNumber": 1333
+          },
+          {
+            "text": "                    print(f\"  RENAMED: '{original_name}' -&gt; '{hex_color}'\")",
+            "lineNumber": 1334
+          },
+          {
+            "text": "                except Exception as e:",
+            "lineNumber": 1335
+          },
+          {
+            "text": "                    self.failed_count += 1",
+            "lineNumber": 1336
+          },
+          {
+            "text": "                    print(f\"  FAILED to rename '{original_name}': {str(e)}\")",
+            "lineNumber": 1337
+          },
+          {
+            "text": "        ",
+            "lineNumber": 1338
+          },
+          {
+            "text": "        # Update progress",
+            "lineNumber": 1339
+          },
+          {
+            "text": "        self.current_index += 1",
+            "lineNumber": 1340
+          },
+          {
+            "text": "        if not self.renaming_phase:",
+            "lineNumber": 1341
+          },
+          {
+            "text": "            progress = (self.current_index / len(self.images)) * 50.0  # First 50% for scanning",
+            "lineNumber": 1342
+          },
+          {
+            "text": "        else:",
+            "lineNumber": 1343
+          },
+          {
+            "text": "            progress = 50.0 + (self.current_index / len(self.rename_operations)) * 50.0  # Second 50% for renaming",
+            "lineNumber": 1344
+          },
+          {
+            "text": "        ",
+            "lineNumber": 1345
+          },
+          {
+            "text": "        props = bpy.context.scene.bst_path_props",
+            "lineNumber": 1346
+          },
+          {
+            "text": "        props.operation_progress = progress",
+            "lineNumber": 1347
+          },
+          {
+            "text": "        ",
+            "lineNumber": 1348
+          },
+          {
+            "text": "        # Force UI update",
+            "lineNumber": 1349
+          },
+          {
+            "text": "        for area in bpy.context.screen.areas:",
+            "lineNumber": 1350
+          },
+          {
+            "text": "            area.tag_redraw()",
+            "lineNumber": 1351
+          },
+          {
+            "text": "        ",
+            "lineNumber": 1352
+          },
+          {
+            "text": "        # Continue processing with shorter intervals for better responsiveness",
+            "lineNumber": 1353
+          },
+          {
+            "text": "        return 0.05  # Process next item in 0.05 seconds (50ms) for better stability",
+            "lineNumber": 1354,
+            "isSignature": true
+          },
+          {
+            "lineNumber": 1355
+          },
+          {
+            "text": "# Cancel Operation Operator",
+            "lineNumber": 1356
+          },
+          {
+            "text": "class RBST_PathMan_OT_cancel_operation(Operator):",
+            "lineNumber": 1357,
+            "isSignature": true
+          },
+          {
+            "text": "    bl_idname = \"bst.cancel_operation\"",
+            "lineNumber": 1358
+          }
+        ]
+      },
+      "score": 0.18438613414764404
+    },
+    {
+      "codeBlock": {
+        "relativeWorkspacePath": ".\\ops\\ghost_buster.py",
+        "range": {
+          "startPosition": {
+            "line": 388,
+            "column": 32
+          },
+          "endPosition": {
+            "line": 606
+          }
+        },
+        "contents": "class RBST_Bustin_OT_GhostDetector(bpy.types.Operator):\n    \"\"\"Detect and analyze ghost data without removing it\"\"\"\n    bl_idname = \"bst.ghost_detector\"\n    bl_label = \"Ghost Detector\"\n    bl_options = {'REGISTER', 'INTERNAL'}\n    \n    # Properties to store analysis data\n    total_wgt_objects: bpy.props.IntProperty(default=0)\n    unused_wgt_objects: bpy.props.IntProperty(default=0)\n    used_wgt_objects: bpy.props.IntProperty(default=0)\n    empty_collections: bpy.props.IntProperty(default=0)\n    ghost_objects: bpy.props.IntProperty(default=0)\n    ghost_potential: bpy.props.IntProperty(default=0)\n    ghost_legitimate: bpy.props.IntProperty(default=0)\n    ghost_low_priority: bpy.props.IntProperty(default=0)\n    wgt_details: bpy.props.StringProperty(default=\"\")\n    collection_details: bpy.props.StringProperty(default=\"\")\n    ghost_details: bpy.props.StringProperty(default=\"\")\n    \n    def analyze_ghost_data(self):\n        \"\"\"Analyze ghost data similar to ghost_buster functions\"\"\"",
+        "signatures": {},
+        "detailedLines": [
+          {
+            "text": "class RBST_Bustin_OT_GhostDetector(bpy.types.Operator):",
+            "lineNumber": 391,
+            "isSignature": true
+          },
+          {
+            "text": "    \"\"\"Detect and analyze ghost data without removing it\"\"\"",
+            "lineNumber": 392
+          },
+          {
+            "text": "    bl_idname = \"bst.ghost_detector\"",
+            "lineNumber": 393
+          },
+          {
+            "text": "    bl_label = \"Ghost Detector\"",
+            "lineNumber": 394
+          },
+          {
+            "text": "    bl_options = {'REGISTER', 'INTERNAL'}",
+            "lineNumber": 395
+          },
+          {
+            "text": "    ",
+            "lineNumber": 396
+          },
+          {
+            "text": "    # Properties to store analysis data",
+            "lineNumber": 397
+          },
+          {
+            "text": "    total_wgt_objects: bpy.props.IntProperty(default=0)",
+            "lineNumber": 398
+          },
+          {
+            "text": "    unused_wgt_objects: bpy.props.IntProperty(default=0)",
+            "lineNumber": 399
+          },
+          {
+            "text": "    used_wgt_objects: bpy.props.IntProperty(default=0)",
+            "lineNumber": 400
+          },
+          {
+            "text": "    empty_collections: bpy.props.IntProperty(default=0)",
+            "lineNumber": 401
+          },
+          {
+            "text": "    ghost_objects: bpy.props.IntProperty(default=0)",
+            "lineNumber": 402
+          },
+          {
+            "text": "    ghost_potential: bpy.props.IntProperty(default=0)",
+            "lineNumber": 403
+          },
+          {
+            "text": "    ghost_legitimate: bpy.props.IntProperty(default=0)",
+            "lineNumber": 404
+          },
+          {
+            "text": "    ghost_low_priority: bpy.props.IntProperty(default=0)",
+            "lineNumber": 405
+          },
+          {
+            "text": "    wgt_details: bpy.props.StringProperty(default=\"\")",
+            "lineNumber": 406
+          },
+          {
+            "text": "    collection_details: bpy.props.StringProperty(default=\"\")",
+            "lineNumber": 407
+          },
+          {
+            "text": "    ghost_details: bpy.props.StringProperty(default=\"\")",
+            "lineNumber": 408
+          },
+          {
+            "text": "    ",
+            "lineNumber": 409
+          },
+          {
+            "text": "    def analyze_ghost_data(self):",
+            "lineNumber": 410
+          },
+          {
+            "text": "        \"\"\"Analyze ghost data similar to ghost_buster functions\"\"\"",
+            "lineNumber": 411
+          }
+        ]
+      },
+      "score": 0.18324269354343414
+    },
+    {
+      "codeBlock": {
+        "relativeWorkspacePath": ".\\ops\\Rename_images_by_mat.py",
+        "range": {
+          "startPosition": {
+            "line": 497,
+            "column": 20
+          },
+          "endPosition": {
+            "line": 512,
+            "column": 41
+          }
+        },
+        "contents": "# Registration classes - need to register both operators\nclasses = (\n    RBST_RenameImg_OT_summary_dialog,\n    RBST_RenameImg_OT_Rename_images_by_mat,\n)\n\ndef register():\n    for cls in classes:\n        compat.safe_register_class(cls)\n\ndef unregister():\n    for cls in reversed(classes):\n        compat.safe_unregister_class(cls)",
+        "signatures": {},
+        "detailedLines": [
+          {
+            "text": "# Registration classes - need to register both operators",
+            "lineNumber": 501
+          },
+          {
+            "text": "classes = (",
+            "lineNumber": 502
+          },
+          {
+            "text": "    RBST_RenameImg_OT_summary_dialog,",
+            "lineNumber": 503
+          },
+          {
+            "text": "    RBST_RenameImg_OT_Rename_images_by_mat,",
+            "lineNumber": 504
+          },
+          {
+            "text": ")",
+            "lineNumber": 505
+          },
+          {
+            "lineNumber": 506
+          },
+          {
+            "text": "def register():",
+            "lineNumber": 507,
+            "isSignature": true
+          },
+          {
+            "text": "    for cls in classes:",
+            "lineNumber": 508
+          },
+          {
+            "text": "        compat.safe_register_class(cls)",
+            "lineNumber": 509,
+            "isSignature": true
+          },
+          {
+            "lineNumber": 510
+          },
+          {
+            "text": "def unregister():",
+            "lineNumber": 511,
+            "isSignature": true
+          },
+          {
+            "text": "    for cls in reversed(classes):",
+            "lineNumber": 512
+          },
+          {
+            "text": "        compat.safe_unregister_class(cls)",
+            "lineNumber": 513,
+            "isSignature": true
+          }
+        ]
+      },
+      "score": 0.18306505680084229
+    }
+  ]
+}
+```
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
