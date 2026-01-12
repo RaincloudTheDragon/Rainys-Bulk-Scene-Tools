@@ -24744,7 +24744,6 @@ bump 0.15.0 and update changelog concisely. check the last 2 commits.
 
 _**Agent (model default, mode Agent)**_
 
-
 Checking the current version, changelog, and recent commits:
 
 
@@ -24782,7 +24781,6 @@ ece391e integrate DBU merge duplicates
 </tool-use>
 
 ---
-
 
 Updating the version to 0.15.0 and adding a concise changelog entry:
 
@@ -24854,13 +24852,16915 @@ Status: **completed**
 
 ---
 
-
 Updated the version to 0.15.0 and added a concise changelog entry covering:
 
 1. **The Great Refactor** — refactored all names to the RBST_ prefix system
 2. **DBU integration** — added the Merge Duplicates button in Bulk Data Remap
 
 The changelog entry is concise and highlights both major changes from the last 2 commits.
+
+---
+
+_**User**_
+
+context: @t:\1 BlenderAssets\.specstory\history\2026-01-09_23-54Z-blender-material-unpacking-issue.md 
+
+I need to edit my handling of the CC/iC-specific MSMNAO Pack in the AutoMatExtractor. Currently, the incorrect file is being written. Describe to me how it currently functions. I believe the issue is that it's accidentally replacing (in this particular blendfile) Std_Skin_Head.001_MSMNAO Pack, with Std_Skin_Head.001_SSTM Pack, which is not the correct texture.
+
+---
+
+_**Agent (model default, mode Agent)**_
+
+
+Reviewing the context file and AutoMatExtractor code to understand how MSMNAO Pack textures are handled:
+
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: t:\1 BlenderAssets\.specstory\history\2026-01-09_23-54Z-blender-material-unpacking-issue.md</summary>
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="semantic_search_full">
+<details>
+<summary>Tool use: **semantic_search_full**</summary>
+
+
+Parameters:
+
+```json
+{
+  "query": "MSMNAO Pack texture handling AutoMatExtractor",
+  "topK": 10,
+  "explanation": ""
+}
+```
+Result:
+
+```json
+{
+  "codeResults": [
+    {
+      "codeBlock": {
+        "relativeWorkspacePath": ".\\ops\\AutoMatExtractor.py",
+        "range": {
+          "startPosition": {
+            "line": 64
+          },
+          "endPosition": {
+            "line": 537
+          }
+        },
+        "contents": "class RBST_AutoMat_OT_AutoMatExtractor(bpy.types.Operator):\ndef execute(self, context):\n        # Get addon preferences\n\n        \n        return {'FINISHED'}\n    \n    def _process_step(self):\n        \"\"\"Process AutoMat extraction in steps to avoid blocking the UI\"\"\"\n        props = bpy.context.scene.bst_path_props\n        \n        # Check for cancellation\n        if props.cancel_operation:\n            props.is_operation_running = False\n            props.operation_progress = 0.0\n            props.operation_status = \"Operation cancelled\"\n            props.cancel_operation = False\n            return None\n        \n        if self.current_step == 0:\n            # Step 1: Pack images\n            if self.current_index &gt;= len(self.selected_images):\n                # Packing complete, move to next step\n                self.current_step = 1\n                self.current_index = 0\n                props.operation_status = \"Removing extensions from image names...\"\n                props.operation_progress = 25.0\n                return 0.01\n            \n            # Pack current image\n            img = self.selected_images[self.current_index]\n            props.operation_status = f\"Packing {img.name}...\"\n            \n            if not img.packed_file:\n                try:\n                    img.pack()\n                    self.packed_count += 1\n                except Exception as e:\n                    # Continue even if packing fails\n                    pass\n            \n            self.current_index += 1\n            progress = (self.current_index / len(self.selected_images)) * 25.0\n            props.operation_progress = progress\n            \n        elif self.current_step == 1:\n            # Step 2: Remove extensions (this is a quick operation)\n            try:\n                bpy.ops.bst.remove_extensions()\n            except Exception as e:\n                pass  # Continue even if this fails\n            \n            self.current_step = 2\n            self.current_index = 0\n            props.operation_status = \"Analyzing material usage...\"\n            props.operation_progress = 30.0\n            \n        elif self.current_step == 2:",
+        "signatures": {
+          "ranges": [
+            {
+              "startPosition": {
+                "line": 65,
+                "column": 1
+              },
+              "endPosition": {
+                "line": 66,
+                "column": 5
+              }
+            }
+          ]
+        },
+        "detailedLines": [
+          {
+            "text": "class RBST_AutoMat_OT_AutoMatExtractor(bpy.types.Operator):",
+            "lineNumber": 65,
+            "isSignature": true
+          },
+          {
+            "text": "def execute(self, context):",
+            "lineNumber": 71
+          },
+          {
+            "text": "        # Get addon preferences",
+            "lineNumber": 72
+          },
+          {
+            "lineNumber": 107
+          },
+          {
+            "text": "        ",
+            "lineNumber": 108
+          },
+          {
+            "text": "        return {'FINISHED'}",
+            "lineNumber": 109
+          },
+          {
+            "text": "    ",
+            "lineNumber": 110
+          },
+          {
+            "text": "    def _process_step(self):",
+            "lineNumber": 111
+          },
+          {
+            "text": "        \"\"\"Process AutoMat extraction in steps to avoid blocking the UI\"\"\"",
+            "lineNumber": 112
+          },
+          {
+            "text": "        props = bpy.context.scene.bst_path_props",
+            "lineNumber": 113
+          },
+          {
+            "text": "        ",
+            "lineNumber": 114
+          },
+          {
+            "text": "        # Check for cancellation",
+            "lineNumber": 115
+          },
+          {
+            "text": "        if props.cancel_operation:",
+            "lineNumber": 116
+          },
+          {
+            "text": "            props.is_operation_running = False",
+            "lineNumber": 117
+          },
+          {
+            "text": "            props.operation_progress = 0.0",
+            "lineNumber": 118
+          },
+          {
+            "text": "            props.operation_status = \"Operation cancelled\"",
+            "lineNumber": 119
+          },
+          {
+            "text": "            props.cancel_operation = False",
+            "lineNumber": 120
+          },
+          {
+            "text": "            return None",
+            "lineNumber": 121
+          },
+          {
+            "text": "        ",
+            "lineNumber": 122
+          },
+          {
+            "text": "        if self.current_step == 0:",
+            "lineNumber": 123
+          },
+          {
+            "text": "            # Step 1: Pack images",
+            "lineNumber": 124
+          },
+          {
+            "text": "            if self.current_index &gt;= len(self.selected_images):",
+            "lineNumber": 125
+          },
+          {
+            "text": "                # Packing complete, move to next step",
+            "lineNumber": 126
+          },
+          {
+            "text": "                self.current_step = 1",
+            "lineNumber": 127
+          },
+          {
+            "text": "                self.current_index = 0",
+            "lineNumber": 128
+          },
+          {
+            "text": "                props.operation_status = \"Removing extensions from image names...\"",
+            "lineNumber": 129
+          },
+          {
+            "text": "                props.operation_progress = 25.0",
+            "lineNumber": 130
+          },
+          {
+            "text": "                return 0.01",
+            "lineNumber": 131
+          },
+          {
+            "text": "            ",
+            "lineNumber": 132
+          },
+          {
+            "text": "            # Pack current image",
+            "lineNumber": 133
+          },
+          {
+            "text": "            img = self.selected_images[self.current_index]",
+            "lineNumber": 134
+          },
+          {
+            "text": "            props.operation_status = f\"Packing {img.name}...\"",
+            "lineNumber": 135
+          },
+          {
+            "text": "            ",
+            "lineNumber": 136
+          },
+          {
+            "text": "            if not img.packed_file:",
+            "lineNumber": 137
+          },
+          {
+            "text": "                try:",
+            "lineNumber": 138
+          },
+          {
+            "text": "                    img.pack()",
+            "lineNumber": 139
+          },
+          {
+            "text": "                    self.packed_count += 1",
+            "lineNumber": 140
+          },
+          {
+            "text": "                except Exception as e:",
+            "lineNumber": 141
+          },
+          {
+            "text": "                    # Continue even if packing fails",
+            "lineNumber": 142
+          },
+          {
+            "text": "                    pass",
+            "lineNumber": 143
+          },
+          {
+            "text": "            ",
+            "lineNumber": 144
+          },
+          {
+            "text": "            self.current_index += 1",
+            "lineNumber": 145
+          },
+          {
+            "text": "            progress = (self.current_index / len(self.selected_images)) * 25.0",
+            "lineNumber": 146
+          },
+          {
+            "text": "            props.operation_progress = progress",
+            "lineNumber": 147
+          },
+          {
+            "text": "            ",
+            "lineNumber": 148
+          },
+          {
+            "text": "        elif self.current_step == 1:",
+            "lineNumber": 149
+          },
+          {
+            "text": "            # Step 2: Remove extensions (this is a quick operation)",
+            "lineNumber": 150
+          },
+          {
+            "text": "            try:",
+            "lineNumber": 151
+          },
+          {
+            "text": "                bpy.ops.bst.remove_extensions()",
+            "lineNumber": 152
+          },
+          {
+            "text": "            except Exception as e:",
+            "lineNumber": 153
+          },
+          {
+            "text": "                pass  # Continue even if this fails",
+            "lineNumber": 154
+          },
+          {
+            "text": "            ",
+            "lineNumber": 155
+          },
+          {
+            "text": "            self.current_step = 2",
+            "lineNumber": 156
+          },
+          {
+            "text": "            self.current_index = 0",
+            "lineNumber": 157
+          },
+          {
+            "text": "            props.operation_status = \"Analyzing material usage...\"",
+            "lineNumber": 158
+          },
+          {
+            "text": "            props.operation_progress = 30.0",
+            "lineNumber": 159
+          },
+          {
+            "text": "            ",
+            "lineNumber": 160
+          },
+          {
+            "text": "        elif self.current_step == 2:",
+            "lineNumber": 161
+          }
+        ]
+      },
+      "score": 0.35988765954971313
+    },
+    {
+      "codeBlock": {
+        "relativeWorkspacePath": ".\\ops\\Rename_images_by_mat.py",
+        "range": {
+          "startPosition": {
+            "line": 68
+          },
+          "endPosition": {
+            "line": 497
+          }
+        },
+        "contents": "class RBST_RenameImg_OT_Rename_images_by_mat(bpy.types.Operator):\ndef extract_texture_suffix(self, name):\n, 'msmnao pack', 'roughness pack', 'sstm pack',\n            'flow_pack', 'msmnao_pack', 'roughness_pack', 'sstm_pack',\n            \n            # Hair-related multi-word suffixes (spaces)\n            'hair flow map', 'hair id map', 'hair root map', 'hair depth map',\n            'flow map', 'id map', 'root map', 'depth map',\n            \n            # Additional common variations\n            'tex', 'map', 'img', 'texture',\n            'd', 'n', 'r', 'm', 's', 'a', 'h', 'o', 'e'  # Single letter abbreviations\n        ]\n        \n        # Remove file extension first\n        base_name = re.sub(r'\\.[^.]+$', '', name)\n        \n        # Sort suffixes by length (longest first) to prioritize more specific matches\n        sorted_suffixes = sorted(suffixes, key=len, reverse=True)\n        \n        # First, try to find multi-word suffixes with spaces (case-insensitive)\n        for suffix in sorted_suffixes:\n            if ' ' in suffix:  # Multi-word suffix\n                # Pattern: ends with space + suffix\n                pattern = rf'\\s+({re.escape(suffix)})$'\n                match = re.search(pattern, base_name, re.IGNORECASE)\n                if match:\n                    return match.group(1).lower()\n                \n                # Pattern: ends with suffix (no space separator, but exact match)\n                if base_name.lower().endswith(suffix.lower()) and len(base_name) &gt; len(suffix):\n                    # Check if there's a word boundary before the suffix\n                    prefix_end = len(base_name) - len(suffix)\n                    if prefix_end &gt; 0 and base_name[prefix_end - 1] in ' _-':\n                        return suffix.lower()\n        \n        # Then try single-word suffixes with traditional separators",
+        "signatures": {
+          "ranges": [
+            {
+              "startPosition": {
+                "line": 69,
+                "column": 1
+              },
+              "endPosition": {
+                "line": 70,
+                "column": 5
+              }
+            },
+            {
+              "startPosition": {
+                "line": 232,
+                "column": 5
+              },
+              "endPosition": {
+                "line": 233,
+                "column": 9
+              }
+            }
+          ]
+        },
+        "detailedLines": [
+          {
+            "text": "class RBST_RenameImg_OT_Rename_images_by_mat(bpy.types.Operator):",
+            "lineNumber": 69,
+            "isSignature": true
+          },
+          {
+            "text": "def extract_texture_suffix(self, name):",
+            "lineNumber": 232
+          },
+          {
+            "text": ", 'msmnao pack', 'roughness pack', 'sstm pack',",
+            "lineNumber": 268
+          },
+          {
+            "text": "            'flow_pack', 'msmnao_pack', 'roughness_pack', 'sstm_pack',",
+            "lineNumber": 269
+          },
+          {
+            "text": "            ",
+            "lineNumber": 270
+          },
+          {
+            "text": "            # Hair-related multi-word suffixes (spaces)",
+            "lineNumber": 271
+          },
+          {
+            "text": "            'hair flow map', 'hair id map', 'hair root map', 'hair depth map',",
+            "lineNumber": 272
+          },
+          {
+            "text": "            'flow map', 'id map', 'root map', 'depth map',",
+            "lineNumber": 273
+          },
+          {
+            "text": "            ",
+            "lineNumber": 274
+          },
+          {
+            "text": "            # Additional common variations",
+            "lineNumber": 275
+          },
+          {
+            "text": "            'tex', 'map', 'img', 'texture',",
+            "lineNumber": 276
+          },
+          {
+            "text": "            'd', 'n', 'r', 'm', 's', 'a', 'h', 'o', 'e'  # Single letter abbreviations",
+            "lineNumber": 277
+          },
+          {
+            "text": "        ]",
+            "lineNumber": 278
+          },
+          {
+            "text": "        ",
+            "lineNumber": 279
+          },
+          {
+            "text": "        # Remove file extension first",
+            "lineNumber": 280
+          },
+          {
+            "text": "        base_name = re.sub(r'\\.[^.]+$', '', name)",
+            "lineNumber": 281
+          },
+          {
+            "text": "        ",
+            "lineNumber": 282
+          },
+          {
+            "text": "        # Sort suffixes by length (longest first) to prioritize more specific matches",
+            "lineNumber": 283
+          },
+          {
+            "text": "        sorted_suffixes = sorted(suffixes, key=len, reverse=True)",
+            "lineNumber": 284
+          },
+          {
+            "text": "        ",
+            "lineNumber": 285
+          },
+          {
+            "text": "        # First, try to find multi-word suffixes with spaces (case-insensitive)",
+            "lineNumber": 286
+          },
+          {
+            "text": "        for suffix in sorted_suffixes:",
+            "lineNumber": 287
+          },
+          {
+            "text": "            if ' ' in suffix:  # Multi-word suffix",
+            "lineNumber": 288
+          },
+          {
+            "text": "                # Pattern: ends with space + suffix",
+            "lineNumber": 289
+          },
+          {
+            "text": "                pattern = rf'\\s+({re.escape(suffix)})$'",
+            "lineNumber": 290
+          },
+          {
+            "text": "                match = re.search(pattern, base_name, re.IGNORECASE)",
+            "lineNumber": 291
+          },
+          {
+            "text": "                if match:",
+            "lineNumber": 292
+          },
+          {
+            "text": "                    return match.group(1).lower()",
+            "lineNumber": 293
+          },
+          {
+            "text": "                ",
+            "lineNumber": 294
+          },
+          {
+            "text": "                # Pattern: ends with suffix (no space separator, but exact match)",
+            "lineNumber": 295
+          },
+          {
+            "text": "                if base_name.lower().endswith(suffix.lower()) and len(base_name) &gt; len(suffix):",
+            "lineNumber": 296
+          },
+          {
+            "text": "                    # Check if there's a word boundary before the suffix",
+            "lineNumber": 297
+          },
+          {
+            "text": "                    prefix_end = len(base_name) - len(suffix)",
+            "lineNumber": 298
+          },
+          {
+            "text": "                    if prefix_end &gt; 0 and base_name[prefix_end - 1] in ' _-':",
+            "lineNumber": 299
+          },
+          {
+            "text": "                        return suffix.lower()",
+            "lineNumber": 300
+          },
+          {
+            "text": "        ",
+            "lineNumber": 301
+          },
+          {
+            "text": "        # Then try single-word suffixes with traditional separators",
+            "lineNumber": 302
+          }
+        ]
+      },
+      "score": 0.3485746383666992
+    },
+    {
+      "codeBlock": {
+        "relativeWorkspacePath": ".\\ops\\Rename_images_by_mat.py",
+        "range": {
+          "startPosition": {
+            "line": 68
+          },
+          "endPosition": {
+            "line": 497
+          }
+        },
+        "contents": "class RBST_RenameImg_OT_Rename_images_by_mat(bpy.types.Operator):\n\n    \n    def extract_texture_suffix(self, name):\n        \"\"\"Extract texture type suffix from image name (case-insensitive)\"\"\"\n        # Comprehensive list of texture suffixes\n        suffixes = [\n            # Standard PBR suffixes\n            'diffuse', 'basecolor', 'base_color', 'albedo', 'color', 'col',\n            'normal', 'norm', 'nrm', 'bump',\n            'roughness', 'rough', 'rgh',\n            'metallic', 'metal', 'mtl',\n            'specular', 'spec', 'spc',\n            'ao', 'ambient_occlusion', 'ambientocclusion', 'occlusion',\n            'gradao',\n            'height', 'displacement', 'disp', 'displace',\n            'opacity', 'alpha', 'mask',\n            'emission', 'emissive', 'emit',\n            'subsurface', 'sss', 'transmission',\n            \n            # Character Creator / iClone suffixes\n            'base', 'diffusemap', 'normalmap', 'roughnessmap', 'metallicmap',\n            'aomap', 'opacitymap', 'emissionmap', 'heightmap', 'displacementmap',\n            'detail_normal', 'detail_diffuse', 'detail_mask',\n            'blend', 'id', 'cavity', 'curvature', 'transmap', 'rgbamask', 'sssmap', 'micronmask',\n            'bcbmap', 'mnaomask', 'specmask', 'micron', 'cfulcmask', 'nmuilmask', 'nbmap', 'enmask', 'blend_multiply',\n            \n            # Hair-related compound suffixes (no spaces)\n            'hairflowmap', 'hairidmap', 'hairrootmap', 'hairdepthmap',\n            'flowmap', 'idmap', 'rootmap', 'depthmap',\n            \n            # Wrinkle map suffixes (Character Creator)\n            'wrinkle_normal1', 'wrinkle_normal2', 'wrinkle_normal3',\n            'wrinkle_roughness1', 'wrinkle_roughness2', 'wrinkle_roughness3',\n            'wrinkle_diffuse1', 'wrinkle_diffuse2', 'wrinkle_diffuse3',\n            'wrinkle_mask1', 'wrinkle_mask2', 'wrinkle_mask3',\n            'wrinkle_flow1', 'wrinkle_flow2', 'wrinkle_flow3',\n            \n            # Character Creator pack suffixes (with spaces)\n            'flow pack', 'msmnao pack', 'roughness pack', 'sstm pack',\n            'flow_pack', 'msmnao_pack', 'roughness_pack', 'sstm_pack',\n            \n            # Hair-related multi-word suffixes (spaces)",
+        "signatures": {
+          "ranges": [
+            {
+              "startPosition": {
+                "line": 69,
+                "column": 1
+              },
+              "endPosition": {
+                "line": 70,
+                "column": 5
+              }
+            }
+          ]
+        },
+        "detailedLines": [
+          {
+            "text": "class RBST_RenameImg_OT_Rename_images_by_mat(bpy.types.Operator):",
+            "lineNumber": 69,
+            "isSignature": true
+          },
+          {
+            "lineNumber": 230
+          },
+          {
+            "text": "    ",
+            "lineNumber": 231
+          },
+          {
+            "text": "    def extract_texture_suffix(self, name):",
+            "lineNumber": 232
+          },
+          {
+            "text": "        \"\"\"Extract texture type suffix from image name (case-insensitive)\"\"\"",
+            "lineNumber": 233
+          },
+          {
+            "text": "        # Comprehensive list of texture suffixes",
+            "lineNumber": 234
+          },
+          {
+            "text": "        suffixes = [",
+            "lineNumber": 235
+          },
+          {
+            "text": "            # Standard PBR suffixes",
+            "lineNumber": 236
+          },
+          {
+            "text": "            'diffuse', 'basecolor', 'base_color', 'albedo', 'color', 'col',",
+            "lineNumber": 237
+          },
+          {
+            "text": "            'normal', 'norm', 'nrm', 'bump',",
+            "lineNumber": 238
+          },
+          {
+            "text": "            'roughness', 'rough', 'rgh',",
+            "lineNumber": 239
+          },
+          {
+            "text": "            'metallic', 'metal', 'mtl',",
+            "lineNumber": 240
+          },
+          {
+            "text": "            'specular', 'spec', 'spc',",
+            "lineNumber": 241
+          },
+          {
+            "text": "            'ao', 'ambient_occlusion', 'ambientocclusion', 'occlusion',",
+            "lineNumber": 242
+          },
+          {
+            "text": "            'gradao',",
+            "lineNumber": 243
+          },
+          {
+            "text": "            'height', 'displacement', 'disp', 'displace',",
+            "lineNumber": 244
+          },
+          {
+            "text": "            'opacity', 'alpha', 'mask',",
+            "lineNumber": 245
+          },
+          {
+            "text": "            'emission', 'emissive', 'emit',",
+            "lineNumber": 246
+          },
+          {
+            "text": "            'subsurface', 'sss', 'transmission',",
+            "lineNumber": 247
+          },
+          {
+            "text": "            ",
+            "lineNumber": 248
+          },
+          {
+            "text": "            # Character Creator / iClone suffixes",
+            "lineNumber": 249
+          },
+          {
+            "text": "            'base', 'diffusemap', 'normalmap', 'roughnessmap', 'metallicmap',",
+            "lineNumber": 250
+          },
+          {
+            "text": "            'aomap', 'opacitymap', 'emissionmap', 'heightmap', 'displacementmap',",
+            "lineNumber": 251
+          },
+          {
+            "text": "            'detail_normal', 'detail_diffuse', 'detail_mask',",
+            "lineNumber": 252
+          },
+          {
+            "text": "            'blend', 'id', 'cavity', 'curvature', 'transmap', 'rgbamask', 'sssmap', 'micronmask',",
+            "lineNumber": 253
+          },
+          {
+            "text": "            'bcbmap', 'mnaomask', 'specmask', 'micron', 'cfulcmask', 'nmuilmask', 'nbmap', 'enmask', 'blend_multiply',",
+            "lineNumber": 254
+          },
+          {
+            "text": "            ",
+            "lineNumber": 255
+          },
+          {
+            "text": "            # Hair-related compound suffixes (no spaces)",
+            "lineNumber": 256
+          },
+          {
+            "text": "            'hairflowmap', 'hairidmap', 'hairrootmap', 'hairdepthmap',",
+            "lineNumber": 257
+          },
+          {
+            "text": "            'flowmap', 'idmap', 'rootmap', 'depthmap',",
+            "lineNumber": 258
+          },
+          {
+            "text": "            ",
+            "lineNumber": 259
+          },
+          {
+            "text": "            # Wrinkle map suffixes (Character Creator)",
+            "lineNumber": 260
+          },
+          {
+            "text": "            'wrinkle_normal1', 'wrinkle_normal2', 'wrinkle_normal3',",
+            "lineNumber": 261
+          },
+          {
+            "text": "            'wrinkle_roughness1', 'wrinkle_roughness2', 'wrinkle_roughness3',",
+            "lineNumber": 262
+          },
+          {
+            "text": "            'wrinkle_diffuse1', 'wrinkle_diffuse2', 'wrinkle_diffuse3',",
+            "lineNumber": 263
+          },
+          {
+            "text": "            'wrinkle_mask1', 'wrinkle_mask2', 'wrinkle_mask3',",
+            "lineNumber": 264
+          },
+          {
+            "text": "            'wrinkle_flow1', 'wrinkle_flow2', 'wrinkle_flow3',",
+            "lineNumber": 265
+          },
+          {
+            "text": "            ",
+            "lineNumber": 266
+          },
+          {
+            "text": "            # Character Creator pack suffixes (with spaces)",
+            "lineNumber": 267
+          },
+          {
+            "text": "            'flow pack', 'msmnao pack', 'roughness pack', 'sstm pack',",
+            "lineNumber": 268
+          },
+          {
+            "text": "            'flow_pack', 'msmnao_pack', 'roughness_pack', 'sstm_pack',",
+            "lineNumber": 269
+          },
+          {
+            "text": "            ",
+            "lineNumber": 270
+          },
+          {
+            "text": "            # Hair-related multi-word suffixes (spaces)",
+            "lineNumber": 271
+          }
+        ]
+      },
+      "score": 0.3418830633163452
+    },
+    {
+      "codeBlock": {
+        "relativeWorkspacePath": ".\\ops\\AutoMatExtractor.py",
+        "range": {
+          "startPosition": {
+            "line": 64
+          },
+          "endPosition": {
+            "line": 537
+          }
+        },
+        "contents": "class RBST_AutoMat_OT_AutoMatExtractor(bpy.types.Operator):\ndef _process_step(self):\n\n            \n            if img.name.startswith('#'):\n                # Flat colors go to FlatColors subfolder\n                base_folder = f\"//textures\\\\{common_path_part}\\\\FlatColors\"\n            else:\n                # Check material usage for this image\n                materials_using_image = self.material_mapping.get(img.name, [])\n                \n                if not materials_using_image:\n                    # No materials found, put in common folder\n                    base_folder = f\"//textures\\\\{common_path_part}\"\n                    print(f\"DEBUG: {img.name} - No materials found, using common folder\")\n                elif len(materials_using_image) == 1:\n                    # Used by exactly one material, organize by material name\n                    material_name = self.sanitize_filename(materials_using_image[0])\n                    base_folder = f\"//textures\\\\{blend_name}\\\\{material_name}\"\n                    print(f\"DEBUG: {img.name} - Used by {material_name}, organizing by material\")\n                else:\n                    # Used by multiple materials, put in common folder\n                    base_folder = f\"//textures\\\\{common_path_part}\"\n                    print(f\"DEBUG: {img.name} - Used by multiple materials: {materials_using_image}, using common folder\")\n            \n            is_udim = self.is_udim_image(img)\n            if is_udim:\n                udim_mapping = self.build_udim_mapping(base_folder, sanitized_base_name, extension, img)\n                self.path_mapping[img.name] = udim_mapping\n                self.udim_summary[\"found\"] += 1\n                print(f\"DEBUG: {img.name} - UDIM detected with {len(udim_mapping.get('tiles', {}))} tiles\")\n            else:\n                path = f\"{base_folder}\\\\{filename}\"\n                self.path_mapping[img.name] = path\n            \n            self.current_index += 1\n            progress = 50.0 + (self.current_index / len(self.selected_images)) * 20.0\n            props.operation_progress = progress\n            \n        elif self.current_step == 4:",
+        "signatures": {
+          "ranges": [
+            {
+              "startPosition": {
+                "line": 65,
+                "column": 1
+              },
+              "endPosition": {
+                "line": 66,
+                "column": 5
+              }
+            },
+            {
+              "startPosition": {
+                "line": 111,
+                "column": 5
+              },
+              "endPosition": {
+                "line": 112,
+                "column": 9
+              }
+            }
+          ]
+        },
+        "detailedLines": [
+          {
+            "text": "class RBST_AutoMat_OT_AutoMatExtractor(bpy.types.Operator):",
+            "lineNumber": 65,
+            "isSignature": true
+          },
+          {
+            "text": "def _process_step(self):",
+            "lineNumber": 111
+          },
+          {
+            "lineNumber": 223
+          },
+          {
+            "text": "            ",
+            "lineNumber": 224
+          },
+          {
+            "text": "            if img.name.startswith('#'):",
+            "lineNumber": 225
+          },
+          {
+            "text": "                # Flat colors go to FlatColors subfolder",
+            "lineNumber": 226
+          },
+          {
+            "text": "                base_folder = f\"//textures\\\\{common_path_part}\\\\FlatColors\"",
+            "lineNumber": 227
+          },
+          {
+            "text": "            else:",
+            "lineNumber": 228
+          },
+          {
+            "text": "                # Check material usage for this image",
+            "lineNumber": 229
+          },
+          {
+            "text": "                materials_using_image = self.material_mapping.get(img.name, [])",
+            "lineNumber": 230
+          },
+          {
+            "text": "                ",
+            "lineNumber": 231
+          },
+          {
+            "text": "                if not materials_using_image:",
+            "lineNumber": 232
+          },
+          {
+            "text": "                    # No materials found, put in common folder",
+            "lineNumber": 233
+          },
+          {
+            "text": "                    base_folder = f\"//textures\\\\{common_path_part}\"",
+            "lineNumber": 234
+          },
+          {
+            "text": "                    print(f\"DEBUG: {img.name} - No materials found, using common folder\")",
+            "lineNumber": 235
+          },
+          {
+            "text": "                elif len(materials_using_image) == 1:",
+            "lineNumber": 236
+          },
+          {
+            "text": "                    # Used by exactly one material, organize by material name",
+            "lineNumber": 237
+          },
+          {
+            "text": "                    material_name = self.sanitize_filename(materials_using_image[0])",
+            "lineNumber": 238
+          },
+          {
+            "text": "                    base_folder = f\"//textures\\\\{blend_name}\\\\{material_name}\"",
+            "lineNumber": 239
+          },
+          {
+            "text": "                    print(f\"DEBUG: {img.name} - Used by {material_name}, organizing by material\")",
+            "lineNumber": 240
+          },
+          {
+            "text": "                else:",
+            "lineNumber": 241
+          },
+          {
+            "text": "                    # Used by multiple materials, put in common folder",
+            "lineNumber": 242
+          },
+          {
+            "text": "                    base_folder = f\"//textures\\\\{common_path_part}\"",
+            "lineNumber": 243
+          },
+          {
+            "text": "                    print(f\"DEBUG: {img.name} - Used by multiple materials: {materials_using_image}, using common folder\")",
+            "lineNumber": 244
+          },
+          {
+            "text": "            ",
+            "lineNumber": 245
+          },
+          {
+            "text": "            is_udim = self.is_udim_image(img)",
+            "lineNumber": 246
+          },
+          {
+            "text": "            if is_udim:",
+            "lineNumber": 247
+          },
+          {
+            "text": "                udim_mapping = self.build_udim_mapping(base_folder, sanitized_base_name, extension, img)",
+            "lineNumber": 248
+          },
+          {
+            "text": "                self.path_mapping[img.name] = udim_mapping",
+            "lineNumber": 249
+          },
+          {
+            "text": "                self.udim_summary[\"found\"] += 1",
+            "lineNumber": 250
+          },
+          {
+            "text": "                print(f\"DEBUG: {img.name} - UDIM detected with {len(udim_mapping.get('tiles', {}))} tiles\")",
+            "lineNumber": 251
+          },
+          {
+            "text": "            else:",
+            "lineNumber": 252
+          },
+          {
+            "text": "                path = f\"{base_folder}\\\\{filename}\"",
+            "lineNumber": 253
+          },
+          {
+            "text": "                self.path_mapping[img.name] = path",
+            "lineNumber": 254
+          },
+          {
+            "text": "            ",
+            "lineNumber": 255
+          },
+          {
+            "text": "            self.current_index += 1",
+            "lineNumber": 256
+          },
+          {
+            "text": "            progress = 50.0 + (self.current_index / len(self.selected_images)) * 20.0",
+            "lineNumber": 257
+          },
+          {
+            "text": "            props.operation_progress = progress",
+            "lineNumber": 258
+          },
+          {
+            "text": "            ",
+            "lineNumber": 259
+          },
+          {
+            "text": "        elif self.current_step == 4:",
+            "lineNumber": 260
+          }
+        ]
+      },
+      "score": 0.3292827904224396
+    },
+    {
+      "codeBlock": {
+        "relativeWorkspacePath": ".\\ops\\AutoMatExtractor.py",
+        "range": {
+          "startPosition": {
+            "line": 62,
+            "column": 67
+          },
+          "endPosition": {
+            "line": 537
+          }
+        },
+        "contents": "class RBST_AutoMat_OT_AutoMatExtractor(bpy.types.Operator):\n    bl_idname = \"bst.automatextractor\"\n    bl_label = \"AutoMatExtractor\"\n    bl_description = \"Pack selected images and extract them with organized paths by blend file and material\"\n    bl_options = {'REGISTER', 'UNDO'}\n\n    def execute(self, context):\n        # Get addon preferences\n        addon_name = __package__.split('.')[0]\n        addon_entry = context.preferences.addons.get(addon_name)\n        prefs = addon_entry.preferences if addon_entry else None\n        common_outside = prefs.automat_common_outside_blend if prefs else False\n        \n        # Get selected images\n        selected_images = [img for img in bpy.data.images if hasattr(img, \"bst_selected\") and img.bst_selected]\n        \n        if not selected_images:\n            self.report({'WARNING'}, \"No images selected for extraction\")\n            return {'CANCELLED'}\n        \n        # Set up progress tracking\n        props = context.scene.bst_path_props\n        props.is_operation_running = True\n        props.operation_progress = 0.0\n        props.operation_status = f\"Preparing AutoMat extraction for {len(selected_images)} images...\"\n        \n        # Store data for timer processing\n        self.selected_images = selected_images\n        self.common_outside = common_outside\n        self.current_step = 0\n        self.current_index = 0\n        self.packed_count = 0\n        self.success_count = 0\n        self.overwrite_skipped = []\n        self.failed_list = []\n        self.path_mapping = {}\n        self.udim_summary = {\n            \"found\": 0,\n            \"saved\": 0,\n        }\n        \n        # Start timer for processing\n        bpy.app.timers.register(self._process_step)\n        \n        return {'FINISHED'}\n    \n    def _process_step(self):\n        \"\"\"",
+        "signatures": {},
+        "detailedLines": [
+          {
+            "text": "class RBST_AutoMat_OT_AutoMatExtractor(bpy.types.Operator):",
+            "lineNumber": 65,
+            "isSignature": true
+          },
+          {
+            "text": "    bl_idname = \"bst.automatextractor\"",
+            "lineNumber": 66
+          },
+          {
+            "text": "    bl_label = \"AutoMatExtractor\"",
+            "lineNumber": 67
+          },
+          {
+            "text": "    bl_description = \"Pack selected images and extract them with organized paths by blend file and material\"",
+            "lineNumber": 68
+          },
+          {
+            "text": "    bl_options = {'REGISTER', 'UNDO'}",
+            "lineNumber": 69
+          },
+          {
+            "lineNumber": 70
+          },
+          {
+            "text": "    def execute(self, context):",
+            "lineNumber": 71
+          },
+          {
+            "text": "        # Get addon preferences",
+            "lineNumber": 72
+          },
+          {
+            "text": "        addon_name = __package__.split('.')[0]",
+            "lineNumber": 73
+          },
+          {
+            "text": "        addon_entry = context.preferences.addons.get(addon_name)",
+            "lineNumber": 74
+          },
+          {
+            "text": "        prefs = addon_entry.preferences if addon_entry else None",
+            "lineNumber": 75
+          },
+          {
+            "text": "        common_outside = prefs.automat_common_outside_blend if prefs else False",
+            "lineNumber": 76
+          },
+          {
+            "text": "        ",
+            "lineNumber": 77
+          },
+          {
+            "text": "        # Get selected images",
+            "lineNumber": 78
+          },
+          {
+            "text": "        selected_images = [img for img in bpy.data.images if hasattr(img, \"bst_selected\") and img.bst_selected]",
+            "lineNumber": 79
+          },
+          {
+            "text": "        ",
+            "lineNumber": 80
+          },
+          {
+            "text": "        if not selected_images:",
+            "lineNumber": 81
+          },
+          {
+            "text": "            self.report({'WARNING'}, \"No images selected for extraction\")",
+            "lineNumber": 82
+          },
+          {
+            "text": "            return {'CANCELLED'}",
+            "lineNumber": 83
+          },
+          {
+            "text": "        ",
+            "lineNumber": 84
+          },
+          {
+            "text": "        # Set up progress tracking",
+            "lineNumber": 85
+          },
+          {
+            "text": "        props = context.scene.bst_path_props",
+            "lineNumber": 86
+          },
+          {
+            "text": "        props.is_operation_running = True",
+            "lineNumber": 87
+          },
+          {
+            "text": "        props.operation_progress = 0.0",
+            "lineNumber": 88
+          },
+          {
+            "text": "        props.operation_status = f\"Preparing AutoMat extraction for {len(selected_images)} images...\"",
+            "lineNumber": 89
+          },
+          {
+            "text": "        ",
+            "lineNumber": 90
+          },
+          {
+            "text": "        # Store data for timer processing",
+            "lineNumber": 91
+          },
+          {
+            "text": "        self.selected_images = selected_images",
+            "lineNumber": 92
+          },
+          {
+            "text": "        self.common_outside = common_outside",
+            "lineNumber": 93
+          },
+          {
+            "text": "        self.current_step = 0",
+            "lineNumber": 94
+          },
+          {
+            "text": "        self.current_index = 0",
+            "lineNumber": 95
+          },
+          {
+            "text": "        self.packed_count = 0",
+            "lineNumber": 96
+          },
+          {
+            "text": "        self.success_count = 0",
+            "lineNumber": 97
+          },
+          {
+            "text": "        self.overwrite_skipped = []",
+            "lineNumber": 98
+          },
+          {
+            "text": "        self.failed_list = []",
+            "lineNumber": 99
+          },
+          {
+            "text": "        self.path_mapping = {}",
+            "lineNumber": 100
+          },
+          {
+            "text": "        self.udim_summary = {",
+            "lineNumber": 101
+          },
+          {
+            "text": "            \"found\": 0,",
+            "lineNumber": 102
+          },
+          {
+            "text": "            \"saved\": 0,",
+            "lineNumber": 103
+          },
+          {
+            "text": "        }",
+            "lineNumber": 104
+          },
+          {
+            "text": "        ",
+            "lineNumber": 105
+          },
+          {
+            "text": "        # Start timer for processing",
+            "lineNumber": 106
+          },
+          {
+            "text": "        bpy.app.timers.register(self._process_step)",
+            "lineNumber": 107
+          },
+          {
+            "text": "        ",
+            "lineNumber": 108
+          },
+          {
+            "text": "        return {'FINISHED'}",
+            "lineNumber": 109
+          },
+          {
+            "text": "    ",
+            "lineNumber": 110
+          },
+          {
+            "text": "    def _process_step(self):",
+            "lineNumber": 111
+          },
+          {
+            "text": "        \"\"\"",
+            "lineNumber": 112
+          }
+        ]
+      },
+      "score": 0.2978731393814087
+    },
+    {
+      "codeBlock": {
+        "relativeWorkspacePath": ".\\ops\\AutoMatExtractor.py",
+        "range": {
+          "startPosition": {
+            "line": 64
+          },
+          "endPosition": {
+            "line": 537
+          }
+        },
+        "contents": "class RBST_AutoMat_OT_AutoMatExtractor(bpy.types.Operator):\n\n\n    def sanitize_filename(self, filename):\n        \"\"\"Sanitize filename/folder name for filesystem compatibility\"\"\"\n        # First, remove potential file extensions, including numerical ones like .001\n        base_name = re.sub(r'\\.\\d{3}$', '', filename) # Remove .001, .002 etc.\n        base_name = os.path.splitext(base_name)[0] # Remove standard extensions\n        \n        # Remove or replace invalid characters for Windows/Mac/Linux\n        sanitized = re.sub(r'[&lt;&gt;:\"/\\\\|?*]', '_', base_name)\n        # Remove leading/trailing spaces and dots\n        sanitized = sanitized.strip(' .')\n        # Ensure it's not empty\n        if not sanitized:\n            sanitized = \"unnamed\"\n        return sanitized\n    \n    def get_image_material_mapping(self, images):\n        \"\"\"Create mapping of image names to materials that use them\"\"\"\n        image_to_materials = {}\n        \n        # Initialize mapping\n        for img in images:\n            image_to_materials[img.name] = []\n        \n        # Check all materials for image usage\n        for material in bpy.data.materials:\n            if not material.use_nodes:\n                continue\n                \n            material_images = set()\n            \n            # Find all image texture nodes in this material\n            for node in material.node_tree.nodes:\n                if node.type == 'TEX_IMAGE' and node.image:\n                    material_images.add(node.image.name)\n            \n            # Add this material to each image's usage list\n            for img_name in material_images:\n                if img_name in image_to_materials:\n                    image_to_materials[img_name].append(material.name)\n        \n        return image_to_materials\n\n    def is_udim_image(self, image):\n        \"\"\"Return True when the image contains UDIM/tiled data\"\"\"",
+        "signatures": {
+          "ranges": [
+            {
+              "startPosition": {
+                "line": 65,
+                "column": 1
+              },
+              "endPosition": {
+                "line": 66,
+                "column": 5
+              }
+            }
+          ]
+        },
+        "detailedLines": [
+          {
+            "text": "class RBST_AutoMat_OT_AutoMatExtractor(bpy.types.Operator):",
+            "lineNumber": 65,
+            "isSignature": true
+          },
+          {
+            "lineNumber": 403
+          },
+          {
+            "lineNumber": 404
+          },
+          {
+            "text": "    def sanitize_filename(self, filename):",
+            "lineNumber": 405
+          },
+          {
+            "text": "        \"\"\"Sanitize filename/folder name for filesystem compatibility\"\"\"",
+            "lineNumber": 406
+          },
+          {
+            "text": "        # First, remove potential file extensions, including numerical ones like .001",
+            "lineNumber": 407
+          },
+          {
+            "text": "        base_name = re.sub(r'\\.\\d{3}$', '', filename) # Remove .001, .002 etc.",
+            "lineNumber": 408
+          },
+          {
+            "text": "        base_name = os.path.splitext(base_name)[0] # Remove standard extensions",
+            "lineNumber": 409
+          },
+          {
+            "text": "        ",
+            "lineNumber": 410
+          },
+          {
+            "text": "        # Remove or replace invalid characters for Windows/Mac/Linux",
+            "lineNumber": 411
+          },
+          {
+            "text": "        sanitized = re.sub(r'[&lt;&gt;:\"/\\\\|?*]', '_', base_name)",
+            "lineNumber": 412
+          },
+          {
+            "text": "        # Remove leading/trailing spaces and dots",
+            "lineNumber": 413
+          },
+          {
+            "text": "        sanitized = sanitized.strip(' .')",
+            "lineNumber": 414
+          },
+          {
+            "text": "        # Ensure it's not empty",
+            "lineNumber": 415
+          },
+          {
+            "text": "        if not sanitized:",
+            "lineNumber": 416
+          },
+          {
+            "text": "            sanitized = \"unnamed\"",
+            "lineNumber": 417
+          },
+          {
+            "text": "        return sanitized",
+            "lineNumber": 418
+          },
+          {
+            "text": "    ",
+            "lineNumber": 419
+          },
+          {
+            "text": "    def get_image_material_mapping(self, images):",
+            "lineNumber": 420
+          },
+          {
+            "text": "        \"\"\"Create mapping of image names to materials that use them\"\"\"",
+            "lineNumber": 421
+          },
+          {
+            "text": "        image_to_materials = {}",
+            "lineNumber": 422
+          },
+          {
+            "text": "        ",
+            "lineNumber": 423
+          },
+          {
+            "text": "        # Initialize mapping",
+            "lineNumber": 424
+          },
+          {
+            "text": "        for img in images:",
+            "lineNumber": 425
+          },
+          {
+            "text": "            image_to_materials[img.name] = []",
+            "lineNumber": 426
+          },
+          {
+            "text": "        ",
+            "lineNumber": 427
+          },
+          {
+            "text": "        # Check all materials for image usage",
+            "lineNumber": 428
+          },
+          {
+            "text": "        for material in bpy.data.materials:",
+            "lineNumber": 429
+          },
+          {
+            "text": "            if not material.use_nodes:",
+            "lineNumber": 430
+          },
+          {
+            "text": "                continue",
+            "lineNumber": 431
+          },
+          {
+            "text": "                ",
+            "lineNumber": 432
+          },
+          {
+            "text": "            material_images = set()",
+            "lineNumber": 433
+          },
+          {
+            "text": "            ",
+            "lineNumber": 434
+          },
+          {
+            "text": "            # Find all image texture nodes in this material",
+            "lineNumber": 435
+          },
+          {
+            "text": "            for node in material.node_tree.nodes:",
+            "lineNumber": 436
+          },
+          {
+            "text": "                if node.type == 'TEX_IMAGE' and node.image:",
+            "lineNumber": 437
+          },
+          {
+            "text": "                    material_images.add(node.image.name)",
+            "lineNumber": 438
+          },
+          {
+            "text": "            ",
+            "lineNumber": 439
+          },
+          {
+            "text": "            # Add this material to each image's usage list",
+            "lineNumber": 440
+          },
+          {
+            "text": "            for img_name in material_images:",
+            "lineNumber": 441
+          },
+          {
+            "text": "                if img_name in image_to_materials:",
+            "lineNumber": 442
+          },
+          {
+            "text": "                    image_to_materials[img_name].append(material.name)",
+            "lineNumber": 443
+          },
+          {
+            "text": "        ",
+            "lineNumber": 444
+          },
+          {
+            "text": "        return image_to_materials",
+            "lineNumber": 445
+          },
+          {
+            "lineNumber": 446
+          },
+          {
+            "text": "    def is_udim_image(self, image):",
+            "lineNumber": 447
+          },
+          {
+            "text": "        \"\"\"Return True when the image contains UDIM/tiled data\"\"\"",
+            "lineNumber": 448
+          }
+        ]
+      },
+      "score": 0.2707273066043854
+    },
+    {
+      "codeBlock": {
+        "relativeWorkspacePath": ".\\ops\\Rename_images_by_mat.py",
+        "range": {
+          "startPosition": {
+            "line": 68
+          },
+          "endPosition": {
+            "line": 497
+          }
+        },
+        "contents": "class RBST_RenameImg_OT_Rename_images_by_mat(bpy.types.Operator):\ndef capitalize_suffix(self, suffix):\n,\n            'wrinkle_mask3': 'Wrinkle_Mask3',\n            'wrinkle_flow1': 'Wrinkle_Flow1',\n            'wrinkle_flow2': 'Wrinkle_Flow2',\n            'wrinkle_flow3': 'Wrinkle_Flow3',\n            \n            # Character Creator pack suffixes (with spaces)\n            'flow pack': 'Flow Pack',\n            'msmnao pack': 'MSMNAO Pack',\n            'roughness pack': 'Roughness Pack',\n            'sstm pack': 'SSTM Pack',\n            'flow_pack': 'Flow_Pack',\n            'msmnao_pack': 'MSMNAO_Pack',\n            'roughness_pack': 'Roughness_Pack',\n            'sstm_pack': 'SSTM_Pack',\n            \n            # Hair-related multi-word suffixes\n            'hair flow map': 'HairFlowMap',\n            'hair id map': 'HairIDMap',\n            'hair root map': 'HairRootMap',\n            'hair depth map': 'HairDepthMap',\n            'flow map': 'FlowMap',\n            'id map': 'IDMap',\n            'root map': 'RootMap',\n            'depth map': 'DepthMap',\n            \n            # Additional common variations\n            'tex': 'Texture',\n            'map': 'Map',\n            'img': 'Image',\n            'texture': 'Texture',\n            \n            # Single letter abbreviations\n            'd': 'Diffuse',\n            'n': 'Normal',\n            'r': 'Roughness',\n            'm': 'Metallic',\n            's': 'Specular',\n            'a': 'Alpha',\n            'h': 'Height',\n            'o': 'Occlusion',\n            'e': 'Emission'\n        }\n        \n        # Get the proper capitalization from mapping, or capitalize first letter as fallback\n        return suffix_mapping.get(suffix.lower(), suffix.capitalize())\n    \n    def has_potential_suffix(self, name):\n        \"\"\"",
+        "signatures": {
+          "ranges": [
+            {
+              "startPosition": {
+                "line": 69,
+                "column": 1
+              },
+              "endPosition": {
+                "line": 70,
+                "column": 5
+              }
+            },
+            {
+              "startPosition": {
+                "line": 330,
+                "column": 5
+              },
+              "endPosition": {
+                "line": 331,
+                "column": 9
+              }
+            }
+          ]
+        },
+        "detailedLines": [
+          {
+            "text": "class RBST_RenameImg_OT_Rename_images_by_mat(bpy.types.Operator):",
+            "lineNumber": 69,
+            "isSignature": true
+          },
+          {
+            "text": "def capitalize_suffix(self, suffix):",
+            "lineNumber": 330
+          },
+          {
+            "text": ",",
+            "lineNumber": 436
+          },
+          {
+            "text": "            'wrinkle_mask3': 'Wrinkle_Mask3',",
+            "lineNumber": 437
+          },
+          {
+            "text": "            'wrinkle_flow1': 'Wrinkle_Flow1',",
+            "lineNumber": 438
+          },
+          {
+            "text": "            'wrinkle_flow2': 'Wrinkle_Flow2',",
+            "lineNumber": 439
+          },
+          {
+            "text": "            'wrinkle_flow3': 'Wrinkle_Flow3',",
+            "lineNumber": 440
+          },
+          {
+            "text": "            ",
+            "lineNumber": 441
+          },
+          {
+            "text": "            # Character Creator pack suffixes (with spaces)",
+            "lineNumber": 442
+          },
+          {
+            "text": "            'flow pack': 'Flow Pack',",
+            "lineNumber": 443
+          },
+          {
+            "text": "            'msmnao pack': 'MSMNAO Pack',",
+            "lineNumber": 444
+          },
+          {
+            "text": "            'roughness pack': 'Roughness Pack',",
+            "lineNumber": 445
+          },
+          {
+            "text": "            'sstm pack': 'SSTM Pack',",
+            "lineNumber": 446
+          },
+          {
+            "text": "            'flow_pack': 'Flow_Pack',",
+            "lineNumber": 447
+          },
+          {
+            "text": "            'msmnao_pack': 'MSMNAO_Pack',",
+            "lineNumber": 448
+          },
+          {
+            "text": "            'roughness_pack': 'Roughness_Pack',",
+            "lineNumber": 449
+          },
+          {
+            "text": "            'sstm_pack': 'SSTM_Pack',",
+            "lineNumber": 450
+          },
+          {
+            "text": "            ",
+            "lineNumber": 451
+          },
+          {
+            "text": "            # Hair-related multi-word suffixes",
+            "lineNumber": 452
+          },
+          {
+            "text": "            'hair flow map': 'HairFlowMap',",
+            "lineNumber": 453
+          },
+          {
+            "text": "            'hair id map': 'HairIDMap',",
+            "lineNumber": 454
+          },
+          {
+            "text": "            'hair root map': 'HairRootMap',",
+            "lineNumber": 455
+          },
+          {
+            "text": "            'hair depth map': 'HairDepthMap',",
+            "lineNumber": 456
+          },
+          {
+            "text": "            'flow map': 'FlowMap',",
+            "lineNumber": 457
+          },
+          {
+            "text": "            'id map': 'IDMap',",
+            "lineNumber": 458
+          },
+          {
+            "text": "            'root map': 'RootMap',",
+            "lineNumber": 459
+          },
+          {
+            "text": "            'depth map': 'DepthMap',",
+            "lineNumber": 460
+          },
+          {
+            "text": "            ",
+            "lineNumber": 461
+          },
+          {
+            "text": "            # Additional common variations",
+            "lineNumber": 462
+          },
+          {
+            "text": "            'tex': 'Texture',",
+            "lineNumber": 463
+          },
+          {
+            "text": "            'map': 'Map',",
+            "lineNumber": 464
+          },
+          {
+            "text": "            'img': 'Image',",
+            "lineNumber": 465
+          },
+          {
+            "text": "            'texture': 'Texture',",
+            "lineNumber": 466
+          },
+          {
+            "text": "            ",
+            "lineNumber": 467
+          },
+          {
+            "text": "            # Single letter abbreviations",
+            "lineNumber": 468
+          },
+          {
+            "text": "            'd': 'Diffuse',",
+            "lineNumber": 469
+          },
+          {
+            "text": "            'n': 'Normal',",
+            "lineNumber": 470
+          },
+          {
+            "text": "            'r': 'Roughness',",
+            "lineNumber": 471
+          },
+          {
+            "text": "            'm': 'Metallic',",
+            "lineNumber": 472
+          },
+          {
+            "text": "            's': 'Specular',",
+            "lineNumber": 473
+          },
+          {
+            "text": "            'a': 'Alpha',",
+            "lineNumber": 474
+          },
+          {
+            "text": "            'h': 'Height',",
+            "lineNumber": 475
+          },
+          {
+            "text": "            'o': 'Occlusion',",
+            "lineNumber": 476
+          },
+          {
+            "text": "            'e': 'Emission'",
+            "lineNumber": 477
+          },
+          {
+            "text": "        }",
+            "lineNumber": 478
+          },
+          {
+            "text": "        ",
+            "lineNumber": 479
+          },
+          {
+            "text": "        # Get the proper capitalization from mapping, or capitalize first letter as fallback",
+            "lineNumber": 480
+          },
+          {
+            "text": "        return suffix_mapping.get(suffix.lower(), suffix.capitalize())",
+            "lineNumber": 481
+          },
+          {
+            "text": "    ",
+            "lineNumber": 482
+          },
+          {
+            "text": "    def has_potential_suffix(self, name):",
+            "lineNumber": 483
+          },
+          {
+            "text": "        \"\"\"",
+            "lineNumber": 484
+          }
+        ]
+      },
+      "score": 0.2693450450897217
+    },
+    {
+      "codeBlock": {
+        "relativeWorkspacePath": ".\\changelog.md",
+        "range": {
+          "startPosition": {
+            "line": 134
+          },
+          "endPosition": {
+            "line": 160
+          }
+        },
+        "contents": "    - AutoMat Extractor\n\n# v 0.5.1\n\n- **Enhanced AutoMat Extractor:**\n  - Added a crucial safety check to prevent textures from overwriting each other if they resolve to the same filename (e.g., &#96;Image.001.png&#96; and &#96;Image.002.png&#96; both becoming &#96;Image.png&#96;).\n  - The operator now correctly sanitizes names with numerical suffixes before saving.\n  - A new summary dialog now appears after the operation, reporting how many files were extracted successfully and listing any files that were skipped due to naming conflicts.\n  - Added a user preference to control the location of the &#96;common&#96; folder, allowing it to be placed either inside or outside the blend file's specific texture folder. A checkbox for this setting was added to the UI.\n- **Improved Suffix Handling:**\n  - The \"Rename by Material\" tool now correctly preserves spaces in packed texture names (e.g., &#96;Flow Pack&#96; instead of &#96;FlowPack&#96;).\n  - Added support for underscore-separated packed texture names (e.g., &#96;flow_pack&#96;).\n- **Bug Fixes:**\n  - Resolved multiple &#96;AttributeError&#96; and &#96;TypeError&#96; exceptions that occurred due to incorrect addon name lookups and invalid icon names, making the UI and addon registration more robust.\n\n# v 0.5.0\n\n- **Integrated Scene General: Free GPU VRAM**\n- **Integrated PathMan: Automatic Material Extractor**\n- **Integrated PathMan: Rename Image Textures by Material**: Added comprehensive texture suffix recognition\n  - Recognizes many Character Creator suffixes\n  - Recognizes most standard material suffixes\n  - Images with unrecognized suffixes are skipped instead of renamed, preventing unintended modifications\n  - Enhanced logging: Unrecognized suffix images are listed separately for easy identification\n- **UI Improvements**:\n  - Rearranged workflow layout: Make Paths Relative/Absolute moved to main workflow section",
+        "signatures": {},
+        "detailedLines": [
+          {
+            "text": "    - AutoMat Extractor",
+            "lineNumber": 135
+          },
+          {
+            "lineNumber": 136
+          },
+          {
+            "text": "# v 0.5.1",
+            "lineNumber": 137
+          },
+          {
+            "lineNumber": 138
+          },
+          {
+            "text": "- **Enhanced AutoMat Extractor:**",
+            "lineNumber": 139
+          },
+          {
+            "text": "  - Added a crucial safety check to prevent textures from overwriting each other if they resolve to the same filename (e.g., &#96;Image.001.png&#96; and &#96;Image.002.png&#96; both becoming &#96;Image.png&#96;).",
+            "lineNumber": 140
+          },
+          {
+            "text": "  - The operator now correctly sanitizes names with numerical suffixes before saving.",
+            "lineNumber": 141
+          },
+          {
+            "text": "  - A new summary dialog now appears after the operation, reporting how many files were extracted successfully and listing any files that were skipped due to naming conflicts.",
+            "lineNumber": 142
+          },
+          {
+            "text": "  - Added a user preference to control the location of the &#96;common&#96; folder, allowing it to be placed either inside or outside the blend file's specific texture folder. A checkbox for this setting was added to the UI.",
+            "lineNumber": 143
+          },
+          {
+            "text": "- **Improved Suffix Handling:**",
+            "lineNumber": 144
+          },
+          {
+            "text": "  - The \"Rename by Material\" tool now correctly preserves spaces in packed texture names (e.g., &#96;Flow Pack&#96; instead of &#96;FlowPack&#96;).",
+            "lineNumber": 145
+          },
+          {
+            "text": "  - Added support for underscore-separated packed texture names (e.g., &#96;flow_pack&#96;).",
+            "lineNumber": 146
+          },
+          {
+            "text": "- **Bug Fixes:**",
+            "lineNumber": 147
+          },
+          {
+            "text": "  - Resolved multiple &#96;AttributeError&#96; and &#96;TypeError&#96; exceptions that occurred due to incorrect addon name lookups and invalid icon names, making the UI and addon registration more robust.",
+            "lineNumber": 148
+          },
+          {
+            "lineNumber": 149
+          },
+          {
+            "text": "# v 0.5.0",
+            "lineNumber": 150
+          },
+          {
+            "lineNumber": 151
+          },
+          {
+            "text": "- **Integrated Scene General: Free GPU VRAM**",
+            "lineNumber": 152
+          },
+          {
+            "text": "- **Integrated PathMan: Automatic Material Extractor**",
+            "lineNumber": 153
+          },
+          {
+            "text": "- **Integrated PathMan: Rename Image Textures by Material**: Added comprehensive texture suffix recognition",
+            "lineNumber": 154
+          },
+          {
+            "text": "  - Recognizes many Character Creator suffixes",
+            "lineNumber": 155
+          },
+          {
+            "text": "  - Recognizes most standard material suffixes",
+            "lineNumber": 156
+          },
+          {
+            "text": "  - Images with unrecognized suffixes are skipped instead of renamed, preventing unintended modifications",
+            "lineNumber": 157
+          },
+          {
+            "text": "  - Enhanced logging: Unrecognized suffix images are listed separately for easy identification",
+            "lineNumber": 158
+          },
+          {
+            "text": "- **UI Improvements**:",
+            "lineNumber": 159
+          },
+          {
+            "text": "  - Rearranged workflow layout: Make Paths Relative/Absolute moved to main workflow section",
+            "lineNumber": 160
+          }
+        ]
+      },
+      "score": 0.2382318377494812
+    },
+    {
+      "codeBlock": {
+        "relativeWorkspacePath": ".\\ops\\Rename_images_by_mat.py",
+        "range": {
+          "startPosition": {
+            "line": 68
+          },
+          "endPosition": {
+            "line": 497
+          }
+        },
+        "contents": "class RBST_RenameImg_OT_Rename_images_by_mat(bpy.types.Operator):\n\n    \n    def capitalize_suffix(self, suffix):\n        \"\"\"Properly capitalize texture type suffixes with correct formatting\"\"\"\n        # Dictionary of common texture suffixes with proper capitalization\n        suffix_mapping = {\n            # Standard PBR suffixes\n            'diffuse': 'Diffuse',\n            'basecolor': 'BaseColor',\n            'base_color': 'BaseColor',\n            'albedo': 'Albedo',\n            'color': 'Color',\n            'col': 'Color',\n            \n            'normal': 'Normal',\n            'norm': 'Normal',\n            'nrm': 'Normal',\n            'bump': 'Bump',\n            \n            'roughness': 'Roughness',\n            'rough': 'Roughness',\n            'rgh': 'Roughness',\n            \n            'metallic': 'Metallic',\n            'metal': 'Metallic',\n            'mtl': 'Metallic',\n            \n            'specular': 'Specular',\n            'spec': 'Specular',\n            'spc': 'Specular',\n            \n            'ao': 'AO',\n            'ambient_occlusion': 'AmbientOcclusion',\n            'ambientocclusion': 'AmbientOcclusion',\n            'occlusion': 'Occlusion',\n            'gradao': 'GradAO',\n            \n            'height': 'Height',\n            'displacement': 'Displacement',\n            'disp': 'Displacement',\n            'displace': 'Displacement',\n            \n            'opacity': 'Opacity',\n            'alpha': 'Alpha',\n            'mask': 'Mask',\n            'transmap': 'TransMap',\n            \n            'emission': 'Emission',\n            'emissive': 'Emission',\n            'emit': 'Emission',\n            \n            'subsurface': 'Subsurface',\n            'sss': 'SSS',\n            'transmission': 'Transmission',\n            \n            # Character Creator / iClone suffixes\n            'base': 'Base',\n            'diffusemap': 'DiffuseMap',\n            'normalmap': 'NormalMap',\n            'roughnessmap': 'RoughnessMap',\n            'metallicmap': 'MetallicMap',\n            'aomap': 'AOMap',\n            'opacitymap': 'OpacityMap',",
+        "signatures": {
+          "ranges": [
+            {
+              "startPosition": {
+                "line": 69,
+                "column": 1
+              },
+              "endPosition": {
+                "line": 70,
+                "column": 5
+              }
+            }
+          ]
+        },
+        "detailedLines": [
+          {
+            "text": "class RBST_RenameImg_OT_Rename_images_by_mat(bpy.types.Operator):",
+            "lineNumber": 69,
+            "isSignature": true
+          },
+          {
+            "lineNumber": 328
+          },
+          {
+            "text": "    ",
+            "lineNumber": 329
+          },
+          {
+            "text": "    def capitalize_suffix(self, suffix):",
+            "lineNumber": 330
+          },
+          {
+            "text": "        \"\"\"Properly capitalize texture type suffixes with correct formatting\"\"\"",
+            "lineNumber": 331
+          },
+          {
+            "text": "        # Dictionary of common texture suffixes with proper capitalization",
+            "lineNumber": 332
+          },
+          {
+            "text": "        suffix_mapping = {",
+            "lineNumber": 333
+          },
+          {
+            "text": "            # Standard PBR suffixes",
+            "lineNumber": 334
+          },
+          {
+            "text": "            'diffuse': 'Diffuse',",
+            "lineNumber": 335
+          },
+          {
+            "text": "            'basecolor': 'BaseColor',",
+            "lineNumber": 336
+          },
+          {
+            "text": "            'base_color': 'BaseColor',",
+            "lineNumber": 337
+          },
+          {
+            "text": "            'albedo': 'Albedo',",
+            "lineNumber": 338
+          },
+          {
+            "text": "            'color': 'Color',",
+            "lineNumber": 339
+          },
+          {
+            "text": "            'col': 'Color',",
+            "lineNumber": 340
+          },
+          {
+            "text": "            ",
+            "lineNumber": 341
+          },
+          {
+            "text": "            'normal': 'Normal',",
+            "lineNumber": 342
+          },
+          {
+            "text": "            'norm': 'Normal',",
+            "lineNumber": 343
+          },
+          {
+            "text": "            'nrm': 'Normal',",
+            "lineNumber": 344
+          },
+          {
+            "text": "            'bump': 'Bump',",
+            "lineNumber": 345
+          },
+          {
+            "text": "            ",
+            "lineNumber": 346
+          },
+          {
+            "text": "            'roughness': 'Roughness',",
+            "lineNumber": 347
+          },
+          {
+            "text": "            'rough': 'Roughness',",
+            "lineNumber": 348
+          },
+          {
+            "text": "            'rgh': 'Roughness',",
+            "lineNumber": 349
+          },
+          {
+            "text": "            ",
+            "lineNumber": 350
+          },
+          {
+            "text": "            'metallic': 'Metallic',",
+            "lineNumber": 351
+          },
+          {
+            "text": "            'metal': 'Metallic',",
+            "lineNumber": 352
+          },
+          {
+            "text": "            'mtl': 'Metallic',",
+            "lineNumber": 353
+          },
+          {
+            "text": "            ",
+            "lineNumber": 354
+          },
+          {
+            "text": "            'specular': 'Specular',",
+            "lineNumber": 355
+          },
+          {
+            "text": "            'spec': 'Specular',",
+            "lineNumber": 356
+          },
+          {
+            "text": "            'spc': 'Specular',",
+            "lineNumber": 357
+          },
+          {
+            "text": "            ",
+            "lineNumber": 358
+          },
+          {
+            "text": "            'ao': 'AO',",
+            "lineNumber": 359
+          },
+          {
+            "text": "            'ambient_occlusion': 'AmbientOcclusion',",
+            "lineNumber": 360
+          },
+          {
+            "text": "            'ambientocclusion': 'AmbientOcclusion',",
+            "lineNumber": 361
+          },
+          {
+            "text": "            'occlusion': 'Occlusion',",
+            "lineNumber": 362
+          },
+          {
+            "text": "            'gradao': 'GradAO',",
+            "lineNumber": 363
+          },
+          {
+            "text": "            ",
+            "lineNumber": 364
+          },
+          {
+            "text": "            'height': 'Height',",
+            "lineNumber": 365
+          },
+          {
+            "text": "            'displacement': 'Displacement',",
+            "lineNumber": 366
+          },
+          {
+            "text": "            'disp': 'Displacement',",
+            "lineNumber": 367
+          },
+          {
+            "text": "            'displace': 'Displacement',",
+            "lineNumber": 368
+          },
+          {
+            "text": "            ",
+            "lineNumber": 369
+          },
+          {
+            "text": "            'opacity': 'Opacity',",
+            "lineNumber": 370
+          },
+          {
+            "text": "            'alpha': 'Alpha',",
+            "lineNumber": 371
+          },
+          {
+            "text": "            'mask': 'Mask',",
+            "lineNumber": 372
+          },
+          {
+            "text": "            'transmap': 'TransMap',",
+            "lineNumber": 373
+          },
+          {
+            "text": "            ",
+            "lineNumber": 374
+          },
+          {
+            "text": "            'emission': 'Emission',",
+            "lineNumber": 375
+          },
+          {
+            "text": "            'emissive': 'Emission',",
+            "lineNumber": 376
+          },
+          {
+            "text": "            'emit': 'Emission',",
+            "lineNumber": 377
+          },
+          {
+            "text": "            ",
+            "lineNumber": 378
+          },
+          {
+            "text": "            'subsurface': 'Subsurface',",
+            "lineNumber": 379
+          },
+          {
+            "text": "            'sss': 'SSS',",
+            "lineNumber": 380
+          },
+          {
+            "text": "            'transmission': 'Transmission',",
+            "lineNumber": 381
+          },
+          {
+            "text": "            ",
+            "lineNumber": 382
+          },
+          {
+            "text": "            # Character Creator / iClone suffixes",
+            "lineNumber": 383
+          },
+          {
+            "text": "            'base': 'Base',",
+            "lineNumber": 384
+          },
+          {
+            "text": "            'diffusemap': 'DiffuseMap',",
+            "lineNumber": 385
+          },
+          {
+            "text": "            'normalmap': 'NormalMap',",
+            "lineNumber": 386
+          },
+          {
+            "text": "            'roughnessmap': 'RoughnessMap',",
+            "lineNumber": 387
+          },
+          {
+            "text": "            'metallicmap': 'MetallicMap',",
+            "lineNumber": 388
+          },
+          {
+            "text": "            'aomap': 'AOMap',",
+            "lineNumber": 389
+          },
+          {
+            "text": "            'opacitymap': 'OpacityMap',",
+            "lineNumber": 390
+          }
+        ]
+      },
+      "score": 0.2368393987417221
+    },
+    {
+      "codeBlock": {
+        "relativeWorkspacePath": ".\\ops\\AutoMatExtractor.py",
+        "range": {
+          "startPosition": {
+            "line": 64
+          },
+          "endPosition": {
+            "line": 537
+          }
+        },
+        "contents": "class RBST_AutoMat_OT_AutoMatExtractor(bpy.types.Operator):\n\n\n    def is_udim_image(self, image):\n        \"\"\"Return True when the image contains UDIM/tiled data\"\"\"\n        has_tiles = hasattr(image, \"source\") and image.source == 'TILED'\n        tiles_attr = getattr(image, \"tiles\", None)\n        if tiles_attr and len(tiles_attr) &gt; 1:\n            return True\n        return has_tiles\n\n    def build_udim_mapping(self, base_folder, base_name, extension, image):\n        \"\"\"Create a path mapping structure for UDIM images\"\"\"\n        udim_token = \"&lt;UDIM&gt;\"\n        template_filename = f\"{base_name}.{udim_token}{extension}\"\n        template_path = f\"{base_folder}\\\\{template_filename}\"\n        tile_paths = {}\n\n        tiles = getattr(image, \"tiles\", [])\n        for tile in tiles:\n            tile_number = str(getattr(tile, \"number\", \"1001\"))\n            tile_filename = f\"{base_name}.{tile_number}{extension}\"\n            tile_paths[tile_number] = f\"{base_folder}\\\\{tile_filename}\"\n\n        return {\n            \"udim\": True,\n            \"template\": template_path,\n            \"tiles\": tile_paths,\n        }\n\n    def save_udim_image(self, image, mapping):\n        \"\"\"Attempt to save each tile for a UDIM image\"\"\"\n        success = False\n        try:\n            image.save()\n            success = True\n        except Exception as e:\n            print(f\"DEBUG: UDIM bulk save failed for {image.name}: {e}\")\n            success = self._save_udim_tiles_individually(image, mapping)\n\n        if success:\n            self.udim_summary[\"saved\"] += 1\n        return success\n\n    def save_standard_image(self, image):\n        \"\"\"Save a non-UDIM image safely\"\"\"\n        try:\n            if hasattr(image, 'save'):\n                image.save()\n                return True\n        except Exception as e:\n            print(f\"DEBUG: Failed to save image {image.name}: {e}\")\n        return False\n\n    def _save_udim_tiles_individually(self, image, mapping):\n        \"\"\"Fallback saving routine when image.save() fails on UDIMs\"\"\"",
+        "signatures": {
+          "ranges": [
+            {
+              "startPosition": {
+                "line": 65,
+                "column": 1
+              },
+              "endPosition": {
+                "line": 66,
+                "column": 5
+              }
+            }
+          ]
+        },
+        "detailedLines": [
+          {
+            "text": "class RBST_AutoMat_OT_AutoMatExtractor(bpy.types.Operator):",
+            "lineNumber": 65,
+            "isSignature": true
+          },
+          {
+            "lineNumber": 445
+          },
+          {
+            "lineNumber": 446
+          },
+          {
+            "text": "    def is_udim_image(self, image):",
+            "lineNumber": 447
+          },
+          {
+            "text": "        \"\"\"Return True when the image contains UDIM/tiled data\"\"\"",
+            "lineNumber": 448
+          },
+          {
+            "text": "        has_tiles = hasattr(image, \"source\") and image.source == 'TILED'",
+            "lineNumber": 449
+          },
+          {
+            "text": "        tiles_attr = getattr(image, \"tiles\", None)",
+            "lineNumber": 450
+          },
+          {
+            "text": "        if tiles_attr and len(tiles_attr) &gt; 1:",
+            "lineNumber": 451
+          },
+          {
+            "text": "            return True",
+            "lineNumber": 452
+          },
+          {
+            "text": "        return has_tiles",
+            "lineNumber": 453
+          },
+          {
+            "lineNumber": 454
+          },
+          {
+            "text": "    def build_udim_mapping(self, base_folder, base_name, extension, image):",
+            "lineNumber": 455
+          },
+          {
+            "text": "        \"\"\"Create a path mapping structure for UDIM images\"\"\"",
+            "lineNumber": 456
+          },
+          {
+            "text": "        udim_token = \"&lt;UDIM&gt;\"",
+            "lineNumber": 457
+          },
+          {
+            "text": "        template_filename = f\"{base_name}.{udim_token}{extension}\"",
+            "lineNumber": 458
+          },
+          {
+            "text": "        template_path = f\"{base_folder}\\\\{template_filename}\"",
+            "lineNumber": 459
+          },
+          {
+            "text": "        tile_paths = {}",
+            "lineNumber": 460
+          },
+          {
+            "lineNumber": 461
+          },
+          {
+            "text": "        tiles = getattr(image, \"tiles\", [])",
+            "lineNumber": 462
+          },
+          {
+            "text": "        for tile in tiles:",
+            "lineNumber": 463
+          },
+          {
+            "text": "            tile_number = str(getattr(tile, \"number\", \"1001\"))",
+            "lineNumber": 464
+          },
+          {
+            "text": "            tile_filename = f\"{base_name}.{tile_number}{extension}\"",
+            "lineNumber": 465
+          },
+          {
+            "text": "            tile_paths[tile_number] = f\"{base_folder}\\\\{tile_filename}\"",
+            "lineNumber": 466
+          },
+          {
+            "lineNumber": 467
+          },
+          {
+            "text": "        return {",
+            "lineNumber": 468
+          },
+          {
+            "text": "            \"udim\": True,",
+            "lineNumber": 469
+          },
+          {
+            "text": "            \"template\": template_path,",
+            "lineNumber": 470
+          },
+          {
+            "text": "            \"tiles\": tile_paths,",
+            "lineNumber": 471
+          },
+          {
+            "text": "        }",
+            "lineNumber": 472
+          },
+          {
+            "lineNumber": 473
+          },
+          {
+            "text": "    def save_udim_image(self, image, mapping):",
+            "lineNumber": 474
+          },
+          {
+            "text": "        \"\"\"Attempt to save each tile for a UDIM image\"\"\"",
+            "lineNumber": 475
+          },
+          {
+            "text": "        success = False",
+            "lineNumber": 476
+          },
+          {
+            "text": "        try:",
+            "lineNumber": 477
+          },
+          {
+            "text": "            image.save()",
+            "lineNumber": 478
+          },
+          {
+            "text": "            success = True",
+            "lineNumber": 479
+          },
+          {
+            "text": "        except Exception as e:",
+            "lineNumber": 480
+          },
+          {
+            "text": "            print(f\"DEBUG: UDIM bulk save failed for {image.name}: {e}\")",
+            "lineNumber": 481
+          },
+          {
+            "text": "            success = self._save_udim_tiles_individually(image, mapping)",
+            "lineNumber": 482
+          },
+          {
+            "lineNumber": 483
+          },
+          {
+            "text": "        if success:",
+            "lineNumber": 484
+          },
+          {
+            "text": "            self.udim_summary[\"saved\"] += 1",
+            "lineNumber": 485
+          },
+          {
+            "text": "        return success",
+            "lineNumber": 486
+          },
+          {
+            "lineNumber": 487
+          },
+          {
+            "text": "    def save_standard_image(self, image):",
+            "lineNumber": 488
+          },
+          {
+            "text": "        \"\"\"Save a non-UDIM image safely\"\"\"",
+            "lineNumber": 489
+          },
+          {
+            "text": "        try:",
+            "lineNumber": 490
+          },
+          {
+            "text": "            if hasattr(image, 'save'):",
+            "lineNumber": 491
+          },
+          {
+            "text": "                image.save()",
+            "lineNumber": 492
+          },
+          {
+            "text": "                return True",
+            "lineNumber": 493
+          },
+          {
+            "text": "        except Exception as e:",
+            "lineNumber": 494
+          },
+          {
+            "text": "            print(f\"DEBUG: Failed to save image {image.name}: {e}\")",
+            "lineNumber": 495
+          },
+          {
+            "text": "        return False",
+            "lineNumber": 496
+          },
+          {
+            "lineNumber": 497
+          },
+          {
+            "text": "    def _save_udim_tiles_individually(self, image, mapping):",
+            "lineNumber": 498
+          },
+          {
+            "text": "        \"\"\"Fallback saving routine when image.save() fails on UDIMs\"\"\"",
+            "lineNumber": 499
+          }
+        ]
+      },
+      "score": 0.2282489538192749
+    },
+    {
+      "codeBlock": {
+        "relativeWorkspacePath": ".\\panels\\bulk_path_management.py",
+        "range": {
+          "startPosition": {
+            "line": 1435
+          },
+          "endPosition": {
+            "line": 1642
+          }
+        },
+        "contents": "class RBST_PathMan_PT_bulk_path_tools(Panel):\ndef draw(self, context):\n\n        \n        # Remap selected button - placed right under the preview\n        any_selected = any(hasattr(img, \"bst_selected\") and img.bst_selected for img in bpy.data.images)\n        row = box.row()\n        row.enabled = any_selected\n        row.operator(\"bst.bulk_remap\", text=\"Remap Selected\", icon='FILE_REFRESH')\n        \n        # Rename by Material and AutoMat buttons - placed right after remap selected\n        row = box.row()\n        row.enabled = any_selected\n        row.operator(\"bst.rename_images_by_mat\", text=\"Rename by Material\", icon='OUTLINER_DATA_FONT')\n        \n        # Get addon preferences\n        addon_name = __package__.split('.')[0]\n        addon_entry = context.preferences.addons.get(addon_name)\n        prefs = addon_entry.preferences if addon_entry else None\n        \n        row = box.row(align=True)\n        row.enabled = any_selected\n        \n        # Split row for button and checkbox\n        split = row.split(factor=0.8)\n        \n        # Left side: button\n        split.operator(\"bst.automatextractor\", text=\"AutoMat Extractor\", icon='PACKAGE')\n        \n        # Right side: checkbox\n        col = split.column()\n        if prefs:\n            col.prop(prefs, \"automat_common_outside_blend\", text=\"\", icon='FOLDER_REDIRECT')\n        \n        # Bulk operations section\n        box = layout.box()\n        box.label(text=\"Bulk Operations\", icon='MODIFIER')\n        row = box.row()\n        row.prop(path_props, \"show_bulk_operations\", \n                 text=\"Show Bulk Operations\", \n                 icon=\"TRIA_DOWN\" if path_props.show_bulk_operations else \"TRIA_RIGHT\",\n                 icon_only=True, emboss=False)\n        row.label(text=\"Image Selection\")\n        \n        # Show bulk operations UI only when expanded",
+        "signatures": {
+          "ranges": [
+            {
+              "startPosition": {
+                "line": 1436,
+                "column": 1
+              },
+              "endPosition": {
+                "line": 1437,
+                "column": 5
+              }
+            },
+            {
+              "startPosition": {
+                "line": 1448,
+                "column": 5
+              },
+              "endPosition": {
+                "line": 1449,
+                "column": 9
+              }
+            }
+          ]
+        },
+        "detailedLines": [
+          {
+            "text": "class RBST_PathMan_PT_bulk_path_tools(Panel):",
+            "lineNumber": 1436,
+            "isSignature": true
+          },
+          {
+            "text": "def draw(self, context):",
+            "lineNumber": 1448
+          },
+          {
+            "lineNumber": 1533
+          },
+          {
+            "text": "        ",
+            "lineNumber": 1534
+          },
+          {
+            "text": "        # Remap selected button - placed right under the preview",
+            "lineNumber": 1535
+          },
+          {
+            "text": "        any_selected = any(hasattr(img, \"bst_selected\") and img.bst_selected for img in bpy.data.images)",
+            "lineNumber": 1536
+          },
+          {
+            "text": "        row = box.row()",
+            "lineNumber": 1537
+          },
+          {
+            "text": "        row.enabled = any_selected",
+            "lineNumber": 1538
+          },
+          {
+            "text": "        row.operator(\"bst.bulk_remap\", text=\"Remap Selected\", icon='FILE_REFRESH')",
+            "lineNumber": 1539
+          },
+          {
+            "text": "        ",
+            "lineNumber": 1540
+          },
+          {
+            "text": "        # Rename by Material and AutoMat buttons - placed right after remap selected",
+            "lineNumber": 1541
+          },
+          {
+            "text": "        row = box.row()",
+            "lineNumber": 1542
+          },
+          {
+            "text": "        row.enabled = any_selected",
+            "lineNumber": 1543
+          },
+          {
+            "text": "        row.operator(\"bst.rename_images_by_mat\", text=\"Rename by Material\", icon='OUTLINER_DATA_FONT')",
+            "lineNumber": 1544
+          },
+          {
+            "text": "        ",
+            "lineNumber": 1545
+          },
+          {
+            "text": "        # Get addon preferences",
+            "lineNumber": 1546
+          },
+          {
+            "text": "        addon_name = __package__.split('.')[0]",
+            "lineNumber": 1547
+          },
+          {
+            "text": "        addon_entry = context.preferences.addons.get(addon_name)",
+            "lineNumber": 1548
+          },
+          {
+            "text": "        prefs = addon_entry.preferences if addon_entry else None",
+            "lineNumber": 1549
+          },
+          {
+            "text": "        ",
+            "lineNumber": 1550
+          },
+          {
+            "text": "        row = box.row(align=True)",
+            "lineNumber": 1551
+          },
+          {
+            "text": "        row.enabled = any_selected",
+            "lineNumber": 1552
+          },
+          {
+            "text": "        ",
+            "lineNumber": 1553
+          },
+          {
+            "text": "        # Split row for button and checkbox",
+            "lineNumber": 1554
+          },
+          {
+            "text": "        split = row.split(factor=0.8)",
+            "lineNumber": 1555
+          },
+          {
+            "text": "        ",
+            "lineNumber": 1556
+          },
+          {
+            "text": "        # Left side: button",
+            "lineNumber": 1557
+          },
+          {
+            "text": "        split.operator(\"bst.automatextractor\", text=\"AutoMat Extractor\", icon='PACKAGE')",
+            "lineNumber": 1558
+          },
+          {
+            "text": "        ",
+            "lineNumber": 1559
+          },
+          {
+            "text": "        # Right side: checkbox",
+            "lineNumber": 1560
+          },
+          {
+            "text": "        col = split.column()",
+            "lineNumber": 1561
+          },
+          {
+            "text": "        if prefs:",
+            "lineNumber": 1562
+          },
+          {
+            "text": "            col.prop(prefs, \"automat_common_outside_blend\", text=\"\", icon='FOLDER_REDIRECT')",
+            "lineNumber": 1563
+          },
+          {
+            "text": "        ",
+            "lineNumber": 1564
+          },
+          {
+            "text": "        # Bulk operations section",
+            "lineNumber": 1565
+          },
+          {
+            "text": "        box = layout.box()",
+            "lineNumber": 1566
+          },
+          {
+            "text": "        box.label(text=\"Bulk Operations\", icon='MODIFIER')",
+            "lineNumber": 1567
+          },
+          {
+            "text": "        row = box.row()",
+            "lineNumber": 1568
+          },
+          {
+            "text": "        row.prop(path_props, \"show_bulk_operations\", ",
+            "lineNumber": 1569
+          },
+          {
+            "text": "                 text=\"Show Bulk Operations\", ",
+            "lineNumber": 1570
+          },
+          {
+            "text": "                 icon=\"TRIA_DOWN\" if path_props.show_bulk_operations else \"TRIA_RIGHT\",",
+            "lineNumber": 1571
+          },
+          {
+            "text": "                 icon_only=True, emboss=False)",
+            "lineNumber": 1572
+          },
+          {
+            "text": "        row.label(text=\"Image Selection\")",
+            "lineNumber": 1573
+          },
+          {
+            "text": "        ",
+            "lineNumber": 1574
+          },
+          {
+            "text": "        # Show bulk operations UI only when expanded",
+            "lineNumber": 1575
+          }
+        ]
+      },
+      "score": 0.21585139632225037
+    },
+    {
+      "codeBlock": {
+        "relativeWorkspacePath": ".\\__init__.py",
+        "range": {
+          "startPosition": {},
+          "endPosition": {
+            "line": 45
+          }
+        },
+        "contents": "import bpy # type: ignore\nfrom bpy.types import AddonPreferences, Panel # type: ignore\nfrom bpy.props import BoolProperty # type: ignore\nfrom .panels import bulk_viewport_display\nfrom .panels import bulk_data_remap\nfrom .panels import bulk_path_management\nfrom .panels import bulk_scene_general\nfrom .ops.AutoMatExtractor import RBST_AutoMat_OT_AutoMatExtractor, RBST_AutoMat_OT_summary_dialog\nfrom .ops.Rename_images_by_mat import RBST_RenameImg_OT_Rename_images_by_mat, RBST_RenameImg_OT_summary_dialog\nfrom .ops.FreeGPU import RBST_FreeGPU\nfrom .ops import ghost_buster\nfrom . import rainys_repo_bootstrap\nfrom .utils import compat\n\n# Addon preferences class for update settings\nclass RBST_AddonPreferences(AddonPreferences):\n    bl_idname = __package__\n\n    # AutoMat Extractor settings\n    automat_common_outside_blend: BoolProperty(\n        name=\"Place 'common' folder outside 'blend' folder\",\n        description=\"If enabled, the 'common' folder for shared textures will be placed directly in 'textures/'. If disabled, it will be placed inside 'textures/&lt;blend_name&gt;/'\",\n        default=False,\n    )\n\n    def draw(self, context):\n        layout = self.layout\n\n        # AutoMat Extractor settings\n        box = layout.box()\n        box.label(text=\"AutoMat Extractor Settings\")\n        row = box.row()\n        row.prop(self, \"automat_common_outside_blend\")\n\n# Main panel for Bulk Scene Tools\nclass VIEW3D_PT_BulkSceneTools(Panel):\n    \"\"\"Bulk Scene Tools Panel\"\"\"",
+        "signatures": {},
+        "detailedLines": [
+          {
+            "text": "import bpy # type: ignore",
+            "lineNumber": 1
+          },
+          {
+            "text": "from bpy.types import AddonPreferences, Panel # type: ignore",
+            "lineNumber": 2
+          },
+          {
+            "text": "from bpy.props import BoolProperty # type: ignore",
+            "lineNumber": 3
+          },
+          {
+            "text": "from .panels import bulk_viewport_display",
+            "lineNumber": 4
+          },
+          {
+            "text": "from .panels import bulk_data_remap",
+            "lineNumber": 5
+          },
+          {
+            "text": "from .panels import bulk_path_management",
+            "lineNumber": 6
+          },
+          {
+            "text": "from .panels import bulk_scene_general",
+            "lineNumber": 7
+          },
+          {
+            "text": "from .ops.AutoMatExtractor import RBST_AutoMat_OT_AutoMatExtractor, RBST_AutoMat_OT_summary_dialog",
+            "lineNumber": 8
+          },
+          {
+            "text": "from .ops.Rename_images_by_mat import RBST_RenameImg_OT_Rename_images_by_mat, RBST_RenameImg_OT_summary_dialog",
+            "lineNumber": 9
+          },
+          {
+            "text": "from .ops.FreeGPU import RBST_FreeGPU",
+            "lineNumber": 10
+          },
+          {
+            "text": "from .ops import ghost_buster",
+            "lineNumber": 11
+          },
+          {
+            "text": "from . import rainys_repo_bootstrap",
+            "lineNumber": 12
+          },
+          {
+            "text": "from .utils import compat",
+            "lineNumber": 13
+          },
+          {
+            "lineNumber": 14
+          },
+          {
+            "text": "# Addon preferences class for update settings",
+            "lineNumber": 15
+          },
+          {
+            "text": "class RBST_AddonPreferences(AddonPreferences):",
+            "lineNumber": 16,
+            "isSignature": true
+          },
+          {
+            "text": "    bl_idname = __package__",
+            "lineNumber": 17
+          },
+          {
+            "lineNumber": 18
+          },
+          {
+            "text": "    # AutoMat Extractor settings",
+            "lineNumber": 19
+          },
+          {
+            "text": "    automat_common_outside_blend: BoolProperty(",
+            "lineNumber": 20
+          },
+          {
+            "text": "        name=\"Place 'common' folder outside 'blend' folder\",",
+            "lineNumber": 21
+          },
+          {
+            "text": "        description=\"If enabled, the 'common' folder for shared textures will be placed directly in 'textures/'. If disabled, it will be placed inside 'textures/&lt;blend_name&gt;/'\",",
+            "lineNumber": 22
+          },
+          {
+            "text": "        default=False,",
+            "lineNumber": 23
+          },
+          {
+            "text": "    )",
+            "lineNumber": 24
+          },
+          {
+            "lineNumber": 25
+          },
+          {
+            "text": "    def draw(self, context):",
+            "lineNumber": 26
+          },
+          {
+            "text": "        layout = self.layout",
+            "lineNumber": 27
+          },
+          {
+            "lineNumber": 28
+          },
+          {
+            "text": "        # AutoMat Extractor settings",
+            "lineNumber": 29
+          },
+          {
+            "text": "        box = layout.box()",
+            "lineNumber": 30
+          },
+          {
+            "text": "        box.label(text=\"AutoMat Extractor Settings\")",
+            "lineNumber": 31
+          },
+          {
+            "text": "        row = box.row()",
+            "lineNumber": 32
+          },
+          {
+            "text": "        row.prop(self, \"automat_common_outside_blend\")",
+            "lineNumber": 33,
+            "isSignature": true
+          },
+          {
+            "lineNumber": 34
+          },
+          {
+            "text": "# Main panel for Bulk Scene Tools",
+            "lineNumber": 35
+          },
+          {
+            "text": "class VIEW3D_PT_BulkSceneTools(Panel):",
+            "lineNumber": 36,
+            "isSignature": true
+          },
+          {
+            "text": "    \"\"\"Bulk Scene Tools Panel\"\"\"",
+            "lineNumber": 37
+          }
+        ]
+      },
+      "score": 0.210610032081604
+    },
+    {
+      "codeBlock": {
+        "relativeWorkspacePath": ".\\ops\\AutoMatExtractor.py",
+        "range": {
+          "startPosition": {
+            "line": 64
+          },
+          "endPosition": {
+            "line": 537
+          }
+        },
+        "contents": "class RBST_AutoMat_OT_AutoMatExtractor(bpy.types.Operator):\ndef _process_step(self):\n\n            \n        elif self.current_step == 4:\n            # Step 5: Remap paths\n            if self.current_index &gt;= len(self.path_mapping):\n                # Remapping complete, move to saving\n                self.current_step = 5\n                self.current_index = 0\n                props.operation_status = \"Saving images to new locations...\"\n                props.operation_progress = 85.0\n                return 0.01\n            \n            # Remap current image\n            img_name = list(self.path_mapping.keys())[self.current_index]\n            mapping_entry = self.path_mapping[img_name]\n            props.operation_status = f\"Remapping {img_name}...\"\n            \n            if isinstance(mapping_entry, dict) and mapping_entry.get(\"udim\"):\n                success = set_image_paths(\n                    img_name,\n                    mapping_entry.get(\"template\", \"\"),\n                    tile_paths=mapping_entry.get(\"tiles\", {})\n                )\n            else:\n                success = set_image_paths(img_name, mapping_entry)\n            if success:\n                self.success_count += 1\n            else:\n                self.failed_list.append(img_name)\n            \n            self.current_index += 1\n            progress = 70.0 + (self.current_index / len(self.path_mapping)) * 15.0\n            props.operation_progress = progress\n            \n        elif self.current_step == 5:",
+        "signatures": {
+          "ranges": [
+            {
+              "startPosition": {
+                "line": 65,
+                "column": 1
+              },
+              "endPosition": {
+                "line": 66,
+                "column": 5
+              }
+            },
+            {
+              "startPosition": {
+                "line": 111,
+                "column": 5
+              },
+              "endPosition": {
+                "line": 112,
+                "column": 9
+              }
+            }
+          ]
+        },
+        "detailedLines": [
+          {
+            "text": "class RBST_AutoMat_OT_AutoMatExtractor(bpy.types.Operator):",
+            "lineNumber": 65,
+            "isSignature": true
+          },
+          {
+            "text": "def _process_step(self):",
+            "lineNumber": 111
+          },
+          {
+            "lineNumber": 258
+          },
+          {
+            "text": "            ",
+            "lineNumber": 259
+          },
+          {
+            "text": "        elif self.current_step == 4:",
+            "lineNumber": 260
+          },
+          {
+            "text": "            # Step 5: Remap paths",
+            "lineNumber": 261
+          },
+          {
+            "text": "            if self.current_index &gt;= len(self.path_mapping):",
+            "lineNumber": 262
+          },
+          {
+            "text": "                # Remapping complete, move to saving",
+            "lineNumber": 263
+          },
+          {
+            "text": "                self.current_step = 5",
+            "lineNumber": 264
+          },
+          {
+            "text": "                self.current_index = 0",
+            "lineNumber": 265
+          },
+          {
+            "text": "                props.operation_status = \"Saving images to new locations...\"",
+            "lineNumber": 266
+          },
+          {
+            "text": "                props.operation_progress = 85.0",
+            "lineNumber": 267
+          },
+          {
+            "text": "                return 0.01",
+            "lineNumber": 268
+          },
+          {
+            "text": "            ",
+            "lineNumber": 269
+          },
+          {
+            "text": "            # Remap current image",
+            "lineNumber": 270
+          },
+          {
+            "text": "            img_name = list(self.path_mapping.keys())[self.current_index]",
+            "lineNumber": 271
+          },
+          {
+            "text": "            mapping_entry = self.path_mapping[img_name]",
+            "lineNumber": 272
+          },
+          {
+            "text": "            props.operation_status = f\"Remapping {img_name}...\"",
+            "lineNumber": 273
+          },
+          {
+            "text": "            ",
+            "lineNumber": 274
+          },
+          {
+            "text": "            if isinstance(mapping_entry, dict) and mapping_entry.get(\"udim\"):",
+            "lineNumber": 275
+          },
+          {
+            "text": "                success = set_image_paths(",
+            "lineNumber": 276
+          },
+          {
+            "text": "                    img_name,",
+            "lineNumber": 277
+          },
+          {
+            "text": "                    mapping_entry.get(\"template\", \"\"),",
+            "lineNumber": 278
+          },
+          {
+            "text": "                    tile_paths=mapping_entry.get(\"tiles\", {})",
+            "lineNumber": 279
+          },
+          {
+            "text": "                )",
+            "lineNumber": 280
+          },
+          {
+            "text": "            else:",
+            "lineNumber": 281
+          },
+          {
+            "text": "                success = set_image_paths(img_name, mapping_entry)",
+            "lineNumber": 282
+          },
+          {
+            "text": "            if success:",
+            "lineNumber": 283
+          },
+          {
+            "text": "                self.success_count += 1",
+            "lineNumber": 284
+          },
+          {
+            "text": "            else:",
+            "lineNumber": 285
+          },
+          {
+            "text": "                self.failed_list.append(img_name)",
+            "lineNumber": 286
+          },
+          {
+            "text": "            ",
+            "lineNumber": 287
+          },
+          {
+            "text": "            self.current_index += 1",
+            "lineNumber": 288
+          },
+          {
+            "text": "            progress = 70.0 + (self.current_index / len(self.path_mapping)) * 15.0",
+            "lineNumber": 289
+          },
+          {
+            "text": "            props.operation_progress = progress",
+            "lineNumber": 290
+          },
+          {
+            "text": "            ",
+            "lineNumber": 291
+          },
+          {
+            "text": "        elif self.current_step == 5:",
+            "lineNumber": 292
+          }
+        ]
+      },
+      "score": 0.20992475748062134
+    },
+    {
+      "codeBlock": {
+        "relativeWorkspacePath": ".\\ops\\AutoMatExtractor.py",
+        "range": {
+          "startPosition": {
+            "line": 64
+          },
+          "endPosition": {
+            "line": 537
+          }
+        },
+        "contents": "class RBST_AutoMat_OT_AutoMatExtractor(bpy.types.Operator):\ndef _process_step(self):\n\n            \n        elif self.current_step == 3:\n            # Step 4: Build path mapping\n            if self.current_index &gt;= len(self.selected_images):\n                # Path building complete, move to remapping\n                self.current_step = 4\n                self.current_index = 0\n                props.operation_status = \"Remapping image paths...\"\n                props.operation_progress = 70.0\n                return 0.01\n            \n            # Build path for current image\n            img = self.selected_images[self.current_index]\n            props.operation_status = f\"Building path for {img.name}...\"\n            \n            # Get blend file name - respect user preference if set\n            if props.use_blend_subfolder:\n                blend_name = props.blend_subfolder\n                if not blend_name:\n                    # Fall back to filename if not specified\n                    blend_path = bpy.data.filepath\n                    if blend_path:\n                        blend_name = os.path.splitext(os.path.basename(blend_path))[0]\n                    else:\n                        blend_name = \"untitled\"\n            else:\n                # Derive from filename\n                blend_path = bpy.data.filepath\n                if blend_path:\n                    blend_name = os.path.splitext(os.path.basename(blend_path))[0]\n                else:\n                    blend_name = \"untitled\"\n            blend_name = self.sanitize_filename(blend_name)\n            \n            # Determine common path\n            if self.common_outside:\n                common_path_part = \"common\"\n            else:\n                common_path_part = f\"{blend_name}\\\\common\"\n            \n            # Get extension and build path\n            extension = get_image_extension(img)\n            sanitized_base_name = self.sanitize_filename(img.name)\n            filename = f\"{sanitized_base_name}{extension}\"\n            \n            if img.name.startswith('#'):",
+        "signatures": {
+          "ranges": [
+            {
+              "startPosition": {
+                "line": 65,
+                "column": 1
+              },
+              "endPosition": {
+                "line": 66,
+                "column": 5
+              }
+            },
+            {
+              "startPosition": {
+                "line": 111,
+                "column": 5
+              },
+              "endPosition": {
+                "line": 112,
+                "column": 9
+              }
+            }
+          ]
+        },
+        "detailedLines": [
+          {
+            "text": "class RBST_AutoMat_OT_AutoMatExtractor(bpy.types.Operator):",
+            "lineNumber": 65,
+            "isSignature": true
+          },
+          {
+            "text": "def _process_step(self):",
+            "lineNumber": 111
+          },
+          {
+            "lineNumber": 179
+          },
+          {
+            "text": "            ",
+            "lineNumber": 180
+          },
+          {
+            "text": "        elif self.current_step == 3:",
+            "lineNumber": 181
+          },
+          {
+            "text": "            # Step 4: Build path mapping",
+            "lineNumber": 182
+          },
+          {
+            "text": "            if self.current_index &gt;= len(self.selected_images):",
+            "lineNumber": 183
+          },
+          {
+            "text": "                # Path building complete, move to remapping",
+            "lineNumber": 184
+          },
+          {
+            "text": "                self.current_step = 4",
+            "lineNumber": 185
+          },
+          {
+            "text": "                self.current_index = 0",
+            "lineNumber": 186
+          },
+          {
+            "text": "                props.operation_status = \"Remapping image paths...\"",
+            "lineNumber": 187
+          },
+          {
+            "text": "                props.operation_progress = 70.0",
+            "lineNumber": 188
+          },
+          {
+            "text": "                return 0.01",
+            "lineNumber": 189
+          },
+          {
+            "text": "            ",
+            "lineNumber": 190
+          },
+          {
+            "text": "            # Build path for current image",
+            "lineNumber": 191
+          },
+          {
+            "text": "            img = self.selected_images[self.current_index]",
+            "lineNumber": 192
+          },
+          {
+            "text": "            props.operation_status = f\"Building path for {img.name}...\"",
+            "lineNumber": 193
+          },
+          {
+            "text": "            ",
+            "lineNumber": 194
+          },
+          {
+            "text": "            # Get blend file name - respect user preference if set",
+            "lineNumber": 195
+          },
+          {
+            "text": "            if props.use_blend_subfolder:",
+            "lineNumber": 196
+          },
+          {
+            "text": "                blend_name = props.blend_subfolder",
+            "lineNumber": 197
+          },
+          {
+            "text": "                if not blend_name:",
+            "lineNumber": 198
+          },
+          {
+            "text": "                    # Fall back to filename if not specified",
+            "lineNumber": 199
+          },
+          {
+            "text": "                    blend_path = bpy.data.filepath",
+            "lineNumber": 200
+          },
+          {
+            "text": "                    if blend_path:",
+            "lineNumber": 201
+          },
+          {
+            "text": "                        blend_name = os.path.splitext(os.path.basename(blend_path))[0]",
+            "lineNumber": 202
+          },
+          {
+            "text": "                    else:",
+            "lineNumber": 203
+          },
+          {
+            "text": "                        blend_name = \"untitled\"",
+            "lineNumber": 204
+          },
+          {
+            "text": "            else:",
+            "lineNumber": 205
+          },
+          {
+            "text": "                # Derive from filename",
+            "lineNumber": 206
+          },
+          {
+            "text": "                blend_path = bpy.data.filepath",
+            "lineNumber": 207
+          },
+          {
+            "text": "                if blend_path:",
+            "lineNumber": 208
+          },
+          {
+            "text": "                    blend_name = os.path.splitext(os.path.basename(blend_path))[0]",
+            "lineNumber": 209
+          },
+          {
+            "text": "                else:",
+            "lineNumber": 210
+          },
+          {
+            "text": "                    blend_name = \"untitled\"",
+            "lineNumber": 211
+          },
+          {
+            "text": "            blend_name = self.sanitize_filename(blend_name)",
+            "lineNumber": 212
+          },
+          {
+            "text": "            ",
+            "lineNumber": 213
+          },
+          {
+            "text": "            # Determine common path",
+            "lineNumber": 214
+          },
+          {
+            "text": "            if self.common_outside:",
+            "lineNumber": 215
+          },
+          {
+            "text": "                common_path_part = \"common\"",
+            "lineNumber": 216
+          },
+          {
+            "text": "            else:",
+            "lineNumber": 217
+          },
+          {
+            "text": "                common_path_part = f\"{blend_name}\\\\common\"",
+            "lineNumber": 218
+          },
+          {
+            "text": "            ",
+            "lineNumber": 219
+          },
+          {
+            "text": "            # Get extension and build path",
+            "lineNumber": 220
+          },
+          {
+            "text": "            extension = get_image_extension(img)",
+            "lineNumber": 221
+          },
+          {
+            "text": "            sanitized_base_name = self.sanitize_filename(img.name)",
+            "lineNumber": 222
+          },
+          {
+            "text": "            filename = f\"{sanitized_base_name}{extension}\"",
+            "lineNumber": 223
+          },
+          {
+            "text": "            ",
+            "lineNumber": 224
+          },
+          {
+            "text": "            if img.name.startswith('#'):",
+            "lineNumber": 225
+          }
+        ]
+      },
+      "score": 0.2098166048526764
+    },
+    {
+      "codeBlock": {
+        "relativeWorkspacePath": ".\\ops\\AutoMatExtractor.py",
+        "range": {
+          "startPosition": {
+            "line": 64
+          },
+          "endPosition": {
+            "line": 537
+          }
+        },
+        "contents": "class RBST_AutoMat_OT_AutoMatExtractor(bpy.types.Operator):\ndef _process_step(self):\n\n            \n        elif self.current_step == 2:\n            # Step 3: Organize images by material usage\n            if self.current_index &gt;= len(self.selected_images):\n                # Analysis complete, move to path building\n                self.current_step = 3\n                self.current_index = 0\n                props.operation_status = \"Building path mapping...\"\n                props.operation_progress = 50.0\n                return 0.01\n            \n            # Get material mapping for all selected images\n            if self.current_index == 0:\n                self.material_mapping = self.get_image_material_mapping(self.selected_images)\n                print(f\"DEBUG: Material mapping created for {len(self.selected_images)} images\")\n            \n            # This step is quick, just mark progress\n            self.current_index += 1\n            progress = 30.0 + (self.current_index / len(self.selected_images)) * 20.0\n            props.operation_progress = progress\n            \n        elif self.current_step == 3:",
+        "signatures": {
+          "ranges": [
+            {
+              "startPosition": {
+                "line": 65,
+                "column": 1
+              },
+              "endPosition": {
+                "line": 66,
+                "column": 5
+              }
+            },
+            {
+              "startPosition": {
+                "line": 111,
+                "column": 5
+              },
+              "endPosition": {
+                "line": 112,
+                "column": 9
+              }
+            }
+          ]
+        },
+        "detailedLines": [
+          {
+            "text": "class RBST_AutoMat_OT_AutoMatExtractor(bpy.types.Operator):",
+            "lineNumber": 65,
+            "isSignature": true
+          },
+          {
+            "text": "def _process_step(self):",
+            "lineNumber": 111
+          },
+          {
+            "lineNumber": 159
+          },
+          {
+            "text": "            ",
+            "lineNumber": 160
+          },
+          {
+            "text": "        elif self.current_step == 2:",
+            "lineNumber": 161
+          },
+          {
+            "text": "            # Step 3: Organize images by material usage",
+            "lineNumber": 162
+          },
+          {
+            "text": "            if self.current_index &gt;= len(self.selected_images):",
+            "lineNumber": 163
+          },
+          {
+            "text": "                # Analysis complete, move to path building",
+            "lineNumber": 164
+          },
+          {
+            "text": "                self.current_step = 3",
+            "lineNumber": 165
+          },
+          {
+            "text": "                self.current_index = 0",
+            "lineNumber": 166
+          },
+          {
+            "text": "                props.operation_status = \"Building path mapping...\"",
+            "lineNumber": 167
+          },
+          {
+            "text": "                props.operation_progress = 50.0",
+            "lineNumber": 168
+          },
+          {
+            "text": "                return 0.01",
+            "lineNumber": 169
+          },
+          {
+            "text": "            ",
+            "lineNumber": 170
+          },
+          {
+            "text": "            # Get material mapping for all selected images",
+            "lineNumber": 171
+          },
+          {
+            "text": "            if self.current_index == 0:",
+            "lineNumber": 172
+          },
+          {
+            "text": "                self.material_mapping = self.get_image_material_mapping(self.selected_images)",
+            "lineNumber": 173
+          },
+          {
+            "text": "                print(f\"DEBUG: Material mapping created for {len(self.selected_images)} images\")",
+            "lineNumber": 174
+          },
+          {
+            "text": "            ",
+            "lineNumber": 175
+          },
+          {
+            "text": "            # This step is quick, just mark progress",
+            "lineNumber": 176
+          },
+          {
+            "text": "            self.current_index += 1",
+            "lineNumber": 177
+          },
+          {
+            "text": "            progress = 30.0 + (self.current_index / len(self.selected_images)) * 20.0",
+            "lineNumber": 178
+          },
+          {
+            "text": "            props.operation_progress = progress",
+            "lineNumber": 179
+          },
+          {
+            "text": "            ",
+            "lineNumber": 180
+          },
+          {
+            "text": "        elif self.current_step == 3:",
+            "lineNumber": 181
+          }
+        ]
+      },
+      "score": 0.2038508653640747
+    },
+    {
+      "codeBlock": {
+        "relativeWorkspacePath": ".\\panels\\bulk_path_management.py",
+        "range": {
+          "startPosition": {
+            "line": 840,
+            "column": 27
+          },
+          "endPosition": {
+            "line": 917
+          }
+        },
+        "contents": "# Pack Images Operator\nclass RBST_PathMan_OT_pack_images(Operator):\n    bl_idname = \"bst.pack_images\"\n    bl_label = \"Pack Images\"\n    bl_description = \"Pack selected images into the .blend file\"\n    bl_options = {'REGISTER', 'UNDO'}\n    \n    def execute(self, context):\n        packed_count = 0\n        failed_count = 0\n        \n        # Get all selected images or all images if none selected\n        selected_images = [img for img in bpy.data.images if hasattr(img, \"bst_selected\") and img.bst_selected]\n        if not selected_images:\n            selected_images = list(bpy.data.images)\n        \n        for img in selected_images:\n            # Skip images that can't or shouldn't be packed\n            if (img.packed_file or  # Already packed\n                img.source == 'GENERATED' or  # Procedurally generated\n                img.source == 'VIEWER' or  # Render Result, Viewer Node, etc.\n                not img.filepath or  # No file path\n                img.name in ['Render Result', 'Viewer Node']):  # Special Blender images\n                continue\n                \n            try:\n                print(f\"DEBUG: Packing image: {img.name}\")\n                img.pack()\n                packed_count += 1\n            except Exception as e:\n                print(f\"DEBUG: Failed to pack {img.name}: {str(e)}\")\n                failed_count += 1\n        \n        if packed_count &gt; 0:\n            self.report({'INFO'}, f\"Successfully packed {packed_count} images\" + \n                       (f\", {failed_count} failed\" if failed_count &gt; 0 else \"\"))\n        else:\n            self.report({'WARNING'}, \"No images were packed\" +\n                        (f\", {failed_count} failed\" if failed_count &gt; 0 else \"\"))\n        \n        return {'FINISHED'}\n\n# Unpack Images Operator\nclass RBST_PathMan_OT_unpack_images(Operator):\n    bl_idname = \"bst.unpack_images\"",
+        "signatures": {},
+        "detailedLines": [
+          {
+            "text": "# Pack Images Operator",
+            "lineNumber": 843
+          },
+          {
+            "text": "class RBST_PathMan_OT_pack_images(Operator):",
+            "lineNumber": 844,
+            "isSignature": true
+          },
+          {
+            "text": "    bl_idname = \"bst.pack_images\"",
+            "lineNumber": 845
+          },
+          {
+            "text": "    bl_label = \"Pack Images\"",
+            "lineNumber": 846
+          },
+          {
+            "text": "    bl_description = \"Pack selected images into the .blend file\"",
+            "lineNumber": 847
+          },
+          {
+            "text": "    bl_options = {'REGISTER', 'UNDO'}",
+            "lineNumber": 848
+          },
+          {
+            "text": "    ",
+            "lineNumber": 849
+          },
+          {
+            "text": "    def execute(self, context):",
+            "lineNumber": 850
+          },
+          {
+            "text": "        packed_count = 0",
+            "lineNumber": 851
+          },
+          {
+            "text": "        failed_count = 0",
+            "lineNumber": 852
+          },
+          {
+            "text": "        ",
+            "lineNumber": 853
+          },
+          {
+            "text": "        # Get all selected images or all images if none selected",
+            "lineNumber": 854
+          },
+          {
+            "text": "        selected_images = [img for img in bpy.data.images if hasattr(img, \"bst_selected\") and img.bst_selected]",
+            "lineNumber": 855
+          },
+          {
+            "text": "        if not selected_images:",
+            "lineNumber": 856
+          },
+          {
+            "text": "            selected_images = list(bpy.data.images)",
+            "lineNumber": 857
+          },
+          {
+            "text": "        ",
+            "lineNumber": 858
+          },
+          {
+            "text": "        for img in selected_images:",
+            "lineNumber": 859
+          },
+          {
+            "text": "            # Skip images that can't or shouldn't be packed",
+            "lineNumber": 860
+          },
+          {
+            "text": "            if (img.packed_file or  # Already packed",
+            "lineNumber": 861
+          },
+          {
+            "text": "                img.source == 'GENERATED' or  # Procedurally generated",
+            "lineNumber": 862
+          },
+          {
+            "text": "                img.source == 'VIEWER' or  # Render Result, Viewer Node, etc.",
+            "lineNumber": 863
+          },
+          {
+            "text": "                not img.filepath or  # No file path",
+            "lineNumber": 864
+          },
+          {
+            "text": "                img.name in ['Render Result', 'Viewer Node']):  # Special Blender images",
+            "lineNumber": 865
+          },
+          {
+            "text": "                continue",
+            "lineNumber": 866
+          },
+          {
+            "text": "                ",
+            "lineNumber": 867
+          },
+          {
+            "text": "            try:",
+            "lineNumber": 868
+          },
+          {
+            "text": "                print(f\"DEBUG: Packing image: {img.name}\")",
+            "lineNumber": 869
+          },
+          {
+            "text": "                img.pack()",
+            "lineNumber": 870
+          },
+          {
+            "text": "                packed_count += 1",
+            "lineNumber": 871
+          },
+          {
+            "text": "            except Exception as e:",
+            "lineNumber": 872
+          },
+          {
+            "text": "                print(f\"DEBUG: Failed to pack {img.name}: {str(e)}\")",
+            "lineNumber": 873
+          },
+          {
+            "text": "                failed_count += 1",
+            "lineNumber": 874
+          },
+          {
+            "text": "        ",
+            "lineNumber": 875
+          },
+          {
+            "text": "        if packed_count &gt; 0:",
+            "lineNumber": 876
+          },
+          {
+            "text": "            self.report({'INFO'}, f\"Successfully packed {packed_count} images\" + ",
+            "lineNumber": 877
+          },
+          {
+            "text": "                       (f\", {failed_count} failed\" if failed_count &gt; 0 else \"\"))",
+            "lineNumber": 878
+          },
+          {
+            "text": "        else:",
+            "lineNumber": 879
+          },
+          {
+            "text": "            self.report({'WARNING'}, \"No images were packed\" +",
+            "lineNumber": 880
+          },
+          {
+            "text": "                        (f\", {failed_count} failed\" if failed_count &gt; 0 else \"\"))",
+            "lineNumber": 881
+          },
+          {
+            "text": "        ",
+            "lineNumber": 882
+          },
+          {
+            "text": "        return {'FINISHED'}",
+            "lineNumber": 883,
+            "isSignature": true
+          },
+          {
+            "lineNumber": 884
+          },
+          {
+            "text": "# Unpack Images Operator",
+            "lineNumber": 885
+          },
+          {
+            "text": "class RBST_PathMan_OT_unpack_images(Operator):",
+            "lineNumber": 886,
+            "isSignature": true
+          },
+          {
+            "text": "    bl_idname = \"bst.unpack_images\"",
+            "lineNumber": 887
+          }
+        ]
+      },
+      "score": 0.20074699819087982
+    },
+    {
+      "codeBlock": {
+        "relativeWorkspacePath": ".\\ops\\AutoMatExtractor.py",
+        "range": {
+          "startPosition": {
+            "line": 64
+          },
+          "endPosition": {
+            "line": 537
+          }
+        },
+        "contents": "class RBST_AutoMat_OT_AutoMatExtractor(bpy.types.Operator):\ndef _process_step(self):\n\n            if isinstance(mapping_entry, dict) and mapping_entry.get(\"udim\"):\n                self.save_udim_image(img, mapping_entry)\n            else:\n                self.save_standard_image(img)\n            \n            self.current_index += 1\n            progress = 85.0 + (self.current_index / len(self.selected_images)) * 15.0\n            props.operation_progress = progress\n        \n        # Force UI update\n        for area in bpy.context.screen.areas:\n            area.tag_redraw()\n        \n        # Continue processing\n        return 0.01\n\n    def show_summary_dialog(self, context, total_selected, success_count, overwrite_skipped_list, failed_remap_list):\n        \"\"\"Show a popup dialog with the extraction summary\"\"\"\n        overwrite_details = \"\"\n        if overwrite_skipped_list:\n            for name, path in overwrite_skipped_list:\n                overwrite_details += f\"'{name}' -&gt; '{path}'\\n\"\n\n        failed_remap_details = \"\"\n        if failed_remap_list:\n            for name, path in failed_remap_list:\n                failed_remap_details += f\"'{name}' -&gt; '{path}'\\n\"\n\n        bpy.ops.bst.automat_summary_dialog('INVOKE_DEFAULT',\n            total_selected=total_selected,\n            success_count=success_count,\n            overwrite_skipped_count=len(overwrite_skipped_list),\n            failed_remap_count=len(failed_remap_list),\n            overwrite_details=overwrite_details.strip(),\n            failed_remap_details=failed_remap_details.strip()\n        )\n\n    def sanitize_filename(self, filename):\n        \"\"\"Sanitize filename/folder name for filesystem compatibility\"\"\"",
+        "signatures": {
+          "ranges": [
+            {
+              "startPosition": {
+                "line": 65,
+                "column": 1
+              },
+              "endPosition": {
+                "line": 66,
+                "column": 5
+              }
+            },
+            {
+              "startPosition": {
+                "line": 111,
+                "column": 5
+              },
+              "endPosition": {
+                "line": 112,
+                "column": 9
+              }
+            }
+          ]
+        },
+        "detailedLines": [
+          {
+            "text": "class RBST_AutoMat_OT_AutoMatExtractor(bpy.types.Operator):",
+            "lineNumber": 65,
+            "isSignature": true
+          },
+          {
+            "text": "def _process_step(self):",
+            "lineNumber": 111
+          },
+          {
+            "lineNumber": 367
+          },
+          {
+            "text": "            if isinstance(mapping_entry, dict) and mapping_entry.get(\"udim\"):",
+            "lineNumber": 368
+          },
+          {
+            "text": "                self.save_udim_image(img, mapping_entry)",
+            "lineNumber": 369
+          },
+          {
+            "text": "            else:",
+            "lineNumber": 370
+          },
+          {
+            "text": "                self.save_standard_image(img)",
+            "lineNumber": 371
+          },
+          {
+            "text": "            ",
+            "lineNumber": 372
+          },
+          {
+            "text": "            self.current_index += 1",
+            "lineNumber": 373
+          },
+          {
+            "text": "            progress = 85.0 + (self.current_index / len(self.selected_images)) * 15.0",
+            "lineNumber": 374
+          },
+          {
+            "text": "            props.operation_progress = progress",
+            "lineNumber": 375
+          },
+          {
+            "text": "        ",
+            "lineNumber": 376
+          },
+          {
+            "text": "        # Force UI update",
+            "lineNumber": 377
+          },
+          {
+            "text": "        for area in bpy.context.screen.areas:",
+            "lineNumber": 378
+          },
+          {
+            "text": "            area.tag_redraw()",
+            "lineNumber": 379
+          },
+          {
+            "text": "        ",
+            "lineNumber": 380
+          },
+          {
+            "text": "        # Continue processing",
+            "lineNumber": 381
+          },
+          {
+            "text": "        return 0.01",
+            "lineNumber": 382
+          },
+          {
+            "lineNumber": 383
+          },
+          {
+            "text": "    def show_summary_dialog(self, context, total_selected, success_count, overwrite_skipped_list, failed_remap_list):",
+            "lineNumber": 384
+          },
+          {
+            "text": "        \"\"\"Show a popup dialog with the extraction summary\"\"\"",
+            "lineNumber": 385
+          },
+          {
+            "text": "        overwrite_details = \"\"",
+            "lineNumber": 386
+          },
+          {
+            "text": "        if overwrite_skipped_list:",
+            "lineNumber": 387
+          },
+          {
+            "text": "            for name, path in overwrite_skipped_list:",
+            "lineNumber": 388
+          },
+          {
+            "text": "                overwrite_details += f\"'{name}' -&gt; '{path}'\\n\"",
+            "lineNumber": 389
+          },
+          {
+            "lineNumber": 390
+          },
+          {
+            "text": "        failed_remap_details = \"\"",
+            "lineNumber": 391
+          },
+          {
+            "text": "        if failed_remap_list:",
+            "lineNumber": 392
+          },
+          {
+            "text": "            for name, path in failed_remap_list:",
+            "lineNumber": 393
+          },
+          {
+            "text": "                failed_remap_details += f\"'{name}' -&gt; '{path}'\\n\"",
+            "lineNumber": 394
+          },
+          {
+            "lineNumber": 395
+          },
+          {
+            "text": "        bpy.ops.bst.automat_summary_dialog('INVOKE_DEFAULT',",
+            "lineNumber": 396
+          },
+          {
+            "text": "            total_selected=total_selected,",
+            "lineNumber": 397
+          },
+          {
+            "text": "            success_count=success_count,",
+            "lineNumber": 398
+          },
+          {
+            "text": "            overwrite_skipped_count=len(overwrite_skipped_list),",
+            "lineNumber": 399
+          },
+          {
+            "text": "            failed_remap_count=len(failed_remap_list),",
+            "lineNumber": 400
+          },
+          {
+            "text": "            overwrite_details=overwrite_details.strip(),",
+            "lineNumber": 401
+          },
+          {
+            "text": "            failed_remap_details=failed_remap_details.strip()",
+            "lineNumber": 402
+          },
+          {
+            "text": "        )",
+            "lineNumber": 403
+          },
+          {
+            "lineNumber": 404
+          },
+          {
+            "text": "    def sanitize_filename(self, filename):",
+            "lineNumber": 405
+          },
+          {
+            "text": "        \"\"\"Sanitize filename/folder name for filesystem compatibility\"\"\"",
+            "lineNumber": 406
+          }
+        ]
+      },
+      "score": 0.19909259676933289
+    },
+    {
+      "codeBlock": {
+        "relativeWorkspacePath": ".\\ops\\AutoMatExtractor.py",
+        "range": {
+          "startPosition": {
+            "line": 64
+          },
+          "endPosition": {
+            "line": 537
+          }
+        },
+        "contents": "class RBST_AutoMat_OT_AutoMatExtractor(bpy.types.Operator):\ndef _process_step(self):\n\n                print(f\"  Flat colors: {flat_colors}\")\n                \n                # Show material organization details\n                if material_organized &gt; 0:\n                    print(f\"\\nMaterial organization details:\")\n                    material_folders = {}\n                    for img_name, path in self.path_mapping.items():\n                        if \"FlatColors\" not in path and \"common\" not in path:\n                            # Extract material name from path\n                            if isinstance(path, dict):\n                                continue\n                            path_parts = path.split('\\\\')\n                            if len(path_parts) &gt;= 3:\n                                material_name = path_parts[-2]\n                                if material_name not in material_folders:\n                                    material_folders[material_name] = []\n                                material_folders[material_name].append(img_name)\n                    \n                    for material_name, images in material_folders.items():\n                        print(f\"  {material_name}: {len(images)} images\")\n                \n                print(f\"=====================================\\n\")\n                if self.udim_summary[\"found\"]:\n                    print(f\"UDIM images processed: {self.udim_summary['found']} (saved successfully: {self.udim_summary['saved']})\")\n                \n                # Force UI update\n                for area in bpy.context.screen.areas:\n                    area.tag_redraw()\n                \n                return None\n            \n            # Save current image\n            img = self.selected_images[self.current_index]\n            props.operation_status = f\"Saving {img.name}...\"\n            \n            mapping_entry = self.path_mapping.get(img.name)\n            if isinstance(mapping_entry, dict) and mapping_entry.get(\"udim\"):\n                self.save_udim_image(img, mapping_entry)",
+        "signatures": {
+          "ranges": [
+            {
+              "startPosition": {
+                "line": 65,
+                "column": 1
+              },
+              "endPosition": {
+                "line": 66,
+                "column": 5
+              }
+            },
+            {
+              "startPosition": {
+                "line": 111,
+                "column": 5
+              },
+              "endPosition": {
+                "line": 112,
+                "column": 9
+              }
+            }
+          ]
+        },
+        "detailedLines": [
+          {
+            "text": "class RBST_AutoMat_OT_AutoMatExtractor(bpy.types.Operator):",
+            "lineNumber": 65,
+            "isSignature": true
+          },
+          {
+            "text": "def _process_step(self):",
+            "lineNumber": 111
+          },
+          {
+            "lineNumber": 331
+          },
+          {
+            "text": "                print(f\"  Flat colors: {flat_colors}\")",
+            "lineNumber": 332
+          },
+          {
+            "text": "                ",
+            "lineNumber": 333
+          },
+          {
+            "text": "                # Show material organization details",
+            "lineNumber": 334
+          },
+          {
+            "text": "                if material_organized &gt; 0:",
+            "lineNumber": 335
+          },
+          {
+            "text": "                    print(f\"\\nMaterial organization details:\")",
+            "lineNumber": 336
+          },
+          {
+            "text": "                    material_folders = {}",
+            "lineNumber": 337
+          },
+          {
+            "text": "                    for img_name, path in self.path_mapping.items():",
+            "lineNumber": 338
+          },
+          {
+            "text": "                        if \"FlatColors\" not in path and \"common\" not in path:",
+            "lineNumber": 339
+          },
+          {
+            "text": "                            # Extract material name from path",
+            "lineNumber": 340
+          },
+          {
+            "text": "                            if isinstance(path, dict):",
+            "lineNumber": 341
+          },
+          {
+            "text": "                                continue",
+            "lineNumber": 342
+          },
+          {
+            "text": "                            path_parts = path.split('\\\\')",
+            "lineNumber": 343
+          },
+          {
+            "text": "                            if len(path_parts) &gt;= 3:",
+            "lineNumber": 344
+          },
+          {
+            "text": "                                material_name = path_parts[-2]",
+            "lineNumber": 345
+          },
+          {
+            "text": "                                if material_name not in material_folders:",
+            "lineNumber": 346
+          },
+          {
+            "text": "                                    material_folders[material_name] = []",
+            "lineNumber": 347
+          },
+          {
+            "text": "                                material_folders[material_name].append(img_name)",
+            "lineNumber": 348
+          },
+          {
+            "text": "                    ",
+            "lineNumber": 349
+          },
+          {
+            "text": "                    for material_name, images in material_folders.items():",
+            "lineNumber": 350
+          },
+          {
+            "text": "                        print(f\"  {material_name}: {len(images)} images\")",
+            "lineNumber": 351
+          },
+          {
+            "text": "                ",
+            "lineNumber": 352
+          },
+          {
+            "text": "                print(f\"=====================================\\n\")",
+            "lineNumber": 353
+          },
+          {
+            "text": "                if self.udim_summary[\"found\"]:",
+            "lineNumber": 354
+          },
+          {
+            "text": "                    print(f\"UDIM images processed: {self.udim_summary['found']} (saved successfully: {self.udim_summary['saved']})\")",
+            "lineNumber": 355
+          },
+          {
+            "text": "                ",
+            "lineNumber": 356
+          },
+          {
+            "text": "                # Force UI update",
+            "lineNumber": 357
+          },
+          {
+            "text": "                for area in bpy.context.screen.areas:",
+            "lineNumber": 358
+          },
+          {
+            "text": "                    area.tag_redraw()",
+            "lineNumber": 359
+          },
+          {
+            "text": "                ",
+            "lineNumber": 360
+          },
+          {
+            "text": "                return None",
+            "lineNumber": 361
+          },
+          {
+            "text": "            ",
+            "lineNumber": 362
+          },
+          {
+            "text": "            # Save current image",
+            "lineNumber": 363
+          },
+          {
+            "text": "            img = self.selected_images[self.current_index]",
+            "lineNumber": 364
+          },
+          {
+            "text": "            props.operation_status = f\"Saving {img.name}...\"",
+            "lineNumber": 365
+          },
+          {
+            "text": "            ",
+            "lineNumber": 366
+          },
+          {
+            "text": "            mapping_entry = self.path_mapping.get(img.name)",
+            "lineNumber": 367
+          },
+          {
+            "text": "            if isinstance(mapping_entry, dict) and mapping_entry.get(\"udim\"):",
+            "lineNumber": 368
+          },
+          {
+            "text": "                self.save_udim_image(img, mapping_entry)",
+            "lineNumber": 369
+          }
+        ]
+      },
+      "score": 0.19787150621414185
+    },
+    {
+      "codeBlock": {
+        "relativeWorkspacePath": ".\\changelog.md",
+        "range": {
+          "startPosition": {},
+          "endPosition": {
+            "line": 40,
+            "column": 2
+          }
+        },
+        "contents": "# v0.15.0 2026-01-07\n  - Refactored all class, function, and constant names to use consistent RBST_ prefix system with module-specific sub-prefixes\n  - Added Data-Block Utils integration: Merge Duplicates button in Bulk Data Remap panel that automates finding and merging duplicates across Node Groups, Materials, Lights, Images, and Meshes\n\n# v0.14.1\n  - Fixed crash in Blender 5.0 when refreshing material previews (#11)\n    - Removed problematic batch preview operators and unsafe icon_id access that caused crashes\n    - Added version-specific optimizations for 4.2/4.5 vs 5.0+ compatibility\n    - Improved cleanup and reduced CPU usage\n\n# v0.14.0\n  - Added operator to select all images with absolute paths (#3)\n  - Added search functionality to filter datablocks in PathMan and Data Remapper panels (#4)\n\n# v0.13.1\n  - Fix github workflow to include new utils folder\n\n# v0.13.0\n  - Set up compat for #9, still needs bugchecking, but the main setup is complete.\n  - Fixed #10\n\n# v0.12.0\n  - Integrate Rainy's Extension Repo bootstrapper\n  - Set minimum Blender version to 4.2 for #9\n\n# v0.11.0\n  - Ported to blender extension type\n  - Removed CGCookie autoupdater\n\n# v 0.10.0\n- **AutoMat Extractor**\n  - Added UDIM/tiled image detection so multi-tile textures are organized alongside standard images without errors. #8\n    - Path builder now emits UDIM filename templates (e.g., &#96;name.[UDIM].png&#96;) plus per-tile targets (e.g., &#96;name.1001.png&#96;), preventing collisions during relocation.\n  - Remapping helper sets tile-level &#96;filepath&#96; values and ensures directories exist before saving.\n  - Saving routine attempts whole-image writes first, then falls back to per-tile saves via the Image Editor context, with summary logs noting UDIM sets processed.\n- **Viewport Colors**\n  - Added a Refresh Material Previews button that clears thumbnails, assigns each material to a temporary preview mesh, and forces &#96;preview_ensure()&#96; so stubborn viewport colors now reliably pick up thumbnail data. #7\n\n# v 0.9.1\n- **Convert Relations to Constraint**\n  ",
+        "signatures": {},
+        "detailedLines": [
+          {
+            "text": "# v0.15.0 2026-01-07",
+            "lineNumber": 1
+          },
+          {
+            "text": "  - Refactored all class, function, and constant names to use consistent RBST_ prefix system with module-specific sub-prefixes",
+            "lineNumber": 2
+          },
+          {
+            "text": "  - Added Data-Block Utils integration: Merge Duplicates button in Bulk Data Remap panel that automates finding and merging duplicates across Node Groups, Materials, Lights, Images, and Meshes",
+            "lineNumber": 3
+          },
+          {
+            "lineNumber": 4
+          },
+          {
+            "text": "# v0.14.1",
+            "lineNumber": 5
+          },
+          {
+            "text": "  - Fixed crash in Blender 5.0 when refreshing material previews (#11)",
+            "lineNumber": 6
+          },
+          {
+            "text": "    - Removed problematic batch preview operators and unsafe icon_id access that caused crashes",
+            "lineNumber": 7
+          },
+          {
+            "text": "    - Added version-specific optimizations for 4.2/4.5 vs 5.0+ compatibility",
+            "lineNumber": 8
+          },
+          {
+            "text": "    - Improved cleanup and reduced CPU usage",
+            "lineNumber": 9
+          },
+          {
+            "lineNumber": 10
+          },
+          {
+            "text": "# v0.14.0",
+            "lineNumber": 11
+          },
+          {
+            "text": "  - Added operator to select all images with absolute paths (#3)",
+            "lineNumber": 12
+          },
+          {
+            "text": "  - Added search functionality to filter datablocks in PathMan and Data Remapper panels (#4)",
+            "lineNumber": 13
+          },
+          {
+            "lineNumber": 14
+          },
+          {
+            "text": "# v0.13.1",
+            "lineNumber": 15
+          },
+          {
+            "text": "  - Fix github workflow to include new utils folder",
+            "lineNumber": 16
+          },
+          {
+            "lineNumber": 17
+          },
+          {
+            "text": "# v0.13.0",
+            "lineNumber": 18
+          },
+          {
+            "text": "  - Set up compat for #9, still needs bugchecking, but the main setup is complete.",
+            "lineNumber": 19
+          },
+          {
+            "text": "  - Fixed #10",
+            "lineNumber": 20
+          },
+          {
+            "lineNumber": 21
+          },
+          {
+            "text": "# v0.12.0",
+            "lineNumber": 22
+          },
+          {
+            "text": "  - Integrate Rainy's Extension Repo bootstrapper",
+            "lineNumber": 23
+          },
+          {
+            "text": "  - Set minimum Blender version to 4.2 for #9",
+            "lineNumber": 24
+          },
+          {
+            "lineNumber": 25
+          },
+          {
+            "text": "# v0.11.0",
+            "lineNumber": 26
+          },
+          {
+            "text": "  - Ported to blender extension type",
+            "lineNumber": 27
+          },
+          {
+            "text": "  - Removed CGCookie autoupdater",
+            "lineNumber": 28
+          },
+          {
+            "lineNumber": 29
+          },
+          {
+            "text": "# v 0.10.0",
+            "lineNumber": 30
+          },
+          {
+            "text": "- **AutoMat Extractor**",
+            "lineNumber": 31
+          },
+          {
+            "text": "  - Added UDIM/tiled image detection so multi-tile textures are organized alongside standard images without errors. #8",
+            "lineNumber": 32
+          },
+          {
+            "text": "    - Path builder now emits UDIM filename templates (e.g., &#96;name.[UDIM].png&#96;) plus per-tile targets (e.g., &#96;name.1001.png&#96;), preventing collisions during relocation.",
+            "lineNumber": 33
+          },
+          {
+            "text": "  - Remapping helper sets tile-level &#96;filepath&#96; values and ensures directories exist before saving.",
+            "lineNumber": 34
+          },
+          {
+            "text": "  - Saving routine attempts whole-image writes first, then falls back to per-tile saves via the Image Editor context, with summary logs noting UDIM sets processed.",
+            "lineNumber": 35
+          },
+          {
+            "text": "- **Viewport Colors**",
+            "lineNumber": 36
+          },
+          {
+            "text": "  - Added a Refresh Material Previews button that clears thumbnails, assigns each material to a temporary preview mesh, and forces &#96;preview_ensure()&#96; so stubborn viewport colors now reliably pick up thumbnail data. #7",
+            "lineNumber": 37
+          },
+          {
+            "lineNumber": 38
+          },
+          {
+            "text": "# v 0.9.1",
+            "lineNumber": 39
+          },
+          {
+            "text": "- **Convert Relations to Constraint**",
+            "lineNumber": 40
+          },
+          {
+            "text": "  ",
+            "lineNumber": 41
+          }
+        ]
+      },
+      "score": 0.19548480212688446
+    },
+    {
+      "codeBlock": {
+        "relativeWorkspacePath": ".\\panels\\bulk_viewport_display.py",
+        "range": {
+          "startPosition": {
+            "line": 455,
+            "column": 20
+          },
+          "endPosition": {
+            "line": 522
+          }
+        },
+        "contents": "def process_material(material, use_vectorized=True):\n    \"\"\"Process a material to determine its viewport color\"\"\"\n    if not material:\n        print(f\"Material is None, using fallback color\")\n        return (1, 1, 1), RBST_ViewDisp_MaterialStatus.PREVIEW_BASED\n    \n    if material.is_grease_pencil:\n        print(f\"Material {material.name}: is a grease pencil material, using fallback color\")\n        return (1, 1, 1), RBST_ViewDisp_MaterialStatus.PREVIEW_BASED\n    \n    try:\n        # Get color from material thumbnail\n        print(f\"Material {material.name}: Attempting to extract color from thumbnail\")\n        \n        # Get color from the material thumbnail\n        color = get_color_from_preview(material, use_vectorized)\n        \n        if color:\n            print(f\"Material {material.name}: Thumbnail color = {color}\")\n            \n            # Correct color for viewport display\n            corrected_color = correct_viewport_color(color)\n            print(f\"Material {material.name}: Corrected thumbnail color = {corrected_color}\")\n            \n            return corrected_color, RBST_ViewDisp_MaterialStatus.PREVIEW_BASED\n        else:\n            print(f\"Material {material.name}: Could not extract color from thumbnail, using fallback color\")\n            return (1, 1, 1), RBST_ViewDisp_MaterialStatus.PREVIEW_BASED\n        \n    except Exception as e:\n        print(f\"Error processing material {material.name}: {e}\")\n        return (1, 1, 1), RBST_ViewDisp_MaterialStatus.FAILED\n\ndef get_average_color(image, use_vectorized=True):\n    \"\"\"Calculate the average color of an image\"\"\"",
+        "signatures": {},
+        "detailedLines": [
+          {
+            "text": "def process_material(material, use_vectorized=True):",
+            "lineNumber": 458,
+            "isSignature": true
+          },
+          {
+            "text": "    \"\"\"Process a material to determine its viewport color\"\"\"",
+            "lineNumber": 459
+          },
+          {
+            "text": "    if not material:",
+            "lineNumber": 460
+          },
+          {
+            "text": "        print(f\"Material is None, using fallback color\")",
+            "lineNumber": 461
+          },
+          {
+            "text": "        return (1, 1, 1), RBST_ViewDisp_MaterialStatus.PREVIEW_BASED",
+            "lineNumber": 462
+          },
+          {
+            "text": "    ",
+            "lineNumber": 463
+          },
+          {
+            "text": "    if material.is_grease_pencil:",
+            "lineNumber": 464
+          },
+          {
+            "text": "        print(f\"Material {material.name}: is a grease pencil material, using fallback color\")",
+            "lineNumber": 465
+          },
+          {
+            "text": "        return (1, 1, 1), RBST_ViewDisp_MaterialStatus.PREVIEW_BASED",
+            "lineNumber": 466
+          },
+          {
+            "text": "    ",
+            "lineNumber": 467
+          },
+          {
+            "text": "    try:",
+            "lineNumber": 468
+          },
+          {
+            "text": "        # Get color from material thumbnail",
+            "lineNumber": 469
+          },
+          {
+            "text": "        print(f\"Material {material.name}: Attempting to extract color from thumbnail\")",
+            "lineNumber": 470
+          },
+          {
+            "text": "        ",
+            "lineNumber": 471
+          },
+          {
+            "text": "        # Get color from the material thumbnail",
+            "lineNumber": 472
+          },
+          {
+            "text": "        color = get_color_from_preview(material, use_vectorized)",
+            "lineNumber": 473
+          },
+          {
+            "text": "        ",
+            "lineNumber": 474
+          },
+          {
+            "text": "        if color:",
+            "lineNumber": 475
+          },
+          {
+            "text": "            print(f\"Material {material.name}: Thumbnail color = {color}\")",
+            "lineNumber": 476
+          },
+          {
+            "text": "            ",
+            "lineNumber": 477
+          },
+          {
+            "text": "            # Correct color for viewport display",
+            "lineNumber": 478
+          },
+          {
+            "text": "            corrected_color = correct_viewport_color(color)",
+            "lineNumber": 479
+          },
+          {
+            "text": "            print(f\"Material {material.name}: Corrected thumbnail color = {corrected_color}\")",
+            "lineNumber": 480
+          },
+          {
+            "text": "            ",
+            "lineNumber": 481
+          },
+          {
+            "text": "            return corrected_color, RBST_ViewDisp_MaterialStatus.PREVIEW_BASED",
+            "lineNumber": 482
+          },
+          {
+            "text": "        else:",
+            "lineNumber": 483
+          },
+          {
+            "text": "            print(f\"Material {material.name}: Could not extract color from thumbnail, using fallback color\")",
+            "lineNumber": 484
+          },
+          {
+            "text": "            return (1, 1, 1), RBST_ViewDisp_MaterialStatus.PREVIEW_BASED",
+            "lineNumber": 485
+          },
+          {
+            "text": "        ",
+            "lineNumber": 486
+          },
+          {
+            "text": "    except Exception as e:",
+            "lineNumber": 487
+          },
+          {
+            "text": "        print(f\"Error processing material {material.name}: {e}\")",
+            "lineNumber": 488
+          },
+          {
+            "text": "        return (1, 1, 1), RBST_ViewDisp_MaterialStatus.FAILED",
+            "lineNumber": 489,
+            "isSignature": true
+          },
+          {
+            "lineNumber": 490
+          },
+          {
+            "text": "def get_average_color(image, use_vectorized=True):",
+            "lineNumber": 491,
+            "isSignature": true
+          },
+          {
+            "text": "    \"\"\"Calculate the average color of an image\"\"\"",
+            "lineNumber": 492
+          }
+        ]
+      },
+      "score": 0.19342850148677826
+    },
+    {
+      "codeBlock": {
+        "relativeWorkspacePath": ".\\ops\\Rename_images_by_mat.py",
+        "range": {
+          "startPosition": {
+            "line": 68
+          },
+          "endPosition": {
+            "line": 497
+          }
+        },
+        "contents": "class RBST_RenameImg_OT_Rename_images_by_mat(bpy.types.Operator):\ndef execute(self, context):\n        # Get selected images\n\n                continue\n            elif len(materials) == 1:\n                # Single material usage - check suffix recognition\n                material_name = materials[0]\n                suffix = self.extract_texture_suffix(img.name)\n                original_name = img.name\n                \n                # Skip images with unrecognized suffixes (only if they have a potential suffix pattern)\n                if suffix is None and self.has_potential_suffix(img.name):\n                    unrecognized_suffix_count += 1\n                    unrecognized_list.append(img.name)\n                    print(f\"DEBUG: Skipped image with unrecognized suffix: {img.name}\")\n                    continue\n                \n                if suffix:\n                    # Capitalize the suffix properly\n                    capitalized_suffix = self.capitalize_suffix(suffix)\n                    expected_name = f\"{material_name}_{capitalized_suffix}\"\n                else:\n                    # No suffix detected, use material name only\n                    expected_name = material_name\n                \n                # Check if the image is already correctly named\n                if img.name == expected_name:\n                    already_correct_count += 1\n                    print(f\"DEBUG: Skipped already correctly named: {img.name}\")\n                    continue\n                \n                # Avoid duplicate names\n                new_name = self.ensure_unique_name(expected_name)\n                \n                img.name = new_name\n                renamed_count += 1\n                renamed_list.append((original_name, new_name, material_name, capitalized_suffix if suffix else None))\n                print(f\"DEBUG: Renamed '{original_name}' → '{new_name}' (Material: {material_name}, Suffix: {capitalized_suffix if suffix else 'none'})\")\n            else:\n                # Shared across multiple materials - skip\n                shared_count += 1",
+        "signatures": {
+          "ranges": [
+            {
+              "startPosition": {
+                "line": 69,
+                "column": 1
+              },
+              "endPosition": {
+                "line": 70,
+                "column": 5
+              }
+            },
+            {
+              "startPosition": {
+                "line": 75,
+                "column": 5
+              },
+              "endPosition": {
+                "line": 77,
+                "column": 9
+              }
+            }
+          ]
+        },
+        "detailedLines": [
+          {
+            "text": "class RBST_RenameImg_OT_Rename_images_by_mat(bpy.types.Operator):",
+            "lineNumber": 69,
+            "isSignature": true
+          },
+          {
+            "text": "def execute(self, context):",
+            "lineNumber": 75
+          },
+          {
+            "text": "        # Get selected images",
+            "lineNumber": 76
+          },
+          {
+            "lineNumber": 114
+          },
+          {
+            "text": "                continue",
+            "lineNumber": 115
+          },
+          {
+            "text": "            elif len(materials) == 1:",
+            "lineNumber": 116
+          },
+          {
+            "text": "                # Single material usage - check suffix recognition",
+            "lineNumber": 117
+          },
+          {
+            "text": "                material_name = materials[0]",
+            "lineNumber": 118
+          },
+          {
+            "text": "                suffix = self.extract_texture_suffix(img.name)",
+            "lineNumber": 119
+          },
+          {
+            "text": "                original_name = img.name",
+            "lineNumber": 120
+          },
+          {
+            "text": "                ",
+            "lineNumber": 121
+          },
+          {
+            "text": "                # Skip images with unrecognized suffixes (only if they have a potential suffix pattern)",
+            "lineNumber": 122
+          },
+          {
+            "text": "                if suffix is None and self.has_potential_suffix(img.name):",
+            "lineNumber": 123
+          },
+          {
+            "text": "                    unrecognized_suffix_count += 1",
+            "lineNumber": 124
+          },
+          {
+            "text": "                    unrecognized_list.append(img.name)",
+            "lineNumber": 125
+          },
+          {
+            "text": "                    print(f\"DEBUG: Skipped image with unrecognized suffix: {img.name}\")",
+            "lineNumber": 126
+          },
+          {
+            "text": "                    continue",
+            "lineNumber": 127
+          },
+          {
+            "text": "                ",
+            "lineNumber": 128
+          },
+          {
+            "text": "                if suffix:",
+            "lineNumber": 129
+          },
+          {
+            "text": "                    # Capitalize the suffix properly",
+            "lineNumber": 130
+          },
+          {
+            "text": "                    capitalized_suffix = self.capitalize_suffix(suffix)",
+            "lineNumber": 131
+          },
+          {
+            "text": "                    expected_name = f\"{material_name}_{capitalized_suffix}\"",
+            "lineNumber": 132
+          },
+          {
+            "text": "                else:",
+            "lineNumber": 133
+          },
+          {
+            "text": "                    # No suffix detected, use material name only",
+            "lineNumber": 134
+          },
+          {
+            "text": "                    expected_name = material_name",
+            "lineNumber": 135
+          },
+          {
+            "text": "                ",
+            "lineNumber": 136
+          },
+          {
+            "text": "                # Check if the image is already correctly named",
+            "lineNumber": 137
+          },
+          {
+            "text": "                if img.name == expected_name:",
+            "lineNumber": 138
+          },
+          {
+            "text": "                    already_correct_count += 1",
+            "lineNumber": 139
+          },
+          {
+            "text": "                    print(f\"DEBUG: Skipped already correctly named: {img.name}\")",
+            "lineNumber": 140
+          },
+          {
+            "text": "                    continue",
+            "lineNumber": 141
+          },
+          {
+            "text": "                ",
+            "lineNumber": 142
+          },
+          {
+            "text": "                # Avoid duplicate names",
+            "lineNumber": 143
+          },
+          {
+            "text": "                new_name = self.ensure_unique_name(expected_name)",
+            "lineNumber": 144
+          },
+          {
+            "text": "                ",
+            "lineNumber": 145
+          },
+          {
+            "text": "                img.name = new_name",
+            "lineNumber": 146
+          },
+          {
+            "text": "                renamed_count += 1",
+            "lineNumber": 147
+          },
+          {
+            "text": "                renamed_list.append((original_name, new_name, material_name, capitalized_suffix if suffix else None))",
+            "lineNumber": 148
+          },
+          {
+            "text": "                print(f\"DEBUG: Renamed '{original_name}' → '{new_name}' (Material: {material_name}, Suffix: {capitalized_suffix if suffix else 'none'})\")",
+            "lineNumber": 149
+          },
+          {
+            "text": "            else:",
+            "lineNumber": 150
+          },
+          {
+            "text": "                # Shared across multiple materials - skip",
+            "lineNumber": 151
+          },
+          {
+            "text": "                shared_count += 1",
+            "lineNumber": 152
+          }
+        ]
+      },
+      "score": 0.1864534616470337
+    },
+    {
+      "codeBlock": {
+        "relativeWorkspacePath": ".\\ops\\AutoMatExtractor.py",
+        "range": {
+          "startPosition": {
+            "line": 64
+          },
+          "endPosition": {
+            "line": 540,
+            "column": 9
+          }
+        },
+        "contents": "class RBST_AutoMat_OT_AutoMatExtractor(bpy.types.Operator):\n\n\n    def _save_udim_tiles_individually(self, image, mapping):\n        \"\"\"Fallback saving routine when image.save() fails on UDIMs\"\"\"\n        tile_paths = mapping.get(\"tiles\", {})\n        any_saved = False\n\n        for tile in getattr(image, \"tiles\", []):\n            tile_number = str(getattr(tile, \"number\", \"1001\"))\n            target_path = tile_paths.get(tile_number)\n            if not target_path:\n                continue\n            try:\n                ensure_directory_for_path(target_path)\n                self._save_tile_via_image_editor(image, tile_number, target_path)\n                any_saved = True\n            except Exception as e:\n                print(f\"DEBUG: Failed to save UDIM tile {tile_number} for {image.name}: {e}\")\n\n        return any_saved\n\n    def _save_tile_via_image_editor(self, image, tile_number, filepath):\n        \"\"\"Use an IMAGE_EDITOR override to save a specific tile\"\"\"\n        # Try to find an existing image editor to reuse Blender UI context\n        for area in bpy.context.screen.areas:\n            if area.type != 'IMAGE_EDITOR':\n                continue\n            override = bpy.context.copy()\n            override['area'] = area\n            override['space_data'] = area.spaces.active\n            region = next((r for r in area.regions if r.type == 'WINDOW'), None)\n            if region is None:\n                continue\n            override['region'] = region\n            space = area.spaces.active\n            space.image = image\n            if hasattr(space, \"image_user\"):\n                space.image_user.tile = int(tile_number)\n            bpy.ops.image.save(override, filepath=filepath)\n            return\n        # Fallback: attempt to set filepath and invoke save without override\n        image.filepath = filepath\n        image.save()\n\n# Must register the new dialog class as well\nclasses =",
+        "signatures": {
+          "ranges": [
+            {
+              "startPosition": {
+                "line": 65,
+                "column": 1
+              },
+              "endPosition": {
+                "line": 66,
+                "column": 5
+              }
+            }
+          ]
+        },
+        "detailedLines": [
+          {
+            "text": "class RBST_AutoMat_OT_AutoMatExtractor(bpy.types.Operator):",
+            "lineNumber": 65,
+            "isSignature": true
+          },
+          {
+            "lineNumber": 496
+          },
+          {
+            "lineNumber": 497
+          },
+          {
+            "text": "    def _save_udim_tiles_individually(self, image, mapping):",
+            "lineNumber": 498
+          },
+          {
+            "text": "        \"\"\"Fallback saving routine when image.save() fails on UDIMs\"\"\"",
+            "lineNumber": 499
+          },
+          {
+            "text": "        tile_paths = mapping.get(\"tiles\", {})",
+            "lineNumber": 500
+          },
+          {
+            "text": "        any_saved = False",
+            "lineNumber": 501
+          },
+          {
+            "lineNumber": 502
+          },
+          {
+            "text": "        for tile in getattr(image, \"tiles\", []):",
+            "lineNumber": 503
+          },
+          {
+            "text": "            tile_number = str(getattr(tile, \"number\", \"1001\"))",
+            "lineNumber": 504
+          },
+          {
+            "text": "            target_path = tile_paths.get(tile_number)",
+            "lineNumber": 505
+          },
+          {
+            "text": "            if not target_path:",
+            "lineNumber": 506
+          },
+          {
+            "text": "                continue",
+            "lineNumber": 507
+          },
+          {
+            "text": "            try:",
+            "lineNumber": 508
+          },
+          {
+            "text": "                ensure_directory_for_path(target_path)",
+            "lineNumber": 509
+          },
+          {
+            "text": "                self._save_tile_via_image_editor(image, tile_number, target_path)",
+            "lineNumber": 510
+          },
+          {
+            "text": "                any_saved = True",
+            "lineNumber": 511
+          },
+          {
+            "text": "            except Exception as e:",
+            "lineNumber": 512
+          },
+          {
+            "text": "                print(f\"DEBUG: Failed to save UDIM tile {tile_number} for {image.name}: {e}\")",
+            "lineNumber": 513
+          },
+          {
+            "lineNumber": 514
+          },
+          {
+            "text": "        return any_saved",
+            "lineNumber": 515
+          },
+          {
+            "lineNumber": 516
+          },
+          {
+            "text": "    def _save_tile_via_image_editor(self, image, tile_number, filepath):",
+            "lineNumber": 517
+          },
+          {
+            "text": "        \"\"\"Use an IMAGE_EDITOR override to save a specific tile\"\"\"",
+            "lineNumber": 518
+          },
+          {
+            "text": "        # Try to find an existing image editor to reuse Blender UI context",
+            "lineNumber": 519
+          },
+          {
+            "text": "        for area in bpy.context.screen.areas:",
+            "lineNumber": 520
+          },
+          {
+            "text": "            if area.type != 'IMAGE_EDITOR':",
+            "lineNumber": 521
+          },
+          {
+            "text": "                continue",
+            "lineNumber": 522
+          },
+          {
+            "text": "            override = bpy.context.copy()",
+            "lineNumber": 523
+          },
+          {
+            "text": "            override['area'] = area",
+            "lineNumber": 524
+          },
+          {
+            "text": "            override['space_data'] = area.spaces.active",
+            "lineNumber": 525
+          },
+          {
+            "text": "            region = next((r for r in area.regions if r.type == 'WINDOW'), None)",
+            "lineNumber": 526
+          },
+          {
+            "text": "            if region is None:",
+            "lineNumber": 527
+          },
+          {
+            "text": "                continue",
+            "lineNumber": 528
+          },
+          {
+            "text": "            override['region'] = region",
+            "lineNumber": 529
+          },
+          {
+            "text": "            space = area.spaces.active",
+            "lineNumber": 530
+          },
+          {
+            "text": "            space.image = image",
+            "lineNumber": 531
+          },
+          {
+            "text": "            if hasattr(space, \"image_user\"):",
+            "lineNumber": 532
+          },
+          {
+            "text": "                space.image_user.tile = int(tile_number)",
+            "lineNumber": 533
+          },
+          {
+            "text": "            bpy.ops.image.save(override, filepath=filepath)",
+            "lineNumber": 534
+          },
+          {
+            "text": "            return",
+            "lineNumber": 535
+          },
+          {
+            "text": "        # Fallback: attempt to set filepath and invoke save without override",
+            "lineNumber": 536
+          },
+          {
+            "text": "        image.filepath = filepath",
+            "lineNumber": 537
+          },
+          {
+            "text": "        image.save()",
+            "lineNumber": 538,
+            "isSignature": true
+          },
+          {
+            "lineNumber": 539
+          },
+          {
+            "text": "# Must register the new dialog class as well",
+            "lineNumber": 540
+          },
+          {
+            "text": "classes =",
+            "lineNumber": 541
+          }
+        ]
+      },
+      "score": 0.183366596698761
+    },
+    {
+      "codeBlock": {
+        "relativeWorkspacePath": ".\\panels\\bulk_viewport_display.py",
+        "range": {
+          "startPosition": {
+            "line": 675,
+            "column": 21
+          },
+          "endPosition": {
+            "line": 771
+          }
+        },
+        "contents": "def get_final_color(material):\n    \"\"\"Get the final color for a material\"\"\"\n    if not material or not material.use_nodes:\n        print(f\"Material {material.name if material else 'None'} has no nodes\")\n        return None\n    \n    # Find the Principled BSDF node\n    principled_node = None\n    for node in material.node_tree.nodes:\n        if node.type == 'BSDF_PRINCIPLED':\n            principled_node = node\n            break\n    \n    if not principled_node:\n        print(f\"Material {material.name}: No Principled BSDF node found\")\n        return None\n    \n    # Get the Base Color input\n    base_color_input = principled_node.inputs.get('Base Color')\n    if not base_color_input:\n        print(f\"Material {material.name}: No Base Color input found\")\n        return None\n    \n    # Check if there's a texture connected to the Base Color input\n    if base_color_input.links:\n        connected_node = base_color_input.links[0].from_node\n        print(f\"Material {material.name}: Base Color connected to ",
+        "signatures": {},
+        "detailedLines": [
+          {
+            "text": "def get_final_color(material):",
+            "lineNumber": 678,
+            "isSignature": true
+          },
+          {
+            "text": "    \"\"\"Get the final color for a material\"\"\"",
+            "lineNumber": 679
+          },
+          {
+            "text": "    if not material or not material.use_nodes:",
+            "lineNumber": 680
+          },
+          {
+            "text": "        print(f\"Material {material.name if material else 'None'} has no nodes\")",
+            "lineNumber": 681
+          },
+          {
+            "text": "        return None",
+            "lineNumber": 682
+          },
+          {
+            "text": "    ",
+            "lineNumber": 683
+          },
+          {
+            "text": "    # Find the Principled BSDF node",
+            "lineNumber": 684
+          },
+          {
+            "text": "    principled_node = None",
+            "lineNumber": 685
+          },
+          {
+            "text": "    for node in material.node_tree.nodes:",
+            "lineNumber": 686
+          },
+          {
+            "text": "        if node.type == 'BSDF_PRINCIPLED':",
+            "lineNumber": 687
+          },
+          {
+            "text": "            principled_node = node",
+            "lineNumber": 688
+          },
+          {
+            "text": "            break",
+            "lineNumber": 689
+          },
+          {
+            "text": "    ",
+            "lineNumber": 690
+          },
+          {
+            "text": "    if not principled_node:",
+            "lineNumber": 691
+          },
+          {
+            "text": "        print(f\"Material {material.name}: No Principled BSDF node found\")",
+            "lineNumber": 692
+          },
+          {
+            "text": "        return None",
+            "lineNumber": 693
+          },
+          {
+            "text": "    ",
+            "lineNumber": 694
+          },
+          {
+            "text": "    # Get the Base Color input",
+            "lineNumber": 695
+          },
+          {
+            "text": "    base_color_input = principled_node.inputs.get('Base Color')",
+            "lineNumber": 696
+          },
+          {
+            "text": "    if not base_color_input:",
+            "lineNumber": 697
+          },
+          {
+            "text": "        print(f\"Material {material.name}: No Base Color input found\")",
+            "lineNumber": 698
+          },
+          {
+            "text": "        return None",
+            "lineNumber": 699
+          },
+          {
+            "text": "    ",
+            "lineNumber": 700
+          },
+          {
+            "text": "    # Check if there's a texture connected to the Base Color input",
+            "lineNumber": 701
+          },
+          {
+            "text": "    if base_color_input.links:",
+            "lineNumber": 702
+          },
+          {
+            "text": "        connected_node = base_color_input.links[0].from_node",
+            "lineNumber": 703
+          },
+          {
+            "text": "        print(f\"Material {material.name}: Base Color connected to ",
+            "lineNumber": 704
+          }
+        ]
+      },
+      "score": 0.18076330423355103
+    },
+    {
+      "codeBlock": {
+        "relativeWorkspacePath": ".\\ops\\AutoMatExtractor.py",
+        "range": {
+          "startPosition": {
+            "line": 11
+          },
+          "endPosition": {
+            "line": 537
+          }
+        },
+        "contents": "class RBST_AutoMat_OT_summary_dialog(bpy.types.Operator):\n\n    \n    def draw(self, context):\n        layout = self.layout\n        \n        layout.label(text=\"AutoMat Extractor - Summary\", icon='INFO')\n        layout.separator()\n        \n        box = layout.box()\n        col = box.column(align=True)\n        col.label(text=f\"Total selected images: {self.total_selected}\")\n        col.label(text=f\"Successfully extracted: {self.success_count}\", icon='CHECKMARK')\n        \n        if self.overwrite_skipped_count &gt; 0:\n            col.label(text=f\"Skipped to prevent overwrite: {self.overwrite_skipped_count}\", icon='ERROR')\n        if self.failed_remap_count &gt; 0:\n            col.label(text=f\"Failed to remap (path issue): {self.failed_remap_count}\", icon='ERROR')\n\n        if self.overwrite_details:\n            layout.separator()\n            box = layout.box()\n            box.label(text=\"Overwrite Conflicts (Skipped):\", icon='FILE_TEXT')\n            for line in self.overwrite_details.split('\\n'):\n                if line.strip():\n                    box.label(text=line)\n\n        if self.failed_remap_details:\n            layout.separator()\n            box = layout.box()\n            box.label(text=\"Failed Remaps:\", icon='FILE_TEXT')\n            for line in self.failed_remap_details.split('\\n'):\n                if line.strip():\n                    box.label(text=line)\n\n    def execute(self, context):\n        return {'FINISHED'}\n    \n    def invoke(self, context, event):\n        return context.window_manager.invoke_popup(self, width=500)\n\nclass RBST_AutoMat_OT_AutoMatExtractor(bpy.types.Operator):\n    bl_idname = \"bst.automatextractor\"",
+        "signatures": {
+          "ranges": [
+            {
+              "startPosition": {
+                "line": 12,
+                "column": 1
+              },
+              "endPosition": {
+                "line": 13,
+                "column": 5
+              }
+            }
+          ]
+        },
+        "detailedLines": [
+          {
+            "text": "class RBST_AutoMat_OT_summary_dialog(bpy.types.Operator):",
+            "lineNumber": 12,
+            "isSignature": true
+          },
+          {
+            "lineNumber": 25
+          },
+          {
+            "text": "    ",
+            "lineNumber": 26
+          },
+          {
+            "text": "    def draw(self, context):",
+            "lineNumber": 27
+          },
+          {
+            "text": "        layout = self.layout",
+            "lineNumber": 28
+          },
+          {
+            "text": "        ",
+            "lineNumber": 29
+          },
+          {
+            "text": "        layout.label(text=\"AutoMat Extractor - Summary\", icon='INFO')",
+            "lineNumber": 30
+          },
+          {
+            "text": "        layout.separator()",
+            "lineNumber": 31
+          },
+          {
+            "text": "        ",
+            "lineNumber": 32
+          },
+          {
+            "text": "        box = layout.box()",
+            "lineNumber": 33
+          },
+          {
+            "text": "        col = box.column(align=True)",
+            "lineNumber": 34
+          },
+          {
+            "text": "        col.label(text=f\"Total selected images: {self.total_selected}\")",
+            "lineNumber": 35
+          },
+          {
+            "text": "        col.label(text=f\"Successfully extracted: {self.success_count}\", icon='CHECKMARK')",
+            "lineNumber": 36
+          },
+          {
+            "text": "        ",
+            "lineNumber": 37
+          },
+          {
+            "text": "        if self.overwrite_skipped_count &gt; 0:",
+            "lineNumber": 38
+          },
+          {
+            "text": "            col.label(text=f\"Skipped to prevent overwrite: {self.overwrite_skipped_count}\", icon='ERROR')",
+            "lineNumber": 39
+          },
+          {
+            "text": "        if self.failed_remap_count &gt; 0:",
+            "lineNumber": 40
+          },
+          {
+            "text": "            col.label(text=f\"Failed to remap (path issue): {self.failed_remap_count}\", icon='ERROR')",
+            "lineNumber": 41
+          },
+          {
+            "lineNumber": 42
+          },
+          {
+            "text": "        if self.overwrite_details:",
+            "lineNumber": 43
+          },
+          {
+            "text": "            layout.separator()",
+            "lineNumber": 44
+          },
+          {
+            "text": "            box = layout.box()",
+            "lineNumber": 45
+          },
+          {
+            "text": "            box.label(text=\"Overwrite Conflicts (Skipped):\", icon='FILE_TEXT')",
+            "lineNumber": 46
+          },
+          {
+            "text": "            for line in self.overwrite_details.split('\\n'):",
+            "lineNumber": 47
+          },
+          {
+            "text": "                if line.strip():",
+            "lineNumber": 48
+          },
+          {
+            "text": "                    box.label(text=line)",
+            "lineNumber": 49
+          },
+          {
+            "lineNumber": 50
+          },
+          {
+            "text": "        if self.failed_remap_details:",
+            "lineNumber": 51
+          },
+          {
+            "text": "            layout.separator()",
+            "lineNumber": 52
+          },
+          {
+            "text": "            box = layout.box()",
+            "lineNumber": 53
+          },
+          {
+            "text": "            box.label(text=\"Failed Remaps:\", icon='FILE_TEXT')",
+            "lineNumber": 54
+          },
+          {
+            "text": "            for line in self.failed_remap_details.split('\\n'):",
+            "lineNumber": 55
+          },
+          {
+            "text": "                if line.strip():",
+            "lineNumber": 56
+          },
+          {
+            "text": "                    box.label(text=line)",
+            "lineNumber": 57
+          },
+          {
+            "lineNumber": 58
+          },
+          {
+            "text": "    def execute(self, context):",
+            "lineNumber": 59
+          },
+          {
+            "text": "        return {'FINISHED'}",
+            "lineNumber": 60
+          },
+          {
+            "text": "    ",
+            "lineNumber": 61
+          },
+          {
+            "text": "    def invoke(self, context, event):",
+            "lineNumber": 62
+          },
+          {
+            "text": "        return context.window_manager.invoke_popup(self, width=500)",
+            "lineNumber": 63,
+            "isSignature": true
+          },
+          {
+            "lineNumber": 64
+          },
+          {
+            "text": "class RBST_AutoMat_OT_AutoMatExtractor(bpy.types.Operator):",
+            "lineNumber": 65,
+            "isSignature": true
+          },
+          {
+            "text": "    bl_idname = \"bst.automatextractor\"",
+            "lineNumber": 66
+          }
+        ]
+      },
+      "score": 0.17537105083465576
+    },
+    {
+      "codeBlock": {
+        "relativeWorkspacePath": ".\\panels\\bulk_viewport_display.py",
+        "range": {
+          "startPosition": {
+            "line": 677
+          },
+          "endPosition": {
+            "line": 803
+          }
+        },
+        "contents": "def get_final_color(material):\n\n                    return avg_color\n            \n            # If it's an RGB node, use its color\n            elif source_node.type == 'RGB':\n                color = list(source_node.outputs[0].default_value)[:3]\n                print(f\"Material {material.name}: RGB node color = {color}\")\n                return color\n            \n            # For other node types, try to get color from the output socket\n            elif source_socket and hasattr(source_node.outputs, '__getitem__'):\n                for output in source_node.outputs:\n                    if output.name == source_socket:\n                        if hasattr(output, 'default_value') and len(output.default_value) &gt;= 3:\n                            color = list(output.default_value)[:3]\n                            print(f\"Material {material.name}: Node output socket color = {color}\")\n                            return color\n            \n            print(f\"Material {material.name}: Could not extract color from source node {source_node.name} of type {source_node.type}\")\n        else:\n            print(f\"Material {material.name}: Could not find color source node in the node tree\")\n            \n            # Debug: Print the node tree structure to help diagnose the issue\n            print(f\"Material {material.name}: Node tree structure:\")\n            for node in material.node_tree.nodes:\n                print(f\"  - Node: {node.name}, Type: {node.type}\")\n                for input_socket in node.inputs:\n                    if input_socket.links:\n                        print(f\"    - Input: {input_socket.name} connected to {input_socket.links[0].from_node.name}\")\n    \n    # If no texture or couldn't get texture color, use the base color value\n    color = list(base_color_input.default_value)[:3]\n    print(f\"Material {material.name}: Using base color value = {color}\")\n    return color\n\ndef find_diffuse_texture(material):\n    \"\"\"Find the diffuse texture in a material\"\"\"",
+        "signatures": {
+          "ranges": [
+            {
+              "startPosition": {
+                "line": 678,
+                "column": 1
+              },
+              "endPosition": {
+                "line": 679,
+                "column": 5
+              }
+            }
+          ]
+        },
+        "detailedLines": [
+          {
+            "text": "def get_final_color(material):",
+            "lineNumber": 678,
+            "isSignature": true
+          },
+          {
+            "lineNumber": 739
+          },
+          {
+            "text": "                    return avg_color",
+            "lineNumber": 740
+          },
+          {
+            "text": "            ",
+            "lineNumber": 741
+          },
+          {
+            "text": "            # If it's an RGB node, use its color",
+            "lineNumber": 742
+          },
+          {
+            "text": "            elif source_node.type == 'RGB':",
+            "lineNumber": 743
+          },
+          {
+            "text": "                color = list(source_node.outputs[0].default_value)[:3]",
+            "lineNumber": 744
+          },
+          {
+            "text": "                print(f\"Material {material.name}: RGB node color = {color}\")",
+            "lineNumber": 745
+          },
+          {
+            "text": "                return color",
+            "lineNumber": 746
+          },
+          {
+            "text": "            ",
+            "lineNumber": 747
+          },
+          {
+            "text": "            # For other node types, try to get color from the output socket",
+            "lineNumber": 748
+          },
+          {
+            "text": "            elif source_socket and hasattr(source_node.outputs, '__getitem__'):",
+            "lineNumber": 749
+          },
+          {
+            "text": "                for output in source_node.outputs:",
+            "lineNumber": 750
+          },
+          {
+            "text": "                    if output.name == source_socket:",
+            "lineNumber": 751
+          },
+          {
+            "text": "                        if hasattr(output, 'default_value') and len(output.default_value) &gt;= 3:",
+            "lineNumber": 752
+          },
+          {
+            "text": "                            color = list(output.default_value)[:3]",
+            "lineNumber": 753
+          },
+          {
+            "text": "                            print(f\"Material {material.name}: Node output socket color = {color}\")",
+            "lineNumber": 754
+          },
+          {
+            "text": "                            return color",
+            "lineNumber": 755
+          },
+          {
+            "text": "            ",
+            "lineNumber": 756
+          },
+          {
+            "text": "            print(f\"Material {material.name}: Could not extract color from source node {source_node.name} of type {source_node.type}\")",
+            "lineNumber": 757
+          },
+          {
+            "text": "        else:",
+            "lineNumber": 758
+          },
+          {
+            "text": "            print(f\"Material {material.name}: Could not find color source node in the node tree\")",
+            "lineNumber": 759
+          },
+          {
+            "text": "            ",
+            "lineNumber": 760
+          },
+          {
+            "text": "            # Debug: Print the node tree structure to help diagnose the issue",
+            "lineNumber": 761
+          },
+          {
+            "text": "            print(f\"Material {material.name}: Node tree structure:\")",
+            "lineNumber": 762
+          },
+          {
+            "text": "            for node in material.node_tree.nodes:",
+            "lineNumber": 763
+          },
+          {
+            "text": "                print(f\"  - Node: {node.name}, Type: {node.type}\")",
+            "lineNumber": 764
+          },
+          {
+            "text": "                for input_socket in node.inputs:",
+            "lineNumber": 765
+          },
+          {
+            "text": "                    if input_socket.links:",
+            "lineNumber": 766
+          },
+          {
+            "text": "                        print(f\"    - Input: {input_socket.name} connected to {input_socket.links[0].from_node.name}\")",
+            "lineNumber": 767
+          },
+          {
+            "text": "    ",
+            "lineNumber": 768
+          },
+          {
+            "text": "    # If no texture or couldn't get texture color, use the base color value",
+            "lineNumber": 769
+          },
+          {
+            "text": "    color = list(base_color_input.default_value)[:3]",
+            "lineNumber": 770
+          },
+          {
+            "text": "    print(f\"Material {material.name}: Using base color value = {color}\")",
+            "lineNumber": 771
+          },
+          {
+            "text": "    return color",
+            "lineNumber": 772,
+            "isSignature": true
+          },
+          {
+            "lineNumber": 773
+          },
+          {
+            "text": "def find_diffuse_texture(material):",
+            "lineNumber": 774,
+            "isSignature": true
+          },
+          {
+            "text": "    \"\"\"Find the diffuse texture in a material\"\"\"",
+            "lineNumber": 775
+          }
+        ]
+      },
+      "score": 0.1723649948835373
+    }
+  ]
+}
+```
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search">
+<details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+
+Parameters:
+
+```json
+{
+  "pattern": "MSMNAO|SSTM|Pack",
+  "path": "E:\\Rainys_Bulk_Scene_Tools\\ops\\AutoMatExtractor.py",
+  "caseInsensitive": true
+}
+```
+Result:
+
+```json
+{
+  "success": {
+    "pattern": "MSMNAO|SSTM|Pack",
+    "path": "E:\\Rainys_Bulk_Scene_Tools\\ops\\AutoMatExtractor.py",
+    "outputMode": "content",
+    "workspaceResults": {
+      "E:\\Rainys_Bulk_Scene_Tools": {
+        "content": {
+          "matches": [
+            {
+              "file": "ops\\AutoMatExtractor.py",
+              "matches": [
+                {
+                  "lineNumber": 68,
+                  "content": "    bl_description = \"Pack selected images and extract them with organized paths by blend file and material\""
+                },
+                {
+                  "lineNumber": 73,
+                  "content": "        addon_name = __package__.split('.')[0]"
+                },
+                {
+                  "lineNumber": 96,
+                  "content": "        self.packed_count = 0"
+                },
+                {
+                  "lineNumber": 124,
+                  "content": "            # Step 1: Pack images"
+                },
+                {
+                  "lineNumber": 126,
+                  "content": "                # Packing complete, move to next step"
+                },
+                {
+                  "lineNumber": 133,
+                  "content": "            # Pack current image"
+                },
+                {
+                  "lineNumber": 135,
+                  "content": "            props.operation_status = f\"Packing {img.name}...\""
+                },
+                {
+                  "lineNumber": 137,
+                  "content": "            if not img.packed_file:"
+                },
+                {
+                  "lineNumber": 139,
+                  "content": "                    img.pack()"
+                },
+                {
+                  "lineNumber": 140,
+                  "content": "                    self.packed_count += 1"
+                },
+                {
+                  "lineNumber": 142,
+                  "content": "                    # Continue even if packing fails"
+                }
+              ]
+            }
+          ],
+          "totalLines": 11,
+          "totalMatchedLines": 11
+        }
+      }
+    }
+  }
+}
+```
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+
+Reading the context file and examining AutoMatExtractor's texture handling logic:
+
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: t:\1 BlenderAssets\.specstory\history\2026-01-09_23-54Z-blender-material-unpacking-issue.md</summary>
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: E:\Rainys_Bulk_Scene_Tools\ops\AutoMatExtractor.py</summary>
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search">
+<details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+
+Parameters:
+
+```json
+{
+  "pattern": "sanitize_filename|get_image_material_mapping|build.*path|path_mapping",
+  "path": "E:\\Rainys_Bulk_Scene_Tools\\ops\\AutoMatExtractor.py",
+  "caseInsensitive": true
+}
+```
+Result:
+
+```json
+{
+  "success": {
+    "pattern": "sanitize_filename|get_image_material_mapping|build.*path|path_mapping",
+    "path": "E:\\Rainys_Bulk_Scene_Tools\\ops\\AutoMatExtractor.py",
+    "outputMode": "content",
+    "workspaceResults": {
+      "E:\\Rainys_Bulk_Scene_Tools": {
+        "content": {
+          "matches": [
+            {
+              "file": "ops\\AutoMatExtractor.py",
+              "matches": [
+                {
+                  "lineNumber": 100,
+                  "content": "        self.path_mapping = {}"
+                },
+                {
+                  "lineNumber": 167,
+                  "content": "                props.operation_status = \"Building path mapping...\""
+                },
+                {
+                  "lineNumber": 173,
+                  "content": "                self.material_mapping = self.get_image_material_mapping(self.selected_images)"
+                },
+                {
+                  "lineNumber": 182,
+                  "content": "            # Step 4: Build path mapping"
+                },
+                {
+                  "lineNumber": 191,
+                  "content": "            # Build path for current image"
+                },
+                {
+                  "lineNumber": 193,
+                  "content": "            props.operation_status = f\"Building path for {img.name}...\""
+                },
+                {
+                  "lineNumber": 212,
+                  "content": "            blend_name = self.sanitize_filename(blend_name)"
+                },
+                {
+                  "lineNumber": 220,
+                  "content": "            # Get extension and build path"
+                },
+                {
+                  "lineNumber": 222,
+                  "content": "            sanitized_base_name = self.sanitize_filename(img.name)"
+                },
+                {
+                  "lineNumber": 238,
+                  "content": "                    material_name = self.sanitize_filename(materials_using_image[0])"
+                },
+                {
+                  "lineNumber": 249,
+                  "content": "                self.path_mapping[img.name] = udim_mapping"
+                },
+                {
+                  "lineNumber": 254,
+                  "content": "                self.path_mapping[img.name] = path"
+                },
+                {
+                  "lineNumber": 262,
+                  "content": "            if self.current_index &gt;= len(self.path_mapping):"
+                },
+                {
+                  "lineNumber": 271,
+                  "content": "            img_name = list(self.path_mapping.keys())[self.current_index]"
+                },
+                {
+                  "lineNumber": 272,
+                  "content": "            mapping_entry = self.path_mapping[img_name]"
+                },
+                {
+                  "lineNumber": 289,
+                  "content": "            progress = 70.0 + (self.current_index / len(self.path_mapping)) * 15.0"
+                },
+                {
+                  "lineNumber": 320,
+                  "content": "                for img_name, path in self.path_mapping.items():"
+                },
+                {
+                  "lineNumber": 338,
+                  "content": "                    for img_name, path in self.path_mapping.items():"
+                },
+                {
+                  "lineNumber": 367,
+                  "content": "            mapping_entry = self.path_mapping.get(img.name)"
+                },
+                {
+                  "lineNumber": 405,
+                  "content": "    def sanitize_filename(self, filename):"
+                },
+                {
+                  "lineNumber": 420,
+                  "content": "    def get_image_material_mapping(self, images):"
+                }
+              ]
+            }
+          ],
+          "totalLines": 21,
+          "totalMatchedLines": 21
+        }
+      }
+    }
+  }
+}
+```
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+
+Reading more of the context file and examining the sanitize_filename function:
+
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: t:\1 BlenderAssets\.specstory\history\2026-01-09_23-54Z-blender-material-unpacking-issue.md</summary>
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: E:\Rainys_Bulk_Scene_Tools\ops\AutoMatExtractor.py</summary>
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: E:\Rainys_Bulk_Scene_Tools\ops\AutoMatExtractor.py</summary>
+
+</details>
+</tool-use>
+
+---
+
+
+Reviewing the path-building logic and checking for name collision handling:
+
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: E:\Rainys_Bulk_Scene_Tools\ops\AutoMatExtractor.py</summary>
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search">
+<details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+
+Parameters:
+
+```json
+{
+  "pattern": "collision|overwrite|duplicate|\\.001|\\.002|suffix",
+  "path": "E:\\Rainys_Bulk_Scene_Tools\\ops\\AutoMatExtractor.py",
+  "caseInsensitive": true
+}
+```
+Result:
+
+```json
+{
+  "success": {
+    "pattern": "collision|overwrite|duplicate|\\.001|\\.002|suffix",
+    "path": "E:\\Rainys_Bulk_Scene_Tools\\ops\\AutoMatExtractor.py",
+    "outputMode": "content",
+    "workspaceResults": {
+      "E:\\Rainys_Bulk_Scene_Tools": {
+        "content": {
+          "matches": [
+            {
+              "file": "ops\\AutoMatExtractor.py",
+              "matches": [
+                {
+                  "lineNumber": 21,
+                  "content": "    overwrite_skipped_count: bpy.props.IntProperty(default=0)"
+                },
+                {
+                  "lineNumber": 24,
+                  "content": "    overwrite_details: bpy.props.StringProperty(default=\"\")"
+                },
+                {
+                  "lineNumber": 38,
+                  "content": "        if self.overwrite_skipped_count &gt; 0:"
+                },
+                {
+                  "lineNumber": 39,
+                  "content": "            col.label(text=f\"Skipped to prevent overwrite: {self.overwrite_skipped_count}\", icon='ERROR')"
+                },
+                {
+                  "lineNumber": 43,
+                  "content": "        if self.overwrite_details:"
+                },
+                {
+                  "lineNumber": 46,
+                  "content": "            box.label(text=\"Overwrite Conflicts (Skipped):\", icon='FILE_TEXT')"
+                },
+                {
+                  "lineNumber": 47,
+                  "content": "            for line in self.overwrite_details.split('\\n'):"
+                },
+                {
+                  "lineNumber": 98,
+                  "content": "        self.overwrite_skipped = []"
+                },
+                {
+                  "lineNumber": 305,
+                  "content": "                    overwrite_skipped_list=self.overwrite_skipped,"
+                },
+                {
+                  "lineNumber": 384,
+                  "content": "    def show_summary_dialog(self, context, total_selected, success_count, overwrite_skipped_list, failed_remap_list):"
+                },
+                {
+                  "lineNumber": 386,
+                  "content": "        overwrite_details = \"\""
+                },
+                {
+                  "lineNumber": 387,
+                  "content": "        if overwrite_skipped_list:"
+                },
+                {
+                  "lineNumber": 388,
+                  "content": "            for name, path in overwrite_skipped_list:"
+                },
+                {
+                  "lineNumber": 389,
+                  "content": "                overwrite_details += f\"'{name}' -&gt; '{path}'\\n\""
+                },
+                {
+                  "lineNumber": 399,
+                  "content": "            overwrite_skipped_count=len(overwrite_skipped_list),"
+                },
+                {
+                  "lineNumber": 401,
+                  "content": "            overwrite_details=overwrite_details.strip(),"
+                },
+                {
+                  "lineNumber": 407,
+                  "content": "        # First, remove potential file extensions, including numerical ones like .001"
+                },
+                {
+                  "lineNumber": 408,
+                  "content": "        base_name = re.sub(r'\\.\\d{3}$', '', filename) # Remove .001, .002 etc."
+                }
+              ]
+            }
+          ],
+          "totalLines": 18,
+          "totalMatchedLines": 18
+        }
+      }
+    }
+  }
+}
+```
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: t:\1 BlenderAssets\.specstory\history\2026-01-09_23-54Z-blender-material-unpacking-issue.md</summary>
+
+</details>
+</tool-use>
+
+---
+
+
+Searching the context file for details about the MSMNAO Pack issue:
+
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search">
+<details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+
+Parameters:
+
+```json
+{
+  "pattern": "MSMNAO|SSTM|Std_Skin_Head",
+  "path": "t:\\1 BlenderAssets\\.specstory\\history\\2026-01-09_23-54Z-blender-material-unpacking-issue.md",
+  "caseInsensitive": true
+}
+```
+Result:
+
+```json
+{
+  "success": {
+    "pattern": "MSMNAO|SSTM|Std_Skin_Head",
+    "path": "t:\\1 BlenderAssets\\.specstory\\history\\2026-01-09_23-54Z-blender-material-unpacking-issue.md",
+    "outputMode": "content",
+    "workspaceResults": {
+      "E:\\Rainys_Bulk_Scene_Tools": {
+        "content": {
+          "matches": [
+            {
+              "file": "t:\\1 BlenderAssets\\.specstory\\history\\2026-01-09_23-54Z-blender-material-unpacking-issue.md",
+              "matches": [
+                {
+                  "lineNumber": 9,
+                  "content": "use blender-mcp to view my scene. why does unpacking the files make Std_Skin_Head material output as black? this has happened before with another one of these more complex CC/iC characters."
+                },
+                {
+                  "lineNumber": 20,
+                  "content": "Checking available MCP resources, then inspecting the scene to investigate the \"Std_Skin_Head\" material issue."
+                },
+                {
+                  "lineNumber": 55,
+                  "content": "&lt;summary&gt;Tool use: **grep** • Grep for \"Std_Skin_Head\" • 0 matches&lt;/summary&gt;"
+                },
+                {
+                  "lineNumber": 330,
+                  "content": "            &lt;summary&gt;Tool use: **web_search** • Searched web &#96;Blender unpack files Character Creator iClone material black Std_Skin_Head texture path&#96; • **1** results&lt;/summary&gt;"
+                },
+                {
+                  "lineNumber": 334,
+                  "content": "| Web Search Results |  | When unpacking files in Blender using the Blender-MCP add-on, encountering black materials like the Std_Skin_Head is often due to missing or improperly linked texture files. This issue is common with complex Character Creator (CC) or iClone (iC) characters.&lt;br/&gt;&lt;br/&gt;**Possible Causes:**&lt;br/&gt;&lt;br/&gt;1. **Missing Textures:** If the textures are not correctly unpacked or are missing from their expected locations, Blender cannot display them, resulting in black materials.&lt;br/&gt;&lt;br/&gt;2. **Incorrect Texture Paths:** Unpacking can sometimes alter the file paths of textures. If Blender cannot locate the textures due to these changes, the materials may appear black.&lt;br/&gt;&lt;br/&gt;**Solutions:**&lt;br/&gt;&lt;br/&gt;- **Verify Texture Paths:** After unpacking, ensure that all texture file paths are correctly set. You can do this by selecting the material, navigating to the Shader Editor, and checking the Image Texture nodes to confirm that they point to the correct file locations.&lt;br/&gt;&lt;br/&gt;- [... omitted end of long line]"
+                },
+                {
+                  "lineNumber": 350,
+                  "content": "When you unpack files in Blender, the &#96;Std_Skin_Head&#96; material (and similar CC/iC materials) can turn black because:"
+                },
+                {
+                  "lineNumber": 364,
+                  "content": "   - Select the &#96;Std_Skin_Head&#96; material"
+                },
+                {
+                  "lineNumber": 408,
+                  "content": "| Web Search Results |  | When unpacking files in Blender, it's common for materials like &#96;Std_Skin_Head&#96; from Character Creator (CC) or iClone (iC) to appear black. This issue typically arises due to:&lt;br/&gt;&lt;br/&gt;1. **Broken Texture Paths**: Unpacking can alter file paths, causing Blender to lose track of textures.&lt;br/&gt;2. **Unpacked Textures Not Extracted**: If textures were packed into the &#96;.blend&#96; file, they might not unpack automatically.&lt;br/&gt;3. **Image Texture Nodes Referencing Missing Files**: Material nodes may still point to old packed or external paths.&lt;br/&gt;&lt;br/&gt;**Solutions:**&lt;br/&gt;&lt;br/&gt;1. **Relink Missing Textures**:&lt;br/&gt;   - Navigate to &#96;File &gt; External Data &gt; Find Missing Files&#96;.&lt;br/&gt;   - Select the directory containing your textures.&lt;br/&gt;   - Blender will attempt to locate and relink the missing textures.&lt;br/&gt;&lt;br/&gt;2. **Manually Reassign Textures**:&lt;br/&gt;   - In the Shader Editor, select the material.&lt;br/&gt;   - Locate the Image Texture nodes.&lt;br/&gt;   - Click the folder icon and na [... omitted end of long line]"
+                },
+                {
+                  "lineNumber": 448,
+                  "content": "After installing the build tools, try restarting Cursor and blender-mcp should work, allowing us to inspect your scene and diagnose the &#96;Std_Skin_Head&#96; material issue."
+                },
+                {
+                  "lineNumber": 626,
+                  "content": "- We can then inspect your scene to diagnose the &#96;Std_Skin_Head&#96; material issue"
+                },
+                {
+                  "lineNumber": 745,
+                  "content": "2. Select the object with the &#96;Std_Skin_Head&#96; material"
+                },
+                {
+                  "lineNumber": 775,
+                  "content": "Inspecting your scene to diagnose the &#96;Std_Skin_Head&#96; material issue:"
+                },
+                {
+                  "lineNumber": 791,
+                  "content": "  * user_prompt: Inspecting scene to find why Std_Skin_Head material outputs as black after unpacking files"
+                },
+                {
+                  "lineNumber": 901,
+                  "content": "Searching for the &#96;Std_Skin_Head&#96; material and inspecting its nodes:"
+                },
+                {
+                  "lineNumber": 921,
+                  "content": "# Find the Std_Skin_Head material"
+                },
+                {
+                  "lineNumber": 924,
+                  "content": "    if \"Std_Skin_Head\" in mat.name or \"Skin_Head\" in mat.name:"
+                },
+                {
+                  "lineNumber": 944,
+                  "content": "    print(\"Std_Skin_Head material not found. Listing all materials:\")"
+                },
+                {
+                  "lineNumber": 948,
+                  "content": "  * user_prompt: Finding and inspecting Std_Skin_Head material nodes"
+                },
+                {
+                  "lineNumber": 951,
+                  "content": "Code executed successfully: Found material: Std_Skin_Head"
+                },
+                {
+                  "lineNumber": 953,
+                  "content": "Material: Std_Skin_Head"
+                },
+                {
+                  "lineNumber": 959,
+                  "content": "    Image: Std_Skin_Head_Diffuse"
+                },
+                {
+                  "lineNumber": 960,
+                  "content": "    Filepath: //textures\\Emi\\Std_Skin_Head\\Std_Skin_Head_Diffuse.png"
+                },
+                {
+                  "lineNumber": 964,
+                  "content": "    Image: Std_Skin_Head_Normal"
+                },
+                {
+                  "lineNumber": 965,
+                  "content": "    Filepath: //textures\\Emi\\Std_Skin_Head\\Std_Skin_Head_Normal.png"
+                },
+                {
+                  "lineNumber": 971,
+                  "content": "    Image: Std_Skin_Head_BCBMap"
+                },
+                {
+                  "lineNumber": 972,
+                  "content": "    Filepath: //textures\\Emi\\Std_Skin_Head\\Std_Skin_Head_BCBMap.jpg"
+                },
+                {
+                  "lineNumber": 976,
+                  "content": "    Image: Std_Skin_Head_ao"
+                },
+                {
+                  "lineNumber": 977,
+                  "content": "    Filepath: //textures\\Emi\\Std_Skin_Head\\Std_Skin_Head_ao.jpg"
+                },
+                {
+                  "lineNumber": 981,
+                  "content": "    Image: Std_Skin_Head_MNAOMask"
+                },
+                {
+                  "lineNumber": 982,
+                  "content": "    Filepath: //textures\\Emi\\Std_Skin_Head\\Std_Skin_Head_MNAOMask.tga"
+                },
+                {
+                  "lineNumber": 986,
+                  "content": "    Image: Std_Skin_Head_SSSMap"
+                },
+                {
+                  "lineNumber": 987,
+                  "content": "    Filepath: //textures\\Emi\\Std_Skin_Head\\Std_Skin_Head_SSSMap.jpg"
+                },
+                {
+                  "lineNumber": 991,
+                  "content": "    Image: Std_Skin_Head_TransMap"
+                },
+                {
+                  "lineNumber": 992,
+                  "content": "    Filepath: //textures\\Emi\\Std_Skin_Head\\Std_Skin_Head_TransMap.png"
+                },
+                {
+                  "lineNumber": 996,
+                  "content": "    Image: Std_Skin_Head_SpecMask"
+                },
+                {
+                  "lineNumber": 997,
+                  "content": "    Filepath: //textures\\Emi\\Std_Skin_Head\\Std_Skin_Head_SpecMask.jpg"
+                },
+                {
+                  "lineNumber": 1001,
+                  "content": "    Image: Std_Skin_Head_roughness"
+                },
+                {
+                  "lineNumber": 1002,
+                  "content": "    Filepath: //textures\\Emi\\Std_Skin_Head\\Std_Skin_Head_roughness.png"
+                },
+                {
+                  "lineNumber": 1012,
+                  "content": "    Image: Std_Skin_Head_MicroNMask"
+                },
+                {
+                  "lineNumber": 1013,
+                  "content": "    Filepath: //textures\\Emi\\Std_Skin_Head\\Std_Skin_Head_MicroNMask.jpg"
+                },
+                {
+                  "lineNumber": 1017,
+                  "content": "    Image: Std_Skin_Head_NBMap"
+                },
+                {
+                  "lineNumber": 1018,
+                  "content": "    Filepath: //textures\\Emi\\Std_Skin_Head\\Std_Skin_Head_NBMap.jpg"
+                },
+                {
+                  "lineNumber": 1022,
+                  "content": "    Image: Std_Skin_Head_NMUILMask"
+                },
+                {
+                  "lineNumber": 1023,
+                  "content": "    Filepath: //textures\\Emi\\Std_Skin_Head\\Std_Skin_Head_NMUILMask.tga"
+                },
+                {
+                  "lineNumber": 1027,
+                  "content": "    Image: Std_Skin_Head_CFULCMask"
+                },
+                {
+                  "lineNumber": 1028,
+                  "content": "    Filepath: //textures\\Emi\\Std_Skin_Head\\Std_Skin_Head_CFULCMask.tga"
+                },
+                {
+                  "lineNumber": 1032,
+                  "content": "    Image: Std_Skin_Head_ENMask"
+                },
+                {
+                  "lineNumber": 1033,
+                  "content": "    Filepath: //textures\\Emi\\Std_Skin_Head\\Std_Skin_Head_ENMask.tga"
+                },
+                {
+                  "lineNumber": 1038,
+                  "content": "    Image: Std_Skin_Head_Wrinkle_Diffuse1"
+                },
+                {
+                  "lineNumber": 1039,
+                  "content": "    Filepath: //textures\\Emi\\Std_Skin_Head\\Std_Skin_Head_Wrinkle_Diffuse1.png"
+                },
+                {
+                  "lineNumber": 1043,
+                  "content": "    Image: Std_Skin_Head_Wrinkle_Diffuse2"
+                },
+                {
+                  "lineNumber": 1044,
+                  "content": "    Filepath: //textures\\Emi\\Std_Skin_Head\\Std_Skin_Head_Wrinkle_Diffuse2.png"
+                },
+                {
+                  "lineNumber": 1048,
+                  "content": "    Image: Std_Skin_Head_Wrinkle_Diffuse3"
+                },
+                {
+                  "lineNumber": 1049,
+                  "content": "    Filepath: //textures\\Emi\\Std_Skin_Head\\Std_Skin_Head_Wrinkle_Diffuse3.png"
+                },
+                {
+                  "lineNumber": 1053,
+                  "content": "    Image: Std_Skin_Head_Wrinkle_Roughness1"
+                },
+                {
+                  "lineNumber": 1054,
+                  "content": "    Filepath: //textures\\Emi\\Std_Skin_Head\\Std_Skin_Head_Wrinkle_Roughness1.png"
+                },
+                {
+                  "lineNumber": 1058,
+                  "content": "    Image: Std_Skin_Head_Wrinkle_Roughness2"
+                },
+                {
+                  "lineNumber": 1059,
+                  "content": "    Filepath: //textures\\Emi\\Std_Skin_Head\\Std_Skin_Head_Wrinkle_Roughness2.png"
+                },
+                {
+                  "lineNumber": 1063,
+                  "content": "    Image: Std_Skin_Head_Wrinkle_Roughness3"
+                },
+                {
+                  "lineNumber": 1064,
+                  "content": "    Filepath: //textures\\Emi\\Std_Skin_Head\\Std_Skin_Head_Wrinkle_Roughness3.png"
+                },
+                {
+                  "lineNumber": 1068,
+                  "content": "    Image: Std_Skin_Head_Wrinkle_Normal1"
+                },
+                {
+                  "lineNumber": 1069,
+                  "content": "    Filepath: //textures\\Emi\\Std_Skin_Head\\Std_Skin_Head_Wrinkle_Normal1.png"
+                },
+                {
+                  "lineNumber": 1073,
+                  "content": "    Image: Std_Skin_Head_Wrinkle_Normal2"
+                },
+                {
+                  "lineNumber": 1074,
+                  "content": "    Filepath: //textures\\Emi\\Std_Skin_Head\\Std_Skin_Head_Wrinkle_Normal2.png"
+                },
+                {
+                  "lineNumber": 1078,
+                  "content": "    Image: Std_Skin_Head_Wrinkle_Normal3"
+                },
+                {
+                  "lineNumber": 1079,
+                  "content": "    Filepath: //textures\\Emi\\Std_Skin_Head\\Std_Skin_Head_Wrinkle_Normal3.png"
+                },
+                {
+                  "lineNumber": 1083,
+                  "content": "    Image: Std_Skin_Head_Wrinkle_Flow1"
+                },
+                {
+                  "lineNumber": 1084,
+                  "content": "    Filepath: //textures\\Emi\\Std_Skin_Head\\Std_Skin_Head_Wrinkle_Flow1.jpg"
+                },
+                {
+                  "lineNumber": 1088,
+                  "content": "    Image: Std_Skin_Head_Wrinkle_Flow2"
+                },
+                {
+                  "lineNumber": 1089,
+                  "content": "    Filepath: //textures\\Emi\\Std_Skin_Head\\Std_Skin_Head_Wrinkle_Flow2.jpg"
+                },
+                {
+                  "lineNumber": 1093,
+                  "content": "    Image: Std_Skin_Head_Wrinkle_Flow3"
+                },
+                {
+                  "lineNumber": 1094,
+                  "content": "    Filepath: //textures\\Emi\\Std_Skin_Head\\Std_Skin_Head_Wrinkle_Flow3.jpg"
+                },
+                {
+                  "lineNumber": 1099,
+                  "content": "    Filepath: //textures\\Emi\\Std_Skin_Head\\cc3iid_RL_WrinkleMask_Set1A_v2.0.png"
+                },
+                {
+                  "lineNumber": 1104,
+                  "content": "    Filepath: //textures\\Emi\\Std_Skin_Head\\cc3iid_RL_WrinkleMask_Set1B_v2.0.png"
+                },
+                {
+                  "lineNumber": 1109,
+                  "content": "    Filepath: //textures\\Emi\\Std_Skin_Head\\cc3iid_RL_WrinkleMask_Set2_v2.0.png"
+                },
+                {
+                  "lineNumber": 1114,
+                  "content": "    Filepath: //textures\\Emi\\Std_Skin_Head\\cc3iid_RL_WrinkleMask_Set3_v2.0.png"
+                },
+                {
+                  "lineNumber": 1119,
+                  "content": "    Filepath: //textures\\Emi\\Std_Skin_Head\\cc3iid_RL_WrinkleMask_Set123_v2.0.png"
+                },
+                {
+                  "lineNumber": 1123,
+                  "content": "    Image: Std_Skin_Head.001_Roughness Pack"
+                },
+                {
+                  "lineNumber": 1124,
+                  "content": "    Filepath: //textures\\Emi\\Std_Skin_Head\\Std_Skin_Head.png"
+                },
+                {
+                  "lineNumber": 1129,
+                  "content": "    Image: Std_Skin_Head.001_Flow Pack"
+                },
+                {
+                  "lineNumber": 1130,
+                  "content": "    Filepath: //textures\\Emi\\Std_Skin_Head\\Std_Skin_Head.png"
+                },
+                {
+                  "lineNumber": 1134,
+                  "content": "  - TEX_IMAGE: cc3iid_(SSTM_PACK)_v2.0.7_5642"
+                },
+                {
+                  "lineNumber": 1135,
+                  "content": "    Image: Std_Skin_Head.001_SSTM Pack"
+                },
+                {
+                  "lineNumber": 1136,
+                  "content": "    Filepath: //textures\\Emi\\Std_Skin_Head\\Std_Skin_Head.png"
+                },
+                {
+                  "lineNumber": 1139,
+                  "content": "  - TEX_IMAGE: cc3iid_(MSMNAO_PACK)_v2.0.7_5643"
+                },
+                {
+                  "lineNumber": 1140,
+                  "content": "    Image: Std_Skin_Head.001_MSMNAO Pack"
+                },
+                {
+                  "lineNumber": 1141,
+                  "content": "    Filepath: //textures\\Emi\\Std_Skin_Head\\Std_Skin_Head.png"
+                },
+                {
+                  "lineNumber": 1144,
+                  "content": "  - SEPARATE_COLOR: cc3iid_(MSMNAO_PACK_SPLIT)_v2.0.7_5644"
+                },
+                {
+                  "lineNumber": 1177,
+                  "content": "material = bpy.data.materials.get(\"Std_Skin_Head\")"
+                },
+                {
+                  "lineNumber": 1263,
+                  "content": "material = bpy.data.materials.get(\"Std_Skin_Head\")"
+                },
+                {
+                  "lineNumber": 1368,
+                  "content": "material = bpy.data.materials.get(\"Std_Skin_Head\")"
+                },
+                {
+                  "lineNumber": 1451,
+                  "content": "material = bpy.data.materials.get(\"Std_Skin_Head\")"
+                },
+                {
+                  "lineNumber": 1566,
+                  "content": "material = bpy.data.materials.get(\"Std_Skin_Head\")"
+                },
+                {
+                  "lineNumber": 1685,
+                  "content": "material = bpy.data.materials.get(\"Std_Skin_Head\")"
+                },
+                {
+                  "lineNumber": 1690,
+                  "content": "    print(\"Reloading all images in Std_Skin_Head material...\\n\")"
+                },
+                {
+                  "lineNumber": 1732,
+                  "content": "Code executed successfully: Reloading all images in Std_Skin_Head material..."
+                },
+                {
+                  "lineNumber": 1734,
+                  "content": "✗ Still missing: cc3iid_(DIFFUSE)_v2.0.7_5517 (Std_Skin_Head_Diffuse)"
+                },
+                {
+                  "lineNumber": 1735,
+                  "content": "  Path: //textures\\Emi\\Std_Skin_Head\\Std_Skin_Head_Diffuse.png"
+                },
+                {
+                  "lineNumber": 1736,
+                  "content": "✗ Still missing: cc3iid_(NORMAL)_v2.0.7_5518 (Std_Skin_Head_Normal)"
+                },
+                {
+                  "lineNumber": 1737,
+                  "content": "  Path: //textures\\Emi\\Std_Skin_Head\\Std_Skin_Head_Normal.png"
+                },
+                {
+                  "lineNumber": 1738,
+                  "content": "✗ Still missing: cc3iid_(BLEND2)_v2.0.7_5600 (Std_Skin_Head_BCBMap)"
+                },
+                {
+                  "lineNumber": 1739,
+                  "content": "  Path: //textures\\Emi\\Std_Skin_Head\\Std_Skin_Head_BCBMap.jpg"
+                },
+                {
+                  "lineNumber": 1740,
+                  "content": "✗ Still missing: cc3iid_(AO)_v2.0.7_5601 (Std_Skin_Head_ao)"
+                },
+                {
+                  "lineNumber": 1741,
+                  "content": "  Path: //textures\\Emi\\Std_Skin_Head\\Std_Skin_Head_ao.jpg"
+                },
+                {
+                  "lineNumber": 1742,
+                  "content": "✗ Still missing: cc3iid_(MCMAOMASK)_v2.0.7_5602 (Std_Skin_Head_MNAOMask)"
+                },
+                {
+                  "lineNumber": 1743,
+                  "content": "  Path: //textures\\Emi\\Std_Skin_Head\\Std_Skin_Head_MNAOMask.tga"
+                },
+                {
+                  "lineNumber": 1744,
+                  "content": "✗ Still missing: cc3iid_(SSS)_v2.0.7_5603 (Std_Skin_Head_SSSMap)"
+                },
+                {
+                  "lineNumber": 1745,
+                  "content": "  Path: //textures\\Emi\\Std_Skin_Head\\Std_Skin_Head_SSSMap.jpg"
+                },
+                {
+                  "lineNumber": 1746,
+                  "content": "✗ Still missing: cc3iid_(TRANSMISSION)_v2.0.7_5604 (Std_Skin_Head_TransMap)"
+                },
+                {
+                  "lineNumber": 1747,
+                  "content": "  Path: //textures\\Emi\\Std_Skin_Head\\Std_Skin_Head_TransMap.png"
+                },
+                {
+                  "lineNumber": 1748,
+                  "content": "✗ Still missing: cc3iid_(SPECMASK)_v2.0.7_5605 (Std_Skin_Head_SpecMask)"
+                },
+                {
+                  "lineNumber": 1749,
+                  "content": "  Path: //textures\\Emi\\Std_Skin_Head\\Std_Skin_Head_SpecMask.jpg"
+                },
+                {
+                  "lineNumber": 1750,
+                  "content": "✗ Still missing: cc3iid_(ROUGHNESS)_v2.0.7_5606 (Std_Skin_Head_roughness)"
+                },
+                {
+                  "lineNumber": 1751,
+                  "content": "  Path: //textures\\Emi\\Std_Skin_Head\\Std_Skin_Head_roughness.png"
+                },
+                {
+                  "lineNumber": 1754,
+                  "content": "✗ Still missing: cc3iid_(MICRONMASK)_v2.0.7_5609 (Std_Skin_Head_MicroNMask)"
+                },
+                {
+                  "lineNumber": 1755,
+                  "content": "  Path: //textures\\Emi\\Std_Skin_Head\\Std_Skin_Head_MicroNMask.jpg"
+                },
+                {
+                  "lineNumber": 1756,
+                  "content": "✗ Still missing: cc3iid_(NORMALBLEND)_v2.0.7_5610 (Std_Skin_Head_NBMap)"
+                },
+                {
+                  "lineNumber": 1757,
+                  "content": "  Path: //textures\\Emi\\Std_Skin_Head\\Std_Skin_Head_NBMap.jpg"
+                },
+                {
+                  "lineNumber": 1758,
+                  "content": "✗ Still missing: cc3iid_(NMUILMASK)_v2.0.7_5611 (Std_Skin_Head_NMUILMask)"
+                },
+                {
+                  "lineNumber": 1759,
+                  "content": "  Path: //textures\\Emi\\Std_Skin_Head\\Std_Skin_Head_NMUILMask.tga"
+                },
+                {
+                  "lineNumber": 1760,
+                  "content": "✗ Still missing: cc3iid_(CFULCMASK)_v2.0.7_5612 (Std_Skin_Head_CFULCMask)"
+                },
+                {
+                  "lineNumber": 1761,
+                  "content": "  Path: //textures\\Emi\\Std_Skin_Head\\Std_Skin_Head_CFULCMask.tga"
+                },
+                {
+                  "lineNumber": 1762,
+                  "content": "✗ Still missing: cc3iid_(ENNASK)_v2.0.7_5613 (Std_Skin_Head_ENMask)"
+                },
+                {
+                  "lineNumber": 1763,
+                  "content": "  Path: //textures\\Emi\\Std_Skin_Head\\Std_Skin_Head_ENMask.tga"
+                },
+                {
+                  "lineNumber": 1764,
+                  "content": "✗ Still missing: cc3iid_(WRINKLEDIFFUSE1)_v2.0.7_5616 (Std_Skin_Head_Wrinkle_Diffuse1)"
+                },
+                {
+                  "lineNumber": 1765,
+                  "content": "  Path: //textures\\Emi\\Std_Skin_Head\\Std_Skin_Head_Wrinkle_Diffuse1.png"
+                },
+                {
+                  "lineNumber": 1766,
+                  "content": "✗ Still missing: cc3iid_(WRINKLEDIFFUSE2)_v2.0.7_5617 (Std_Skin_Head_Wrinkle_Diffuse2)"
+                },
+                {
+                  "lineNumber": 1767,
+                  "content": "  Path: //textures\\Emi\\Std_Skin_Head\\Std_Skin_Head_Wrinkle_Diffuse2.png"
+                },
+                {
+                  "lineNumber": 1768,
+                  "content": "✗ Still missing: cc3iid_(WRINKLEDIFFUSE3)_v2.0.7_5618 (Std_Skin_Head_Wrinkle_Diffuse3)"
+                },
+                {
+                  "lineNumber": 1769,
+                  "content": "  Path: //textures\\Emi\\Std_Skin_Head\\Std_Skin_Head_Wrinkle_Diffuse3.png"
+                },
+                {
+                  "lineNumber": 1770,
+                  "content": "✗ Still missing: cc3iid_(WRINKLEROUGHNESS1)_v2.0.7_5619 (Std_Skin_Head_Wrinkle_Roughness1)"
+                },
+                {
+                  "lineNumber": 1771,
+                  "content": "  Path: //textures\\Emi\\Std_Skin_Head\\Std_Skin_Head_Wrinkle_Roughness1.png"
+                },
+                {
+                  "lineNumber": 1772,
+                  "content": "✗ Still missing: cc3iid_(WRINKLEROUGHNESS2)_v2.0.7_5620 (Std_Skin_Head_Wrinkle_Roughness2)"
+                },
+                {
+                  "lineNumber": 1773,
+                  "content": "  Path: //textures\\Emi\\Std_Skin_Head\\Std_Skin_Head_Wrinkle_Roughness2.png"
+                },
+                {
+                  "lineNumber": 1774,
+                  "content": "✗ Still missing: cc3iid_(WRINKLEROUGHNESS3)_v2.0.7_5621 (Std_Skin_Head_Wrinkle_Roughness3)"
+                },
+                {
+                  "lineNumber": 1775,
+                  "content": "  Path: //textures\\Emi\\Std_Skin_Head\\Std_Skin_Head_Wrinkle_Roughness3.png"
+                },
+                {
+                  "lineNumber": 1776,
+                  "content": "✗ Still missing: cc3iid_(WRINKLENORMAL1)_v2.0.7_5622 (Std_Skin_Head_Wrinkle_Normal1)"
+                },
+                {
+                  "lineNumber": 1777,
+                  "content": "  Path: //textures\\Emi\\Std_Skin_Head\\Std_Skin_Head_Wrinkle_Normal1.png"
+                },
+                {
+                  "lineNumber": 1778,
+                  "content": "✗ Still missing: cc3iid_(WRINKLENORMAL2)_v2.0.7_5623 (Std_Skin_Head_Wrinkle_Normal2)"
+                },
+                {
+                  "lineNumber": 1779,
+                  "content": "  Path: //textures\\Emi\\Std_Skin_Head\\Std_Skin_Head_Wrinkle_Normal2.png"
+                },
+                {
+                  "lineNumber": 1780,
+                  "content": "✗ Still missing: cc3iid_(WRINKLENORMAL3)_v2.0.7_5624 (Std_Skin_Head_Wrinkle_Normal3)"
+                },
+                {
+                  "lineNumber": 1781,
+                  "content": "  Path: //textures\\Emi\\Std_Skin_Head\\Std_Skin_Head_Wrinkle_Normal3.png"
+                },
+                {
+                  "lineNumber": 1782,
+                  "content": "✗ Still missing: cc3iid_(WRINKLEFLOW1)_v2.0.7_5625 (Std_Skin_Head_Wrinkle_Flow1)"
+                },
+                {
+                  "lineNumber": 1783,
+                  "content": "  Path: //textures\\Emi\\Std_Skin_Head\\Std_Skin_Head_Wrinkle_Flow1.jpg"
+                },
+                {
+                  "lineNumber": 1784,
+                  "content": "✗ Still missing: cc3iid_(WRINKLEFLOW2)_v2.0.7_5626 (Std_Skin_Head_Wrinkle_Flow2)"
+                },
+                {
+                  "lineNumber": 1785,
+                  "content": "  Path: //textures\\Emi\\Std_Skin_Head\\Std_Skin_Head_Wrinkle_Flow2.jpg"
+                },
+                {
+                  "lineNumber": 1786,
+                  "content": "✗ Still missing: cc3iid_(WRINKLEFLOW3)_v2.0.7_5627 (Std_Skin_Head_Wrinkle_Flow3)"
+                },
+                {
+                  "lineNumber": 1787,
+                  "content": "  Path: //textures\\Emi\\Std_Skin_Head\\Std_Skin_Head_Wrinkle_Flow3.jpg"
+                },
+                {
+                  "lineNumber": 1789,
+                  "content": "  Path: //textures\\Emi\\Std_Skin_Head\\cc3iid_RL_WrinkleMask_Set1A_v2.0.png"
+                },
+                {
+                  "lineNumber": 1791,
+                  "content": "  Path: //textures\\Emi\\Std_Skin_Head\\cc3iid_RL_WrinkleMask_Set1B_v2.0.png"
+                },
+                {
+                  "lineNumber": 1793,
+                  "content": "  Path: //textures\\Emi\\Std_Skin_Head\\cc3iid_RL_WrinkleMask_Set2_v2.0.png"
+                },
+                {
+                  "lineNumber": 1795,
+                  "content": "  Path: //textures\\Emi\\Std_Skin_Head\\cc3iid_RL_WrinkleMask_Set3_v2.0.png"
+                },
+                {
+                  "lineNumber": 1797,
+                  "content": "  Path: //textures\\Emi\\Std_Skin_Head\\cc3iid_RL_WrinkleMask_Set123_v2.0.png"
+                },
+                {
+                  "lineNumber": 1798,
+                  "content": "✗ Still missing: cc3iid_(ROUGHNESS_PACK)_v2.0.7_5638 (Std_Skin_Head.001_Roughness Pack)"
+                },
+                {
+                  "lineNumber": 1799,
+                  "content": "  Path: //textures\\Emi\\Std_Skin_Head\\Std_Skin_Head.png"
+                },
+                {
+                  "lineNumber": 1800,
+                  "content": "✗ Still missing: cc3iid_(FLOW_PACK)_v2.0.7_5640 (Std_Skin_Head.001_Flow Pack)"
+                },
+                {
+                  "lineNumber": 1801,
+                  "content": "  Path: //textures\\Emi\\Std_Skin_Head\\Std_Skin_Head.png"
+                },
+                {
+                  "lineNumber": 1802,
+                  "content": "✗ Still missing: cc3iid_(SSTM_PACK)_v2.0.7_5642 (Std_Skin_Head.001_SSTM Pack)"
+                },
+                {
+                  "lineNumber": 1803,
+                  "content": "  Path: //textures\\Emi\\Std_Skin_Head\\Std_Skin_Head.png"
+                },
+                {
+                  "lineNumber": 1804,
+                  "content": "✗ Still missing: cc3iid_(MSMNAO_PACK)_v2.0.7_5643 (Std_Skin_Head.001_MSMNAO Pack)"
+                },
+                {
+                  "lineNumber": 1805,
+                  "content": "  Path: //textures\\Emi\\Std_Skin_Head\\Std_Skin_Head.png"
+                },
+                {
+                  "lineNumber": 1845,
+                  "content": "material = bpy.data.materials.get(\"Std_Skin_Head\")"
+                },
+                {
+                  "lineNumber": 1856,
+                  "content": "        \"//textures\\\\Emi\\\\Std_Skin_Head\\\\Std_Skin_Head_Diffuse.png\","
+                },
+                {
+                  "lineNumber": 1857,
+                  "content": "        \"//textures/Emi/Std_Skin_Head/Std_Skin_Head_Diffuse.png\","
+                },
+                {
+                  "lineNumber": 1858,
+                  "content": "        \"textures\\\\Emi\\\\Std_Skin_Head\\\\Std_Skin_Head_Diffuse.png\","
+                },
+                {
+                  "lineNumber": 1859,
+                  "content": "        \"textures/Emi/Std_Skin_Head/Std_Skin_Head_Diffuse.png\""
+                },
+                {
+                  "lineNumber": 1937,
+                  "content": "Error executing code: Communication error with Blender: Code execution error: Writing to ID classes in this context is not allowed: Std_Skin_Head_Diffuse, Image data-block, error setting Image.filepath"
+                },
+                {
+                  "lineNumber": 1977,
+                  "content": "    os.path.join(blend_dir, \"textures\", \"Emi\", \"Std_Skin_Head\"),"
+                },
+                {
+                  "lineNumber": 1978,
+                  "content": "    os.path.join(blend_dir, \"..\", \"textures\", \"Emi\", \"Std_Skin_Head\"),"
+                },
+                {
+                  "lineNumber": 1979,
+                  "content": "    os.path.join(blend_dir, \"..\", \"..\", \"textures\", \"Emi\", \"Std_Skin_Head\"),"
+                },
+                {
+                  "lineNumber": 1997,
+                  "content": "material = bpy.data.materials.get(\"Std_Skin_Head\")"
+                },
+                {
+                  "lineNumber": 2019,
+                  "content": "  T:\\1 BlenderAssets\\Amazon\\Char\\LeaderSet\\textures\\Emi\\Std_Skin_Head"
+                },
+                {
+                  "lineNumber": 2028,
+                  "content": "  T:\\1 BlenderAssets\\Amazon\\Char\\textures\\Emi\\Std_Skin_Head"
+                },
+                {
+                  "lineNumber": 2031,
+                  "content": "  T:\\1 BlenderAssets\\Amazon\\textures\\Emi\\Std_Skin_Head"
+                },
+                {
+                  "lineNumber": 2035,
+                  "content": "  Relative: //textures\\Emi\\Std_Skin_Head\\Std_Skin_Head_Diffuse.png"
+                },
+                {
+                  "lineNumber": 2036,
+                  "content": "  Absolute (Blender's resolution): T:\\1 BlenderAssets\\Amazon\\Char\\LeaderSet\\textures\\Emi\\Std_Skin_Head\\Std_Skin_Head_Diffuse.png"
+                },
+                {
+                  "lineNumber": 2107,
+                  "content": "material = bpy.data.materials.get(\"Std_Skin_Head\")"
+                },
+                {
+                  "lineNumber": 2147,
+                  "content": "After unpacking files in Blender, the &#96;Std_Skin_Head&#96; material appears black because:"
+                },
+                {
+                  "lineNumber": 2169,
+                  "content": "2. Select the &#96;Std_Skin_Head&#96; material"
+                },
+                {
+                  "lineNumber": 2185,
+                  "content": "the images are intact. the issue is something to do with the cc/ic node groups. they're incredibly complex on Std_Skin_Head, but most other characters don't behave this way. I've only ever gotten this 2 other times."
+                },
+                {
+                  "lineNumber": 2219,
+                  "content": "material = bpy.data.materials.get(\"Std_Skin_Head\")"
+                },
+                {
+                  "lineNumber": 2373,
+                  "content": "material = bpy.data.materials.get(\"Std_Skin_Head\")"
+                },
+                {
+                  "lineNumber": 2550,
+                  "content": "material = bpy.data.materials.get(\"Std_Skin_Head\")"
+                },
+                {
+                  "lineNumber": 2679,
+                  "content": "material = bpy.data.materials.get(\"Std_Skin_Head\")"
+                },
+                {
+                  "lineNumber": 2820,
+                  "content": "material = bpy.data.materials.get(\"Std_Skin_Head\")"
+                },
+                {
+                  "lineNumber": 2983,
+                  "content": "material = bpy.data.materials.get(\"Std_Skin_Head\")"
+                },
+                {
+                  "lineNumber": 3140,
+                  "content": "material = bpy.data.materials.get(\"Std_Skin_Head\")"
+                },
+                {
+                  "lineNumber": 3347,
+                  "content": "material = bpy.data.materials.get(\"Std_Skin_Head\")"
+                },
+                {
+                  "lineNumber": 3461,
+                  "content": "material = bpy.data.materials.get(\"Std_Skin_Head\")"
+                },
+                {
+                  "lineNumber": 3556,
+                  "content": "1. Open the Shader Editor and select the &#96;Std_Skin_Head&#96; material"
+                },
+                {
+                  "lineNumber": 3641,
+                  "content": "  - Std_Skin_Head"
+                },
+                {
+                  "lineNumber": 3654,
+                  "content": "Inspecting Una's &#96;Std_Skin_Head&#96; material, focusing on the 'Metallic, Specular &amp; Roughness' frame in the shader group:"
+                },
+                {
+                  "lineNumber": 3674,
+                  "content": "material = bpy.data.materials.get(\"Std_Skin_Head\")"
+                },
+                {
+                  "lineNumber": 3678,
+                  "content": "    print(f\"Analyzing Una's Std_Skin_Head material...\\n\")"
+                },
+                {
+                  "lineNumber": 3768,
+                  "content": "Code executed successfully: Analyzing Una's Std_Skin_Head material..."
+                },
+                {
+                  "lineNumber": 3820,
+                  "content": "material = bpy.data.materials.get(\"Std_Skin_Head\")"
+                },
+                {
+                  "lineNumber": 3968,
+                  "content": "material = bpy.data.materials.get(\"Std_Skin_Head\")"
+                },
+                {
+                  "lineNumber": 4270,
+                  "content": "material = bpy.data.materials.get(\"Std_Skin_Head\")"
+                },
+                {
+                  "lineNumber": 4400,
+                  "content": "material = bpy.data.materials.get(\"Std_Skin_Head\")"
+                },
+                {
+                  "lineNumber": 4402,
+                  "content": "    print(\"Std_Skin_Head material not found in current file\")"
+                },
+                {
+                  "lineNumber": 4495,
+                  "content": "Found material: Std_Skin_Head"
+                },
+                {
+                  "lineNumber": 4555,
+                  "content": "material = bpy.data.materials.get(\"Std_Skin_Head\")"
+                },
+                {
+                  "lineNumber": 4716,
+                  "content": "2. Go to **Shader Editor** and select the &#96;Std_Skin_Head&#96; material"
+                },
+                {
+                  "lineNumber": 4759,
+                  "content": "material = bpy.data.materials.get(\"Std_Skin_Head\")"
+                },
+                {
+                  "lineNumber": 4886,
+                  "content": "material = bpy.data.materials.get(\"Std_Skin_Head\")"
+                },
+                {
+                  "lineNumber": 5028,
+                  "content": "    Connected from: cc3iid_(MSMNAO_PACK)_v2.0.7_5643"
+                },
+                {
+                  "lineNumber": 5042,
+                  "content": "    Connected from: cc3iid_(SSTM_PACK)_v2.0.7_5642"
+                },
+                {
+                  "lineNumber": 5044,
+                  "content": "    Connected from: cc3iid_(SSTM_PACK)_v2.0.7_5642"
+                },
+                {
+                  "lineNumber": 5050,
+                  "content": "    Connected from: cc3iid_(MSMNAO_PACK_SPLIT)_v2.0.7_5644"
+                },
+                {
+                  "lineNumber": 5080,
+                  "content": "    Connected from: cc3iid_(MSMNAO_PACK_SPLIT)_v2.0.7_5644"
+                },
+                {
+                  "lineNumber": 5196,
+                  "content": "material = bpy.data.materials.get(\"Std_Skin_Head\")"
+                },
+                {
+                  "lineNumber": 5386,
+                  "content": "material = bpy.data.materials.get(\"Std_Skin_Head\")"
+                },
+                {
+                  "lineNumber": 5533,
+                  "content": "material = bpy.data.materials.get(\"Std_Skin_Head\")"
+                },
+                {
+                  "lineNumber": 5692,
+                  "content": "material = bpy.data.materials.get(\"Std_Skin_Head\")"
+                },
+                {
+                  "lineNumber": 5908,
+                  "content": "material = bpy.data.materials.get(\"Std_Skin_Head\")"
+                },
+                {
+                  "lineNumber": 6041,
+                  "content": "material = bpy.data.materials.get(\"Std_Skin_Head\")"
+                },
+                {
+                  "lineNumber": 6225,
+                  "content": "material = bpy.data.materials.get(\"Std_Skin_Head\")"
+                },
+                {
+                  "lineNumber": 6360,
+                  "content": "cc3iid_(BLEND2)_v2.0.7_5600 (Std_Skin_Head_BCBMap) connects directly to group node"
+                },
+                {
+                  "lineNumber": 6361,
+                  "content": "cc3iid_(MCMAOMASK)_v2.0.7_5602 (Std_Skin_Head_MNAOMask) connects directly to group node"
+                },
+                {
+                  "lineNumber": 6362,
+                  "content": "cc3iid_(MCMAOMASK)_v2.0.7_5602 (Std_Skin_Head_MNAOMask) connects directly to group node"
+                },
+                {
+                  "lineNumber": 6364,
+                  "content": "cc3iid_(NORMALBLEND)_v2.0.7_5610 (Std_Skin_Head_NBMap) connects directly to group node"
+                },
+                {
+                  "lineNumber": 6365,
+                  "content": "cc3iid_(NMUILMASK)_v2.0.7_5611 (Std_Skin_Head_NMUILMask) connects directly to group node"
+                },
+                {
+                  "lineNumber": 6366,
+                  "content": "cc3iid_(NMUILMASK)_v2.0.7_5611 (Std_Skin_Head_NMUILMask) connects directly to group node"
+                },
+                {
+                  "lineNumber": 6367,
+                  "content": "cc3iid_(CFULCMASK)_v2.0.7_5612 (Std_Skin_Head_CFULCMask) connects directly to group node"
+                },
+                {
+                  "lineNumber": 6368,
+                  "content": "cc3iid_(CFULCMASK)_v2.0.7_5612 (Std_Skin_Head_CFULCMask) connects directly to group node"
+                },
+                {
+                  "lineNumber": 6369,
+                  "content": "cc3iid_(ENNASK)_v2.0.7_5613 (Std_Skin_Head_ENMask) connects directly to group node"
+                },
+                {
+                  "lineNumber": 6370,
+                  "content": "cc3iid_(SSTM_PACK)_v2.0.7_5642 (Std_Skin_Head.001_SSTM Pack) connects directly to group node"
+                },
+                {
+                  "lineNumber": 6371,
+                  "content": "cc3iid_(SSTM_PACK)_v2.0.7_5642 (Std_Skin_Head.001_SSTM Pack) connects directly to group node"
+                },
+                {
+                  "lineNumber": 6372,
+                  "content": "cc3iid_(MSMNAO_PACK)_v2.0.7_5643 (Std_Skin_Head.001_MSMNAO Pack) connects directly to group node"
+                },
+                {
+                  "lineNumber": 6423,
+                  "content": "material = bpy.data.materials.get(\"Std_Skin_Head\")"
+                },
+                {
+                  "lineNumber": 6607,
+                  "content": "material = bpy.data.materials.get(\"Std_Skin_Head\")"
+                },
+                {
+                  "lineNumber": 6756,
+                  "content": "material = bpy.data.materials.get(\"Std_Skin_Head\")"
+                },
+                {
+                  "lineNumber": 6889,
+                  "content": "material = bpy.data.materials.get(\"Std_Skin_Head\")"
+                },
+                {
+                  "lineNumber": 6965,
+                  "content": "      Image: Std_Skin_Head_MNAOMask"
+                },
+                {
+                  "lineNumber": 6989,
+                  "content": "   - &#96;MCMAO Map&#96; is an external file (&#96;Std_Skin_Head_MNAOMask&#96;)"
+                },
+                {
+                  "lineNumber": 7019,
+                  "content": "packing makes no difference. the MCMAO map and alpha inputs get their data from the Std_Skin_Head_MNAOMask image datablock, which is present. but I think I found the issue. the MSMNAO Pack image that outputs data to AO Map, Specular Mask, and Micro Normal Mask, is a completely different file. That means my AutoMat Extractor's special handling of CC/iC's MSMNAO Packs is accidentally merging files together. I can fix this in the addon and unpack again."
+                },
+                {
+                  "lineNumber": 7030,
+                  "content": "The issue is the AutoMat Extractor addon incorrectly merging MSMNAO Pack files."
+                },
+                {
+                  "lineNumber": 7034,
+                  "content": "The &#96;MSMNAO Pack&#96; image datablock is supposed to provide data to:"
+                },
+                {
+                  "lineNumber": 7040,
+                  "content": "1. Incorrect data in the MSMNAO Pack image"
+                },
+                {
+                  "lineNumber": 7054,
+                  "content": "Update AutoMat Extractor’s MSMNAO Pack handling to:"
+                },
+                {
+                  "lineNumber": 7055,
+                  "content": "1. Correctly identify which file should be the MSMNAO Pack"
+                }
+              ]
+            }
+          ],
+          "totalLines": 241,
+          "totalMatchedLines": 241
+        }
+      }
+    }
+  }
+}
+```
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: E:\Rainys_Bulk_Scene_Tools\ops\AutoMatExtractor.py</summary>
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="semantic_search_full">
+<details>
+<summary>Tool use: **semantic_search_full**</summary>
+
+
+Parameters:
+
+```json
+{
+  "query": "how does AutoMatExtractor handle overwrite conflicts when multiple images resolve to same filename",
+  "includePattern": "ops",
+  "topK": 10,
+  "explanation": ""
+}
+```
+Result:
+
+```json
+{
+  "codeResults": [
+    {
+      "codeBlock": {
+        "relativeWorkspacePath": ".\\ops\\AutoMatExtractor.py",
+        "range": {
+          "startPosition": {
+            "line": 64
+          },
+          "endPosition": {
+            "line": 537
+          }
+        },
+        "contents": "class RBST_AutoMat_OT_AutoMatExtractor(bpy.types.Operator):\ndef _process_step(self):\n\n            \n        elif self.current_step == 3:\n            # Step 4: Build path mapping\n            if self.current_index &gt;= len(self.selected_images):\n                # Path building complete, move to remapping\n                self.current_step = 4\n                self.current_index = 0\n                props.operation_status = \"Remapping image paths...\"\n                props.operation_progress = 70.0\n                return 0.01\n            \n            # Build path for current image\n            img = self.selected_images[self.current_index]\n            props.operation_status = f\"Building path for {img.name}...\"\n            \n            # Get blend file name - respect user preference if set\n            if props.use_blend_subfolder:\n                blend_name = props.blend_subfolder\n                if not blend_name:\n                    # Fall back to filename if not specified\n                    blend_path = bpy.data.filepath\n                    if blend_path:\n                        blend_name = os.path.splitext(os.path.basename(blend_path))[0]\n                    else:\n                        blend_name = \"untitled\"\n            else:\n                # Derive from filename\n                blend_path = bpy.data.filepath\n                if blend_path:\n                    blend_name = os.path.splitext(os.path.basename(blend_path))[0]\n                else:\n                    blend_name = \"untitled\"\n            blend_name = self.sanitize_filename(blend_name)\n            \n            # Determine common path\n            if self.common_outside:\n                common_path_part = \"common\"\n            else:\n                common_path_part = f\"{blend_name}\\\\common\"\n            \n            # Get extension and build path\n            extension = get_image_extension(img)\n            sanitized_base_name = self.sanitize_filename(img.name)\n            filename = f\"{sanitized_base_name}{extension}\"\n            \n            if img.name.startswith('#'):",
+        "signatures": {
+          "ranges": [
+            {
+              "startPosition": {
+                "line": 65,
+                "column": 1
+              },
+              "endPosition": {
+                "line": 66,
+                "column": 5
+              }
+            },
+            {
+              "startPosition": {
+                "line": 111,
+                "column": 5
+              },
+              "endPosition": {
+                "line": 112,
+                "column": 9
+              }
+            }
+          ]
+        },
+        "detailedLines": [
+          {
+            "text": "class RBST_AutoMat_OT_AutoMatExtractor(bpy.types.Operator):",
+            "lineNumber": 65,
+            "isSignature": true
+          },
+          {
+            "text": "def _process_step(self):",
+            "lineNumber": 111
+          },
+          {
+            "lineNumber": 179
+          },
+          {
+            "text": "            ",
+            "lineNumber": 180
+          },
+          {
+            "text": "        elif self.current_step == 3:",
+            "lineNumber": 181
+          },
+          {
+            "text": "            # Step 4: Build path mapping",
+            "lineNumber": 182
+          },
+          {
+            "text": "            if self.current_index &gt;= len(self.selected_images):",
+            "lineNumber": 183
+          },
+          {
+            "text": "                # Path building complete, move to remapping",
+            "lineNumber": 184
+          },
+          {
+            "text": "                self.current_step = 4",
+            "lineNumber": 185
+          },
+          {
+            "text": "                self.current_index = 0",
+            "lineNumber": 186
+          },
+          {
+            "text": "                props.operation_status = \"Remapping image paths...\"",
+            "lineNumber": 187
+          },
+          {
+            "text": "                props.operation_progress = 70.0",
+            "lineNumber": 188
+          },
+          {
+            "text": "                return 0.01",
+            "lineNumber": 189
+          },
+          {
+            "text": "            ",
+            "lineNumber": 190
+          },
+          {
+            "text": "            # Build path for current image",
+            "lineNumber": 191
+          },
+          {
+            "text": "            img = self.selected_images[self.current_index]",
+            "lineNumber": 192
+          },
+          {
+            "text": "            props.operation_status = f\"Building path for {img.name}...\"",
+            "lineNumber": 193
+          },
+          {
+            "text": "            ",
+            "lineNumber": 194
+          },
+          {
+            "text": "            # Get blend file name - respect user preference if set",
+            "lineNumber": 195
+          },
+          {
+            "text": "            if props.use_blend_subfolder:",
+            "lineNumber": 196
+          },
+          {
+            "text": "                blend_name = props.blend_subfolder",
+            "lineNumber": 197
+          },
+          {
+            "text": "                if not blend_name:",
+            "lineNumber": 198
+          },
+          {
+            "text": "                    # Fall back to filename if not specified",
+            "lineNumber": 199
+          },
+          {
+            "text": "                    blend_path = bpy.data.filepath",
+            "lineNumber": 200
+          },
+          {
+            "text": "                    if blend_path:",
+            "lineNumber": 201
+          },
+          {
+            "text": "                        blend_name = os.path.splitext(os.path.basename(blend_path))[0]",
+            "lineNumber": 202
+          },
+          {
+            "text": "                    else:",
+            "lineNumber": 203
+          },
+          {
+            "text": "                        blend_name = \"untitled\"",
+            "lineNumber": 204
+          },
+          {
+            "text": "            else:",
+            "lineNumber": 205
+          },
+          {
+            "text": "                # Derive from filename",
+            "lineNumber": 206
+          },
+          {
+            "text": "                blend_path = bpy.data.filepath",
+            "lineNumber": 207
+          },
+          {
+            "text": "                if blend_path:",
+            "lineNumber": 208
+          },
+          {
+            "text": "                    blend_name = os.path.splitext(os.path.basename(blend_path))[0]",
+            "lineNumber": 209
+          },
+          {
+            "text": "                else:",
+            "lineNumber": 210
+          },
+          {
+            "text": "                    blend_name = \"untitled\"",
+            "lineNumber": 211
+          },
+          {
+            "text": "            blend_name = self.sanitize_filename(blend_name)",
+            "lineNumber": 212
+          },
+          {
+            "text": "            ",
+            "lineNumber": 213
+          },
+          {
+            "text": "            # Determine common path",
+            "lineNumber": 214
+          },
+          {
+            "text": "            if self.common_outside:",
+            "lineNumber": 215
+          },
+          {
+            "text": "                common_path_part = \"common\"",
+            "lineNumber": 216
+          },
+          {
+            "text": "            else:",
+            "lineNumber": 217
+          },
+          {
+            "text": "                common_path_part = f\"{blend_name}\\\\common\"",
+            "lineNumber": 218
+          },
+          {
+            "text": "            ",
+            "lineNumber": 219
+          },
+          {
+            "text": "            # Get extension and build path",
+            "lineNumber": 220
+          },
+          {
+            "text": "            extension = get_image_extension(img)",
+            "lineNumber": 221
+          },
+          {
+            "text": "            sanitized_base_name = self.sanitize_filename(img.name)",
+            "lineNumber": 222
+          },
+          {
+            "text": "            filename = f\"{sanitized_base_name}{extension}\"",
+            "lineNumber": 223
+          },
+          {
+            "text": "            ",
+            "lineNumber": 224
+          },
+          {
+            "text": "            if img.name.startswith('#'):",
+            "lineNumber": 225
+          }
+        ]
+      },
+      "score": 0.4012528657913208
+    },
+    {
+      "codeBlock": {
+        "relativeWorkspacePath": ".\\ops\\AutoMatExtractor.py",
+        "range": {
+          "startPosition": {
+            "line": 64
+          },
+          "endPosition": {
+            "line": 537
+          }
+        },
+        "contents": "class RBST_AutoMat_OT_AutoMatExtractor(bpy.types.Operator):\ndef _process_step(self):\n\n            \n            if img.name.startswith('#'):\n                # Flat colors go to FlatColors subfolder\n                base_folder = f\"//textures\\\\{common_path_part}\\\\FlatColors\"\n            else:\n                # Check material usage for this image\n                materials_using_image = self.material_mapping.get(img.name, [])\n                \n                if not materials_using_image:\n                    # No materials found, put in common folder\n                    base_folder = f\"//textures\\\\{common_path_part}\"\n                    print(f\"DEBUG: {img.name} - No materials found, using common folder\")\n                elif len(materials_using_image) == 1:\n                    # Used by exactly one material, organize by material name\n                    material_name = self.sanitize_filename(materials_using_image[0])\n                    base_folder = f\"//textures\\\\{blend_name}\\\\{material_name}\"\n                    print(f\"DEBUG: {img.name} - Used by {material_name}, organizing by material\")\n                else:\n                    # Used by multiple materials, put in common folder\n                    base_folder = f\"//textures\\\\{common_path_part}\"\n                    print(f\"DEBUG: {img.name} - Used by multiple materials: {materials_using_image}, using common folder\")\n            \n            is_udim = self.is_udim_image(img)\n            if is_udim:\n                udim_mapping = self.build_udim_mapping(base_folder, sanitized_base_name, extension, img)\n                self.path_mapping[img.name] = udim_mapping\n                self.udim_summary[\"found\"] += 1\n                print(f\"DEBUG: {img.name} - UDIM detected with {len(udim_mapping.get('tiles', {}))} tiles\")\n            else:\n                path = f\"{base_folder}\\\\{filename}\"\n                self.path_mapping[img.name] = path\n            \n            self.current_index += 1\n            progress = 50.0 + (self.current_index / len(self.selected_images)) * 20.0\n            props.operation_progress = progress\n            \n        elif self.current_step == 4:",
+        "signatures": {
+          "ranges": [
+            {
+              "startPosition": {
+                "line": 65,
+                "column": 1
+              },
+              "endPosition": {
+                "line": 66,
+                "column": 5
+              }
+            },
+            {
+              "startPosition": {
+                "line": 111,
+                "column": 5
+              },
+              "endPosition": {
+                "line": 112,
+                "column": 9
+              }
+            }
+          ]
+        },
+        "detailedLines": [
+          {
+            "text": "class RBST_AutoMat_OT_AutoMatExtractor(bpy.types.Operator):",
+            "lineNumber": 65,
+            "isSignature": true
+          },
+          {
+            "text": "def _process_step(self):",
+            "lineNumber": 111
+          },
+          {
+            "lineNumber": 223
+          },
+          {
+            "text": "            ",
+            "lineNumber": 224
+          },
+          {
+            "text": "            if img.name.startswith('#'):",
+            "lineNumber": 225
+          },
+          {
+            "text": "                # Flat colors go to FlatColors subfolder",
+            "lineNumber": 226
+          },
+          {
+            "text": "                base_folder = f\"//textures\\\\{common_path_part}\\\\FlatColors\"",
+            "lineNumber": 227
+          },
+          {
+            "text": "            else:",
+            "lineNumber": 228
+          },
+          {
+            "text": "                # Check material usage for this image",
+            "lineNumber": 229
+          },
+          {
+            "text": "                materials_using_image = self.material_mapping.get(img.name, [])",
+            "lineNumber": 230
+          },
+          {
+            "text": "                ",
+            "lineNumber": 231
+          },
+          {
+            "text": "                if not materials_using_image:",
+            "lineNumber": 232
+          },
+          {
+            "text": "                    # No materials found, put in common folder",
+            "lineNumber": 233
+          },
+          {
+            "text": "                    base_folder = f\"//textures\\\\{common_path_part}\"",
+            "lineNumber": 234
+          },
+          {
+            "text": "                    print(f\"DEBUG: {img.name} - No materials found, using common folder\")",
+            "lineNumber": 235
+          },
+          {
+            "text": "                elif len(materials_using_image) == 1:",
+            "lineNumber": 236
+          },
+          {
+            "text": "                    # Used by exactly one material, organize by material name",
+            "lineNumber": 237
+          },
+          {
+            "text": "                    material_name = self.sanitize_filename(materials_using_image[0])",
+            "lineNumber": 238
+          },
+          {
+            "text": "                    base_folder = f\"//textures\\\\{blend_name}\\\\{material_name}\"",
+            "lineNumber": 239
+          },
+          {
+            "text": "                    print(f\"DEBUG: {img.name} - Used by {material_name}, organizing by material\")",
+            "lineNumber": 240
+          },
+          {
+            "text": "                else:",
+            "lineNumber": 241
+          },
+          {
+            "text": "                    # Used by multiple materials, put in common folder",
+            "lineNumber": 242
+          },
+          {
+            "text": "                    base_folder = f\"//textures\\\\{common_path_part}\"",
+            "lineNumber": 243
+          },
+          {
+            "text": "                    print(f\"DEBUG: {img.name} - Used by multiple materials: {materials_using_image}, using common folder\")",
+            "lineNumber": 244
+          },
+          {
+            "text": "            ",
+            "lineNumber": 245
+          },
+          {
+            "text": "            is_udim = self.is_udim_image(img)",
+            "lineNumber": 246
+          },
+          {
+            "text": "            if is_udim:",
+            "lineNumber": 247
+          },
+          {
+            "text": "                udim_mapping = self.build_udim_mapping(base_folder, sanitized_base_name, extension, img)",
+            "lineNumber": 248
+          },
+          {
+            "text": "                self.path_mapping[img.name] = udim_mapping",
+            "lineNumber": 249
+          },
+          {
+            "text": "                self.udim_summary[\"found\"] += 1",
+            "lineNumber": 250
+          },
+          {
+            "text": "                print(f\"DEBUG: {img.name} - UDIM detected with {len(udim_mapping.get('tiles', {}))} tiles\")",
+            "lineNumber": 251
+          },
+          {
+            "text": "            else:",
+            "lineNumber": 252
+          },
+          {
+            "text": "                path = f\"{base_folder}\\\\{filename}\"",
+            "lineNumber": 253
+          },
+          {
+            "text": "                self.path_mapping[img.name] = path",
+            "lineNumber": 254
+          },
+          {
+            "text": "            ",
+            "lineNumber": 255
+          },
+          {
+            "text": "            self.current_index += 1",
+            "lineNumber": 256
+          },
+          {
+            "text": "            progress = 50.0 + (self.current_index / len(self.selected_images)) * 20.0",
+            "lineNumber": 257
+          },
+          {
+            "text": "            props.operation_progress = progress",
+            "lineNumber": 258
+          },
+          {
+            "text": "            ",
+            "lineNumber": 259
+          },
+          {
+            "text": "        elif self.current_step == 4:",
+            "lineNumber": 260
+          }
+        ]
+      },
+      "score": 0.3999311923980713
+    },
+    {
+      "codeBlock": {
+        "relativeWorkspacePath": ".\\ops\\AutoMatExtractor.py",
+        "range": {
+          "startPosition": {
+            "line": 64
+          },
+          "endPosition": {
+            "line": 537
+          }
+        },
+        "contents": "class RBST_AutoMat_OT_AutoMatExtractor(bpy.types.Operator):\n\n\n    def sanitize_filename(self, filename):\n        \"\"\"Sanitize filename/folder name for filesystem compatibility\"\"\"\n        # First, remove potential file extensions, including numerical ones like .001\n        base_name = re.sub(r'\\.\\d{3}$', '', filename) # Remove .001, .002 etc.\n        base_name = os.path.splitext(base_name)[0] # Remove standard extensions\n        \n        # Remove or replace invalid characters for Windows/Mac/Linux\n        sanitized = re.sub(r'[&lt;&gt;:\"/\\\\|?*]', '_', base_name)\n        # Remove leading/trailing spaces and dots\n        sanitized = sanitized.strip(' .')\n        # Ensure it's not empty\n        if not sanitized:\n            sanitized = \"unnamed\"\n        return sanitized\n    \n    def get_image_material_mapping(self, images):\n        \"\"\"Create mapping of image names to materials that use them\"\"\"\n        image_to_materials = {}\n        \n        # Initialize mapping\n        for img in images:\n            image_to_materials[img.name] = []\n        \n        # Check all materials for image usage\n        for material in bpy.data.materials:\n            if not material.use_nodes:\n                continue\n                \n            material_images = set()\n            \n            # Find all image texture nodes in this material\n            for node in material.node_tree.nodes:\n                if node.type == 'TEX_IMAGE' and node.image:\n                    material_images.add(node.image.name)\n            \n            # Add this material to each image's usage list\n            for img_name in material_images:\n                if img_name in image_to_materials:\n                    image_to_materials[img_name].append(material.name)\n        \n        return image_to_materials\n\n    def is_udim_image(self, image):\n        \"\"\"Return True when the image contains UDIM/tiled data\"\"\"",
+        "signatures": {
+          "ranges": [
+            {
+              "startPosition": {
+                "line": 65,
+                "column": 1
+              },
+              "endPosition": {
+                "line": 66,
+                "column": 5
+              }
+            }
+          ]
+        },
+        "detailedLines": [
+          {
+            "text": "class RBST_AutoMat_OT_AutoMatExtractor(bpy.types.Operator):",
+            "lineNumber": 65,
+            "isSignature": true
+          },
+          {
+            "lineNumber": 403
+          },
+          {
+            "lineNumber": 404
+          },
+          {
+            "text": "    def sanitize_filename(self, filename):",
+            "lineNumber": 405
+          },
+          {
+            "text": "        \"\"\"Sanitize filename/folder name for filesystem compatibility\"\"\"",
+            "lineNumber": 406
+          },
+          {
+            "text": "        # First, remove potential file extensions, including numerical ones like .001",
+            "lineNumber": 407
+          },
+          {
+            "text": "        base_name = re.sub(r'\\.\\d{3}$', '', filename) # Remove .001, .002 etc.",
+            "lineNumber": 408
+          },
+          {
+            "text": "        base_name = os.path.splitext(base_name)[0] # Remove standard extensions",
+            "lineNumber": 409
+          },
+          {
+            "text": "        ",
+            "lineNumber": 410
+          },
+          {
+            "text": "        # Remove or replace invalid characters for Windows/Mac/Linux",
+            "lineNumber": 411
+          },
+          {
+            "text": "        sanitized = re.sub(r'[&lt;&gt;:\"/\\\\|?*]', '_', base_name)",
+            "lineNumber": 412
+          },
+          {
+            "text": "        # Remove leading/trailing spaces and dots",
+            "lineNumber": 413
+          },
+          {
+            "text": "        sanitized = sanitized.strip(' .')",
+            "lineNumber": 414
+          },
+          {
+            "text": "        # Ensure it's not empty",
+            "lineNumber": 415
+          },
+          {
+            "text": "        if not sanitized:",
+            "lineNumber": 416
+          },
+          {
+            "text": "            sanitized = \"unnamed\"",
+            "lineNumber": 417
+          },
+          {
+            "text": "        return sanitized",
+            "lineNumber": 418
+          },
+          {
+            "text": "    ",
+            "lineNumber": 419
+          },
+          {
+            "text": "    def get_image_material_mapping(self, images):",
+            "lineNumber": 420
+          },
+          {
+            "text": "        \"\"\"Create mapping of image names to materials that use them\"\"\"",
+            "lineNumber": 421
+          },
+          {
+            "text": "        image_to_materials = {}",
+            "lineNumber": 422
+          },
+          {
+            "text": "        ",
+            "lineNumber": 423
+          },
+          {
+            "text": "        # Initialize mapping",
+            "lineNumber": 424
+          },
+          {
+            "text": "        for img in images:",
+            "lineNumber": 425
+          },
+          {
+            "text": "            image_to_materials[img.name] = []",
+            "lineNumber": 426
+          },
+          {
+            "text": "        ",
+            "lineNumber": 427
+          },
+          {
+            "text": "        # Check all materials for image usage",
+            "lineNumber": 428
+          },
+          {
+            "text": "        for material in bpy.data.materials:",
+            "lineNumber": 429
+          },
+          {
+            "text": "            if not material.use_nodes:",
+            "lineNumber": 430
+          },
+          {
+            "text": "                continue",
+            "lineNumber": 431
+          },
+          {
+            "text": "                ",
+            "lineNumber": 432
+          },
+          {
+            "text": "            material_images = set()",
+            "lineNumber": 433
+          },
+          {
+            "text": "            ",
+            "lineNumber": 434
+          },
+          {
+            "text": "            # Find all image texture nodes in this material",
+            "lineNumber": 435
+          },
+          {
+            "text": "            for node in material.node_tree.nodes:",
+            "lineNumber": 436
+          },
+          {
+            "text": "                if node.type == 'TEX_IMAGE' and node.image:",
+            "lineNumber": 437
+          },
+          {
+            "text": "                    material_images.add(node.image.name)",
+            "lineNumber": 438
+          },
+          {
+            "text": "            ",
+            "lineNumber": 439
+          },
+          {
+            "text": "            # Add this material to each image's usage list",
+            "lineNumber": 440
+          },
+          {
+            "text": "            for img_name in material_images:",
+            "lineNumber": 441
+          },
+          {
+            "text": "                if img_name in image_to_materials:",
+            "lineNumber": 442
+          },
+          {
+            "text": "                    image_to_materials[img_name].append(material.name)",
+            "lineNumber": 443
+          },
+          {
+            "text": "        ",
+            "lineNumber": 444
+          },
+          {
+            "text": "        return image_to_materials",
+            "lineNumber": 445
+          },
+          {
+            "lineNumber": 446
+          },
+          {
+            "text": "    def is_udim_image(self, image):",
+            "lineNumber": 447
+          },
+          {
+            "text": "        \"\"\"Return True when the image contains UDIM/tiled data\"\"\"",
+            "lineNumber": 448
+          }
+        ]
+      },
+      "score": 0.3873315453529358
+    },
+    {
+      "codeBlock": {
+        "relativeWorkspacePath": ".\\ops\\AutoMatExtractor.py",
+        "range": {
+          "startPosition": {
+            "line": 62,
+            "column": 67
+          },
+          "endPosition": {
+            "line": 537
+          }
+        },
+        "contents": "class RBST_AutoMat_OT_AutoMatExtractor(bpy.types.Operator):\n    bl_idname = \"bst.automatextractor\"\n    bl_label = \"AutoMatExtractor\"\n    bl_description = \"Pack selected images and extract them with organized paths by blend file and material\"\n    bl_options = {'REGISTER', 'UNDO'}\n\n    def execute(self, context):\n        # Get addon preferences\n        addon_name = __package__.split('.')[0]\n        addon_entry = context.preferences.addons.get(addon_name)\n        prefs = addon_entry.preferences if addon_entry else None\n        common_outside = prefs.automat_common_outside_blend if prefs else False\n        \n        # Get selected images\n        selected_images = [img for img in bpy.data.images if hasattr(img, \"bst_selected\") and img.bst_selected]\n        \n        if not selected_images:\n            self.report({'WARNING'}, \"No images selected for extraction\")\n            return {'CANCELLED'}\n        \n        # Set up progress tracking\n        props = context.scene.bst_path_props\n        props.is_operation_running = True\n        props.operation_progress = 0.0\n        props.operation_status = f\"Preparing AutoMat extraction for {len(selected_images)} images...\"\n        \n        # Store data for timer processing\n        self.selected_images = selected_images\n        self.common_outside = common_outside\n        self.current_step = 0\n        self.current_index = 0\n        self.packed_count = 0\n        self.success_count = 0\n        self.overwrite_skipped = []\n        self.failed_list = []\n        self.path_mapping = {}\n        self.udim_summary = {\n            \"found\": 0,\n            \"saved\": 0,\n        }\n        \n        # Start timer for processing\n        bpy.app.timers.register(self._process_step)\n        \n        return {'FINISHED'}\n    \n    def _process_step(self):\n        \"\"\"",
+        "signatures": {},
+        "detailedLines": [
+          {
+            "text": "class RBST_AutoMat_OT_AutoMatExtractor(bpy.types.Operator):",
+            "lineNumber": 65,
+            "isSignature": true
+          },
+          {
+            "text": "    bl_idname = \"bst.automatextractor\"",
+            "lineNumber": 66
+          },
+          {
+            "text": "    bl_label = \"AutoMatExtractor\"",
+            "lineNumber": 67
+          },
+          {
+            "text": "    bl_description = \"Pack selected images and extract them with organized paths by blend file and material\"",
+            "lineNumber": 68
+          },
+          {
+            "text": "    bl_options = {'REGISTER', 'UNDO'}",
+            "lineNumber": 69
+          },
+          {
+            "lineNumber": 70
+          },
+          {
+            "text": "    def execute(self, context):",
+            "lineNumber": 71
+          },
+          {
+            "text": "        # Get addon preferences",
+            "lineNumber": 72
+          },
+          {
+            "text": "        addon_name = __package__.split('.')[0]",
+            "lineNumber": 73
+          },
+          {
+            "text": "        addon_entry = context.preferences.addons.get(addon_name)",
+            "lineNumber": 74
+          },
+          {
+            "text": "        prefs = addon_entry.preferences if addon_entry else None",
+            "lineNumber": 75
+          },
+          {
+            "text": "        common_outside = prefs.automat_common_outside_blend if prefs else False",
+            "lineNumber": 76
+          },
+          {
+            "text": "        ",
+            "lineNumber": 77
+          },
+          {
+            "text": "        # Get selected images",
+            "lineNumber": 78
+          },
+          {
+            "text": "        selected_images = [img for img in bpy.data.images if hasattr(img, \"bst_selected\") and img.bst_selected]",
+            "lineNumber": 79
+          },
+          {
+            "text": "        ",
+            "lineNumber": 80
+          },
+          {
+            "text": "        if not selected_images:",
+            "lineNumber": 81
+          },
+          {
+            "text": "            self.report({'WARNING'}, \"No images selected for extraction\")",
+            "lineNumber": 82
+          },
+          {
+            "text": "            return {'CANCELLED'}",
+            "lineNumber": 83
+          },
+          {
+            "text": "        ",
+            "lineNumber": 84
+          },
+          {
+            "text": "        # Set up progress tracking",
+            "lineNumber": 85
+          },
+          {
+            "text": "        props = context.scene.bst_path_props",
+            "lineNumber": 86
+          },
+          {
+            "text": "        props.is_operation_running = True",
+            "lineNumber": 87
+          },
+          {
+            "text": "        props.operation_progress = 0.0",
+            "lineNumber": 88
+          },
+          {
+            "text": "        props.operation_status = f\"Preparing AutoMat extraction for {len(selected_images)} images...\"",
+            "lineNumber": 89
+          },
+          {
+            "text": "        ",
+            "lineNumber": 90
+          },
+          {
+            "text": "        # Store data for timer processing",
+            "lineNumber": 91
+          },
+          {
+            "text": "        self.selected_images = selected_images",
+            "lineNumber": 92
+          },
+          {
+            "text": "        self.common_outside = common_outside",
+            "lineNumber": 93
+          },
+          {
+            "text": "        self.current_step = 0",
+            "lineNumber": 94
+          },
+          {
+            "text": "        self.current_index = 0",
+            "lineNumber": 95
+          },
+          {
+            "text": "        self.packed_count = 0",
+            "lineNumber": 96
+          },
+          {
+            "text": "        self.success_count = 0",
+            "lineNumber": 97
+          },
+          {
+            "text": "        self.overwrite_skipped = []",
+            "lineNumber": 98
+          },
+          {
+            "text": "        self.failed_list = []",
+            "lineNumber": 99
+          },
+          {
+            "text": "        self.path_mapping = {}",
+            "lineNumber": 100
+          },
+          {
+            "text": "        self.udim_summary = {",
+            "lineNumber": 101
+          },
+          {
+            "text": "            \"found\": 0,",
+            "lineNumber": 102
+          },
+          {
+            "text": "            \"saved\": 0,",
+            "lineNumber": 103
+          },
+          {
+            "text": "        }",
+            "lineNumber": 104
+          },
+          {
+            "text": "        ",
+            "lineNumber": 105
+          },
+          {
+            "text": "        # Start timer for processing",
+            "lineNumber": 106
+          },
+          {
+            "text": "        bpy.app.timers.register(self._process_step)",
+            "lineNumber": 107
+          },
+          {
+            "text": "        ",
+            "lineNumber": 108
+          },
+          {
+            "text": "        return {'FINISHED'}",
+            "lineNumber": 109
+          },
+          {
+            "text": "    ",
+            "lineNumber": 110
+          },
+          {
+            "text": "    def _process_step(self):",
+            "lineNumber": 111
+          },
+          {
+            "text": "        \"\"\"",
+            "lineNumber": 112
+          }
+        ]
+      },
+      "score": 0.33815646171569824
+    },
+    {
+      "codeBlock": {
+        "relativeWorkspacePath": ".\\ops\\AutoMatExtractor.py",
+        "range": {
+          "startPosition": {
+            "line": 64
+          },
+          "endPosition": {
+            "line": 537
+          }
+        },
+        "contents": "class RBST_AutoMat_OT_AutoMatExtractor(bpy.types.Operator):\ndef _process_step(self):\n\n            \n        elif self.current_step == 4:\n            # Step 5: Remap paths\n            if self.current_index &gt;= len(self.path_mapping):\n                # Remapping complete, move to saving\n                self.current_step = 5\n                self.current_index = 0\n                props.operation_status = \"Saving images to new locations...\"\n                props.operation_progress = 85.0\n                return 0.01\n            \n            # Remap current image\n            img_name = list(self.path_mapping.keys())[self.current_index]\n            mapping_entry = self.path_mapping[img_name]\n            props.operation_status = f\"Remapping {img_name}...\"\n            \n            if isinstance(mapping_entry, dict) and mapping_entry.get(\"udim\"):\n                success = set_image_paths(\n                    img_name,\n                    mapping_entry.get(\"template\", \"\"),\n                    tile_paths=mapping_entry.get(\"tiles\", {})\n                )\n            else:\n                success = set_image_paths(img_name, mapping_entry)\n            if success:\n                self.success_count += 1\n            else:\n                self.failed_list.append(img_name)\n            \n            self.current_index += 1\n            progress = 70.0 + (self.current_index / len(self.path_mapping)) * 15.0\n            props.operation_progress = progress\n            \n        elif self.current_step == 5:",
+        "signatures": {
+          "ranges": [
+            {
+              "startPosition": {
+                "line": 65,
+                "column": 1
+              },
+              "endPosition": {
+                "line": 66,
+                "column": 5
+              }
+            },
+            {
+              "startPosition": {
+                "line": 111,
+                "column": 5
+              },
+              "endPosition": {
+                "line": 112,
+                "column": 9
+              }
+            }
+          ]
+        },
+        "detailedLines": [
+          {
+            "text": "class RBST_AutoMat_OT_AutoMatExtractor(bpy.types.Operator):",
+            "lineNumber": 65,
+            "isSignature": true
+          },
+          {
+            "text": "def _process_step(self):",
+            "lineNumber": 111
+          },
+          {
+            "lineNumber": 258
+          },
+          {
+            "text": "            ",
+            "lineNumber": 259
+          },
+          {
+            "text": "        elif self.current_step == 4:",
+            "lineNumber": 260
+          },
+          {
+            "text": "            # Step 5: Remap paths",
+            "lineNumber": 261
+          },
+          {
+            "text": "            if self.current_index &gt;= len(self.path_mapping):",
+            "lineNumber": 262
+          },
+          {
+            "text": "                # Remapping complete, move to saving",
+            "lineNumber": 263
+          },
+          {
+            "text": "                self.current_step = 5",
+            "lineNumber": 264
+          },
+          {
+            "text": "                self.current_index = 0",
+            "lineNumber": 265
+          },
+          {
+            "text": "                props.operation_status = \"Saving images to new locations...\"",
+            "lineNumber": 266
+          },
+          {
+            "text": "                props.operation_progress = 85.0",
+            "lineNumber": 267
+          },
+          {
+            "text": "                return 0.01",
+            "lineNumber": 268
+          },
+          {
+            "text": "            ",
+            "lineNumber": 269
+          },
+          {
+            "text": "            # Remap current image",
+            "lineNumber": 270
+          },
+          {
+            "text": "            img_name = list(self.path_mapping.keys())[self.current_index]",
+            "lineNumber": 271
+          },
+          {
+            "text": "            mapping_entry = self.path_mapping[img_name]",
+            "lineNumber": 272
+          },
+          {
+            "text": "            props.operation_status = f\"Remapping {img_name}...\"",
+            "lineNumber": 273
+          },
+          {
+            "text": "            ",
+            "lineNumber": 274
+          },
+          {
+            "text": "            if isinstance(mapping_entry, dict) and mapping_entry.get(\"udim\"):",
+            "lineNumber": 275
+          },
+          {
+            "text": "                success = set_image_paths(",
+            "lineNumber": 276
+          },
+          {
+            "text": "                    img_name,",
+            "lineNumber": 277
+          },
+          {
+            "text": "                    mapping_entry.get(\"template\", \"\"),",
+            "lineNumber": 278
+          },
+          {
+            "text": "                    tile_paths=mapping_entry.get(\"tiles\", {})",
+            "lineNumber": 279
+          },
+          {
+            "text": "                )",
+            "lineNumber": 280
+          },
+          {
+            "text": "            else:",
+            "lineNumber": 281
+          },
+          {
+            "text": "                success = set_image_paths(img_name, mapping_entry)",
+            "lineNumber": 282
+          },
+          {
+            "text": "            if success:",
+            "lineNumber": 283
+          },
+          {
+            "text": "                self.success_count += 1",
+            "lineNumber": 284
+          },
+          {
+            "text": "            else:",
+            "lineNumber": 285
+          },
+          {
+            "text": "                self.failed_list.append(img_name)",
+            "lineNumber": 286
+          },
+          {
+            "text": "            ",
+            "lineNumber": 287
+          },
+          {
+            "text": "            self.current_index += 1",
+            "lineNumber": 288
+          },
+          {
+            "text": "            progress = 70.0 + (self.current_index / len(self.path_mapping)) * 15.0",
+            "lineNumber": 289
+          },
+          {
+            "text": "            props.operation_progress = progress",
+            "lineNumber": 290
+          },
+          {
+            "text": "            ",
+            "lineNumber": 291
+          },
+          {
+            "text": "        elif self.current_step == 5:",
+            "lineNumber": 292
+          }
+        ]
+      },
+      "score": 0.33773303031921387
+    },
+    {
+      "codeBlock": {
+        "relativeWorkspacePath": ".\\ops\\AutoMatExtractor.py",
+        "range": {
+          "startPosition": {
+            "line": 64
+          },
+          "endPosition": {
+            "line": 537
+          }
+        },
+        "contents": "class RBST_AutoMat_OT_AutoMatExtractor(bpy.types.Operator):\n\n\n    def is_udim_image(self, image):\n        \"\"\"Return True when the image contains UDIM/tiled data\"\"\"\n        has_tiles = hasattr(image, \"source\") and image.source == 'TILED'\n        tiles_attr = getattr(image, \"tiles\", None)\n        if tiles_attr and len(tiles_attr) &gt; 1:\n            return True\n        return has_tiles\n\n    def build_udim_mapping(self, base_folder, base_name, extension, image):\n        \"\"\"Create a path mapping structure for UDIM images\"\"\"\n        udim_token = \"&lt;UDIM&gt;\"\n        template_filename = f\"{base_name}.{udim_token}{extension}\"\n        template_path = f\"{base_folder}\\\\{template_filename}\"\n        tile_paths = {}\n\n        tiles = getattr(image, \"tiles\", [])\n        for tile in tiles:\n            tile_number = str(getattr(tile, \"number\", \"1001\"))\n            tile_filename = f\"{base_name}.{tile_number}{extension}\"\n            tile_paths[tile_number] = f\"{base_folder}\\\\{tile_filename}\"\n\n        return {\n            \"udim\": True,\n            \"template\": template_path,\n            \"tiles\": tile_paths,\n        }\n\n    def save_udim_image(self, image, mapping):\n        \"\"\"Attempt to save each tile for a UDIM image\"\"\"\n        success = False\n        try:\n            image.save()\n            success = True\n        except Exception as e:\n            print(f\"DEBUG: UDIM bulk save failed for {image.name}: {e}\")\n            success = self._save_udim_tiles_individually(image, mapping)\n\n        if success:\n            self.udim_summary[\"saved\"] += 1\n        return success\n\n    def save_standard_image(self, image):\n        \"\"\"Save a non-UDIM image safely\"\"\"\n        try:\n            if hasattr(image, 'save'):\n                image.save()\n                return True\n        except Exception as e:\n            print(f\"DEBUG: Failed to save image {image.name}: {e}\")\n        return False\n\n    def _save_udim_tiles_individually(self, image, mapping):\n        \"\"\"Fallback saving routine when image.save() fails on UDIMs\"\"\"",
+        "signatures": {
+          "ranges": [
+            {
+              "startPosition": {
+                "line": 65,
+                "column": 1
+              },
+              "endPosition": {
+                "line": 66,
+                "column": 5
+              }
+            }
+          ]
+        },
+        "detailedLines": [
+          {
+            "text": "class RBST_AutoMat_OT_AutoMatExtractor(bpy.types.Operator):",
+            "lineNumber": 65,
+            "isSignature": true
+          },
+          {
+            "lineNumber": 445
+          },
+          {
+            "lineNumber": 446
+          },
+          {
+            "text": "    def is_udim_image(self, image):",
+            "lineNumber": 447
+          },
+          {
+            "text": "        \"\"\"Return True when the image contains UDIM/tiled data\"\"\"",
+            "lineNumber": 448
+          },
+          {
+            "text": "        has_tiles = hasattr(image, \"source\") and image.source == 'TILED'",
+            "lineNumber": 449
+          },
+          {
+            "text": "        tiles_attr = getattr(image, \"tiles\", None)",
+            "lineNumber": 450
+          },
+          {
+            "text": "        if tiles_attr and len(tiles_attr) &gt; 1:",
+            "lineNumber": 451
+          },
+          {
+            "text": "            return True",
+            "lineNumber": 452
+          },
+          {
+            "text": "        return has_tiles",
+            "lineNumber": 453
+          },
+          {
+            "lineNumber": 454
+          },
+          {
+            "text": "    def build_udim_mapping(self, base_folder, base_name, extension, image):",
+            "lineNumber": 455
+          },
+          {
+            "text": "        \"\"\"Create a path mapping structure for UDIM images\"\"\"",
+            "lineNumber": 456
+          },
+          {
+            "text": "        udim_token = \"&lt;UDIM&gt;\"",
+            "lineNumber": 457
+          },
+          {
+            "text": "        template_filename = f\"{base_name}.{udim_token}{extension}\"",
+            "lineNumber": 458
+          },
+          {
+            "text": "        template_path = f\"{base_folder}\\\\{template_filename}\"",
+            "lineNumber": 459
+          },
+          {
+            "text": "        tile_paths = {}",
+            "lineNumber": 460
+          },
+          {
+            "lineNumber": 461
+          },
+          {
+            "text": "        tiles = getattr(image, \"tiles\", [])",
+            "lineNumber": 462
+          },
+          {
+            "text": "        for tile in tiles:",
+            "lineNumber": 463
+          },
+          {
+            "text": "            tile_number = str(getattr(tile, \"number\", \"1001\"))",
+            "lineNumber": 464
+          },
+          {
+            "text": "            tile_filename = f\"{base_name}.{tile_number}{extension}\"",
+            "lineNumber": 465
+          },
+          {
+            "text": "            tile_paths[tile_number] = f\"{base_folder}\\\\{tile_filename}\"",
+            "lineNumber": 466
+          },
+          {
+            "lineNumber": 467
+          },
+          {
+            "text": "        return {",
+            "lineNumber": 468
+          },
+          {
+            "text": "            \"udim\": True,",
+            "lineNumber": 469
+          },
+          {
+            "text": "            \"template\": template_path,",
+            "lineNumber": 470
+          },
+          {
+            "text": "            \"tiles\": tile_paths,",
+            "lineNumber": 471
+          },
+          {
+            "text": "        }",
+            "lineNumber": 472
+          },
+          {
+            "lineNumber": 473
+          },
+          {
+            "text": "    def save_udim_image(self, image, mapping):",
+            "lineNumber": 474
+          },
+          {
+            "text": "        \"\"\"Attempt to save each tile for a UDIM image\"\"\"",
+            "lineNumber": 475
+          },
+          {
+            "text": "        success = False",
+            "lineNumber": 476
+          },
+          {
+            "text": "        try:",
+            "lineNumber": 477
+          },
+          {
+            "text": "            image.save()",
+            "lineNumber": 478
+          },
+          {
+            "text": "            success = True",
+            "lineNumber": 479
+          },
+          {
+            "text": "        except Exception as e:",
+            "lineNumber": 480
+          },
+          {
+            "text": "            print(f\"DEBUG: UDIM bulk save failed for {image.name}: {e}\")",
+            "lineNumber": 481
+          },
+          {
+            "text": "            success = self._save_udim_tiles_individually(image, mapping)",
+            "lineNumber": 482
+          },
+          {
+            "lineNumber": 483
+          },
+          {
+            "text": "        if success:",
+            "lineNumber": 484
+          },
+          {
+            "text": "            self.udim_summary[\"saved\"] += 1",
+            "lineNumber": 485
+          },
+          {
+            "text": "        return success",
+            "lineNumber": 486
+          },
+          {
+            "lineNumber": 487
+          },
+          {
+            "text": "    def save_standard_image(self, image):",
+            "lineNumber": 488
+          },
+          {
+            "text": "        \"\"\"Save a non-UDIM image safely\"\"\"",
+            "lineNumber": 489
+          },
+          {
+            "text": "        try:",
+            "lineNumber": 490
+          },
+          {
+            "text": "            if hasattr(image, 'save'):",
+            "lineNumber": 491
+          },
+          {
+            "text": "                image.save()",
+            "lineNumber": 492
+          },
+          {
+            "text": "                return True",
+            "lineNumber": 493
+          },
+          {
+            "text": "        except Exception as e:",
+            "lineNumber": 494
+          },
+          {
+            "text": "            print(f\"DEBUG: Failed to save image {image.name}: {e}\")",
+            "lineNumber": 495
+          },
+          {
+            "text": "        return False",
+            "lineNumber": 496
+          },
+          {
+            "lineNumber": 497
+          },
+          {
+            "text": "    def _save_udim_tiles_individually(self, image, mapping):",
+            "lineNumber": 498
+          },
+          {
+            "text": "        \"\"\"Fallback saving routine when image.save() fails on UDIMs\"\"\"",
+            "lineNumber": 499
+          }
+        ]
+      },
+      "score": 0.33067095279693604
+    },
+    {
+      "codeBlock": {
+        "relativeWorkspacePath": ".\\ops\\AutoMatExtractor.py",
+        "range": {
+          "startPosition": {
+            "line": 64
+          },
+          "endPosition": {
+            "line": 537
+          }
+        },
+        "contents": "class RBST_AutoMat_OT_AutoMatExtractor(bpy.types.Operator):\ndef _process_step(self):\n\n            if isinstance(mapping_entry, dict) and mapping_entry.get(\"udim\"):\n                self.save_udim_image(img, mapping_entry)\n            else:\n                self.save_standard_image(img)\n            \n            self.current_index += 1\n            progress = 85.0 + (self.current_index / len(self.selected_images)) * 15.0\n            props.operation_progress = progress\n        \n        # Force UI update\n        for area in bpy.context.screen.areas:\n            area.tag_redraw()\n        \n        # Continue processing\n        return 0.01\n\n    def show_summary_dialog(self, context, total_selected, success_count, overwrite_skipped_list, failed_remap_list):\n        \"\"\"Show a popup dialog with the extraction summary\"\"\"\n        overwrite_details = \"\"\n        if overwrite_skipped_list:\n            for name, path in overwrite_skipped_list:\n                overwrite_details += f\"'{name}' -&gt; '{path}'\\n\"\n\n        failed_remap_details = \"\"\n        if failed_remap_list:\n            for name, path in failed_remap_list:\n                failed_remap_details += f\"'{name}' -&gt; '{path}'\\n\"\n\n        bpy.ops.bst.automat_summary_dialog('INVOKE_DEFAULT',\n            total_selected=total_selected,\n            success_count=success_count,\n            overwrite_skipped_count=len(overwrite_skipped_list),\n            failed_remap_count=len(failed_remap_list),\n            overwrite_details=overwrite_details.strip(),\n            failed_remap_details=failed_remap_details.strip()\n        )\n\n    def sanitize_filename(self, filename):\n        \"\"\"Sanitize filename/folder name for filesystem compatibility\"\"\"",
+        "signatures": {
+          "ranges": [
+            {
+              "startPosition": {
+                "line": 65,
+                "column": 1
+              },
+              "endPosition": {
+                "line": 66,
+                "column": 5
+              }
+            },
+            {
+              "startPosition": {
+                "line": 111,
+                "column": 5
+              },
+              "endPosition": {
+                "line": 112,
+                "column": 9
+              }
+            }
+          ]
+        },
+        "detailedLines": [
+          {
+            "text": "class RBST_AutoMat_OT_AutoMatExtractor(bpy.types.Operator):",
+            "lineNumber": 65,
+            "isSignature": true
+          },
+          {
+            "text": "def _process_step(self):",
+            "lineNumber": 111
+          },
+          {
+            "lineNumber": 367
+          },
+          {
+            "text": "            if isinstance(mapping_entry, dict) and mapping_entry.get(\"udim\"):",
+            "lineNumber": 368
+          },
+          {
+            "text": "                self.save_udim_image(img, mapping_entry)",
+            "lineNumber": 369
+          },
+          {
+            "text": "            else:",
+            "lineNumber": 370
+          },
+          {
+            "text": "                self.save_standard_image(img)",
+            "lineNumber": 371
+          },
+          {
+            "text": "            ",
+            "lineNumber": 372
+          },
+          {
+            "text": "            self.current_index += 1",
+            "lineNumber": 373
+          },
+          {
+            "text": "            progress = 85.0 + (self.current_index / len(self.selected_images)) * 15.0",
+            "lineNumber": 374
+          },
+          {
+            "text": "            props.operation_progress = progress",
+            "lineNumber": 375
+          },
+          {
+            "text": "        ",
+            "lineNumber": 376
+          },
+          {
+            "text": "        # Force UI update",
+            "lineNumber": 377
+          },
+          {
+            "text": "        for area in bpy.context.screen.areas:",
+            "lineNumber": 378
+          },
+          {
+            "text": "            area.tag_redraw()",
+            "lineNumber": 379
+          },
+          {
+            "text": "        ",
+            "lineNumber": 380
+          },
+          {
+            "text": "        # Continue processing",
+            "lineNumber": 381
+          },
+          {
+            "text": "        return 0.01",
+            "lineNumber": 382
+          },
+          {
+            "lineNumber": 383
+          },
+          {
+            "text": "    def show_summary_dialog(self, context, total_selected, success_count, overwrite_skipped_list, failed_remap_list):",
+            "lineNumber": 384
+          },
+          {
+            "text": "        \"\"\"Show a popup dialog with the extraction summary\"\"\"",
+            "lineNumber": 385
+          },
+          {
+            "text": "        overwrite_details = \"\"",
+            "lineNumber": 386
+          },
+          {
+            "text": "        if overwrite_skipped_list:",
+            "lineNumber": 387
+          },
+          {
+            "text": "            for name, path in overwrite_skipped_list:",
+            "lineNumber": 388
+          },
+          {
+            "text": "                overwrite_details += f\"'{name}' -&gt; '{path}'\\n\"",
+            "lineNumber": 389
+          },
+          {
+            "lineNumber": 390
+          },
+          {
+            "text": "        failed_remap_details = \"\"",
+            "lineNumber": 391
+          },
+          {
+            "text": "        if failed_remap_list:",
+            "lineNumber": 392
+          },
+          {
+            "text": "            for name, path in failed_remap_list:",
+            "lineNumber": 393
+          },
+          {
+            "text": "                failed_remap_details += f\"'{name}' -&gt; '{path}'\\n\"",
+            "lineNumber": 394
+          },
+          {
+            "lineNumber": 395
+          },
+          {
+            "text": "        bpy.ops.bst.automat_summary_dialog('INVOKE_DEFAULT',",
+            "lineNumber": 396
+          },
+          {
+            "text": "            total_selected=total_selected,",
+            "lineNumber": 397
+          },
+          {
+            "text": "            success_count=success_count,",
+            "lineNumber": 398
+          },
+          {
+            "text": "            overwrite_skipped_count=len(overwrite_skipped_list),",
+            "lineNumber": 399
+          },
+          {
+            "text": "            failed_remap_count=len(failed_remap_list),",
+            "lineNumber": 400
+          },
+          {
+            "text": "            overwrite_details=overwrite_details.strip(),",
+            "lineNumber": 401
+          },
+          {
+            "text": "            failed_remap_details=failed_remap_details.strip()",
+            "lineNumber": 402
+          },
+          {
+            "text": "        )",
+            "lineNumber": 403
+          },
+          {
+            "lineNumber": 404
+          },
+          {
+            "text": "    def sanitize_filename(self, filename):",
+            "lineNumber": 405
+          },
+          {
+            "text": "        \"\"\"Sanitize filename/folder name for filesystem compatibility\"\"\"",
+            "lineNumber": 406
+          }
+        ]
+      },
+      "score": 0.32418686151504517
+    },
+    {
+      "codeBlock": {
+        "relativeWorkspacePath": ".\\ops\\AutoMatExtractor.py",
+        "range": {
+          "startPosition": {
+            "line": 64
+          },
+          "endPosition": {
+            "line": 540,
+            "column": 9
+          }
+        },
+        "contents": "class RBST_AutoMat_OT_AutoMatExtractor(bpy.types.Operator):\n\n\n    def _save_udim_tiles_individually(self, image, mapping):\n        \"\"\"Fallback saving routine when image.save() fails on UDIMs\"\"\"\n        tile_paths = mapping.get(\"tiles\", {})\n        any_saved = False\n\n        for tile in getattr(image, \"tiles\", []):\n            tile_number = str(getattr(tile, \"number\", \"1001\"))\n            target_path = tile_paths.get(tile_number)\n            if not target_path:\n                continue\n            try:\n                ensure_directory_for_path(target_path)\n                self._save_tile_via_image_editor(image, tile_number, target_path)\n                any_saved = True\n            except Exception as e:\n                print(f\"DEBUG: Failed to save UDIM tile {tile_number} for {image.name}: {e}\")\n\n        return any_saved\n\n    def _save_tile_via_image_editor(self, image, tile_number, filepath):\n        \"\"\"Use an IMAGE_EDITOR override to save a specific tile\"\"\"\n        # Try to find an existing image editor to reuse Blender UI context\n        for area in bpy.context.screen.areas:\n            if area.type != 'IMAGE_EDITOR':\n                continue\n            override = bpy.context.copy()\n            override['area'] = area\n            override['space_data'] = area.spaces.active\n            region = next((r for r in area.regions if r.type == 'WINDOW'), None)\n            if region is None:\n                continue\n            override['region'] = region\n            space = area.spaces.active\n            space.image = image\n            if hasattr(space, \"image_user\"):\n                space.image_user.tile = int(tile_number)\n            bpy.ops.image.save(override, filepath=filepath)\n            return\n        # Fallback: attempt to set filepath and invoke save without override\n        image.filepath = filepath\n        image.save()\n\n# Must register the new dialog class as well\nclasses =",
+        "signatures": {
+          "ranges": [
+            {
+              "startPosition": {
+                "line": 65,
+                "column": 1
+              },
+              "endPosition": {
+                "line": 66,
+                "column": 5
+              }
+            }
+          ]
+        },
+        "detailedLines": [
+          {
+            "text": "class RBST_AutoMat_OT_AutoMatExtractor(bpy.types.Operator):",
+            "lineNumber": 65,
+            "isSignature": true
+          },
+          {
+            "lineNumber": 496
+          },
+          {
+            "lineNumber": 497
+          },
+          {
+            "text": "    def _save_udim_tiles_individually(self, image, mapping):",
+            "lineNumber": 498
+          },
+          {
+            "text": "        \"\"\"Fallback saving routine when image.save() fails on UDIMs\"\"\"",
+            "lineNumber": 499
+          },
+          {
+            "text": "        tile_paths = mapping.get(\"tiles\", {})",
+            "lineNumber": 500
+          },
+          {
+            "text": "        any_saved = False",
+            "lineNumber": 501
+          },
+          {
+            "lineNumber": 502
+          },
+          {
+            "text": "        for tile in getattr(image, \"tiles\", []):",
+            "lineNumber": 503
+          },
+          {
+            "text": "            tile_number = str(getattr(tile, \"number\", \"1001\"))",
+            "lineNumber": 504
+          },
+          {
+            "text": "            target_path = tile_paths.get(tile_number)",
+            "lineNumber": 505
+          },
+          {
+            "text": "            if not target_path:",
+            "lineNumber": 506
+          },
+          {
+            "text": "                continue",
+            "lineNumber": 507
+          },
+          {
+            "text": "            try:",
+            "lineNumber": 508
+          },
+          {
+            "text": "                ensure_directory_for_path(target_path)",
+            "lineNumber": 509
+          },
+          {
+            "text": "                self._save_tile_via_image_editor(image, tile_number, target_path)",
+            "lineNumber": 510
+          },
+          {
+            "text": "                any_saved = True",
+            "lineNumber": 511
+          },
+          {
+            "text": "            except Exception as e:",
+            "lineNumber": 512
+          },
+          {
+            "text": "                print(f\"DEBUG: Failed to save UDIM tile {tile_number} for {image.name}: {e}\")",
+            "lineNumber": 513
+          },
+          {
+            "lineNumber": 514
+          },
+          {
+            "text": "        return any_saved",
+            "lineNumber": 515
+          },
+          {
+            "lineNumber": 516
+          },
+          {
+            "text": "    def _save_tile_via_image_editor(self, image, tile_number, filepath):",
+            "lineNumber": 517
+          },
+          {
+            "text": "        \"\"\"Use an IMAGE_EDITOR override to save a specific tile\"\"\"",
+            "lineNumber": 518
+          },
+          {
+            "text": "        # Try to find an existing image editor to reuse Blender UI context",
+            "lineNumber": 519
+          },
+          {
+            "text": "        for area in bpy.context.screen.areas:",
+            "lineNumber": 520
+          },
+          {
+            "text": "            if area.type != 'IMAGE_EDITOR':",
+            "lineNumber": 521
+          },
+          {
+            "text": "                continue",
+            "lineNumber": 522
+          },
+          {
+            "text": "            override = bpy.context.copy()",
+            "lineNumber": 523
+          },
+          {
+            "text": "            override['area'] = area",
+            "lineNumber": 524
+          },
+          {
+            "text": "            override['space_data'] = area.spaces.active",
+            "lineNumber": 525
+          },
+          {
+            "text": "            region = next((r for r in area.regions if r.type == 'WINDOW'), None)",
+            "lineNumber": 526
+          },
+          {
+            "text": "            if region is None:",
+            "lineNumber": 527
+          },
+          {
+            "text": "                continue",
+            "lineNumber": 528
+          },
+          {
+            "text": "            override['region'] = region",
+            "lineNumber": 529
+          },
+          {
+            "text": "            space = area.spaces.active",
+            "lineNumber": 530
+          },
+          {
+            "text": "            space.image = image",
+            "lineNumber": 531
+          },
+          {
+            "text": "            if hasattr(space, \"image_user\"):",
+            "lineNumber": 532
+          },
+          {
+            "text": "                space.image_user.tile = int(tile_number)",
+            "lineNumber": 533
+          },
+          {
+            "text": "            bpy.ops.image.save(override, filepath=filepath)",
+            "lineNumber": 534
+          },
+          {
+            "text": "            return",
+            "lineNumber": 535
+          },
+          {
+            "text": "        # Fallback: attempt to set filepath and invoke save without override",
+            "lineNumber": 536
+          },
+          {
+            "text": "        image.filepath = filepath",
+            "lineNumber": 537
+          },
+          {
+            "text": "        image.save()",
+            "lineNumber": 538,
+            "isSignature": true
+          },
+          {
+            "lineNumber": 539
+          },
+          {
+            "text": "# Must register the new dialog class as well",
+            "lineNumber": 540
+          },
+          {
+            "text": "classes =",
+            "lineNumber": 541
+          }
+        ]
+      },
+      "score": 0.32338225841522217
+    },
+    {
+      "codeBlock": {
+        "relativeWorkspacePath": ".\\ops\\AutoMatExtractor.py",
+        "range": {
+          "startPosition": {
+            "line": 64
+          },
+          "endPosition": {
+            "line": 537
+          }
+        },
+        "contents": "class RBST_AutoMat_OT_AutoMatExtractor(bpy.types.Operator):\ndef _process_step(self):\n\n            \n        elif self.current_step == 5:\n            # Step 6: Save images\n            if self.current_index &gt;= len(self.selected_images):\n                # Operation complete\n                props.is_operation_running = False\n                props.operation_progress = 100.0\n                props.operation_status = f\"Completed! Extracted {self.success_count} images{f', {len(self.failed_list)} failed' if self.failed_list else ''}\"\n                \n                # Show summary dialog\n                self.show_summary_dialog(\n                    bpy.context,\n                    total_selected=len(self.selected_images),\n                    success_count=self.success_count,\n                    overwrite_skipped_list=self.overwrite_skipped,\n                    failed_remap_list=self.failed_list\n                )\n                \n                # Console summary\n                print(f\"\\n=== AUTOMAT EXTRACTION SUMMARY ===\")\n                print(f\"Total images processed: {len(self.selected_images)}\")\n                print(f\"Successfully extracted: {self.success_count}\")\n                print(f\"Failed to remap: {len(self.failed_list)}\")\n                \n                # Show organization breakdown\n                material_organized = 0\n                common_organized = 0\n                flat_colors = 0\n                \n                for img_name, path in self.path_mapping.items():\n                    current_path = path[\"template\"] if isinstance(path, dict) else path\n                    if \"FlatColors\" in current_path:\n                        flat_colors += 1\n                    elif \"common\" in current_path:\n                        common_organized += 1\n                    else:\n                        material_organized += 1\n                \n                print(f\"\\nOrganization breakdown:\")\n                print(f\"  Material-specific folders: {material_organized}\")\n                print(f\"  Common folder: {common_organized}\")\n                print(f\"  Flat colors: {flat_colors}\")\n                \n                # Show material organization details\n                if",
+        "signatures": {
+          "ranges": [
+            {
+              "startPosition": {
+                "line": 65,
+                "column": 1
+              },
+              "endPosition": {
+                "line": 66,
+                "column": 5
+              }
+            },
+            {
+              "startPosition": {
+                "line": 111,
+                "column": 5
+              },
+              "endPosition": {
+                "line": 112,
+                "column": 9
+              }
+            }
+          ]
+        },
+        "detailedLines": [
+          {
+            "text": "class RBST_AutoMat_OT_AutoMatExtractor(bpy.types.Operator):",
+            "lineNumber": 65,
+            "isSignature": true
+          },
+          {
+            "text": "def _process_step(self):",
+            "lineNumber": 111
+          },
+          {
+            "lineNumber": 290
+          },
+          {
+            "text": "            ",
+            "lineNumber": 291
+          },
+          {
+            "text": "        elif self.current_step == 5:",
+            "lineNumber": 292
+          },
+          {
+            "text": "            # Step 6: Save images",
+            "lineNumber": 293
+          },
+          {
+            "text": "            if self.current_index &gt;= len(self.selected_images):",
+            "lineNumber": 294
+          },
+          {
+            "text": "                # Operation complete",
+            "lineNumber": 295
+          },
+          {
+            "text": "                props.is_operation_running = False",
+            "lineNumber": 296
+          },
+          {
+            "text": "                props.operation_progress = 100.0",
+            "lineNumber": 297
+          },
+          {
+            "text": "                props.operation_status = f\"Completed! Extracted {self.success_count} images{f', {len(self.failed_list)} failed' if self.failed_list else ''}\"",
+            "lineNumber": 298
+          },
+          {
+            "text": "                ",
+            "lineNumber": 299
+          },
+          {
+            "text": "                # Show summary dialog",
+            "lineNumber": 300
+          },
+          {
+            "text": "                self.show_summary_dialog(",
+            "lineNumber": 301
+          },
+          {
+            "text": "                    bpy.context,",
+            "lineNumber": 302
+          },
+          {
+            "text": "                    total_selected=len(self.selected_images),",
+            "lineNumber": 303
+          },
+          {
+            "text": "                    success_count=self.success_count,",
+            "lineNumber": 304
+          },
+          {
+            "text": "                    overwrite_skipped_list=self.overwrite_skipped,",
+            "lineNumber": 305
+          },
+          {
+            "text": "                    failed_remap_list=self.failed_list",
+            "lineNumber": 306
+          },
+          {
+            "text": "                )",
+            "lineNumber": 307
+          },
+          {
+            "text": "                ",
+            "lineNumber": 308
+          },
+          {
+            "text": "                # Console summary",
+            "lineNumber": 309
+          },
+          {
+            "text": "                print(f\"\\n=== AUTOMAT EXTRACTION SUMMARY ===\")",
+            "lineNumber": 310
+          },
+          {
+            "text": "                print(f\"Total images processed: {len(self.selected_images)}\")",
+            "lineNumber": 311
+          },
+          {
+            "text": "                print(f\"Successfully extracted: {self.success_count}\")",
+            "lineNumber": 312
+          },
+          {
+            "text": "                print(f\"Failed to remap: {len(self.failed_list)}\")",
+            "lineNumber": 313
+          },
+          {
+            "text": "                ",
+            "lineNumber": 314
+          },
+          {
+            "text": "                # Show organization breakdown",
+            "lineNumber": 315
+          },
+          {
+            "text": "                material_organized = 0",
+            "lineNumber": 316
+          },
+          {
+            "text": "                common_organized = 0",
+            "lineNumber": 317
+          },
+          {
+            "text": "                flat_colors = 0",
+            "lineNumber": 318
+          },
+          {
+            "text": "                ",
+            "lineNumber": 319
+          },
+          {
+            "text": "                for img_name, path in self.path_mapping.items():",
+            "lineNumber": 320
+          },
+          {
+            "text": "                    current_path = path[\"template\"] if isinstance(path, dict) else path",
+            "lineNumber": 321
+          },
+          {
+            "text": "                    if \"FlatColors\" in current_path:",
+            "lineNumber": 322
+          },
+          {
+            "text": "                        flat_colors += 1",
+            "lineNumber": 323
+          },
+          {
+            "text": "                    elif \"common\" in current_path:",
+            "lineNumber": 324
+          },
+          {
+            "text": "                        common_organized += 1",
+            "lineNumber": 325
+          },
+          {
+            "text": "                    else:",
+            "lineNumber": 326
+          },
+          {
+            "text": "                        material_organized += 1",
+            "lineNumber": 327
+          },
+          {
+            "text": "                ",
+            "lineNumber": 328
+          },
+          {
+            "text": "                print(f\"\\nOrganization breakdown:\")",
+            "lineNumber": 329
+          },
+          {
+            "text": "                print(f\"  Material-specific folders: {material_organized}\")",
+            "lineNumber": 330
+          },
+          {
+            "text": "                print(f\"  Common folder: {common_organized}\")",
+            "lineNumber": 331
+          },
+          {
+            "text": "                print(f\"  Flat colors: {flat_colors}\")",
+            "lineNumber": 332
+          },
+          {
+            "text": "                ",
+            "lineNumber": 333
+          },
+          {
+            "text": "                # Show material organization details",
+            "lineNumber": 334
+          },
+          {
+            "text": "                if",
+            "lineNumber": 335
+          }
+        ]
+      },
+      "score": 0.29954400658607483
+    },
+    {
+      "codeBlock": {
+        "relativeWorkspacePath": ".\\ops\\AutoMatExtractor.py",
+        "range": {
+          "startPosition": {
+            "line": 11
+          },
+          "endPosition": {
+            "line": 537
+          }
+        },
+        "contents": "class RBST_AutoMat_OT_summary_dialog(bpy.types.Operator):\n\n    \n    def draw(self, context):\n        layout = self.layout\n        \n        layout.label(text=\"AutoMat Extractor - Summary\", icon='INFO')\n        layout.separator()\n        \n        box = layout.box()\n        col = box.column(align=True)\n        col.label(text=f\"Total selected images: {self.total_selected}\")\n        col.label(text=f\"Successfully extracted: {self.success_count}\", icon='CHECKMARK')\n        \n        if self.overwrite_skipped_count &gt; 0:\n            col.label(text=f\"Skipped to prevent overwrite: {self.overwrite_skipped_count}\", icon='ERROR')\n        if self.failed_remap_count &gt; 0:\n            col.label(text=f\"Failed to remap (path issue): {self.failed_remap_count}\", icon='ERROR')\n\n        if self.overwrite_details:\n            layout.separator()\n            box = layout.box()\n            box.label(text=\"Overwrite Conflicts (Skipped):\", icon='FILE_TEXT')\n            for line in self.overwrite_details.split('\\n'):\n                if line.strip():\n                    box.label(text=line)\n\n        if self.failed_remap_details:\n            layout.separator()\n            box = layout.box()\n            box.label(text=\"Failed Remaps:\", icon='FILE_TEXT')\n            for line in self.failed_remap_details.split('\\n'):\n                if line.strip():\n                    box.label(text=line)\n\n    def execute(self, context):\n        return {'FINISHED'}\n    \n    def invoke(self, context, event):\n        return context.window_manager.invoke_popup(self, width=500)\n\nclass RBST_AutoMat_OT_AutoMatExtractor(bpy.types.Operator):\n    bl_idname = \"bst.automatextractor\"",
+        "signatures": {
+          "ranges": [
+            {
+              "startPosition": {
+                "line": 12,
+                "column": 1
+              },
+              "endPosition": {
+                "line": 13,
+                "column": 5
+              }
+            }
+          ]
+        },
+        "detailedLines": [
+          {
+            "text": "class RBST_AutoMat_OT_summary_dialog(bpy.types.Operator):",
+            "lineNumber": 12,
+            "isSignature": true
+          },
+          {
+            "lineNumber": 25
+          },
+          {
+            "text": "    ",
+            "lineNumber": 26
+          },
+          {
+            "text": "    def draw(self, context):",
+            "lineNumber": 27
+          },
+          {
+            "text": "        layout = self.layout",
+            "lineNumber": 28
+          },
+          {
+            "text": "        ",
+            "lineNumber": 29
+          },
+          {
+            "text": "        layout.label(text=\"AutoMat Extractor - Summary\", icon='INFO')",
+            "lineNumber": 30
+          },
+          {
+            "text": "        layout.separator()",
+            "lineNumber": 31
+          },
+          {
+            "text": "        ",
+            "lineNumber": 32
+          },
+          {
+            "text": "        box = layout.box()",
+            "lineNumber": 33
+          },
+          {
+            "text": "        col = box.column(align=True)",
+            "lineNumber": 34
+          },
+          {
+            "text": "        col.label(text=f\"Total selected images: {self.total_selected}\")",
+            "lineNumber": 35
+          },
+          {
+            "text": "        col.label(text=f\"Successfully extracted: {self.success_count}\", icon='CHECKMARK')",
+            "lineNumber": 36
+          },
+          {
+            "text": "        ",
+            "lineNumber": 37
+          },
+          {
+            "text": "        if self.overwrite_skipped_count &gt; 0:",
+            "lineNumber": 38
+          },
+          {
+            "text": "            col.label(text=f\"Skipped to prevent overwrite: {self.overwrite_skipped_count}\", icon='ERROR')",
+            "lineNumber": 39
+          },
+          {
+            "text": "        if self.failed_remap_count &gt; 0:",
+            "lineNumber": 40
+          },
+          {
+            "text": "            col.label(text=f\"Failed to remap (path issue): {self.failed_remap_count}\", icon='ERROR')",
+            "lineNumber": 41
+          },
+          {
+            "lineNumber": 42
+          },
+          {
+            "text": "        if self.overwrite_details:",
+            "lineNumber": 43
+          },
+          {
+            "text": "            layout.separator()",
+            "lineNumber": 44
+          },
+          {
+            "text": "            box = layout.box()",
+            "lineNumber": 45
+          },
+          {
+            "text": "            box.label(text=\"Overwrite Conflicts (Skipped):\", icon='FILE_TEXT')",
+            "lineNumber": 46
+          },
+          {
+            "text": "            for line in self.overwrite_details.split('\\n'):",
+            "lineNumber": 47
+          },
+          {
+            "text": "                if line.strip():",
+            "lineNumber": 48
+          },
+          {
+            "text": "                    box.label(text=line)",
+            "lineNumber": 49
+          },
+          {
+            "lineNumber": 50
+          },
+          {
+            "text": "        if self.failed_remap_details:",
+            "lineNumber": 51
+          },
+          {
+            "text": "            layout.separator()",
+            "lineNumber": 52
+          },
+          {
+            "text": "            box = layout.box()",
+            "lineNumber": 53
+          },
+          {
+            "text": "            box.label(text=\"Failed Remaps:\", icon='FILE_TEXT')",
+            "lineNumber": 54
+          },
+          {
+            "text": "            for line in self.failed_remap_details.split('\\n'):",
+            "lineNumber": 55
+          },
+          {
+            "text": "                if line.strip():",
+            "lineNumber": 56
+          },
+          {
+            "text": "                    box.label(text=line)",
+            "lineNumber": 57
+          },
+          {
+            "lineNumber": 58
+          },
+          {
+            "text": "    def execute(self, context):",
+            "lineNumber": 59
+          },
+          {
+            "text": "        return {'FINISHED'}",
+            "lineNumber": 60
+          },
+          {
+            "text": "    ",
+            "lineNumber": 61
+          },
+          {
+            "text": "    def invoke(self, context, event):",
+            "lineNumber": 62
+          },
+          {
+            "text": "        return context.window_manager.invoke_popup(self, width=500)",
+            "lineNumber": 63,
+            "isSignature": true
+          },
+          {
+            "lineNumber": 64
+          },
+          {
+            "text": "class RBST_AutoMat_OT_AutoMatExtractor(bpy.types.Operator):",
+            "lineNumber": 65,
+            "isSignature": true
+          },
+          {
+            "text": "    bl_idname = \"bst.automatextractor\"",
+            "lineNumber": 66
+          }
+        ]
+      },
+      "score": 0.29934006929397583
+    },
+    {
+      "codeBlock": {
+        "relativeWorkspacePath": ".\\ops\\AutoMatExtractor.py",
+        "range": {
+          "startPosition": {
+            "line": 64
+          },
+          "endPosition": {
+            "line": 537
+          }
+        },
+        "contents": "class RBST_AutoMat_OT_AutoMatExtractor(bpy.types.Operator):\ndef execute(self, context):\n        # Get addon preferences\n\n        \n        return {'FINISHED'}\n    \n    def _process_step(self):\n        \"\"\"Process AutoMat extraction in steps to avoid blocking the UI\"\"\"\n        props = bpy.context.scene.bst_path_props\n        \n        # Check for cancellation\n        if props.cancel_operation:\n            props.is_operation_running = False\n            props.operation_progress = 0.0\n            props.operation_status = \"Operation cancelled\"\n            props.cancel_operation = False\n            return None\n        \n        if self.current_step == 0:\n            # Step 1: Pack images\n            if self.current_index &gt;= len(self.selected_images):\n                # Packing complete, move to next step\n                self.current_step = 1\n                self.current_index = 0\n                props.operation_status = \"Removing extensions from image names...\"\n                props.operation_progress = 25.0\n                return 0.01\n            \n            # Pack current image\n            img = self.selected_images[self.current_index]\n            props.operation_status = f\"Packing {img.name}...\"\n            \n            if not img.packed_file:\n                try:\n                    img.pack()\n                    self.packed_count += 1\n                except Exception as e:\n                    # Continue even if packing fails\n                    pass\n            \n            self.current_index += 1\n            progress = (self.current_index / len(self.selected_images)) * 25.0\n            props.operation_progress = progress\n            \n        elif self.current_step == 1:\n            # Step 2: Remove extensions (this is a quick operation)\n            try:\n                bpy.ops.bst.remove_extensions()\n            except Exception as e:\n                pass  # Continue even if this fails\n            \n            self.current_step = 2\n            self.current_index = 0\n            props.operation_status = \"Analyzing material usage...\"\n            props.operation_progress = 30.0\n            \n        elif self.current_step == 2:",
+        "signatures": {
+          "ranges": [
+            {
+              "startPosition": {
+                "line": 65,
+                "column": 1
+              },
+              "endPosition": {
+                "line": 66,
+                "column": 5
+              }
+            }
+          ]
+        },
+        "detailedLines": [
+          {
+            "text": "class RBST_AutoMat_OT_AutoMatExtractor(bpy.types.Operator):",
+            "lineNumber": 65,
+            "isSignature": true
+          },
+          {
+            "text": "def execute(self, context):",
+            "lineNumber": 71
+          },
+          {
+            "text": "        # Get addon preferences",
+            "lineNumber": 72
+          },
+          {
+            "lineNumber": 107
+          },
+          {
+            "text": "        ",
+            "lineNumber": 108
+          },
+          {
+            "text": "        return {'FINISHED'}",
+            "lineNumber": 109
+          },
+          {
+            "text": "    ",
+            "lineNumber": 110
+          },
+          {
+            "text": "    def _process_step(self):",
+            "lineNumber": 111
+          },
+          {
+            "text": "        \"\"\"Process AutoMat extraction in steps to avoid blocking the UI\"\"\"",
+            "lineNumber": 112
+          },
+          {
+            "text": "        props = bpy.context.scene.bst_path_props",
+            "lineNumber": 113
+          },
+          {
+            "text": "        ",
+            "lineNumber": 114
+          },
+          {
+            "text": "        # Check for cancellation",
+            "lineNumber": 115
+          },
+          {
+            "text": "        if props.cancel_operation:",
+            "lineNumber": 116
+          },
+          {
+            "text": "            props.is_operation_running = False",
+            "lineNumber": 117
+          },
+          {
+            "text": "            props.operation_progress = 0.0",
+            "lineNumber": 118
+          },
+          {
+            "text": "            props.operation_status = \"Operation cancelled\"",
+            "lineNumber": 119
+          },
+          {
+            "text": "            props.cancel_operation = False",
+            "lineNumber": 120
+          },
+          {
+            "text": "            return None",
+            "lineNumber": 121
+          },
+          {
+            "text": "        ",
+            "lineNumber": 122
+          },
+          {
+            "text": "        if self.current_step == 0:",
+            "lineNumber": 123
+          },
+          {
+            "text": "            # Step 1: Pack images",
+            "lineNumber": 124
+          },
+          {
+            "text": "            if self.current_index &gt;= len(self.selected_images):",
+            "lineNumber": 125
+          },
+          {
+            "text": "                # Packing complete, move to next step",
+            "lineNumber": 126
+          },
+          {
+            "text": "                self.current_step = 1",
+            "lineNumber": 127
+          },
+          {
+            "text": "                self.current_index = 0",
+            "lineNumber": 128
+          },
+          {
+            "text": "                props.operation_status = \"Removing extensions from image names...\"",
+            "lineNumber": 129
+          },
+          {
+            "text": "                props.operation_progress = 25.0",
+            "lineNumber": 130
+          },
+          {
+            "text": "                return 0.01",
+            "lineNumber": 131
+          },
+          {
+            "text": "            ",
+            "lineNumber": 132
+          },
+          {
+            "text": "            # Pack current image",
+            "lineNumber": 133
+          },
+          {
+            "text": "            img = self.selected_images[self.current_index]",
+            "lineNumber": 134
+          },
+          {
+            "text": "            props.operation_status = f\"Packing {img.name}...\"",
+            "lineNumber": 135
+          },
+          {
+            "text": "            ",
+            "lineNumber": 136
+          },
+          {
+            "text": "            if not img.packed_file:",
+            "lineNumber": 137
+          },
+          {
+            "text": "                try:",
+            "lineNumber": 138
+          },
+          {
+            "text": "                    img.pack()",
+            "lineNumber": 139
+          },
+          {
+            "text": "                    self.packed_count += 1",
+            "lineNumber": 140
+          },
+          {
+            "text": "                except Exception as e:",
+            "lineNumber": 141
+          },
+          {
+            "text": "                    # Continue even if packing fails",
+            "lineNumber": 142
+          },
+          {
+            "text": "                    pass",
+            "lineNumber": 143
+          },
+          {
+            "text": "            ",
+            "lineNumber": 144
+          },
+          {
+            "text": "            self.current_index += 1",
+            "lineNumber": 145
+          },
+          {
+            "text": "            progress = (self.current_index / len(self.selected_images)) * 25.0",
+            "lineNumber": 146
+          },
+          {
+            "text": "            props.operation_progress = progress",
+            "lineNumber": 147
+          },
+          {
+            "text": "            ",
+            "lineNumber": 148
+          },
+          {
+            "text": "        elif self.current_step == 1:",
+            "lineNumber": 149
+          },
+          {
+            "text": "            # Step 2: Remove extensions (this is a quick operation)",
+            "lineNumber": 150
+          },
+          {
+            "text": "            try:",
+            "lineNumber": 151
+          },
+          {
+            "text": "                bpy.ops.bst.remove_extensions()",
+            "lineNumber": 152
+          },
+          {
+            "text": "            except Exception as e:",
+            "lineNumber": 153
+          },
+          {
+            "text": "                pass  # Continue even if this fails",
+            "lineNumber": 154
+          },
+          {
+            "text": "            ",
+            "lineNumber": 155
+          },
+          {
+            "text": "            self.current_step = 2",
+            "lineNumber": 156
+          },
+          {
+            "text": "            self.current_index = 0",
+            "lineNumber": 157
+          },
+          {
+            "text": "            props.operation_status = \"Analyzing material usage...\"",
+            "lineNumber": 158
+          },
+          {
+            "text": "            props.operation_progress = 30.0",
+            "lineNumber": 159
+          },
+          {
+            "text": "            ",
+            "lineNumber": 160
+          },
+          {
+            "text": "        elif self.current_step == 2:",
+            "lineNumber": 161
+          }
+        ]
+      },
+      "score": 0.2932926118373871
+    },
+    {
+      "codeBlock": {
+        "relativeWorkspacePath": ".\\ops\\Rename_images_by_mat.py",
+        "range": {
+          "startPosition": {
+            "line": 68
+          },
+          "endPosition": {
+            "line": 497
+          }
+        },
+        "contents": "class RBST_RenameImg_OT_Rename_images_by_mat(bpy.types.Operator):\ndef extract_texture_suffix(self, name):\n\n        \n        # Then try single-word suffixes with traditional separators\n        for suffix in sorted_suffixes:\n            if ' ' not in suffix:  # Single word suffix\n                # Pattern: ends with _suffix or -suffix or .suffix\n                pattern = rf'[._-]({re.escape(suffix)})$'\n                match = re.search(pattern, base_name, re.IGNORECASE)\n                if match:\n                    return match.group(1).lower()\n        \n        # Check for numeric suffixes (like _01, _02, etc.)\n        numeric_match = re.search(r'[._-](\\d+)$', base_name)\n        if numeric_match:\n            return numeric_match.group(1)\n        \n        return None\n    \n    def ensure_unique_name(self, proposed_name):\n        \"\"\"Ensure the proposed name is unique among all images\"\"\"\n        if proposed_name not in bpy.data.images:\n            return proposed_name\n        \n        # If name exists, add numerical suffix\n        counter = 1\n        while f\"{proposed_name}.{counter:03d}\" in bpy.data.images:\n            counter += 1\n        \n        return f\"{proposed_name}.{counter:03d}\"\n    \n    def capitalize_suffix(self, suffix):\n        \"\"\"Properly capitalize texture type suffixes with correct formatting\"\"\"",
+        "signatures": {
+          "ranges": [
+            {
+              "startPosition": {
+                "line": 69,
+                "column": 1
+              },
+              "endPosition": {
+                "line": 70,
+                "column": 5
+              }
+            },
+            {
+              "startPosition": {
+                "line": 232,
+                "column": 5
+              },
+              "endPosition": {
+                "line": 233,
+                "column": 9
+              }
+            }
+          ]
+        },
+        "detailedLines": [
+          {
+            "text": "class RBST_RenameImg_OT_Rename_images_by_mat(bpy.types.Operator):",
+            "lineNumber": 69,
+            "isSignature": true
+          },
+          {
+            "text": "def extract_texture_suffix(self, name):",
+            "lineNumber": 232
+          },
+          {
+            "lineNumber": 300
+          },
+          {
+            "text": "        ",
+            "lineNumber": 301
+          },
+          {
+            "text": "        # Then try single-word suffixes with traditional separators",
+            "lineNumber": 302
+          },
+          {
+            "text": "        for suffix in sorted_suffixes:",
+            "lineNumber": 303
+          },
+          {
+            "text": "            if ' ' not in suffix:  # Single word suffix",
+            "lineNumber": 304
+          },
+          {
+            "text": "                # Pattern: ends with _suffix or -suffix or .suffix",
+            "lineNumber": 305
+          },
+          {
+            "text": "                pattern = rf'[._-]({re.escape(suffix)})$'",
+            "lineNumber": 306
+          },
+          {
+            "text": "                match = re.search(pattern, base_name, re.IGNORECASE)",
+            "lineNumber": 307
+          },
+          {
+            "text": "                if match:",
+            "lineNumber": 308
+          },
+          {
+            "text": "                    return match.group(1).lower()",
+            "lineNumber": 309
+          },
+          {
+            "text": "        ",
+            "lineNumber": 310
+          },
+          {
+            "text": "        # Check for numeric suffixes (like _01, _02, etc.)",
+            "lineNumber": 311
+          },
+          {
+            "text": "        numeric_match = re.search(r'[._-](\\d+)$', base_name)",
+            "lineNumber": 312
+          },
+          {
+            "text": "        if numeric_match:",
+            "lineNumber": 313
+          },
+          {
+            "text": "            return numeric_match.group(1)",
+            "lineNumber": 314
+          },
+          {
+            "text": "        ",
+            "lineNumber": 315
+          },
+          {
+            "text": "        return None",
+            "lineNumber": 316
+          },
+          {
+            "text": "    ",
+            "lineNumber": 317
+          },
+          {
+            "text": "    def ensure_unique_name(self, proposed_name):",
+            "lineNumber": 318
+          },
+          {
+            "text": "        \"\"\"Ensure the proposed name is unique among all images\"\"\"",
+            "lineNumber": 319
+          },
+          {
+            "text": "        if proposed_name not in bpy.data.images:",
+            "lineNumber": 320
+          },
+          {
+            "text": "            return proposed_name",
+            "lineNumber": 321
+          },
+          {
+            "text": "        ",
+            "lineNumber": 322
+          },
+          {
+            "text": "        # If name exists, add numerical suffix",
+            "lineNumber": 323
+          },
+          {
+            "text": "        counter = 1",
+            "lineNumber": 324
+          },
+          {
+            "text": "        while f\"{proposed_name}.{counter:03d}\" in bpy.data.images:",
+            "lineNumber": 325
+          },
+          {
+            "text": "            counter += 1",
+            "lineNumber": 326
+          },
+          {
+            "text": "        ",
+            "lineNumber": 327
+          },
+          {
+            "text": "        return f\"{proposed_name}.{counter:03d}\"",
+            "lineNumber": 328
+          },
+          {
+            "text": "    ",
+            "lineNumber": 329
+          },
+          {
+            "text": "    def capitalize_suffix(self, suffix):",
+            "lineNumber": 330
+          },
+          {
+            "text": "        \"\"\"Properly capitalize texture type suffixes with correct formatting\"\"\"",
+            "lineNumber": 331
+          }
+        ]
+      },
+      "score": 0.29132211208343506
+    },
+    {
+      "codeBlock": {
+        "relativeWorkspacePath": ".\\ops\\AutoMatExtractor.py",
+        "range": {
+          "startPosition": {
+            "line": 64
+          },
+          "endPosition": {
+            "line": 537
+          }
+        },
+        "contents": "class RBST_AutoMat_OT_AutoMatExtractor(bpy.types.Operator):\ndef _process_step(self):\n\n                print(f\"  Flat colors: {flat_colors}\")\n                \n                # Show material organization details\n                if material_organized &gt; 0:\n                    print(f\"\\nMaterial organization details:\")\n                    material_folders = {}\n                    for img_name, path in self.path_mapping.items():\n                        if \"FlatColors\" not in path and \"common\" not in path:\n                            # Extract material name from path\n                            if isinstance(path, dict):\n                                continue\n                            path_parts = path.split('\\\\')\n                            if len(path_parts) &gt;= 3:\n                                material_name = path_parts[-2]\n                                if material_name not in material_folders:\n                                    material_folders[material_name] = []\n                                material_folders[material_name].append(img_name)\n                    \n                    for material_name, images in material_folders.items():\n                        print(f\"  {material_name}: {len(images)} images\")\n                \n                print(f\"=====================================\\n\")\n                if self.udim_summary[\"found\"]:\n                    print(f\"UDIM images processed: {self.udim_summary['found']} (saved successfully: {self.udim_summary['saved']})\")\n                \n                # Force UI update\n                for area in bpy.context.screen.areas:\n                    area.tag_redraw()\n                \n                return None\n            \n            # Save current image\n            img = self.selected_images[self.current_index]\n            props.operation_status = f\"Saving {img.name}...\"\n            \n            mapping_entry = self.path_mapping.get(img.name)\n            if isinstance(mapping_entry, dict) and mapping_entry.get(\"udim\"):\n                self.save_udim_image(img, mapping_entry)",
+        "signatures": {
+          "ranges": [
+            {
+              "startPosition": {
+                "line": 65,
+                "column": 1
+              },
+              "endPosition": {
+                "line": 66,
+                "column": 5
+              }
+            },
+            {
+              "startPosition": {
+                "line": 111,
+                "column": 5
+              },
+              "endPosition": {
+                "line": 112,
+                "column": 9
+              }
+            }
+          ]
+        },
+        "detailedLines": [
+          {
+            "text": "class RBST_AutoMat_OT_AutoMatExtractor(bpy.types.Operator):",
+            "lineNumber": 65,
+            "isSignature": true
+          },
+          {
+            "text": "def _process_step(self):",
+            "lineNumber": 111
+          },
+          {
+            "lineNumber": 331
+          },
+          {
+            "text": "                print(f\"  Flat colors: {flat_colors}\")",
+            "lineNumber": 332
+          },
+          {
+            "text": "                ",
+            "lineNumber": 333
+          },
+          {
+            "text": "                # Show material organization details",
+            "lineNumber": 334
+          },
+          {
+            "text": "                if material_organized &gt; 0:",
+            "lineNumber": 335
+          },
+          {
+            "text": "                    print(f\"\\nMaterial organization details:\")",
+            "lineNumber": 336
+          },
+          {
+            "text": "                    material_folders = {}",
+            "lineNumber": 337
+          },
+          {
+            "text": "                    for img_name, path in self.path_mapping.items():",
+            "lineNumber": 338
+          },
+          {
+            "text": "                        if \"FlatColors\" not in path and \"common\" not in path:",
+            "lineNumber": 339
+          },
+          {
+            "text": "                            # Extract material name from path",
+            "lineNumber": 340
+          },
+          {
+            "text": "                            if isinstance(path, dict):",
+            "lineNumber": 341
+          },
+          {
+            "text": "                                continue",
+            "lineNumber": 342
+          },
+          {
+            "text": "                            path_parts = path.split('\\\\')",
+            "lineNumber": 343
+          },
+          {
+            "text": "                            if len(path_parts) &gt;= 3:",
+            "lineNumber": 344
+          },
+          {
+            "text": "                                material_name = path_parts[-2]",
+            "lineNumber": 345
+          },
+          {
+            "text": "                                if material_name not in material_folders:",
+            "lineNumber": 346
+          },
+          {
+            "text": "                                    material_folders[material_name] = []",
+            "lineNumber": 347
+          },
+          {
+            "text": "                                material_folders[material_name].append(img_name)",
+            "lineNumber": 348
+          },
+          {
+            "text": "                    ",
+            "lineNumber": 349
+          },
+          {
+            "text": "                    for material_name, images in material_folders.items():",
+            "lineNumber": 350
+          },
+          {
+            "text": "                        print(f\"  {material_name}: {len(images)} images\")",
+            "lineNumber": 351
+          },
+          {
+            "text": "                ",
+            "lineNumber": 352
+          },
+          {
+            "text": "                print(f\"=====================================\\n\")",
+            "lineNumber": 353
+          },
+          {
+            "text": "                if self.udim_summary[\"found\"]:",
+            "lineNumber": 354
+          },
+          {
+            "text": "                    print(f\"UDIM images processed: {self.udim_summary['found']} (saved successfully: {self.udim_summary['saved']})\")",
+            "lineNumber": 355
+          },
+          {
+            "text": "                ",
+            "lineNumber": 356
+          },
+          {
+            "text": "                # Force UI update",
+            "lineNumber": 357
+          },
+          {
+            "text": "                for area in bpy.context.screen.areas:",
+            "lineNumber": 358
+          },
+          {
+            "text": "                    area.tag_redraw()",
+            "lineNumber": 359
+          },
+          {
+            "text": "                ",
+            "lineNumber": 360
+          },
+          {
+            "text": "                return None",
+            "lineNumber": 361
+          },
+          {
+            "text": "            ",
+            "lineNumber": 362
+          },
+          {
+            "text": "            # Save current image",
+            "lineNumber": 363
+          },
+          {
+            "text": "            img = self.selected_images[self.current_index]",
+            "lineNumber": 364
+          },
+          {
+            "text": "            props.operation_status = f\"Saving {img.name}...\"",
+            "lineNumber": 365
+          },
+          {
+            "text": "            ",
+            "lineNumber": 366
+          },
+          {
+            "text": "            mapping_entry = self.path_mapping.get(img.name)",
+            "lineNumber": 367
+          },
+          {
+            "text": "            if isinstance(mapping_entry, dict) and mapping_entry.get(\"udim\"):",
+            "lineNumber": 368
+          },
+          {
+            "text": "                self.save_udim_image(img, mapping_entry)",
+            "lineNumber": 369
+          }
+        ]
+      },
+      "score": 0.2736707031726837
+    },
+    {
+      "codeBlock": {
+        "relativeWorkspacePath": ".\\ops\\Rename_images_by_mat.py",
+        "range": {
+          "startPosition": {
+            "line": 68
+          },
+          "endPosition": {
+            "line": 497
+          }
+        },
+        "contents": "class RBST_RenameImg_OT_Rename_images_by_mat(bpy.types.Operator):\ndef execute(self, context):\n        # Get selected images\n\n                continue\n            elif len(materials) == 1:\n                # Single material usage - check suffix recognition\n                material_name = materials[0]\n                suffix = self.extract_texture_suffix(img.name)\n                original_name = img.name\n                \n                # Skip images with unrecognized suffixes (only if they have a potential suffix pattern)\n                if suffix is None and self.has_potential_suffix(img.name):\n                    unrecognized_suffix_count += 1\n                    unrecognized_list.append(img.name)\n                    print(f\"DEBUG: Skipped image with unrecognized suffix: {img.name}\")\n                    continue\n                \n                if suffix:\n                    # Capitalize the suffix properly\n                    capitalized_suffix = self.capitalize_suffix(suffix)\n                    expected_name = f\"{material_name}_{capitalized_suffix}\"\n                else:\n                    # No suffix detected, use material name only\n                    expected_name = material_name\n                \n                # Check if the image is already correctly named\n                if img.name == expected_name:\n                    already_correct_count += 1\n                    print(f\"DEBUG: Skipped already correctly named: {img.name}\")\n                    continue\n                \n                # Avoid duplicate names\n                new_name = self.ensure_unique_name(expected_name)\n                \n                img.name = new_name\n                renamed_count += 1\n                renamed_list.append((original_name, new_name, material_name, capitalized_suffix if suffix else None))\n                print(f\"DEBUG: Renamed '{original_name}' → '{new_name}' (Material: {material_name}, Suffix: {capitalized_suffix if suffix else 'none'})\")\n            else:\n                # Shared across multiple materials - skip\n                shared_count += 1",
+        "signatures": {
+          "ranges": [
+            {
+              "startPosition": {
+                "line": 69,
+                "column": 1
+              },
+              "endPosition": {
+                "line": 70,
+                "column": 5
+              }
+            },
+            {
+              "startPosition": {
+                "line": 75,
+                "column": 5
+              },
+              "endPosition": {
+                "line": 77,
+                "column": 9
+              }
+            }
+          ]
+        },
+        "detailedLines": [
+          {
+            "text": "class RBST_RenameImg_OT_Rename_images_by_mat(bpy.types.Operator):",
+            "lineNumber": 69,
+            "isSignature": true
+          },
+          {
+            "text": "def execute(self, context):",
+            "lineNumber": 75
+          },
+          {
+            "text": "        # Get selected images",
+            "lineNumber": 76
+          },
+          {
+            "lineNumber": 114
+          },
+          {
+            "text": "                continue",
+            "lineNumber": 115
+          },
+          {
+            "text": "            elif len(materials) == 1:",
+            "lineNumber": 116
+          },
+          {
+            "text": "                # Single material usage - check suffix recognition",
+            "lineNumber": 117
+          },
+          {
+            "text": "                material_name = materials[0]",
+            "lineNumber": 118
+          },
+          {
+            "text": "                suffix = self.extract_texture_suffix(img.name)",
+            "lineNumber": 119
+          },
+          {
+            "text": "                original_name = img.name",
+            "lineNumber": 120
+          },
+          {
+            "text": "                ",
+            "lineNumber": 121
+          },
+          {
+            "text": "                # Skip images with unrecognized suffixes (only if they have a potential suffix pattern)",
+            "lineNumber": 122
+          },
+          {
+            "text": "                if suffix is None and self.has_potential_suffix(img.name):",
+            "lineNumber": 123
+          },
+          {
+            "text": "                    unrecognized_suffix_count += 1",
+            "lineNumber": 124
+          },
+          {
+            "text": "                    unrecognized_list.append(img.name)",
+            "lineNumber": 125
+          },
+          {
+            "text": "                    print(f\"DEBUG: Skipped image with unrecognized suffix: {img.name}\")",
+            "lineNumber": 126
+          },
+          {
+            "text": "                    continue",
+            "lineNumber": 127
+          },
+          {
+            "text": "                ",
+            "lineNumber": 128
+          },
+          {
+            "text": "                if suffix:",
+            "lineNumber": 129
+          },
+          {
+            "text": "                    # Capitalize the suffix properly",
+            "lineNumber": 130
+          },
+          {
+            "text": "                    capitalized_suffix = self.capitalize_suffix(suffix)",
+            "lineNumber": 131
+          },
+          {
+            "text": "                    expected_name = f\"{material_name}_{capitalized_suffix}\"",
+            "lineNumber": 132
+          },
+          {
+            "text": "                else:",
+            "lineNumber": 133
+          },
+          {
+            "text": "                    # No suffix detected, use material name only",
+            "lineNumber": 134
+          },
+          {
+            "text": "                    expected_name = material_name",
+            "lineNumber": 135
+          },
+          {
+            "text": "                ",
+            "lineNumber": 136
+          },
+          {
+            "text": "                # Check if the image is already correctly named",
+            "lineNumber": 137
+          },
+          {
+            "text": "                if img.name == expected_name:",
+            "lineNumber": 138
+          },
+          {
+            "text": "                    already_correct_count += 1",
+            "lineNumber": 139
+          },
+          {
+            "text": "                    print(f\"DEBUG: Skipped already correctly named: {img.name}\")",
+            "lineNumber": 140
+          },
+          {
+            "text": "                    continue",
+            "lineNumber": 141
+          },
+          {
+            "text": "                ",
+            "lineNumber": 142
+          },
+          {
+            "text": "                # Avoid duplicate names",
+            "lineNumber": 143
+          },
+          {
+            "text": "                new_name = self.ensure_unique_name(expected_name)",
+            "lineNumber": 144
+          },
+          {
+            "text": "                ",
+            "lineNumber": 145
+          },
+          {
+            "text": "                img.name = new_name",
+            "lineNumber": 146
+          },
+          {
+            "text": "                renamed_count += 1",
+            "lineNumber": 147
+          },
+          {
+            "text": "                renamed_list.append((original_name, new_name, material_name, capitalized_suffix if suffix else None))",
+            "lineNumber": 148
+          },
+          {
+            "text": "                print(f\"DEBUG: Renamed '{original_name}' → '{new_name}' (Material: {material_name}, Suffix: {capitalized_suffix if suffix else 'none'})\")",
+            "lineNumber": 149
+          },
+          {
+            "text": "            else:",
+            "lineNumber": 150
+          },
+          {
+            "text": "                # Shared across multiple materials - skip",
+            "lineNumber": 151
+          },
+          {
+            "text": "                shared_count += 1",
+            "lineNumber": 152
+          }
+        ]
+      },
+      "score": 0.2707512378692627
+    },
+    {
+      "codeBlock": {
+        "relativeWorkspacePath": ".\\ops\\flat_color_texture_renamer.py",
+        "range": {
+          "startPosition": {
+            "line": 91,
+            "column": 74
+          },
+          "endPosition": {
+            "line": 187
+          }
+        },
+        "contents": "def safe_rename_image(image, new_name):\n    \"\"\"Safely rename an image datablock using context override.\"\"\"\n    try:\n        # Method 1: Try direct assignment first (works in some contexts)\n        image.name = new_name\n        return True\n    except:\n        try:\n            # Method 2: Use context override with outliner\n            for area in bpy.context.screen.areas:\n                if area.type == 'OUTLINER':\n                    with bpy.context.temp_override(area=area):\n                        image.name = new_name\n                    return True\n        except:\n            try:\n                # Method 3: Use bpy.ops with context override\n                # Set the image as active and use the rename operator\n                bpy.context.view_layer.objects.active = None\n                \n                # Create a temporary override context\n                override_context = bpy.context.copy()\n                override_context['edit_image'] = image\n                \n                with bpy.context.temp_override(**override_context):\n                    image.name = new_name\n                return True\n            except:\n                # Method 4: Try using the data API directly with update\n                try:\n                    old_name = image.name\n                    # Force an update cycle\n                    bpy.context.view_layer.update()\n                    image.name = new_name\n                    bpy.context.view_layer.update()\n                    return True\n                except:\n                    return False\n\ndef rename_flat_color_textures():\n    \"\"\"Main function to find and rename flat color textures.\"\"\"",
+        "signatures": {},
+        "detailedLines": [
+          {
+            "text": "def safe_rename_image(image, new_name):",
+            "lineNumber": 94,
+            "isSignature": true
+          },
+          {
+            "text": "    \"\"\"Safely rename an image datablock using context override.\"\"\"",
+            "lineNumber": 95
+          },
+          {
+            "text": "    try:",
+            "lineNumber": 96
+          },
+          {
+            "text": "        # Method 1: Try direct assignment first (works in some contexts)",
+            "lineNumber": 97
+          },
+          {
+            "text": "        image.name = new_name",
+            "lineNumber": 98
+          },
+          {
+            "text": "        return True",
+            "lineNumber": 99
+          },
+          {
+            "text": "    except:",
+            "lineNumber": 100
+          },
+          {
+            "text": "        try:",
+            "lineNumber": 101
+          },
+          {
+            "text": "            # Method 2: Use context override with outliner",
+            "lineNumber": 102
+          },
+          {
+            "text": "            for area in bpy.context.screen.areas:",
+            "lineNumber": 103
+          },
+          {
+            "text": "                if area.type == 'OUTLINER':",
+            "lineNumber": 104
+          },
+          {
+            "text": "                    with bpy.context.temp_override(area=area):",
+            "lineNumber": 105
+          },
+          {
+            "text": "                        image.name = new_name",
+            "lineNumber": 106
+          },
+          {
+            "text": "                    return True",
+            "lineNumber": 107
+          },
+          {
+            "text": "        except:",
+            "lineNumber": 108
+          },
+          {
+            "text": "            try:",
+            "lineNumber": 109
+          },
+          {
+            "text": "                # Method 3: Use bpy.ops with context override",
+            "lineNumber": 110
+          },
+          {
+            "text": "                # Set the image as active and use the rename operator",
+            "lineNumber": 111
+          },
+          {
+            "text": "                bpy.context.view_layer.objects.active = None",
+            "lineNumber": 112
+          },
+          {
+            "text": "                ",
+            "lineNumber": 113
+          },
+          {
+            "text": "                # Create a temporary override context",
+            "lineNumber": 114
+          },
+          {
+            "text": "                override_context = bpy.context.copy()",
+            "lineNumber": 115
+          },
+          {
+            "text": "                override_context['edit_image'] = image",
+            "lineNumber": 116
+          },
+          {
+            "text": "                ",
+            "lineNumber": 117
+          },
+          {
+            "text": "                with bpy.context.temp_override(**override_context):",
+            "lineNumber": 118
+          },
+          {
+            "text": "                    image.name = new_name",
+            "lineNumber": 119
+          },
+          {
+            "text": "                return True",
+            "lineNumber": 120
+          },
+          {
+            "text": "            except:",
+            "lineNumber": 121
+          },
+          {
+            "text": "                # Method 4: Try using the data API directly with update",
+            "lineNumber": 122
+          },
+          {
+            "text": "                try:",
+            "lineNumber": 123
+          },
+          {
+            "text": "                    old_name = image.name",
+            "lineNumber": 124
+          },
+          {
+            "text": "                    # Force an update cycle",
+            "lineNumber": 125
+          },
+          {
+            "text": "                    bpy.context.view_layer.update()",
+            "lineNumber": 126
+          },
+          {
+            "text": "                    image.name = new_name",
+            "lineNumber": 127
+          },
+          {
+            "text": "                    bpy.context.view_layer.update()",
+            "lineNumber": 128
+          },
+          {
+            "text": "                    return True",
+            "lineNumber": 129
+          },
+          {
+            "text": "                except:",
+            "lineNumber": 130
+          },
+          {
+            "text": "                    return False",
+            "lineNumber": 131,
+            "isSignature": true
+          },
+          {
+            "lineNumber": 132
+          },
+          {
+            "text": "def rename_flat_color_textures():",
+            "lineNumber": 133,
+            "isSignature": true
+          },
+          {
+            "text": "    \"\"\"Main function to find and rename flat color textures.\"\"\"",
+            "lineNumber": 134
+          }
+        ]
+      },
+      "score": 0.25269588828086853
+    },
+    {
+      "codeBlock": {
+        "relativeWorkspacePath": ".\\ops\\AutoMatExtractor.py",
+        "range": {
+          "startPosition": {
+            "line": 64
+          },
+          "endPosition": {
+            "line": 537
+          }
+        },
+        "contents": "class RBST_AutoMat_OT_AutoMatExtractor(bpy.types.Operator):\ndef _process_step(self):\n\n            \n        elif self.current_step == 2:\n            # Step 3: Organize images by material usage\n            if self.current_index &gt;= len(self.selected_images):\n                # Analysis complete, move to path building\n                self.current_step = 3\n                self.current_index = 0\n                props.operation_status = \"Building path mapping...\"\n                props.operation_progress = 50.0\n                return 0.01\n            \n            # Get material mapping for all selected images\n            if self.current_index == 0:\n                self.material_mapping = self.get_image_material_mapping(self.selected_images)\n                print(f\"DEBUG: Material mapping created for {len(self.selected_images)} images\")\n            \n            # This step is quick, just mark progress\n            self.current_index += 1\n            progress = 30.0 + (self.current_index / len(self.selected_images)) * 20.0\n            props.operation_progress = progress\n            \n        elif self.current_step == 3:",
+        "signatures": {
+          "ranges": [
+            {
+              "startPosition": {
+                "line": 65,
+                "column": 1
+              },
+              "endPosition": {
+                "line": 66,
+                "column": 5
+              }
+            },
+            {
+              "startPosition": {
+                "line": 111,
+                "column": 5
+              },
+              "endPosition": {
+                "line": 112,
+                "column": 9
+              }
+            }
+          ]
+        },
+        "detailedLines": [
+          {
+            "text": "class RBST_AutoMat_OT_AutoMatExtractor(bpy.types.Operator):",
+            "lineNumber": 65,
+            "isSignature": true
+          },
+          {
+            "text": "def _process_step(self):",
+            "lineNumber": 111
+          },
+          {
+            "lineNumber": 159
+          },
+          {
+            "text": "            ",
+            "lineNumber": 160
+          },
+          {
+            "text": "        elif self.current_step == 2:",
+            "lineNumber": 161
+          },
+          {
+            "text": "            # Step 3: Organize images by material usage",
+            "lineNumber": 162
+          },
+          {
+            "text": "            if self.current_index &gt;= len(self.selected_images):",
+            "lineNumber": 163
+          },
+          {
+            "text": "                # Analysis complete, move to path building",
+            "lineNumber": 164
+          },
+          {
+            "text": "                self.current_step = 3",
+            "lineNumber": 165
+          },
+          {
+            "text": "                self.current_index = 0",
+            "lineNumber": 166
+          },
+          {
+            "text": "                props.operation_status = \"Building path mapping...\"",
+            "lineNumber": 167
+          },
+          {
+            "text": "                props.operation_progress = 50.0",
+            "lineNumber": 168
+          },
+          {
+            "text": "                return 0.01",
+            "lineNumber": 169
+          },
+          {
+            "text": "            ",
+            "lineNumber": 170
+          },
+          {
+            "text": "            # Get material mapping for all selected images",
+            "lineNumber": 171
+          },
+          {
+            "text": "            if self.current_index == 0:",
+            "lineNumber": 172
+          },
+          {
+            "text": "                self.material_mapping = self.get_image_material_mapping(self.selected_images)",
+            "lineNumber": 173
+          },
+          {
+            "text": "                print(f\"DEBUG: Material mapping created for {len(self.selected_images)} images\")",
+            "lineNumber": 174
+          },
+          {
+            "text": "            ",
+            "lineNumber": 175
+          },
+          {
+            "text": "            # This step is quick, just mark progress",
+            "lineNumber": 176
+          },
+          {
+            "text": "            self.current_index += 1",
+            "lineNumber": 177
+          },
+          {
+            "text": "            progress = 30.0 + (self.current_index / len(self.selected_images)) * 20.0",
+            "lineNumber": 178
+          },
+          {
+            "text": "            props.operation_progress = progress",
+            "lineNumber": 179
+          },
+          {
+            "text": "            ",
+            "lineNumber": 180
+          },
+          {
+            "text": "        elif self.current_step == 3:",
+            "lineNumber": 181
+          }
+        ]
+      },
+      "score": 0.22598236799240112
+    },
+    {
+      "codeBlock": {
+        "relativeWorkspacePath": ".\\ops\\AutoMatExtractor.py",
+        "range": {
+          "startPosition": {},
+          "endPosition": {
+            "line": 62
+          }
+        },
+        "contents": "import bpy\nimport os\nimport re\nfrom ..panels.bulk_path_management import (\n    get_image_extension,\n    bulk_remap_paths,\n    set_image_paths,\n    ensure_directory_for_path,\n)\nfrom ..utils import compat\n\nclass RBST_AutoMat_OT_summary_dialog(bpy.types.Operator):\n    \"\"\"Show AutoMat Extractor operation summary\"\"\"\n    bl_idname = \"bst.automat_summary_dialog\"\n    bl_label = \"AutoMat Extractor Summary\"\n    bl_options = {'REGISTER', 'INTERNAL'}\n    \n    # Properties to store summary data\n    total_selected: bpy.props.IntProperty(default=0)\n    success_count: bpy.props.IntProperty(default=0)\n    overwrite_skipped_count: bpy.props.IntProperty(default=0)\n    failed_remap_count: bpy.props.IntProperty(default=0)\n    \n    overwrite_details: bpy.props.StringProperty(default=\"\")\n    failed_remap_details: bpy.props.StringProperty(default=\"\")\n    \n    def draw(self, context):\n        layout = self.layout",
+        "signatures": {},
+        "detailedLines": [
+          {
+            "text": "import bpy",
+            "lineNumber": 1
+          },
+          {
+            "text": "import os",
+            "lineNumber": 2
+          },
+          {
+            "text": "import re",
+            "lineNumber": 3
+          },
+          {
+            "text": "from ..panels.bulk_path_management import (",
+            "lineNumber": 4
+          },
+          {
+            "text": "    get_image_extension,",
+            "lineNumber": 5
+          },
+          {
+            "text": "    bulk_remap_paths,",
+            "lineNumber": 6
+          },
+          {
+            "text": "    set_image_paths,",
+            "lineNumber": 7
+          },
+          {
+            "text": "    ensure_directory_for_path,",
+            "lineNumber": 8
+          },
+          {
+            "text": ")",
+            "lineNumber": 9
+          },
+          {
+            "text": "from ..utils import compat",
+            "lineNumber": 10
+          },
+          {
+            "lineNumber": 11
+          },
+          {
+            "text": "class RBST_AutoMat_OT_summary_dialog(bpy.types.Operator):",
+            "lineNumber": 12,
+            "isSignature": true
+          },
+          {
+            "text": "    \"\"\"Show AutoMat Extractor operation summary\"\"\"",
+            "lineNumber": 13
+          },
+          {
+            "text": "    bl_idname = \"bst.automat_summary_dialog\"",
+            "lineNumber": 14
+          },
+          {
+            "text": "    bl_label = \"AutoMat Extractor Summary\"",
+            "lineNumber": 15
+          },
+          {
+            "text": "    bl_options = {'REGISTER', 'INTERNAL'}",
+            "lineNumber": 16
+          },
+          {
+            "text": "    ",
+            "lineNumber": 17
+          },
+          {
+            "text": "    # Properties to store summary data",
+            "lineNumber": 18
+          },
+          {
+            "text": "    total_selected: bpy.props.IntProperty(default=0)",
+            "lineNumber": 19
+          },
+          {
+            "text": "    success_count: bpy.props.IntProperty(default=0)",
+            "lineNumber": 20
+          },
+          {
+            "text": "    overwrite_skipped_count: bpy.props.IntProperty(default=0)",
+            "lineNumber": 21
+          },
+          {
+            "text": "    failed_remap_count: bpy.props.IntProperty(default=0)",
+            "lineNumber": 22
+          },
+          {
+            "text": "    ",
+            "lineNumber": 23
+          },
+          {
+            "text": "    overwrite_details: bpy.props.StringProperty(default=\"\")",
+            "lineNumber": 24
+          },
+          {
+            "text": "    failed_remap_details: bpy.props.StringProperty(default=\"\")",
+            "lineNumber": 25
+          },
+          {
+            "text": "    ",
+            "lineNumber": 26
+          },
+          {
+            "text": "    def draw(self, context):",
+            "lineNumber": 27
+          },
+          {
+            "text": "        layout = self.layout",
+            "lineNumber": 28
+          }
+        ]
+      },
+      "score": 0.22155165672302246
+    },
+    {
+      "codeBlock": {
+        "relativeWorkspacePath": ".\\ops\\Rename_images_by_mat.py",
+        "range": {
+          "startPosition": {
+            "line": 68
+          },
+          "endPosition": {
+            "line": 497
+          }
+        },
+        "contents": "class RBST_RenameImg_OT_Rename_images_by_mat(bpy.types.Operator):\ndef extract_texture_suffix(self, name):\n, 'msmnao pack', 'roughness pack', 'sstm pack',\n            'flow_pack', 'msmnao_pack', 'roughness_pack', 'sstm_pack',\n            \n            # Hair-related multi-word suffixes (spaces)\n            'hair flow map', 'hair id map', 'hair root map', 'hair depth map',\n            'flow map', 'id map', 'root map', 'depth map',\n            \n            # Additional common variations\n            'tex', 'map', 'img', 'texture',\n            'd', 'n', 'r', 'm', 's', 'a', 'h', 'o', 'e'  # Single letter abbreviations\n        ]\n        \n        # Remove file extension first\n        base_name = re.sub(r'\\.[^.]+$', '', name)\n        \n        # Sort suffixes by length (longest first) to prioritize more specific matches\n        sorted_suffixes = sorted(suffixes, key=len, reverse=True)\n        \n        # First, try to find multi-word suffixes with spaces (case-insensitive)\n        for suffix in sorted_suffixes:\n            if ' ' in suffix:  # Multi-word suffix\n                # Pattern: ends with space + suffix\n                pattern = rf'\\s+({re.escape(suffix)})$'\n                match = re.search(pattern, base_name, re.IGNORECASE)\n                if match:\n                    return match.group(1).lower()\n                \n                # Pattern: ends with suffix (no space separator, but exact match)\n                if base_name.lower().endswith(suffix.lower()) and len(base_name) &gt; len(suffix):\n                    # Check if there's a word boundary before the suffix\n                    prefix_end = len(base_name) - len(suffix)\n                    if prefix_end &gt; 0 and base_name[prefix_end - 1] in ' _-':\n                        return suffix.lower()\n        \n        # Then try single-word suffixes with traditional separators",
+        "signatures": {
+          "ranges": [
+            {
+              "startPosition": {
+                "line": 69,
+                "column": 1
+              },
+              "endPosition": {
+                "line": 70,
+                "column": 5
+              }
+            },
+            {
+              "startPosition": {
+                "line": 232,
+                "column": 5
+              },
+              "endPosition": {
+                "line": 233,
+                "column": 9
+              }
+            }
+          ]
+        },
+        "detailedLines": [
+          {
+            "text": "class RBST_RenameImg_OT_Rename_images_by_mat(bpy.types.Operator):",
+            "lineNumber": 69,
+            "isSignature": true
+          },
+          {
+            "text": "def extract_texture_suffix(self, name):",
+            "lineNumber": 232
+          },
+          {
+            "text": ", 'msmnao pack', 'roughness pack', 'sstm pack',",
+            "lineNumber": 268
+          },
+          {
+            "text": "            'flow_pack', 'msmnao_pack', 'roughness_pack', 'sstm_pack',",
+            "lineNumber": 269
+          },
+          {
+            "text": "            ",
+            "lineNumber": 270
+          },
+          {
+            "text": "            # Hair-related multi-word suffixes (spaces)",
+            "lineNumber": 271
+          },
+          {
+            "text": "            'hair flow map', 'hair id map', 'hair root map', 'hair depth map',",
+            "lineNumber": 272
+          },
+          {
+            "text": "            'flow map', 'id map', 'root map', 'depth map',",
+            "lineNumber": 273
+          },
+          {
+            "text": "            ",
+            "lineNumber": 274
+          },
+          {
+            "text": "            # Additional common variations",
+            "lineNumber": 275
+          },
+          {
+            "text": "            'tex', 'map', 'img', 'texture',",
+            "lineNumber": 276
+          },
+          {
+            "text": "            'd', 'n', 'r', 'm', 's', 'a', 'h', 'o', 'e'  # Single letter abbreviations",
+            "lineNumber": 277
+          },
+          {
+            "text": "        ]",
+            "lineNumber": 278
+          },
+          {
+            "text": "        ",
+            "lineNumber": 279
+          },
+          {
+            "text": "        # Remove file extension first",
+            "lineNumber": 280
+          },
+          {
+            "text": "        base_name = re.sub(r'\\.[^.]+$', '', name)",
+            "lineNumber": 281
+          },
+          {
+            "text": "        ",
+            "lineNumber": 282
+          },
+          {
+            "text": "        # Sort suffixes by length (longest first) to prioritize more specific matches",
+            "lineNumber": 283
+          },
+          {
+            "text": "        sorted_suffixes = sorted(suffixes, key=len, reverse=True)",
+            "lineNumber": 284
+          },
+          {
+            "text": "        ",
+            "lineNumber": 285
+          },
+          {
+            "text": "        # First, try to find multi-word suffixes with spaces (case-insensitive)",
+            "lineNumber": 286
+          },
+          {
+            "text": "        for suffix in sorted_suffixes:",
+            "lineNumber": 287
+          },
+          {
+            "text": "            if ' ' in suffix:  # Multi-word suffix",
+            "lineNumber": 288
+          },
+          {
+            "text": "                # Pattern: ends with space + suffix",
+            "lineNumber": 289
+          },
+          {
+            "text": "                pattern = rf'\\s+({re.escape(suffix)})$'",
+            "lineNumber": 290
+          },
+          {
+            "text": "                match = re.search(pattern, base_name, re.IGNORECASE)",
+            "lineNumber": 291
+          },
+          {
+            "text": "                if match:",
+            "lineNumber": 292
+          },
+          {
+            "text": "                    return match.group(1).lower()",
+            "lineNumber": 293
+          },
+          {
+            "text": "                ",
+            "lineNumber": 294
+          },
+          {
+            "text": "                # Pattern: ends with suffix (no space separator, but exact match)",
+            "lineNumber": 295
+          },
+          {
+            "text": "                if base_name.lower().endswith(suffix.lower()) and len(base_name) &gt; len(suffix):",
+            "lineNumber": 296
+          },
+          {
+            "text": "                    # Check if there's a word boundary before the suffix",
+            "lineNumber": 297
+          },
+          {
+            "text": "                    prefix_end = len(base_name) - len(suffix)",
+            "lineNumber": 298
+          },
+          {
+            "text": "                    if prefix_end &gt; 0 and base_name[prefix_end - 1] in ' _-':",
+            "lineNumber": 299
+          },
+          {
+            "text": "                        return suffix.lower()",
+            "lineNumber": 300
+          },
+          {
+            "text": "        ",
+            "lineNumber": 301
+          },
+          {
+            "text": "        # Then try single-word suffixes with traditional separators",
+            "lineNumber": 302
+          }
+        ]
+      },
+      "score": 0.2153300642967224
+    },
+    {
+      "codeBlock": {
+        "relativeWorkspacePath": ".\\ops\\Rename_images_by_mat.py",
+        "range": {
+          "startPosition": {
+            "line": 68
+          },
+          "endPosition": {
+            "line": 497
+          }
+        },
+        "contents": "class RBST_RenameImg_OT_Rename_images_by_mat(bpy.types.Operator):\n\n    \n    def extract_texture_suffix(self, name):\n        \"\"\"Extract texture type suffix from image name (case-insensitive)\"\"\"\n        # Comprehensive list of texture suffixes\n        suffixes = [\n            # Standard PBR suffixes\n            'diffuse', 'basecolor', 'base_color', 'albedo', 'color', 'col',\n            'normal', 'norm', 'nrm', 'bump',\n            'roughness', 'rough', 'rgh',\n            'metallic', 'metal', 'mtl',\n            'specular', 'spec', 'spc',\n            'ao', 'ambient_occlusion', 'ambientocclusion', 'occlusion',\n            'gradao',\n            'height', 'displacement', 'disp', 'displace',\n            'opacity', 'alpha', 'mask',\n            'emission', 'emissive', 'emit',\n            'subsurface', 'sss', 'transmission',\n            \n            # Character Creator / iClone suffixes\n            'base', 'diffusemap', 'normalmap', 'roughnessmap', 'metallicmap',\n            'aomap', 'opacitymap', 'emissionmap', 'heightmap', 'displacementmap',\n            'detail_normal', 'detail_diffuse', 'detail_mask',\n            'blend', 'id', 'cavity', 'curvature', 'transmap', 'rgbamask', 'sssmap', 'micronmask',\n            'bcbmap', 'mnaomask', 'specmask', 'micron', 'cfulcmask', 'nmuilmask', 'nbmap', 'enmask', 'blend_multiply',\n            \n            # Hair-related compound suffixes (no spaces)\n            'hairflowmap', 'hairidmap', 'hairrootmap', 'hairdepthmap',\n            'flowmap', 'idmap', 'rootmap', 'depthmap',\n            \n            # Wrinkle map suffixes (Character Creator)\n            'wrinkle_normal1', 'wrinkle_normal2', 'wrinkle_normal3',\n            'wrinkle_roughness1', 'wrinkle_roughness2', 'wrinkle_roughness3',\n            'wrinkle_diffuse1', 'wrinkle_diffuse2', 'wrinkle_diffuse3',\n            'wrinkle_mask1', 'wrinkle_mask2', 'wrinkle_mask3',\n            'wrinkle_flow1', 'wrinkle_flow2', 'wrinkle_flow3',\n            \n            # Character Creator pack suffixes (with spaces)\n            'flow pack', 'msmnao pack', 'roughness pack', 'sstm pack',\n            'flow_pack', 'msmnao_pack', 'roughness_pack', 'sstm_pack',\n            \n            # Hair-related multi-word suffixes (spaces)",
+        "signatures": {
+          "ranges": [
+            {
+              "startPosition": {
+                "line": 69,
+                "column": 1
+              },
+              "endPosition": {
+                "line": 70,
+                "column": 5
+              }
+            }
+          ]
+        },
+        "detailedLines": [
+          {
+            "text": "class RBST_RenameImg_OT_Rename_images_by_mat(bpy.types.Operator):",
+            "lineNumber": 69,
+            "isSignature": true
+          },
+          {
+            "lineNumber": 230
+          },
+          {
+            "text": "    ",
+            "lineNumber": 231
+          },
+          {
+            "text": "    def extract_texture_suffix(self, name):",
+            "lineNumber": 232
+          },
+          {
+            "text": "        \"\"\"Extract texture type suffix from image name (case-insensitive)\"\"\"",
+            "lineNumber": 233
+          },
+          {
+            "text": "        # Comprehensive list of texture suffixes",
+            "lineNumber": 234
+          },
+          {
+            "text": "        suffixes = [",
+            "lineNumber": 235
+          },
+          {
+            "text": "            # Standard PBR suffixes",
+            "lineNumber": 236
+          },
+          {
+            "text": "            'diffuse', 'basecolor', 'base_color', 'albedo', 'color', 'col',",
+            "lineNumber": 237
+          },
+          {
+            "text": "            'normal', 'norm', 'nrm', 'bump',",
+            "lineNumber": 238
+          },
+          {
+            "text": "            'roughness', 'rough', 'rgh',",
+            "lineNumber": 239
+          },
+          {
+            "text": "            'metallic', 'metal', 'mtl',",
+            "lineNumber": 240
+          },
+          {
+            "text": "            'specular', 'spec', 'spc',",
+            "lineNumber": 241
+          },
+          {
+            "text": "            'ao', 'ambient_occlusion', 'ambientocclusion', 'occlusion',",
+            "lineNumber": 242
+          },
+          {
+            "text": "            'gradao',",
+            "lineNumber": 243
+          },
+          {
+            "text": "            'height', 'displacement', 'disp', 'displace',",
+            "lineNumber": 244
+          },
+          {
+            "text": "            'opacity', 'alpha', 'mask',",
+            "lineNumber": 245
+          },
+          {
+            "text": "            'emission', 'emissive', 'emit',",
+            "lineNumber": 246
+          },
+          {
+            "text": "            'subsurface', 'sss', 'transmission',",
+            "lineNumber": 247
+          },
+          {
+            "text": "            ",
+            "lineNumber": 248
+          },
+          {
+            "text": "            # Character Creator / iClone suffixes",
+            "lineNumber": 249
+          },
+          {
+            "text": "            'base', 'diffusemap', 'normalmap', 'roughnessmap', 'metallicmap',",
+            "lineNumber": 250
+          },
+          {
+            "text": "            'aomap', 'opacitymap', 'emissionmap', 'heightmap', 'displacementmap',",
+            "lineNumber": 251
+          },
+          {
+            "text": "            'detail_normal', 'detail_diffuse', 'detail_mask',",
+            "lineNumber": 252
+          },
+          {
+            "text": "            'blend', 'id', 'cavity', 'curvature', 'transmap', 'rgbamask', 'sssmap', 'micronmask',",
+            "lineNumber": 253
+          },
+          {
+            "text": "            'bcbmap', 'mnaomask', 'specmask', 'micron', 'cfulcmask', 'nmuilmask', 'nbmap', 'enmask', 'blend_multiply',",
+            "lineNumber": 254
+          },
+          {
+            "text": "            ",
+            "lineNumber": 255
+          },
+          {
+            "text": "            # Hair-related compound suffixes (no spaces)",
+            "lineNumber": 256
+          },
+          {
+            "text": "            'hairflowmap', 'hairidmap', 'hairrootmap', 'hairdepthmap',",
+            "lineNumber": 257
+          },
+          {
+            "text": "            'flowmap', 'idmap', 'rootmap', 'depthmap',",
+            "lineNumber": 258
+          },
+          {
+            "text": "            ",
+            "lineNumber": 259
+          },
+          {
+            "text": "            # Wrinkle map suffixes (Character Creator)",
+            "lineNumber": 260
+          },
+          {
+            "text": "            'wrinkle_normal1', 'wrinkle_normal2', 'wrinkle_normal3',",
+            "lineNumber": 261
+          },
+          {
+            "text": "            'wrinkle_roughness1', 'wrinkle_roughness2', 'wrinkle_roughness3',",
+            "lineNumber": 262
+          },
+          {
+            "text": "            'wrinkle_diffuse1', 'wrinkle_diffuse2', 'wrinkle_diffuse3',",
+            "lineNumber": 263
+          },
+          {
+            "text": "            'wrinkle_mask1', 'wrinkle_mask2', 'wrinkle_mask3',",
+            "lineNumber": 264
+          },
+          {
+            "text": "            'wrinkle_flow1', 'wrinkle_flow2', 'wrinkle_flow3',",
+            "lineNumber": 265
+          },
+          {
+            "text": "            ",
+            "lineNumber": 266
+          },
+          {
+            "text": "            # Character Creator pack suffixes (with spaces)",
+            "lineNumber": 267
+          },
+          {
+            "text": "            'flow pack', 'msmnao pack', 'roughness pack', 'sstm pack',",
+            "lineNumber": 268
+          },
+          {
+            "text": "            'flow_pack', 'msmnao_pack', 'roughness_pack', 'sstm_pack',",
+            "lineNumber": 269
+          },
+          {
+            "text": "            ",
+            "lineNumber": 270
+          },
+          {
+            "text": "            # Hair-related multi-word suffixes (spaces)",
+            "lineNumber": 271
+          }
+        ]
+      },
+      "score": 0.21290460228919983
+    },
+    {
+      "codeBlock": {
+        "relativeWorkspacePath": ".\\ops\\Rename_images_by_mat.py",
+        "range": {
+          "startPosition": {
+            "line": 66,
+            "column": 67
+          },
+          "endPosition": {
+            "line": 497
+          }
+        },
+        "contents": "class RBST_RenameImg_OT_Rename_images_by_mat(bpy.types.Operator):\n    bl_idname = \"bst.rename_images_by_mat\"\n    bl_label = \"Rename Images by Material\"\n    bl_description = \"Rename selected images based on their material usage, preserving texture type suffixes\"\n    bl_options = {'REGISTER', 'UNDO'}\n\n    def execute(self, context):\n        # Get selected images\n        selected_images = [img for img in bpy.data.images if hasattr(img, \"bst_selected\") and img.bst_selected]\n        \n        if not selected_images:\n            self.report({'WARNING'}, \"No images selected for renaming\")\n            return {'CANCELLED'}\n        \n        # Get image to material mapping\n        image_to_materials = self.get_image_material_mapping(selected_images)\n        \n        renamed_count = 0\n        shared_count = 0\n        unused_count = 0\n        cc3iid_count = 0  # Track CC3 ID textures\n        flatcolor_count = 0  # Track flat color textures\n        already_correct_count = 0  # Track images already correctly named\n        unrecognized_suffix_count = 0  # Track images with unrecognized suffixes\n        renamed_list = []  # Track renamed images for debug\n        unrecognized_list = []  # Track images with unrecognized suffixes\n        \n        for img in selected_images:",
+        "signatures": {},
+        "detailedLines": [
+          {
+            "text": "class RBST_RenameImg_OT_Rename_images_by_mat(bpy.types.Operator):",
+            "lineNumber": 69,
+            "isSignature": true
+          },
+          {
+            "text": "    bl_idname = \"bst.rename_images_by_mat\"",
+            "lineNumber": 70
+          },
+          {
+            "text": "    bl_label = \"Rename Images by Material\"",
+            "lineNumber": 71
+          },
+          {
+            "text": "    bl_description = \"Rename selected images based on their material usage, preserving texture type suffixes\"",
+            "lineNumber": 72
+          },
+          {
+            "text": "    bl_options = {'REGISTER', 'UNDO'}",
+            "lineNumber": 73
+          },
+          {
+            "lineNumber": 74
+          },
+          {
+            "text": "    def execute(self, context):",
+            "lineNumber": 75
+          },
+          {
+            "text": "        # Get selected images",
+            "lineNumber": 76
+          },
+          {
+            "text": "        selected_images = [img for img in bpy.data.images if hasattr(img, \"bst_selected\") and img.bst_selected]",
+            "lineNumber": 77
+          },
+          {
+            "text": "        ",
+            "lineNumber": 78
+          },
+          {
+            "text": "        if not selected_images:",
+            "lineNumber": 79
+          },
+          {
+            "text": "            self.report({'WARNING'}, \"No images selected for renaming\")",
+            "lineNumber": 80
+          },
+          {
+            "text": "            return {'CANCELLED'}",
+            "lineNumber": 81
+          },
+          {
+            "text": "        ",
+            "lineNumber": 82
+          },
+          {
+            "text": "        # Get image to material mapping",
+            "lineNumber": 83
+          },
+          {
+            "text": "        image_to_materials = self.get_image_material_mapping(selected_images)",
+            "lineNumber": 84
+          },
+          {
+            "text": "        ",
+            "lineNumber": 85
+          },
+          {
+            "text": "        renamed_count = 0",
+            "lineNumber": 86
+          },
+          {
+            "text": "        shared_count = 0",
+            "lineNumber": 87
+          },
+          {
+            "text": "        unused_count = 0",
+            "lineNumber": 88
+          },
+          {
+            "text": "        cc3iid_count = 0  # Track CC3 ID textures",
+            "lineNumber": 89
+          },
+          {
+            "text": "        flatcolor_count = 0  # Track flat color textures",
+            "lineNumber": 90
+          },
+          {
+            "text": "        already_correct_count = 0  # Track images already correctly named",
+            "lineNumber": 91
+          },
+          {
+            "text": "        unrecognized_suffix_count = 0  # Track images with unrecognized suffixes",
+            "lineNumber": 92
+          },
+          {
+            "text": "        renamed_list = []  # Track renamed images for debug",
+            "lineNumber": 93
+          },
+          {
+            "text": "        unrecognized_list = []  # Track images with unrecognized suffixes",
+            "lineNumber": 94
+          },
+          {
+            "text": "        ",
+            "lineNumber": 95
+          },
+          {
+            "text": "        for img in selected_images:",
+            "lineNumber": 96
+          }
+        ]
+      },
+      "score": 0.19717289507389069
+    },
+    {
+      "codeBlock": {
+        "relativeWorkspacePath": ".\\ops\\Rename_images_by_mat.py",
+        "range": {
+          "startPosition": {
+            "line": 68
+          },
+          "endPosition": {
+            "line": 497
+          }
+        },
+        "contents": "class RBST_RenameImg_OT_Rename_images_by_mat(bpy.types.Operator):\ndef execute(self, context):\n        # Get selected images\n\n        \n        for img in selected_images:\n            # Skip CC3 ID textures (ignore case)\n            if img.name.lower().startswith('cc3iid'):\n                cc3iid_count += 1\n                print(f\"DEBUG: Skipped CC3 ID texture: {img.name}\")\n                continue\n            \n            # Skip flat color textures (start with #)\n            if img.name.startswith('#'):\n                flatcolor_count += 1\n                print(f\"DEBUG: Skipped flat color texture: {img.name}\")\n                continue\n                \n            materials = image_to_materials.get(img.name, [])\n            \n            if len(materials) == 0:\n                # Unused image - skip\n                unused_count += 1\n                print(f\"DEBUG: Skipped unused image: {img.name}\")\n                continue\n            elif len(materials) == 1:\n                # Single material usage - check suffix recognition\n                material_name = materials[0]",
+        "signatures": {
+          "ranges": [
+            {
+              "startPosition": {
+                "line": 69,
+                "column": 1
+              },
+              "endPosition": {
+                "line": 70,
+                "column": 5
+              }
+            },
+            {
+              "startPosition": {
+                "line": 75,
+                "column": 5
+              },
+              "endPosition": {
+                "line": 77,
+                "column": 9
+              }
+            }
+          ]
+        },
+        "detailedLines": [
+          {
+            "text": "class RBST_RenameImg_OT_Rename_images_by_mat(bpy.types.Operator):",
+            "lineNumber": 69,
+            "isSignature": true
+          },
+          {
+            "text": "def execute(self, context):",
+            "lineNumber": 75
+          },
+          {
+            "text": "        # Get selected images",
+            "lineNumber": 76
+          },
+          {
+            "lineNumber": 94
+          },
+          {
+            "text": "        ",
+            "lineNumber": 95
+          },
+          {
+            "text": "        for img in selected_images:",
+            "lineNumber": 96
+          },
+          {
+            "text": "            # Skip CC3 ID textures (ignore case)",
+            "lineNumber": 97
+          },
+          {
+            "text": "            if img.name.lower().startswith('cc3iid'):",
+            "lineNumber": 98
+          },
+          {
+            "text": "                cc3iid_count += 1",
+            "lineNumber": 99
+          },
+          {
+            "text": "                print(f\"DEBUG: Skipped CC3 ID texture: {img.name}\")",
+            "lineNumber": 100
+          },
+          {
+            "text": "                continue",
+            "lineNumber": 101
+          },
+          {
+            "text": "            ",
+            "lineNumber": 102
+          },
+          {
+            "text": "            # Skip flat color textures (start with #)",
+            "lineNumber": 103
+          },
+          {
+            "text": "            if img.name.startswith('#'):",
+            "lineNumber": 104
+          },
+          {
+            "text": "                flatcolor_count += 1",
+            "lineNumber": 105
+          },
+          {
+            "text": "                print(f\"DEBUG: Skipped flat color texture: {img.name}\")",
+            "lineNumber": 106
+          },
+          {
+            "text": "                continue",
+            "lineNumber": 107
+          },
+          {
+            "text": "                ",
+            "lineNumber": 108
+          },
+          {
+            "text": "            materials = image_to_materials.get(img.name, [])",
+            "lineNumber": 109
+          },
+          {
+            "text": "            ",
+            "lineNumber": 110
+          },
+          {
+            "text": "            if len(materials) == 0:",
+            "lineNumber": 111
+          },
+          {
+            "text": "                # Unused image - skip",
+            "lineNumber": 112
+          },
+          {
+            "text": "                unused_count += 1",
+            "lineNumber": 113
+          },
+          {
+            "text": "                print(f\"DEBUG: Skipped unused image: {img.name}\")",
+            "lineNumber": 114
+          },
+          {
+            "text": "                continue",
+            "lineNumber": 115
+          },
+          {
+            "text": "            elif len(materials) == 1:",
+            "lineNumber": 116
+          },
+          {
+            "text": "                # Single material usage - check suffix recognition",
+            "lineNumber": 117
+          },
+          {
+            "text": "                material_name = materials[0]",
+            "lineNumber": 118
+          }
+        ]
+      },
+      "score": 0.18305259943008423
+    },
+    {
+      "codeBlock": {
+        "relativeWorkspacePath": ".\\ops\\Rename_images_by_mat.py",
+        "range": {
+          "startPosition": {
+            "line": 68
+          },
+          "endPosition": {
+            "line": 497
+          }
+        },
+        "contents": "class RBST_RenameImg_OT_Rename_images_by_mat(bpy.types.Operator):\ndef execute(self, context):\n        # Get selected images\n)\")\n            else:\n                # Shared across multiple materials - skip\n                shared_count += 1\n                print(f\"DEBUG: Skipped shared image: {img.name} (used by {len(materials)} materials: {', '.join(materials[:3])}{'...' if len(materials) &gt; 3 else ''})\")\n        \n        # Console debug summary (keep for development)\n        print(f\"\\n=== RENAME BY MATERIAL SUMMARY ===\")\n        print(f\"Total selected: {len(selected_images)}\")\n        print(f\"Renamed: {renamed_count}\")\n        print(f\"Already correct (skipped): {already_correct_count}\")\n        print(f\"Shared (skipped): {shared_count}\")\n        print(f\"Unused (skipped): {unused_count}\")\n        print(f\"CC3 ID textures (skipped): {cc3iid_count}\")\n        print(f\"Flat colors (skipped): {flatcolor_count}\")\n        print(f\"Unrecognized suffixes (skipped): {unrecognized_suffix_count}\")\n        \n        if renamed_list:\n            print(f\"\\nDetailed rename log:\")\n            for original, new, material, suffix in renamed_list:\n                suffix_info = f\" (suffix: {suffix})\" if suffix else \" (no suffix)\"\n                print(f\"  '{original}' → '{new}' for material '{material}'{suffix_info}\")\n        \n        if unrecognized_list:\n            print(f\"\\nImages with unrecognized suffixes:\")\n            for img_name in unrecognized_list:\n                print(f\"  '{img_name}'\")\n        \n        print(f\"===================================\\n\")\n        \n        # Show popup summary dialog\n        self.show_summary_dialog(context, len(selected_images), renamed_count, shared_count, unused_count, cc3iid_count, flatcolor_count, already_correct_count, unrecognized_suffix_count, renamed_list)\n        \n        return {'FINISHED'}\n    \n    def show_summary_dialog(self, context, total_selected, renamed_count, shared_count, unused_count, cc3iid_count, flatcolor_count, already_correct_count, unrecognized_suffix_count, renamed_list):\n        ",
+        "signatures": {
+          "ranges": [
+            {
+              "startPosition": {
+                "line": 69,
+                "column": 1
+              },
+              "endPosition": {
+                "line": 70,
+                "column": 5
+              }
+            },
+            {
+              "startPosition": {
+                "line": 75,
+                "column": 5
+              },
+              "endPosition": {
+                "line": 77,
+                "column": 9
+              }
+            }
+          ]
+        },
+        "detailedLines": [
+          {
+            "text": "class RBST_RenameImg_OT_Rename_images_by_mat(bpy.types.Operator):",
+            "lineNumber": 69,
+            "isSignature": true
+          },
+          {
+            "text": "def execute(self, context):",
+            "lineNumber": 75
+          },
+          {
+            "text": "        # Get selected images",
+            "lineNumber": 76
+          },
+          {
+            "text": ")\")",
+            "lineNumber": 149
+          },
+          {
+            "text": "            else:",
+            "lineNumber": 150
+          },
+          {
+            "text": "                # Shared across multiple materials - skip",
+            "lineNumber": 151
+          },
+          {
+            "text": "                shared_count += 1",
+            "lineNumber": 152
+          },
+          {
+            "text": "                print(f\"DEBUG: Skipped shared image: {img.name} (used by {len(materials)} materials: {', '.join(materials[:3])}{'...' if len(materials) &gt; 3 else ''})\")",
+            "lineNumber": 153
+          },
+          {
+            "text": "        ",
+            "lineNumber": 154
+          },
+          {
+            "text": "        # Console debug summary (keep for development)",
+            "lineNumber": 155
+          },
+          {
+            "text": "        print(f\"\\n=== RENAME BY MATERIAL SUMMARY ===\")",
+            "lineNumber": 156
+          },
+          {
+            "text": "        print(f\"Total selected: {len(selected_images)}\")",
+            "lineNumber": 157
+          },
+          {
+            "text": "        print(f\"Renamed: {renamed_count}\")",
+            "lineNumber": 158
+          },
+          {
+            "text": "        print(f\"Already correct (skipped): {already_correct_count}\")",
+            "lineNumber": 159
+          },
+          {
+            "text": "        print(f\"Shared (skipped): {shared_count}\")",
+            "lineNumber": 160
+          },
+          {
+            "text": "        print(f\"Unused (skipped): {unused_count}\")",
+            "lineNumber": 161
+          },
+          {
+            "text": "        print(f\"CC3 ID textures (skipped): {cc3iid_count}\")",
+            "lineNumber": 162
+          },
+          {
+            "text": "        print(f\"Flat colors (skipped): {flatcolor_count}\")",
+            "lineNumber": 163
+          },
+          {
+            "text": "        print(f\"Unrecognized suffixes (skipped): {unrecognized_suffix_count}\")",
+            "lineNumber": 164
+          },
+          {
+            "text": "        ",
+            "lineNumber": 165
+          },
+          {
+            "text": "        if renamed_list:",
+            "lineNumber": 166
+          },
+          {
+            "text": "            print(f\"\\nDetailed rename log:\")",
+            "lineNumber": 167
+          },
+          {
+            "text": "            for original, new, material, suffix in renamed_list:",
+            "lineNumber": 168
+          },
+          {
+            "text": "                suffix_info = f\" (suffix: {suffix})\" if suffix else \" (no suffix)\"",
+            "lineNumber": 169
+          },
+          {
+            "text": "                print(f\"  '{original}' → '{new}' for material '{material}'{suffix_info}\")",
+            "lineNumber": 170
+          },
+          {
+            "text": "        ",
+            "lineNumber": 171
+          },
+          {
+            "text": "        if unrecognized_list:",
+            "lineNumber": 172
+          },
+          {
+            "text": "            print(f\"\\nImages with unrecognized suffixes:\")",
+            "lineNumber": 173
+          },
+          {
+            "text": "            for img_name in unrecognized_list:",
+            "lineNumber": 174
+          },
+          {
+            "text": "                print(f\"  '{img_name}'\")",
+            "lineNumber": 175
+          },
+          {
+            "text": "        ",
+            "lineNumber": 176
+          },
+          {
+            "text": "        print(f\"===================================\\n\")",
+            "lineNumber": 177
+          },
+          {
+            "text": "        ",
+            "lineNumber": 178
+          },
+          {
+            "text": "        # Show popup summary dialog",
+            "lineNumber": 179
+          },
+          {
+            "text": "        self.show_summary_dialog(context, len(selected_images), renamed_count, shared_count, unused_count, cc3iid_count, flatcolor_count, already_correct_count, unrecognized_suffix_count, renamed_list)",
+            "lineNumber": 180
+          },
+          {
+            "text": "        ",
+            "lineNumber": 181
+          },
+          {
+            "text": "        return {'FINISHED'}",
+            "lineNumber": 182
+          },
+          {
+            "text": "    ",
+            "lineNumber": 183
+          },
+          {
+            "text": "    def show_summary_dialog(self, context, total_selected, renamed_count, shared_count, unused_count, cc3iid_count, flatcolor_count, already_correct_count, unrecognized_suffix_count, renamed_list):",
+            "lineNumber": 184
+          },
+          {
+            "text": "        ",
+            "lineNumber": 185
+          }
+        ]
+      },
+      "score": 0.18189290165901184
+    },
+    {
+      "codeBlock": {
+        "relativeWorkspacePath": ".\\ops\\Rename_images_by_mat.py",
+        "range": {
+          "startPosition": {
+            "line": 68
+          },
+          "endPosition": {
+            "line": 501,
+            "column": 9
+          }
+        },
+        "contents": "class RBST_RenameImg_OT_Rename_images_by_mat(bpy.types.Operator):\n\n    \n    def has_potential_suffix(self, name):\n        \"\"\"Check if the image name has a potential suffix pattern that we should try to recognize\"\"\"\n        # Remove file extension first\n        base_name = re.sub(r'\\.[^.]+$', '', name)\n        \n        # Check for common suffix patterns: _something, -something, .something, or space something\n        suffix_patterns = [\n            r'[._-][a-zA-Z0-9]+$',  # Underscore, dot, or dash followed by alphanumeric\n            r'\\s+[a-zA-Z0-9\\s]+$',  # Space followed by alphanumeric (for multi-word suffixes)\n        ]\n        \n        for pattern in suffix_patterns:\n            if re.search(pattern, base_name):\n                return True\n        \n        return False\n\n\n# Registration classes - need to register both operators\nclasses =",
+        "signatures": {
+          "ranges": [
+            {
+              "startPosition": {
+                "line": 69,
+                "column": 1
+              },
+              "endPosition": {
+                "line": 70,
+                "column": 5
+              }
+            }
+          ]
+        },
+        "detailedLines": [
+          {
+            "text": "class RBST_RenameImg_OT_Rename_images_by_mat(bpy.types.Operator):",
+            "lineNumber": 69,
+            "isSignature": true
+          },
+          {
+            "lineNumber": 481
+          },
+          {
+            "text": "    ",
+            "lineNumber": 482
+          },
+          {
+            "text": "    def has_potential_suffix(self, name):",
+            "lineNumber": 483
+          },
+          {
+            "text": "        \"\"\"Check if the image name has a potential suffix pattern that we should try to recognize\"\"\"",
+            "lineNumber": 484
+          },
+          {
+            "text": "        # Remove file extension first",
+            "lineNumber": 485
+          },
+          {
+            "text": "        base_name = re.sub(r'\\.[^.]+$', '', name)",
+            "lineNumber": 486
+          },
+          {
+            "text": "        ",
+            "lineNumber": 487
+          },
+          {
+            "text": "        # Check for common suffix patterns: _something, -something, .something, or space something",
+            "lineNumber": 488
+          },
+          {
+            "text": "        suffix_patterns = [",
+            "lineNumber": 489
+          },
+          {
+            "text": "            r'[._-][a-zA-Z0-9]+$',  # Underscore, dot, or dash followed by alphanumeric",
+            "lineNumber": 490
+          },
+          {
+            "text": "            r'\\s+[a-zA-Z0-9\\s]+$',  # Space followed by alphanumeric (for multi-word suffixes)",
+            "lineNumber": 491
+          },
+          {
+            "text": "        ]",
+            "lineNumber": 492
+          },
+          {
+            "text": "        ",
+            "lineNumber": 493
+          },
+          {
+            "text": "        for pattern in suffix_patterns:",
+            "lineNumber": 494
+          },
+          {
+            "text": "            if re.search(pattern, base_name):",
+            "lineNumber": 495
+          },
+          {
+            "text": "                return True",
+            "lineNumber": 496
+          },
+          {
+            "text": "        ",
+            "lineNumber": 497
+          },
+          {
+            "text": "        return False",
+            "lineNumber": 498,
+            "isSignature": true
+          },
+          {
+            "lineNumber": 499
+          },
+          {
+            "lineNumber": 500
+          },
+          {
+            "text": "# Registration classes - need to register both operators",
+            "lineNumber": 501
+          },
+          {
+            "text": "classes =",
+            "lineNumber": 502
+          }
+        ]
+      },
+      "score": 0.17312289774417877
+    },
+    {
+      "codeBlock": {
+        "relativeWorkspacePath": ".\\ops\\Rename_images_by_mat.py",
+        "range": {
+          "startPosition": {
+            "line": 68
+          },
+          "endPosition": {
+            "line": 497
+          }
+        },
+        "contents": "class RBST_RenameImg_OT_Rename_images_by_mat(bpy.types.Operator):\ndef capitalize_suffix(self, suffix):\n,\n            'aomap': 'AOMap',\n            'opacitymap': 'OpacityMap',\n            'emissionmap': 'EmissionMap',\n            'heightmap': 'HeightMap',\n            'displacementmap': 'DisplacementMap',\n            'detail_normal': 'DetailNormal',\n            'detail_diffuse': 'DetailDiffuse',\n            'detail_mask': 'DetailMask',\n            'blend': 'Blend',\n            'id': 'ID',\n            'cavity': 'Cavity',\n            'curvature': 'Curvature',\n            'transmap': 'TransMap',\n            'rgbamask': 'RGBAMask',\n            'sssmap': 'SSSMap',\n            'micronmask': 'MicroNMask',\n            'bcbmap': 'BCBMap',\n            'mnaomask': 'MNAOMask',\n            'specmask': 'SpecMask',\n            'micron': 'MicroN',\n            'cfulcmask': 'CFULCMask',\n            'nmuilmask': 'NMUILMask',\n            'nbmap': 'NBMap',\n            'enmask': 'ENMask',\n            'blend_multiply': 'Blend_Multiply',\n            \n            # Hair-related compound suffixes (no spaces)\n            'hairflowmap': 'HairFlowMap',\n            'hairidmap': 'HairIDMap',\n            'hairrootmap': 'HairRootMap',\n            'hairdepthmap': 'HairDepthMap',\n            'flowmap': 'FlowMap',\n            'idmap': 'IDMap',\n            'rootmap': 'RootMap',\n            'depthmap': 'DepthMap',\n            \n            # Wrinkle map suffixes (Character Creator)\n            'wrinkle_normal1': 'Wrinkle_Normal1',\n            'wrinkle_normal2': 'Wrinkle_Normal2',\n            'wrinkle_normal3': 'Wrinkle_Normal3',\n            'wrinkle_roughness1': 'Wrinkle_Roughness1',\n            'wrinkle_roughness2': 'Wrinkle_Roughness2',\n            'wrinkle_roughness3': 'Wrinkle_Roughness3',\n            'wrinkle_diffuse1': 'Wrinkle_Diffuse1',\n            'wrinkle_diffuse2': 'Wrinkle_Diffuse2',\n            'wrinkle_diffuse3': 'Wrinkle_Diffuse3',\n            'wrinkle_mask1': 'Wrinkle_Mask1',\n            'wrinkle_mask2': 'Wrinkle_Mask2',\n            'wrinkle_mask3': 'Wrinkle_Mask3',\n            'wrinkle_flow1': 'Wrinkle_Flow1'",
+        "signatures": {
+          "ranges": [
+            {
+              "startPosition": {
+                "line": 69,
+                "column": 1
+              },
+              "endPosition": {
+                "line": 70,
+                "column": 5
+              }
+            },
+            {
+              "startPosition": {
+                "line": 330,
+                "column": 5
+              },
+              "endPosition": {
+                "line": 331,
+                "column": 9
+              }
+            }
+          ]
+        },
+        "detailedLines": [
+          {
+            "text": "class RBST_RenameImg_OT_Rename_images_by_mat(bpy.types.Operator):",
+            "lineNumber": 69,
+            "isSignature": true
+          },
+          {
+            "text": "def capitalize_suffix(self, suffix):",
+            "lineNumber": 330
+          },
+          {
+            "text": ",",
+            "lineNumber": 388
+          },
+          {
+            "text": "            'aomap': 'AOMap',",
+            "lineNumber": 389
+          },
+          {
+            "text": "            'opacitymap': 'OpacityMap',",
+            "lineNumber": 390
+          },
+          {
+            "text": "            'emissionmap': 'EmissionMap',",
+            "lineNumber": 391
+          },
+          {
+            "text": "            'heightmap': 'HeightMap',",
+            "lineNumber": 392
+          },
+          {
+            "text": "            'displacementmap': 'DisplacementMap',",
+            "lineNumber": 393
+          },
+          {
+            "text": "            'detail_normal': 'DetailNormal',",
+            "lineNumber": 394
+          },
+          {
+            "text": "            'detail_diffuse': 'DetailDiffuse',",
+            "lineNumber": 395
+          },
+          {
+            "text": "            'detail_mask': 'DetailMask',",
+            "lineNumber": 396
+          },
+          {
+            "text": "            'blend': 'Blend',",
+            "lineNumber": 397
+          },
+          {
+            "text": "            'id': 'ID',",
+            "lineNumber": 398
+          },
+          {
+            "text": "            'cavity': 'Cavity',",
+            "lineNumber": 399
+          },
+          {
+            "text": "            'curvature': 'Curvature',",
+            "lineNumber": 400
+          },
+          {
+            "text": "            'transmap': 'TransMap',",
+            "lineNumber": 401
+          },
+          {
+            "text": "            'rgbamask': 'RGBAMask',",
+            "lineNumber": 402
+          },
+          {
+            "text": "            'sssmap': 'SSSMap',",
+            "lineNumber": 403
+          },
+          {
+            "text": "            'micronmask': 'MicroNMask',",
+            "lineNumber": 404
+          },
+          {
+            "text": "            'bcbmap': 'BCBMap',",
+            "lineNumber": 405
+          },
+          {
+            "text": "            'mnaomask': 'MNAOMask',",
+            "lineNumber": 406
+          },
+          {
+            "text": "            'specmask': 'SpecMask',",
+            "lineNumber": 407
+          },
+          {
+            "text": "            'micron': 'MicroN',",
+            "lineNumber": 408
+          },
+          {
+            "text": "            'cfulcmask': 'CFULCMask',",
+            "lineNumber": 409
+          },
+          {
+            "text": "            'nmuilmask': 'NMUILMask',",
+            "lineNumber": 410
+          },
+          {
+            "text": "            'nbmap': 'NBMap',",
+            "lineNumber": 411
+          },
+          {
+            "text": "            'enmask': 'ENMask',",
+            "lineNumber": 412
+          },
+          {
+            "text": "            'blend_multiply': 'Blend_Multiply',",
+            "lineNumber": 413
+          },
+          {
+            "text": "            ",
+            "lineNumber": 414
+          },
+          {
+            "text": "            # Hair-related compound suffixes (no spaces)",
+            "lineNumber": 415
+          },
+          {
+            "text": "            'hairflowmap': 'HairFlowMap',",
+            "lineNumber": 416
+          },
+          {
+            "text": "            'hairidmap': 'HairIDMap',",
+            "lineNumber": 417
+          },
+          {
+            "text": "            'hairrootmap': 'HairRootMap',",
+            "lineNumber": 418
+          },
+          {
+            "text": "            'hairdepthmap': 'HairDepthMap',",
+            "lineNumber": 419
+          },
+          {
+            "text": "            'flowmap': 'FlowMap',",
+            "lineNumber": 420
+          },
+          {
+            "text": "            'idmap': 'IDMap',",
+            "lineNumber": 421
+          },
+          {
+            "text": "            'rootmap': 'RootMap',",
+            "lineNumber": 422
+          },
+          {
+            "text": "            'depthmap': 'DepthMap',",
+            "lineNumber": 423
+          },
+          {
+            "text": "            ",
+            "lineNumber": 424
+          },
+          {
+            "text": "            # Wrinkle map suffixes (Character Creator)",
+            "lineNumber": 425
+          },
+          {
+            "text": "            'wrinkle_normal1': 'Wrinkle_Normal1',",
+            "lineNumber": 426
+          },
+          {
+            "text": "            'wrinkle_normal2': 'Wrinkle_Normal2',",
+            "lineNumber": 427
+          },
+          {
+            "text": "            'wrinkle_normal3': 'Wrinkle_Normal3',",
+            "lineNumber": 428
+          },
+          {
+            "text": "            'wrinkle_roughness1': 'Wrinkle_Roughness1',",
+            "lineNumber": 429
+          },
+          {
+            "text": "            'wrinkle_roughness2': 'Wrinkle_Roughness2',",
+            "lineNumber": 430
+          },
+          {
+            "text": "            'wrinkle_roughness3': 'Wrinkle_Roughness3',",
+            "lineNumber": 431
+          },
+          {
+            "text": "            'wrinkle_diffuse1': 'Wrinkle_Diffuse1',",
+            "lineNumber": 432
+          },
+          {
+            "text": "            'wrinkle_diffuse2': 'Wrinkle_Diffuse2',",
+            "lineNumber": 433
+          },
+          {
+            "text": "            'wrinkle_diffuse3': 'Wrinkle_Diffuse3',",
+            "lineNumber": 434
+          },
+          {
+            "text": "            'wrinkle_mask1': 'Wrinkle_Mask1',",
+            "lineNumber": 435
+          },
+          {
+            "text": "            'wrinkle_mask2': 'Wrinkle_Mask2',",
+            "lineNumber": 436
+          },
+          {
+            "text": "            'wrinkle_mask3': 'Wrinkle_Mask3',",
+            "lineNumber": 437
+          },
+          {
+            "text": "            'wrinkle_flow1': 'Wrinkle_Flow1'",
+            "lineNumber": 438
+          }
+        ]
+      },
+      "score": 0.1574150025844574
+    },
+    {
+      "codeBlock": {
+        "relativeWorkspacePath": ".\\ops\\Rename_images_by_mat.py",
+        "range": {
+          "startPosition": {
+            "line": 68
+          },
+          "endPosition": {
+            "line": 497
+          }
+        },
+        "contents": "class RBST_RenameImg_OT_Rename_images_by_mat(bpy.types.Operator):\ndef capitalize_suffix(self, suffix):\n,\n            'wrinkle_mask3': 'Wrinkle_Mask3',\n            'wrinkle_flow1': 'Wrinkle_Flow1',\n            'wrinkle_flow2': 'Wrinkle_Flow2',\n            'wrinkle_flow3': 'Wrinkle_Flow3',\n            \n            # Character Creator pack suffixes (with spaces)\n            'flow pack': 'Flow Pack',\n            'msmnao pack': 'MSMNAO Pack',\n            'roughness pack': 'Roughness Pack',\n            'sstm pack': 'SSTM Pack',\n            'flow_pack': 'Flow_Pack',\n            'msmnao_pack': 'MSMNAO_Pack',\n            'roughness_pack': 'Roughness_Pack',\n            'sstm_pack': 'SSTM_Pack',\n            \n            # Hair-related multi-word suffixes\n            'hair flow map': 'HairFlowMap',\n            'hair id map': 'HairIDMap',\n            'hair root map': 'HairRootMap',\n            'hair depth map': 'HairDepthMap',\n            'flow map': 'FlowMap',\n            'id map': 'IDMap',\n            'root map': 'RootMap',\n            'depth map': 'DepthMap',\n            \n            # Additional common variations\n            'tex': 'Texture',\n            'map': 'Map',\n            'img': 'Image',\n            'texture': 'Texture',\n            \n            # Single letter abbreviations\n            'd': 'Diffuse',\n            'n': 'Normal',\n            'r': 'Roughness',\n            'm': 'Metallic',\n            's': 'Specular',\n            'a': 'Alpha',\n            'h': 'Height',\n            'o': 'Occlusion',\n            'e': 'Emission'\n        }\n        \n        # Get the proper capitalization from mapping, or capitalize first letter as fallback\n        return suffix_mapping.get(suffix.lower(), suffix.capitalize())\n    \n    def has_potential_suffix(self, name):\n        \"\"\"",
+        "signatures": {
+          "ranges": [
+            {
+              "startPosition": {
+                "line": 69,
+                "column": 1
+              },
+              "endPosition": {
+                "line": 70,
+                "column": 5
+              }
+            },
+            {
+              "startPosition": {
+                "line": 330,
+                "column": 5
+              },
+              "endPosition": {
+                "line": 331,
+                "column": 9
+              }
+            }
+          ]
+        },
+        "detailedLines": [
+          {
+            "text": "class RBST_RenameImg_OT_Rename_images_by_mat(bpy.types.Operator):",
+            "lineNumber": 69,
+            "isSignature": true
+          },
+          {
+            "text": "def capitalize_suffix(self, suffix):",
+            "lineNumber": 330
+          },
+          {
+            "text": ",",
+            "lineNumber": 436
+          },
+          {
+            "text": "            'wrinkle_mask3': 'Wrinkle_Mask3',",
+            "lineNumber": 437
+          },
+          {
+            "text": "            'wrinkle_flow1': 'Wrinkle_Flow1',",
+            "lineNumber": 438
+          },
+          {
+            "text": "            'wrinkle_flow2': 'Wrinkle_Flow2',",
+            "lineNumber": 439
+          },
+          {
+            "text": "            'wrinkle_flow3': 'Wrinkle_Flow3',",
+            "lineNumber": 440
+          },
+          {
+            "text": "            ",
+            "lineNumber": 441
+          },
+          {
+            "text": "            # Character Creator pack suffixes (with spaces)",
+            "lineNumber": 442
+          },
+          {
+            "text": "            'flow pack': 'Flow Pack',",
+            "lineNumber": 443
+          },
+          {
+            "text": "            'msmnao pack': 'MSMNAO Pack',",
+            "lineNumber": 444
+          },
+          {
+            "text": "            'roughness pack': 'Roughness Pack',",
+            "lineNumber": 445
+          },
+          {
+            "text": "            'sstm pack': 'SSTM Pack',",
+            "lineNumber": 446
+          },
+          {
+            "text": "            'flow_pack': 'Flow_Pack',",
+            "lineNumber": 447
+          },
+          {
+            "text": "            'msmnao_pack': 'MSMNAO_Pack',",
+            "lineNumber": 448
+          },
+          {
+            "text": "            'roughness_pack': 'Roughness_Pack',",
+            "lineNumber": 449
+          },
+          {
+            "text": "            'sstm_pack': 'SSTM_Pack',",
+            "lineNumber": 450
+          },
+          {
+            "text": "            ",
+            "lineNumber": 451
+          },
+          {
+            "text": "            # Hair-related multi-word suffixes",
+            "lineNumber": 452
+          },
+          {
+            "text": "            'hair flow map': 'HairFlowMap',",
+            "lineNumber": 453
+          },
+          {
+            "text": "            'hair id map': 'HairIDMap',",
+            "lineNumber": 454
+          },
+          {
+            "text": "            'hair root map': 'HairRootMap',",
+            "lineNumber": 455
+          },
+          {
+            "text": "            'hair depth map': 'HairDepthMap',",
+            "lineNumber": 456
+          },
+          {
+            "text": "            'flow map': 'FlowMap',",
+            "lineNumber": 457
+          },
+          {
+            "text": "            'id map': 'IDMap',",
+            "lineNumber": 458
+          },
+          {
+            "text": "            'root map': 'RootMap',",
+            "lineNumber": 459
+          },
+          {
+            "text": "            'depth map': 'DepthMap',",
+            "lineNumber": 460
+          },
+          {
+            "text": "            ",
+            "lineNumber": 461
+          },
+          {
+            "text": "            # Additional common variations",
+            "lineNumber": 462
+          },
+          {
+            "text": "            'tex': 'Texture',",
+            "lineNumber": 463
+          },
+          {
+            "text": "            'map': 'Map',",
+            "lineNumber": 464
+          },
+          {
+            "text": "            'img': 'Image',",
+            "lineNumber": 465
+          },
+          {
+            "text": "            'texture': 'Texture',",
+            "lineNumber": 466
+          },
+          {
+            "text": "            ",
+            "lineNumber": 467
+          },
+          {
+            "text": "            # Single letter abbreviations",
+            "lineNumber": 468
+          },
+          {
+            "text": "            'd': 'Diffuse',",
+            "lineNumber": 469
+          },
+          {
+            "text": "            'n': 'Normal',",
+            "lineNumber": 470
+          },
+          {
+            "text": "            'r': 'Roughness',",
+            "lineNumber": 471
+          },
+          {
+            "text": "            'm': 'Metallic',",
+            "lineNumber": 472
+          },
+          {
+            "text": "            's': 'Specular',",
+            "lineNumber": 473
+          },
+          {
+            "text": "            'a': 'Alpha',",
+            "lineNumber": 474
+          },
+          {
+            "text": "            'h': 'Height',",
+            "lineNumber": 475
+          },
+          {
+            "text": "            'o': 'Occlusion',",
+            "lineNumber": 476
+          },
+          {
+            "text": "            'e': 'Emission'",
+            "lineNumber": 477
+          },
+          {
+            "text": "        }",
+            "lineNumber": 478
+          },
+          {
+            "text": "        ",
+            "lineNumber": 479
+          },
+          {
+            "text": "        # Get the proper capitalization from mapping, or capitalize first letter as fallback",
+            "lineNumber": 480
+          },
+          {
+            "text": "        return suffix_mapping.get(suffix.lower(), suffix.capitalize())",
+            "lineNumber": 481
+          },
+          {
+            "text": "    ",
+            "lineNumber": 482
+          },
+          {
+            "text": "    def has_potential_suffix(self, name):",
+            "lineNumber": 483
+          },
+          {
+            "text": "        \"\"\"",
+            "lineNumber": 484
+          }
+        ]
+      },
+      "score": 0.1515866070985794
+    }
+  ]
+}
+```
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+
+Reviewing the context file to understand the issue:
+
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: t:\1 BlenderAssets\.specstory\history\2026-01-09_23-54Z-blender-material-unpacking-issue.md</summary>
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: E:\Rainys_Bulk_Scene_Tools\ops\AutoMatExtractor.py</summary>
+
+</details>
+</tool-use>
+
+---
+
+
+## Current AutoMatExtractor MSMNAO Pack Handling
+
+**The Problem:**
+All Pack textures (`Std_Skin_Head.001_Roughness Pack`, `Std_Skin_Head.001_Flow Pack`, `Std_Skin_Head.001_SSTM Pack`, `Std_Skin_Head.001_MSMNAO Pack`) are being saved to the same filename: `Std_Skin_Head.png`.
+
+**How it currently works:**
+
+1. **Step 3: Path Building** (lines 181-258):
+   - For each image, it calls `sanitize_filename(img.name)` on line 222
+   - The `sanitize_filename` function (lines 405-418):
+     - Line 408: Removes `.001`, `.002` etc. only if they appear at the END of the filename (regex: `r'\.\d{3}$'`)
+     - Line 409: Removes file extensions (`.png`, `.jpg`, etc.)
+     - Line 412: Replaces invalid filesystem characters with underscores
+   
+2. **The Issue:**
+   For `Std_Skin_Head.001_MSMNAO Pack.png`:
+   - The regex `r'\.\d{3}$'` only matches `.001` at the very end, so `.001` in the middle is not removed
+   - After removing the extension: `Std_Skin_Head.001_MSMNAO Pack`
+   - Spaces are preserved (they're not invalid characters)
+   - Final sanitized name: `Std_Skin_Head.001_MSMNAO Pack`
+
+   However, all Pack textures end up with the same path `Std_Skin_Head.png`, which suggests the `.001` and the suffix (`MSMNAO Pack`, `SSTM Pack`, etc.) are being stripped somewhere, or there's a collision that's causing overwrites.
+
+**The Bug:**
+The `sanitize_filename` function removes `.001` only when it's at the end, but for CC/iC Pack textures, `.001` appears before the texture type suffix (e.g., `Std_Skin_Head.001_MSMNAO Pack`). This means:
+- The `.001` is not removed
+- But something else is stripping the texture type suffix (`MSMNAO Pack`, `SSTM Pack`)
+- All Pack textures collapse to the same base name `Std_Skin_Head`
+
+**What's likely happening:**
+When multiple images resolve to the same sanitized filename, they overwrite each other during the save step (line 371: `self.save_standard_image(img)`), and the last one processed wins, which might be `SSTM Pack` instead of `MSMNAO Pack`.
+
+The fix should preserve the texture type suffix (like `MSMNAO Pack`, `SSTM Pack`) in the final filename so each Pack texture gets a unique file path.
+
+---
+
+_**User**_
+
+let's see if we can resolve that.
+
+---
+
+_**Agent (model default, mode Plan)**_
+
+
+Reviewing the code to understand the full flow and identify where the texture type suffix is being lost.
+
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: E:\Rainys_Bulk_Scene_Tools\ops\AutoMatExtractor.py</summary>
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search">
+<details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+
+Parameters:
+
+```json
+{
+  "pattern": "set_image_paths|get_image_extension",
+  "path": "E:\\Rainys_Bulk_Scene_Tools",
+  "caseInsensitive": false
+}
+```
+Result:
+
+```json
+{
+  "success": {
+    "pattern": "set_image_paths|get_image_extension",
+    "path": "E:\\Rainys_Bulk_Scene_Tools",
+    "outputMode": "content",
+    "workspaceResults": {
+      "E:\\Rainys_Bulk_Scene_Tools": {
+        "content": {
+          "matches": [
+            {
+              "file": "ops/AutoMatExtractor.py",
+              "matches": [
+                {
+                  "lineNumber": 5,
+                  "content": "    get_image_extension,"
+                },
+                {
+                  "lineNumber": 7,
+                  "content": "    set_image_paths,"
+                },
+                {
+                  "lineNumber": 221,
+                  "content": "            extension = get_image_extension(img)"
+                },
+                {
+                  "lineNumber": 276,
+                  "content": "                success = set_image_paths("
+                },
+                {
+                  "lineNumber": 282,
+                  "content": "                success = set_image_paths(img_name, mapping_entry)"
+                }
+              ]
+            },
+            {
+              "file": ".specstory/history/2025-12-18_23-07Z-github-issue-#3-integration.md",
+              "matches": [
+                {
+                  "lineNumber": 4138,
+                  "content": "        \"contents\": \"def set_image_paths(image_name, new_path, tile_paths=None):\\n    \\\"\\\"\\\"\\n    Set filepath and filepath_raw for an image using its datablock name\\n    Also update packed_file.filepath if the file is packed\\n    \\n    Args:\\n        image_name (str): The name of the image datablock\\n        new_path (str): The new path to assign\\n        \\n    Args:\\n        tile_paths (dict, optional): Mapping of UDIM tile numbers to filepaths\\n        \\n    Returns:\\n        bool: True if successful, False if image not found\\n    \\\"\\\"\\\"\\n    if image_name in bpy.data.images:\\n        img = bpy.data.images[image_name]\\n        ensure_directory_for_path(new_path)\\n        \\n        # Set the filepath properties\\n        img.filepath = new_path\\n        img.filepath_raw = new_path\\n        \\n        # For packed files, set the packed_file.filepath too\\n        # This is the property shown in the UI and is what we need to set\\n        # for proper handling of packed files\\n        if i"
+                },
+                {
+                  "lineNumber": 4142,
+                  "content": "            \"text\": \"def set_image_paths(image_name, new_path, tile_paths=None):\","
+                },
+                {
+                  "lineNumber": 4588,
+                  "content": "        \"contents\": \"def set_image_paths(image_name, new_path, tile_paths=None):\\n\\n\\n        # Support UDIM/tiled images\\n        if tile_paths and hasattr(img, \\\"tiles\\\"):\\n            for tile in img.tiles:\\n                tile_number = str(getattr(tile, \\\"number\\\", \\\"1001\\\"))\\n                tile_path = tile_paths.get(tile_number)\\n                if not tile_path:\\n                    continue\\n                if not hasattr(tile, \\\"filepath\\\"):\\n                    # Blender versions prior to 4.0 don't expose per-tile filepaths;\\n                    # rely on the UDIM template instead.\\n                    continue\\n                ensure_directory_for_path(tile_path)\\n                try:\\n                    tile.filepath = tile_path\\n                except AttributeError:\\n                    # Some builds still expose the attribute but keep it read-only.\\n                    pass\\n            \\n        return True\\n    else:\\n        return False\\n\\ndef bulk_remap_paths(map"
+                },
+                {
+                  "lineNumber": 4605,
+                  "content": "            \"text\": \"def set_image_paths(image_name, new_path, tile_paths=None):\","
+                },
+                {
+                  "lineNumber": 4728,
+                  "content": "        \"contents\": \"# Operator to remap a single datablock path\\nclass BST_OT_remap_path(Operator):\\n    bl_idname = \\\"bst.remap_path\\\"\\n    bl_label = \\\"Remap Path\\\"\\n    bl_description = \\\"Change the filepath and filepath_raw for a datablock\\\"\\n    bl_options = {'REGISTER', 'UNDO'}\\n    \\n    new_path: StringProperty(\\n        name=\\\"New Path\\\",\\n        description=\\\"Base path for datablock (datablock name will be appended)\\\",\\n        default=\\\"//textures/\\\",\\n        subtype='DIR_PATH'\\n    ) # type: ignore\\n    \\n    def execute(self, context):\\n        # Get the active image\\n        active_image = context.scene.bst_path_props.active_image\\n        if active_image:\\n            # Get file extension from the image\\n            extension = get_image_extension(active_image)\\n            \\n            # Get the combined path\\n            full_path = get_combined_path(context, active_image.name, extension)\\n            \\n            # Use the set_image_paths function to ensure prope"
+                },
+                {
+                  "lineNumber": 4809,
+                  "content": "            \"text\": \"            extension = get_image_extension(active_image)\","
+                },
+                {
+                  "lineNumber": 4829,
+                  "content": "            \"text\": \"            # Use the set_image_paths function to ensure proper handling of packed files\","
+                },
+                {
+                  "lineNumber": 4833,
+                  "content": "            \"text\": \"            success = set_image_paths(active_image.name, full_path)\","
+                },
+                {
+                  "lineNumber": 4945,
+                  "content": "        \"contents\": \"def get_image_extension(image):\\n    \\\"\\\"\\\"\\n    Get the file extension from an image\\n\\n    Args:\\n        image: The image datablock\\n\\n    Returns:\\n        str: The file extension including the dot (e.g. '.png') or empty string if not found\\n    \\\"\\\"\\\"\\n    # Debug print statements\\n    print(f\\\"DEBUG: Getting extension for image: {image.name}\\\")\\n    print(f\\\"DEBUG: Image file_format is: {image.file_format}\\\")\\n    \\n    # Use the file_format property\\n    format_map = {\\n        'PNG': '.png',\\n        'JPEG': '.jpg',\\n        'JPEG2000': '.jp2',\\n        'TARGA': '.tga',\\n        'TARGA_RAW': '.tga',\\n        'BMP': '.bmp',\\n        'OPEN_EXR': '.exr',\\n        'OPEN_EXR_MULTILAYER': '.exr',\\n        'HDR': '.hdr',\\n        'TIFF': '.tif',\\n    }\\n    \\n    if image.file_format in format_map:\\n        ext = format_map[image.file_format]\\n        print(f\\\"DEBUG: Matched format, using extension: {ext}\\\")\\n        return ext\\n    \\n    # Default to no extension"
+                },
+                {
+                  "lineNumber": 4949,
+                  "content": "            \"text\": \"def get_image_extension(image):\","
+                },
+                {
+                  "lineNumber": 5096,
+                  "content": "            \"text\": \"def set_image_paths(image_name, new_path, tile_paths=None):\","
+                },
+                {
+                  "lineNumber": 5336,
+                  "content": "        \"contents\": \"class AutoMatExtractor(bpy.types.Operator):\\ndef _process_step(self):\\n\\n            \\n        elif self.current_step == 3:\\n            # Step 4: Build path mapping\\n            if self.current_index &amp;gt;= len(self.selected_images):\\n                # Path building complete, move to remapping\\n                self.current_step = 4\\n                self.current_index = 0\\n                props.operation_status = \\\"Remapping image paths...\\\"\\n                props.operation_progress = 70.0\\n                return 0.01\\n            \\n            # Build path for current image\\n            img = self.selected_images[self.current_index]\\n            props.operation_status = f\\\"Building path for {img.name}...\\\"\\n            \\n            # Get blend file name - respect user preference if set\\n            if props.use_blend_subfolder:\\n                blend_name = props.blend_subfolder\\n                if not blend_name:\\n                    # Fall back to filename if no"
+                },
+                {
+                  "lineNumber": 5539,
+                  "content": "            \"text\": \"            extension = get_image_extension(img)\","
+                },
+                {
+                  "lineNumber": 7808,
+                  "content": "        \"contents\": \"class AutoMatExtractor(bpy.types.Operator):\\ndef _process_step(self):\\n\\n            \\n        elif self.current_step == 4:\\n            # Step 5: Remap paths\\n            if self.current_index &amp;gt;= len(self.path_mapping):\\n                # Remapping complete, move to saving\\n                self.current_step = 5\\n                self.current_index = 0\\n                props.operation_status = \\\"Saving images to new locations...\\\"\\n                props.operation_progress = 85.0\\n                return 0.01\\n            \\n            # Remap current image\\n            img_name = list(self.path_mapping.keys())[self.current_index]\\n            mapping_entry = self.path_mapping[img_name]\\n            props.operation_status = f\\\"Remapping {img_name}...\\\"\\n            \\n            if isinstance(mapping_entry, dict) and mapping_entry.get(\\\"udim\\\"):\\n                success = set_image_paths(\\n                    img_name,\\n                    mapping_entry.get(\\\"templ"
+                },
+                {
+                  "lineNumber": 7915,
+                  "content": "            \"text\": \"                success = set_image_paths(\","
+                },
+                {
+                  "lineNumber": 7939,
+                  "content": "            \"text\": \"                success = set_image_paths(img_name, mapping_entry)\","
+                },
+                {
+                  "lineNumber": 8477,
+                  "content": "                  \"content\": \"    set_image_paths,\""
+                },
+                {
+                  "lineNumber": 8613,
+                  "content": "                  \"content\": \"                success = set_image_paths(\""
+                },
+                {
+                  "lineNumber": 8621,
+                  "content": "                  \"content\": \"                success = set_image_paths(img_name, mapping_entry)\""
+                },
+                {
+                  "lineNumber": 11893,
+                  "content": "        \"contents\": \"# Operator to remap a single datablock path\\nclass BST_OT_remap_path(Operator):\\n    bl_idname = \\\"bst.remap_path\\\"\\n    bl_label = \\\"Remap Path\\\"\\n    bl_description = \\\"Change the filepath and filepath_raw for a datablock\\\"\\n    bl_options = {'REGISTER', 'UNDO'}\\n    \\n    new_path: StringProperty(\\n        name=\\\"New Path\\\",\\n        description=\\\"Base path for datablock (datablock name will be appended)\\\",\\n        default=\\\"//textures/\\\",\\n        subtype='DIR_PATH'\\n    ) # type: ignore\\n    \\n    def execute(self, context):\\n        # Get the active image\\n        active_image = context.scene.bst_path_props.active_image\\n        if active_image:\\n            # Get file extension from the image\\n            extension = get_image_extension(active_image)\\n            \\n            # Get the combined path\\n            full_path = get_combined_path(context, active_image.name, extension)\\n            \\n            # Use the set_image_paths function to ensure prope"
+                },
+                {
+                  "lineNumber": 11974,
+                  "content": "            \"text\": \"            extension = get_image_extension(active_image)\","
+                },
+                {
+                  "lineNumber": 11994,
+                  "content": "            \"text\": \"            # Use the set_image_paths function to ensure proper handling of packed files\","
+                },
+                {
+                  "lineNumber": 11998,
+                  "content": "            \"text\": \"            success = set_image_paths(active_image.name, full_path)\","
+                }
+              ]
+            },
+            {
+              "file": ".specstory/history/2026-01-07_21-47Z-datablock-utilities-integration-for-duplicates.md",
+              "matches": [
+                {
+                  "lineNumber": 2928,
+                  "content": "        \"contents\": \"# Operator to remap a single datablock path\\nclass BST_OT_remap_path(Operator):\\n    bl_idname = \\\"bst.remap_path\\\"\\n    bl_label = \\\"Remap Path\\\"\\n    bl_description = \\\"Change the filepath and filepath_raw for a datablock\\\"\\n    bl_options = {'REGISTER', 'UNDO'}\\n    \\n    new_path: StringProperty(\\n        name=\\\"New Path\\\",\\n        description=\\\"Base path for datablock (datablock name will be appended)\\\",\\n        default=\\\"//textures/\\\",\\n        subtype='DIR_PATH'\\n    ) # type: ignore\\n    \\n    def execute(self, context):\\n        # Get the active image\\n        active_image = context.scene.bst_path_props.active_image\\n        if active_image:\\n            # Get file extension from the image\\n            extension = get_image_extension(active_image)\\n            \\n            # Get the combined path\\n            full_path = get_combined_path(context, active_image.name, extension)\\n            \\n            # Use the set_image_paths function to ensure prope"
+                },
+                {
+                  "lineNumber": 3009,
+                  "content": "            \"text\": \"            extension = get_image_extension(active_image)\","
+                },
+                {
+                  "lineNumber": 3029,
+                  "content": "            \"text\": \"            # Use the set_image_paths function to ensure proper handling of packed files\","
+                },
+                {
+                  "lineNumber": 3033,
+                  "content": "            \"text\": \"            success = set_image_paths(active_image.name, full_path)\","
+                },
+                {
+                  "lineNumber": 3602,
+                  "content": "        \"contents\": \"class BST_OT_bulk_remap(Operator):\\n\\n    \\n    def _process_batch(self):\\n        \\\"\\\"\\\"Process images in batches to avoid blocking the UI\\\"\\\"\\\"\\n        # Check for cancellation\\n        props = bpy.context.scene.bst_path_props\\n        if props.cancel_operation:\\n            props.is_operation_running = False\\n            props.operation_progress = 0.0\\n            props.operation_status = \\\"Operation cancelled\\\"\\n            props.cancel_operation = False\\n            return None\\n        \\n        if self.current_index &amp;gt;= len(self.selected_images):\\n            # Operation complete\\n            props = bpy.context.scene.bst_path_props\\n            props.is_operation_running = False\\n            props.operation_progress = 100.0\\n            props.operation_status = f\\\"Completed! Remapped {self.remap_count} images\\\"\\n            \\n            # Force UI update\\n            for area in bpy.context.screen.areas:\\n                area.tag_redraw()\\n            \\"
+                },
+                {
+                  "lineNumber": 3759,
+                  "content": "            \"text\": \"        extension = get_image_extension(img)\","
+                },
+                {
+                  "lineNumber": 3779,
+                  "content": "            \"text\": \"        success = set_image_paths(img.name, full_path)\","
+                },
+                {
+                  "lineNumber": 21749,
+                  "content": "                  \"content\": \"        \\\"contents\\\": \\\"class AutoMatExtractor(bpy.types.Operator):\\\\ndef _process_step(self):\\\\n\\\\n            \\\\n        elif self.current_step == 4:\\\\n            # Step 5: Remap paths\\\\n            if self.current_index &amp;amp;gt;= len(self.path_mapping):\\\\n                # Remapping complete, move to saving\\\\n                self.current_step = 5\\\\n                self.current_index = 0\\\\n                props.operation_status = \\\\\\\"Saving images to new locations...\\\\\\\"\\\\n                props.operation_progress = 85.0\\\\n                return 0.01\\\\n            \\\\n            # Remap current image\\\\n            img_name = list(self.path_mapping.keys())[self.current_index]\\\\n            mapping_entry = self.path_mapping[img_name]\\\\n            props.operation_status = f\\\\\\\"Remapping {img_name}...\\\\\\\"\\\\n            \\\\n            if isinstance(mapping_entry, dict) and mapping_entry.get(\\\\\\\"udim\\\\\\\"):\\\\n                success = set_image_paths(\\\\n      "
+                },
+                {
+                  "lineNumber": 27484,
+                  "content": "        \"contents\": \"class RBST_AutoMat_OT_AutoMatExtractor(bpy.types.Operator):\\ndef _process_step(self):\\n\\n            \\n        elif self.current_step == 4:\\n            # Step 5: Remap paths\\n            if self.current_index &amp;gt;= len(self.path_mapping):\\n                # Remapping complete, move to saving\\n                self.current_step = 5\\n                self.current_index = 0\\n                props.operation_status = \\\"Saving images to new locations...\\\"\\n                props.operation_progress = 85.0\\n                return 0.01\\n            \\n            # Remap current image\\n            img_name = list(self.path_mapping.keys())[self.current_index]\\n            mapping_entry = self.path_mapping[img_name]\\n            props.operation_status = f\\\"Remapping {img_name}...\\\"\\n            \\n            if isinstance(mapping_entry, dict) and mapping_entry.get(\\\"udim\\\"):\\n                success = set_image_paths(\\n                    img_name,\\n                    mapping_e"
+                },
+                {
+                  "lineNumber": 27591,
+                  "content": "            \"text\": \"                success = set_image_paths(\","
+                },
+                {
+                  "lineNumber": 27615,
+                  "content": "            \"text\": \"                success = set_image_paths(img_name, mapping_entry)\","
+                },
+                {
+                  "lineNumber": 27673,
+                  "content": "        \"contents\": \"class RBST_AutoMat_OT_AutoMatExtractor(bpy.types.Operator):\\ndef _process_step(self):\\n\\n            \\n        elif self.current_step == 3:\\n            # Step 4: Build path mapping\\n            if self.current_index &amp;gt;= len(self.selected_images):\\n                # Path building complete, move to remapping\\n                self.current_step = 4\\n                self.current_index = 0\\n                props.operation_status = \\\"Remapping image paths...\\\"\\n                props.operation_progress = 70.0\\n                return 0.01\\n            \\n            # Build path for current image\\n            img = self.selected_images[self.current_index]\\n            props.operation_status = f\\\"Building path for {img.name}...\\\"\\n            \\n            # Get blend file name - respect user preference if set\\n            if props.use_blend_subfolder:\\n                blend_name = props.blend_subfolder\\n                if not blend_name:\\n                    # Fall back t"
+                },
+                {
+                  "lineNumber": 27876,
+                  "content": "            \"text\": \"            extension = get_image_extension(img)\","
+                }
+              ]
+            },
+            {
+              "file": "panels/bulk_path_management.py",
+              "matches": [
+                {
+                  "lineNumber": 88,
+                  "content": "def get_image_extension(image):"
+                },
+                {
+                  "lineNumber": 125,
+                  "content": "def set_image_paths(image_name, new_path, tile_paths=None):"
+                },
+                {
+                  "lineNumber": 198,
+                  "content": "        success = set_image_paths(image_name, new_path)"
+                },
+                {
+                  "lineNumber": 349,
+                  "content": "            extension = get_image_extension(active_image)"
+                },
+                {
+                  "lineNumber": 354,
+                  "content": "            # Use the set_image_paths function to ensure proper handling of packed files"
+                },
+                {
+                  "lineNumber": 355,
+                  "content": "            success = set_image_paths(active_image.name, full_path)"
+                },
+                {
+                  "lineNumber": 474,
+                  "content": "        extension = get_image_extension(img)"
+                },
+                {
+                  "lineNumber": 479,
+                  "content": "        success = set_image_paths(img.name, full_path)"
+                }
+              ]
+            }
+          ],
+          "totalLines": 49,
+          "totalMatchedLines": 49
+        }
+      }
+    }
+  }
+}
+```
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+
+Checking what `remove_extensions` does, as it's called in Step 2 and might be affecting the names:
+
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search">
+<details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+
+Parameters:
+
+```json
+{
+  "pattern": "remove_extensions|bst\\.remove_extensions",
+  "path": "E:\\Rainys_Bulk_Scene_Tools",
+  "caseInsensitive": false
+}
+```
+Result:
+
+```json
+{
+  "success": {
+    "pattern": "remove_extensions|bst\\.remove_extensions",
+    "path": "E:\\Rainys_Bulk_Scene_Tools",
+    "outputMode": "content",
+    "workspaceResults": {
+      "E:\\Rainys_Bulk_Scene_Tools": {
+        "content": {
+          "matches": [
+            {
+              "file": "ops/AutoMatExtractor.py",
+              "matches": [
+                {
+                  "lineNumber": 152,
+                  "content": "                bpy.ops.bst.remove_extensions()"
+                }
+              ]
+            },
+            {
+              "file": ".specstory/history/2026-01-07_21-47Z-datablock-utilities-integration-for-duplicates.md",
+              "matches": [
+                {
+                  "lineNumber": 2423,
+                  "content": "        \"contents\": \"# Panel for Shader Editor sidebar\\nclass NODE_PT_bulk_path_tools(Panel):\\n    bl_label = \\\"Bulk Pathing\\\"\\n    bl_idname = \\\"NODE_PT_bulk_path_tools\\\"\\n    bl_space_type = 'NODE_EDITOR'\\n    bl_region_type = 'UI'\\n    bl_category = 'Node'\\n    bl_context = 'shader'\\n    \\n    @classmethod\\n    def poll(cls, context):\\n        return hasattr(context.space_data, 'tree_type') and context.space_data.tree_type == 'ShaderNodeTree'\\n    \\n    def draw(self, context):\\n        layout = self.layout\\n        scene = context.scene\\n        path_props = scene.bst_path_props        \\n        \\n        layout.separator()\\n        \\n        # Progress display section\\n        if path_props.is_operation_running:\\n            box = layout.box()\\n            box.label(text=\\\"Operation Progress\\\", icon='TIME')\\n            \\n            # Progress bar\\n            row = box.row()\\n            row.prop(path_props, \\\"operation_progress\\\", text=\\\"\\\")\\n            \\n            # Status "
+                },
+                {
+                  "lineNumber": 2652,
+                  "content": "            \"text\": \"        split.operator(\\\"bst.remove_extensions\\\", text=\\\"Remove Ext\\\", icon='X')\","
+                },
+                {
+                  "lineNumber": 2682,
+                  "content": "        \"contents\": \"class NODE_PT_bulk_path_tools(Panel):\\ndef draw(self, context):\\n icon='TRASH')\\n        split.operator(\\\"bst.remove_extensions\\\", text=\\\"Remove Ext\\\", icon='X')\\n        \\n        # Make paths relative/absolute split\\n        split = col.split(factor=0.5, align=True)\\n        split.operator(\\\"bst.make_paths_relative\\\", text=\\\"Make Relative\\\", icon='FILE_FOLDER')\\n        split.operator(\\\"bst.make_paths_absolute\\\", text=\\\"Make Absolute\\\", icon='FILE_FOLDER')\\n\\n        # Flat color renaming (full width)\\n        col.operator(\\\"bst.rename_flat_colors\\\", text=\\\"Rename Flat Colors\\\", icon='COLOR')\\n        \\n        # Save images (full width)\\n        col.operator(\\\"bst.save_all_images\\\", text=\\\"Save All\\\", icon='EXPORT')\\n        \\n        # Path Settings UI\\n        box.separator()\\n        \\n        # Base path\\n        row = box.row(align=True)\\n        row.prop(path_props, \\\"smart_base_path\\\", text=\\\"Base Path\\\")\\n        \\n        # Blend subfolder\\n        row "
+                },
+                {
+                  "lineNumber": 2722,
+                  "content": "            \"text\": \"        split.operator(\\\"bst.remove_extensions\\\", text=\\\"Remove Ext\\\", icon='X')\","
+                },
+                {
+                  "lineNumber": 4750,
+                  "content": "        \"contents\": \"# Registration function for this module\\nclasses = (\\n    REMOVE_EXT_OT_summary_dialog,\\n    BST_PathProperties,\\n    BST_OT_remap_path,\\n    BST_OT_toggle_select_all,\\n    BST_OT_bulk_remap,\\n    BST_OT_toggle_path_edit,\\n    BST_OT_select_material_images,\\n    BST_OT_select_active_images,\\n    BST_OT_select_absolute_images,\\n    BST_OT_rename_datablock,\\n    BST_OT_toggle_image_selection,\\n    BST_OT_reuse_material_path,\\n    BST_OT_reuse_blend_name,\\n    BST_OT_make_paths_relative,\\n    BST_OT_make_paths_absolute,\\n    BST_OT_pack_images,\\n    BST_OT_unpack_images,\\n    BST_OT_remove_packed_images,\\n    BST_OT_save_all_images,\\n    BST_OT_remove_extensions,\\n    BST_OT_rename_flat_colors,\\n    BST_OT_cancel_operation,\\n    NODE_PT_bulk_path_tools,\\n    VIEW3D_PT_bulk_path_subpanel,\\n)\\n\\ndef register():\\n    for cls in classes:\\n        compat.safe_register_class(cls)\\n    \\n    # Register properties\\n    bpy.types.Scene.bst_path_props = PointerProperty(type=BST"
+                },
+                {
+                  "lineNumber": 4838,
+                  "content": "            \"text\": \"    BST_OT_remove_extensions,\","
+                },
+                {
+                  "lineNumber": 12624,
+                  "content": "        \"contents\": \"class AutoMatExtractor(bpy.types.Operator):\\ndef execute(self, context):\\n        # Get addon preferences\\n\\n        \\n        return {'FINISHED'}\\n    \\n    def _process_step(self):\\n        \\\"\\\"\\\"Process AutoMat extraction in steps to avoid blocking the UI\\\"\\\"\\\"\\n        props = bpy.context.scene.bst_path_props\\n        \\n        # Check for cancellation\\n        if props.cancel_operation:\\n            props.is_operation_running = False\\n            props.operation_progress = 0.0\\n            props.operation_status = \\\"Operation cancelled\\\"\\n            props.cancel_operation = False\\n            return None\\n        \\n        if self.current_step == 0:\\n            # Step 1: Pack images\\n            if self.current_index &amp;gt;= len(self.selected_images):\\n                # Packing complete, move to next step\\n                self.current_step = 1\\n                self.current_index = 0\\n                props.operation_status = \\\"Removing extensions from image nam"
+                },
+                {
+                  "lineNumber": 12833,
+                  "content": "            \"text\": \"                bpy.ops.bst.remove_extensions()\","
+                },
+                {
+                  "lineNumber": 13933,
+                  "content": "        \"contents\": \"# Registration function for this module\\nclasses = (\\n    REMOVE_EXT_OT_summary_dialog,\\n    BST_PathProperties,\\n    BST_OT_remap_path,\\n    BST_OT_toggle_select_all,\\n    BST_OT_bulk_remap,\\n    BST_OT_toggle_path_edit,\\n    BST_OT_select_material_images,\\n    BST_OT_select_active_images,\\n    BST_OT_select_absolute_images,\\n    BST_OT_rename_datablock,\\n    BST_OT_toggle_image_selection,\\n    BST_OT_reuse_material_path,\\n    BST_OT_reuse_blend_name,\\n    BST_OT_make_paths_relative,\\n    BST_OT_make_paths_absolute,\\n    BST_OT_pack_images,\\n    BST_OT_unpack_images,\\n    BST_OT_remove_packed_images,\\n    BST_OT_save_all_images,\\n    BST_OT_remove_extensions,\\n    BST_OT_rename_flat_colors,\\n    BST_OT_cancel_operation,\\n    NODE_PT_bulk_path_tools,\\n    VIEW3D_PT_bulk_path_subpanel,\\n)\\n\\ndef register():\\n    for cls in classes:\\n        compat.safe_register_class(cls)\\n    \\n    # Register properties\\n    bpy.types.Scene.bst_path_props = PointerProperty(type=BST"
+                },
+                {
+                  "lineNumber": 14021,
+                  "content": "            \"text\": \"    BST_OT_remove_extensions,\","
+                },
+                {
+                  "lineNumber": 16569,
+                  "content": "                  \"content\": \"class BST_OT_remove_extensions(Operator):\""
+                },
+                {
+                  "lineNumber": 19129,
+                  "content": "                  \"content\": \"class BST_OT_remove_extensions(Operator):\""
+                },
+                {
+                  "lineNumber": 19567,
+                  "content": "                  \"content\": \"    bl_idname = \\\"bst.remove_extensions\\\"\""
+                },
+                {
+                  "lineNumber": 19667,
+                  "content": "                  \"content\": \"    BST_OT_remove_extensions,\""
+                },
+                {
+                  "lineNumber": 22712,
+                  "content": "                  \"content\": \"    bl_idname = \\\"bst.remove_extensions\\\"\""
+                },
+                {
+                  "lineNumber": 22887,
+                  "content": "                  \"content\": \"    bl_idname = \\\"bst.remove_extensions\\\"\""
+                },
+                {
+                  "lineNumber": 24008,
+                  "content": "                  \"content\": \"class RBST_PathMan_OT_remove_extensions(Operator):\""
+                },
+                {
+                  "lineNumber": 24105,
+                  "content": "                  \"content\": \"class RBST_PathMan_OT_remove_extensions(Operator):\""
+                },
+                {
+                  "lineNumber": 24416,
+                  "content": "                  \"content\": \"class RBST_PathMan_OT_remove_extensions(Operator):\""
+                },
+                {
+                  "lineNumber": 24496,
+                  "content": "                  \"content\": \"    RBST_OT_remove_extensions,\""
+                },
+                {
+                  "lineNumber": 24918,
+                  "content": "        \"contents\": \"class RBST_AutoMat_OT_AutoMatExtractor(bpy.types.Operator):\\ndef execute(self, context):\\n        # Get addon preferences\\n\\n        \\n        return {'FINISHED'}\\n    \\n    def _process_step(self):\\n        \\\"\\\"\\\"Process AutoMat extraction in steps to avoid blocking the UI\\\"\\\"\\\"\\n        props = bpy.context.scene.bst_path_props\\n        \\n        # Check for cancellation\\n        if props.cancel_operation:\\n            props.is_operation_running = False\\n            props.operation_progress = 0.0\\n            props.operation_status = \\\"Operation cancelled\\\"\\n            props.cancel_operation = False\\n            return None\\n        \\n        if self.current_step == 0:\\n            # Step 1: Pack images\\n            if self.current_index &amp;gt;= len(self.selected_images):\\n                # Packing complete, move to next step\\n                self.current_step = 1\\n                self.current_index = 0\\n                props.operation_status = \\\"Removing extension"
+                },
+                {
+                  "lineNumber": 25127,
+                  "content": "            \"text\": \"                bpy.ops.bst.remove_extensions()\","
+                }
+              ]
+            },
+            {
+              "file": ".specstory/history/2025-12-18_23-07Z-github-issue-#3-integration.md",
+              "matches": [
+                {
+                  "lineNumber": 350,
+                  "content": "        \"contents\": \"# Registration function for this module\\nclasses = (\\n    REMOVE_EXT_OT_summary_dialog,\\n    BST_PathProperties,\\n    BST_OT_remap_path,\\n    BST_OT_toggle_select_all,\\n    BST_OT_bulk_remap,\\n    BST_OT_toggle_path_edit,\\n    BST_OT_select_material_images,\\n    BST_OT_select_active_images,\\n    BST_OT_rename_datablock,\\n    BST_OT_toggle_image_selection,\\n    BST_OT_reuse_material_path,\\n    BST_OT_reuse_blend_name,\\n    BST_OT_make_paths_relative,\\n    BST_OT_make_paths_absolute,\\n    BST_OT_pack_images,\\n    BST_OT_unpack_images,\\n    BST_OT_remove_packed_images,\\n    BST_OT_save_all_images,\\n    BST_OT_remove_extensions,\\n    BST_OT_rename_flat_colors,\\n    BST_OT_cancel_operation,\\n    NODE_PT_bulk_path_tools,\\n    VIEW3D_PT_bulk_path_subpanel,\\n)\\n\\ndef register():\\n    for cls in classes:\\n        compat.safe_register_class(cls)\\n    \\n    # Register properties\\n    bpy.types.Scene.bst_path_props = PointerProperty(type=BST_PathProperties)\\n    \\n    # Add cu"
+                },
+                {
+                  "lineNumber": 434,
+                  "content": "            \"text\": \"    BST_OT_remove_extensions,\","
+                },
+                {
+                  "lineNumber": 1094,
+                  "content": "        \"contents\": \"# Panel for Shader Editor sidebar\\nclass NODE_PT_bulk_path_tools(Panel):\\n    bl_label = \\\"Bulk Pathing\\\"\\n    bl_idname = \\\"NODE_PT_bulk_path_tools\\\"\\n    bl_space_type = 'NODE_EDITOR'\\n    bl_region_type = 'UI'\\n    bl_category = 'Node'\\n    bl_context = 'shader'\\n    \\n    @classmethod\\n    def poll(cls, context):\\n        return hasattr(context.space_data, 'tree_type') and context.space_data.tree_type == 'ShaderNodeTree'\\n    \\n    def draw(self, context):\\n        layout = self.layout\\n        scene = context.scene\\n        path_props = scene.bst_path_props        \\n        \\n        layout.separator()\\n        \\n        # Progress display section\\n        if path_props.is_operation_running:\\n            box = layout.box()\\n            box.label(text=\\\"Operation Progress\\\", icon='TIME')\\n            \\n            # Progress bar\\n            row = box.row()\\n            row.prop(path_props, \\\"operation_progress\\\", text=\\\"\\\")\\n            \\n            # Status "
+                },
+                {
+                  "lineNumber": 1323,
+                  "content": "            \"text\": \"        split.operator(\\\"bst.remove_extensions\\\", text=\\\"Remove Ext\\\", icon='X')\","
+                },
+                {
+                  "lineNumber": 2955,
+                  "content": "        \"contents\": \"class NODE_PT_bulk_path_tools(Panel):\\ndef draw(self, context):\\n icon='TRASH')\\n        split.operator(\\\"bst.remove_extensions\\\", text=\\\"Remove Ext\\\", icon='X')\\n        \\n        # Make paths relative/absolute split\\n        split = col.split(factor=0.5, align=True)\\n        split.operator(\\\"bst.make_paths_relative\\\", text=\\\"Make Relative\\\", icon='FILE_FOLDER')\\n        split.operator(\\\"bst.make_paths_absolute\\\", text=\\\"Make Absolute\\\", icon='FILE_FOLDER')\\n\\n        # Flat color renaming (full width)\\n        col.operator(\\\"bst.rename_flat_colors\\\", text=\\\"Rename Flat Colors\\\", icon='COLOR')\\n        \\n        # Save images (full width)\\n        col.operator(\\\"bst.save_all_images\\\", text=\\\"Save All\\\", icon='EXPORT')\\n        \\n        # Path Settings UI\\n        box.separator()\\n        \\n        # Base path\\n        row = box.row(align=True)\\n        row.prop(path_props, \\\"smart_base_path\\\", text=\\\"Base Path\\\")\\n        \\n        # Blend subfolder\\n        row "
+                },
+                {
+                  "lineNumber": 2995,
+                  "content": "            \"text\": \"        split.operator(\\\"bst.remove_extensions\\\", text=\\\"Remove Ext\\\", icon='X')\","
+                },
+                {
+                  "lineNumber": 6964,
+                  "content": "        \"contents\": \"class NODE_PT_bulk_path_tools(Panel):\\ndef draw(self, context):\\n icon='TRASH')\\n        split.operator(\\\"bst.remove_extensions\\\", text=\\\"Remove Ext\\\", icon='X')\\n        \\n        # Make paths relative/absolute split\\n        split = col.split(factor=0.5, align=True)\\n        split.operator(\\\"bst.make_paths_relative\\\", text=\\\"Make Relative\\\", icon='FILE_FOLDER')\\n        split.operator(\\\"bst.make_paths_absolute\\\", text=\\\"Make Absolute\\\", icon='FILE_FOLDER')\\n\\n        # Flat color renaming (full width)\\n        col.operator(\\\"bst.rename_flat_colors\\\", text=\\\"Rename Flat Colors\\\", icon='COLOR')\\n        \\n        # Save images (full width)\\n        col.operator(\\\"bst.save_all_images\\\", text=\\\"Save All\\\", icon='EXPORT')\\n        \\n        # Path Settings UI\\n        box.separator()\\n        \\n        # Base path\\n        row = box.row(align=True)\\n        row.prop(path_props, \\\"smart_base_path\\\", text=\\\"Base Path\\\")\\n        \\n        # Blend subfolder\\n        row "
+                },
+                {
+                  "lineNumber": 7004,
+                  "content": "            \"text\": \"        split.operator(\\\"bst.remove_extensions\\\", text=\\\"Remove Ext\\\", icon='X')\","
+                },
+                {
+                  "lineNumber": 12320,
+                  "content": "        \"contents\": \"# Panel for Shader Editor sidebar\\nclass NODE_PT_bulk_path_tools(Panel):\\n    bl_label = \\\"Bulk Pathing\\\"\\n    bl_idname = \\\"NODE_PT_bulk_path_tools\\\"\\n    bl_space_type = 'NODE_EDITOR'\\n    bl_region_type = 'UI'\\n    bl_category = 'Node'\\n    bl_context = 'shader'\\n    \\n    @classmethod\\n    def poll(cls, context):\\n        return hasattr(context.space_data, 'tree_type') and context.space_data.tree_type == 'ShaderNodeTree'\\n    \\n    def draw(self, context):\\n        layout = self.layout\\n        scene = context.scene\\n        path_props = scene.bst_path_props        \\n        \\n        layout.separator()\\n        \\n        # Progress display section\\n        if path_props.is_operation_running:\\n            box = layout.box()\\n            box.label(text=\\\"Operation Progress\\\", icon='TIME')\\n            \\n            # Progress bar\\n            row = box.row()\\n            row.prop(path_props, \\\"operation_progress\\\", text=\\\"\\\")\\n            \\n            # Status "
+                },
+                {
+                  "lineNumber": 12549,
+                  "content": "            \"text\": \"        split.operator(\\\"bst.remove_extensions\\\", text=\\\"Remove Ext\\\", icon='X')\","
+                },
+                {
+                  "lineNumber": 13549,
+                  "content": "        \"contents\": \"class NODE_PT_bulk_path_tools(Panel):\\ndef draw(self, context):\\n icon='TRASH')\\n        split.operator(\\\"bst.remove_extensions\\\", text=\\\"Remove Ext\\\", icon='X')\\n        \\n        # Make paths relative/absolute split\\n        split = col.split(factor=0.5, align=True)\\n        split.operator(\\\"bst.make_paths_relative\\\", text=\\\"Make Relative\\\", icon='FILE_FOLDER')\\n        split.operator(\\\"bst.make_paths_absolute\\\", text=\\\"Make Absolute\\\", icon='FILE_FOLDER')\\n\\n        # Flat color renaming (full width)\\n        col.operator(\\\"bst.rename_flat_colors\\\", text=\\\"Rename Flat Colors\\\", icon='COLOR')\\n        \\n        # Save images (full width)\\n        col.operator(\\\"bst.save_all_images\\\", text=\\\"Save All\\\", icon='EXPORT')\\n        \\n        # Path Settings UI\\n        box.separator()\\n        \\n        # Base path\\n        row = box.row(align=True)\\n        row.prop(path_props, \\\"smart_base_path\\\", text=\\\"Base Path\\\")\\n        \\n        # Blend subfolder\\n        row "
+                },
+                {
+                  "lineNumber": 13589,
+                  "content": "            \"text\": \"        split.operator(\\\"bst.remove_extensions\\\", text=\\\"Remove Ext\\\", icon='X')\","
+                },
+                {
+                  "lineNumber": 14274,
+                  "content": "        \"contents\": \"# Registration function for this module\\nclasses = (\\n    REMOVE_EXT_OT_summary_dialog,\\n    BST_PathProperties,\\n    BST_OT_remap_path,\\n    BST_OT_toggle_select_all,\\n    BST_OT_bulk_remap,\\n    BST_OT_toggle_path_edit,\\n    BST_OT_select_material_images,\\n    BST_OT_select_active_images,\\n    BST_OT_select_absolute_images,\\n    BST_OT_rename_datablock,\\n    BST_OT_toggle_image_selection,\\n    BST_OT_reuse_material_path,\\n    BST_OT_reuse_blend_name,\\n    BST_OT_make_paths_relative,\\n    BST_OT_make_paths_absolute,\\n    BST_OT_pack_images,\\n    BST_OT_unpack_images,\\n    BST_OT_remove_packed_images,\\n    BST_OT_save_all_images,\\n    BST_OT_remove_extensions,\\n    BST_OT_rename_flat_colors,\\n    BST_OT_cancel_operation,\\n    NODE_PT_bulk_path_tools,\\n    VIEW3D_PT_bulk_path_subpanel,\\n)\\n\\ndef register():\\n    for cls in classes:\\n        compat.safe_register_class(cls)\\n    \\n    # Register properties\\n    bpy.types.Scene.bst_path_props = PointerProperty(type=BST"
+                },
+                {
+                  "lineNumber": 14362,
+                  "content": "            \"text\": \"    BST_OT_remove_extensions,\","
+                }
+              ]
+            },
+            {
+              "file": "panels/bulk_path_management.py",
+              "matches": [
+                {
+                  "lineNumber": 1062,
+                  "content": "class RBST_PathMan_OT_remove_extensions(Operator):"
+                },
+                {
+                  "lineNumber": 1063,
+                  "content": "    bl_idname = \"bst.remove_extensions\""
+                },
+                {
+                  "lineNumber": 1491,
+                  "content": "        split.operator(\"bst.remove_extensions\", text=\"Remove Ext\", icon='X')"
+                },
+                {
+                  "lineNumber": 1681,
+                  "content": "    RBST_PathMan_OT_remove_extensions,"
+                }
+              ]
+            }
+          ],
+          "totalLines": 41,
+          "totalMatchedLines": 41
+        }
+      }
+    }
+  }
+}
+```
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="semantic_search_full">
+<details>
+<summary>Tool use: **semantic_search_full**</summary>
+
+
+Parameters:
+
+```json
+{
+  "query": "remove_extensions operator what does it do to image names",
+  "topK": 10,
+  "explanation": ""
+}
+```
+Result:
+
+```json
+{
+  "codeResults": [
+    {
+      "codeBlock": {
+        "relativeWorkspacePath": ".\\panels\\bulk_path_management.py",
+        "range": {
+          "startPosition": {
+            "line": 1061
+          },
+          "endPosition": {
+            "line": 1147
+          }
+        },
+        "contents": "class RBST_PathMan_OT_remove_extensions(Operator):\ndef execute(self, context):\n\n        \n        for img in selected_images:\n            # Skip linked images\n            if hasattr(img, 'library') and img.library is not None:\n                linked_count += 1\n                print(f\"DEBUG: Skipped linked image: {img.name}\")\n                continue\n                \n            original_name = img.name\n            extension_removed = None\n            \n            # Look for extensions anywhere in the filename, not just at the end\n            for ext in extensions:\n                # Use regex to find extension followed by optional additional content\n                pattern = rf'({re.escape(ext)})(?=\\.|$|\\.[\\d]+$)'\n                match = re.search(pattern, img.name, re.IGNORECASE)\n                if match:\n                    # Remove the extension but keep anything after it\n                    new_name = img.name[:match.start(1)] + img.name[match.end(1):]\n                    try:\n                        print(f\"DEBUG: Removing extension {ext} from {img.name} → {new_name}\")\n                        img.name = new_name\n                        removed_count += 1\n                        extension_removed = ext\n                        removal_list.append((original_name, new_name, ext))\n                        break  # Stop after finding the first matching extension\n                    except Exception as e:\n                        print(f\"DEBUG: Failed to rename {img.name}: {str(e)}\")\n            \n            if not extension_removed:\n                no_extension_count += 1\n                print(f\"DEBUG: No extension found in: {img.name}\")\n        \n        # Console debug summary (keep for development)\n        print(f\"\\n=== REMOVE EXTENSIONS SUMMARY ===\")\n        print(f\"Total selected: {len(selected_images)}\")\n        print(f\"Extensions removed: {removed_count}\")\n        print(f\"No extension found: {no_extension_count}\")\n        print(f\"Linked images (skipped): {linked_count}\")\n        \n        if removal_list:\n            print(f\"\\nDetailed removal log:\")",
+        "signatures": {
+          "ranges": [
+            {
+              "startPosition": {
+                "line": 1062,
+                "column": 1
+              },
+              "endPosition": {
+                "line": 1063,
+                "column": 5
+              }
+            },
+            {
+              "startPosition": {
+                "line": 1068,
+                "column": 5
+              },
+              "endPosition": {
+                "line": 1069,
+                "column": 9
+              }
+            }
+          ]
+        },
+        "detailedLines": [
+          {
+            "text": "class RBST_PathMan_OT_remove_extensions(Operator):",
+            "lineNumber": 1062,
+            "isSignature": true
+          },
+          {
+            "text": "def execute(self, context):",
+            "lineNumber": 1068
+          },
+          {
+            "lineNumber": 1081
+          },
+          {
+            "text": "        ",
+            "lineNumber": 1082
+          },
+          {
+            "text": "        for img in selected_images:",
+            "lineNumber": 1083
+          },
+          {
+            "text": "            # Skip linked images",
+            "lineNumber": 1084
+          },
+          {
+            "text": "            if hasattr(img, 'library') and img.library is not None:",
+            "lineNumber": 1085
+          },
+          {
+            "text": "                linked_count += 1",
+            "lineNumber": 1086
+          },
+          {
+            "text": "                print(f\"DEBUG: Skipped linked image: {img.name}\")",
+            "lineNumber": 1087
+          },
+          {
+            "text": "                continue",
+            "lineNumber": 1088
+          },
+          {
+            "text": "                ",
+            "lineNumber": 1089
+          },
+          {
+            "text": "            original_name = img.name",
+            "lineNumber": 1090
+          },
+          {
+            "text": "            extension_removed = None",
+            "lineNumber": 1091
+          },
+          {
+            "text": "            ",
+            "lineNumber": 1092
+          },
+          {
+            "text": "            # Look for extensions anywhere in the filename, not just at the end",
+            "lineNumber": 1093
+          },
+          {
+            "text": "            for ext in extensions:",
+            "lineNumber": 1094
+          },
+          {
+            "text": "                # Use regex to find extension followed by optional additional content",
+            "lineNumber": 1095
+          },
+          {
+            "text": "                pattern = rf'({re.escape(ext)})(?=\\.|$|\\.[\\d]+$)'",
+            "lineNumber": 1096
+          },
+          {
+            "text": "                match = re.search(pattern, img.name, re.IGNORECASE)",
+            "lineNumber": 1097
+          },
+          {
+            "text": "                if match:",
+            "lineNumber": 1098
+          },
+          {
+            "text": "                    # Remove the extension but keep anything after it",
+            "lineNumber": 1099
+          },
+          {
+            "text": "                    new_name = img.name[:match.start(1)] + img.name[match.end(1):]",
+            "lineNumber": 1100
+          },
+          {
+            "text": "                    try:",
+            "lineNumber": 1101
+          },
+          {
+            "text": "                        print(f\"DEBUG: Removing extension {ext} from {img.name} → {new_name}\")",
+            "lineNumber": 1102
+          },
+          {
+            "text": "                        img.name = new_name",
+            "lineNumber": 1103
+          },
+          {
+            "text": "                        removed_count += 1",
+            "lineNumber": 1104
+          },
+          {
+            "text": "                        extension_removed = ext",
+            "lineNumber": 1105
+          },
+          {
+            "text": "                        removal_list.append((original_name, new_name, ext))",
+            "lineNumber": 1106
+          },
+          {
+            "text": "                        break  # Stop after finding the first matching extension",
+            "lineNumber": 1107
+          },
+          {
+            "text": "                    except Exception as e:",
+            "lineNumber": 1108
+          },
+          {
+            "text": "                        print(f\"DEBUG: Failed to rename {img.name}: {str(e)}\")",
+            "lineNumber": 1109
+          },
+          {
+            "text": "            ",
+            "lineNumber": 1110
+          },
+          {
+            "text": "            if not extension_removed:",
+            "lineNumber": 1111
+          },
+          {
+            "text": "                no_extension_count += 1",
+            "lineNumber": 1112
+          },
+          {
+            "text": "                print(f\"DEBUG: No extension found in: {img.name}\")",
+            "lineNumber": 1113
+          },
+          {
+            "text": "        ",
+            "lineNumber": 1114
+          },
+          {
+            "text": "        # Console debug summary (keep for development)",
+            "lineNumber": 1115
+          },
+          {
+            "text": "        print(f\"\\n=== REMOVE EXTENSIONS SUMMARY ===\")",
+            "lineNumber": 1116
+          },
+          {
+            "text": "        print(f\"Total selected: {len(selected_images)}\")",
+            "lineNumber": 1117
+          },
+          {
+            "text": "        print(f\"Extensions removed: {removed_count}\")",
+            "lineNumber": 1118
+          },
+          {
+            "text": "        print(f\"No extension found: {no_extension_count}\")",
+            "lineNumber": 1119
+          },
+          {
+            "text": "        print(f\"Linked images (skipped): {linked_count}\")",
+            "lineNumber": 1120
+          },
+          {
+            "text": "        ",
+            "lineNumber": 1121
+          },
+          {
+            "text": "        if removal_list:",
+            "lineNumber": 1122
+          },
+          {
+            "text": "            print(f\"\\nDetailed removal log:\")",
+            "lineNumber": 1123
+          }
+        ]
+      },
+      "score": 0.5200367569923401
+    },
+    {
+      "codeBlock": {
+        "relativeWorkspacePath": ".\\panels\\bulk_path_management.py",
+        "range": {
+          "startPosition": {
+            "line": 1058,
+            "column": 84
+          },
+          "endPosition": {
+            "line": 1147
+          }
+        },
+        "contents": "# Remove Extensions Operator\nclass RBST_PathMan_OT_remove_extensions(Operator):\n    bl_idname = \"bst.remove_extensions\"\n    bl_label = \"Remove Extensions\"\n    bl_description = \"Remove common file extensions from selected image datablock names.\"\n    bl_options = {'REGISTER', 'UNDO'}\n    \n    def execute(self, context):\n        removed_count = 0\n        no_extension_count = 0\n        linked_count = 0\n        removal_list = []  # Track removed extensions for debug\n        \n        # Common image extensions to remove (ordered by specificity)\n        extensions = ['.jpeg', '.jpg', '.png', '.tiff', '.tif', '.bmp', \n                      '.exr', '.hdr', '.tga', '.jp2', '.webp']\n        \n        # Get all selected images or all images if none selected\n        selected_images = [img for img in bpy.data.images if hasattr(img, \"bst_selected\") and img.bst_selected]\n        if not selected_images:\n            selected_images = list(bpy.data.images)\n        \n        for img in selected_images:",
+        "signatures": {},
+        "detailedLines": [
+          {
+            "text": "# Remove Extensions Operator",
+            "lineNumber": 1061
+          },
+          {
+            "text": "class RBST_PathMan_OT_remove_extensions(Operator):",
+            "lineNumber": 1062,
+            "isSignature": true
+          },
+          {
+            "text": "    bl_idname = \"bst.remove_extensions\"",
+            "lineNumber": 1063
+          },
+          {
+            "text": "    bl_label = \"Remove Extensions\"",
+            "lineNumber": 1064
+          },
+          {
+            "text": "    bl_description = \"Remove common file extensions from selected image datablock names.\"",
+            "lineNumber": 1065
+          },
+          {
+            "text": "    bl_options = {'REGISTER', 'UNDO'}",
+            "lineNumber": 1066
+          },
+          {
+            "text": "    ",
+            "lineNumber": 1067
+          },
+          {
+            "text": "    def execute(self, context):",
+            "lineNumber": 1068
+          },
+          {
+            "text": "        removed_count = 0",
+            "lineNumber": 1069
+          },
+          {
+            "text": "        no_extension_count = 0",
+            "lineNumber": 1070
+          },
+          {
+            "text": "        linked_count = 0",
+            "lineNumber": 1071
+          },
+          {
+            "text": "        removal_list = []  # Track removed extensions for debug",
+            "lineNumber": 1072
+          },
+          {
+            "text": "        ",
+            "lineNumber": 1073
+          },
+          {
+            "text": "        # Common image extensions to remove (ordered by specificity)",
+            "lineNumber": 1074
+          },
+          {
+            "text": "        extensions = ['.jpeg', '.jpg', '.png', '.tiff', '.tif', '.bmp', ",
+            "lineNumber": 1075
+          },
+          {
+            "text": "                      '.exr', '.hdr', '.tga', '.jp2', '.webp']",
+            "lineNumber": 1076
+          },
+          {
+            "text": "        ",
+            "lineNumber": 1077
+          },
+          {
+            "text": "        # Get all selected images or all images if none selected",
+            "lineNumber": 1078
+          },
+          {
+            "text": "        selected_images = [img for img in bpy.data.images if hasattr(img, \"bst_selected\") and img.bst_selected]",
+            "lineNumber": 1079
+          },
+          {
+            "text": "        if not selected_images:",
+            "lineNumber": 1080
+          },
+          {
+            "text": "            selected_images = list(bpy.data.images)",
+            "lineNumber": 1081
+          },
+          {
+            "text": "        ",
+            "lineNumber": 1082
+          },
+          {
+            "text": "        for img in selected_images:",
+            "lineNumber": 1083
+          }
+        ]
+      },
+      "score": 0.49870526790618896
+    },
+    {
+      "codeBlock": {
+        "relativeWorkspacePath": ".\\ops\\AutoMatExtractor.py",
+        "range": {
+          "startPosition": {
+            "line": 64
+          },
+          "endPosition": {
+            "line": 537
+          }
+        },
+        "contents": "class RBST_AutoMat_OT_AutoMatExtractor(bpy.types.Operator):\ndef execute(self, context):\n        # Get addon preferences\n\n        \n        return {'FINISHED'}\n    \n    def _process_step(self):\n        \"\"\"Process AutoMat extraction in steps to avoid blocking the UI\"\"\"\n        props = bpy.context.scene.bst_path_props\n        \n        # Check for cancellation\n        if props.cancel_operation:\n            props.is_operation_running = False\n            props.operation_progress = 0.0\n            props.operation_status = \"Operation cancelled\"\n            props.cancel_operation = False\n            return None\n        \n        if self.current_step == 0:\n            # Step 1: Pack images\n            if self.current_index &gt;= len(self.selected_images):\n                # Packing complete, move to next step\n                self.current_step = 1\n                self.current_index = 0\n                props.operation_status = \"Removing extensions from image names...\"\n                props.operation_progress = 25.0\n                return 0.01\n            \n            # Pack current image\n            img = self.selected_images[self.current_index]\n            props.operation_status = f\"Packing {img.name}...\"\n            \n            if not img.packed_file:\n                try:\n                    img.pack()\n                    self.packed_count += 1\n                except Exception as e:\n                    # Continue even if packing fails\n                    pass\n            \n            self.current_index += 1\n            progress = (self.current_index / len(self.selected_images)) * 25.0\n            props.operation_progress = progress\n            \n        elif self.current_step == 1:\n            # Step 2: Remove extensions (this is a quick operation)\n            try:\n                bpy.ops.bst.remove_extensions()\n            except Exception as e:\n                pass  # Continue even if this fails\n            \n            self.current_step = 2\n            self.current_index = 0\n            props.operation_status = \"Analyzing material usage...\"\n            props.operation_progress = 30.0\n            \n        elif self.current_step == 2:",
+        "signatures": {
+          "ranges": [
+            {
+              "startPosition": {
+                "line": 65,
+                "column": 1
+              },
+              "endPosition": {
+                "line": 66,
+                "column": 5
+              }
+            }
+          ]
+        },
+        "detailedLines": [
+          {
+            "text": "class RBST_AutoMat_OT_AutoMatExtractor(bpy.types.Operator):",
+            "lineNumber": 65,
+            "isSignature": true
+          },
+          {
+            "text": "def execute(self, context):",
+            "lineNumber": 71
+          },
+          {
+            "text": "        # Get addon preferences",
+            "lineNumber": 72
+          },
+          {
+            "lineNumber": 107
+          },
+          {
+            "text": "        ",
+            "lineNumber": 108
+          },
+          {
+            "text": "        return {'FINISHED'}",
+            "lineNumber": 109
+          },
+          {
+            "text": "    ",
+            "lineNumber": 110
+          },
+          {
+            "text": "    def _process_step(self):",
+            "lineNumber": 111
+          },
+          {
+            "text": "        \"\"\"Process AutoMat extraction in steps to avoid blocking the UI\"\"\"",
+            "lineNumber": 112
+          },
+          {
+            "text": "        props = bpy.context.scene.bst_path_props",
+            "lineNumber": 113
+          },
+          {
+            "text": "        ",
+            "lineNumber": 114
+          },
+          {
+            "text": "        # Check for cancellation",
+            "lineNumber": 115
+          },
+          {
+            "text": "        if props.cancel_operation:",
+            "lineNumber": 116
+          },
+          {
+            "text": "            props.is_operation_running = False",
+            "lineNumber": 117
+          },
+          {
+            "text": "            props.operation_progress = 0.0",
+            "lineNumber": 118
+          },
+          {
+            "text": "            props.operation_status = \"Operation cancelled\"",
+            "lineNumber": 119
+          },
+          {
+            "text": "            props.cancel_operation = False",
+            "lineNumber": 120
+          },
+          {
+            "text": "            return None",
+            "lineNumber": 121
+          },
+          {
+            "text": "        ",
+            "lineNumber": 122
+          },
+          {
+            "text": "        if self.current_step == 0:",
+            "lineNumber": 123
+          },
+          {
+            "text": "            # Step 1: Pack images",
+            "lineNumber": 124
+          },
+          {
+            "text": "            if self.current_index &gt;= len(self.selected_images):",
+            "lineNumber": 125
+          },
+          {
+            "text": "                # Packing complete, move to next step",
+            "lineNumber": 126
+          },
+          {
+            "text": "                self.current_step = 1",
+            "lineNumber": 127
+          },
+          {
+            "text": "                self.current_index = 0",
+            "lineNumber": 128
+          },
+          {
+            "text": "                props.operation_status = \"Removing extensions from image names...\"",
+            "lineNumber": 129
+          },
+          {
+            "text": "                props.operation_progress = 25.0",
+            "lineNumber": 130
+          },
+          {
+            "text": "                return 0.01",
+            "lineNumber": 131
+          },
+          {
+            "text": "            ",
+            "lineNumber": 132
+          },
+          {
+            "text": "            # Pack current image",
+            "lineNumber": 133
+          },
+          {
+            "text": "            img = self.selected_images[self.current_index]",
+            "lineNumber": 134
+          },
+          {
+            "text": "            props.operation_status = f\"Packing {img.name}...\"",
+            "lineNumber": 135
+          },
+          {
+            "text": "            ",
+            "lineNumber": 136
+          },
+          {
+            "text": "            if not img.packed_file:",
+            "lineNumber": 137
+          },
+          {
+            "text": "                try:",
+            "lineNumber": 138
+          },
+          {
+            "text": "                    img.pack()",
+            "lineNumber": 139
+          },
+          {
+            "text": "                    self.packed_count += 1",
+            "lineNumber": 140
+          },
+          {
+            "text": "                except Exception as e:",
+            "lineNumber": 141
+          },
+          {
+            "text": "                    # Continue even if packing fails",
+            "lineNumber": 142
+          },
+          {
+            "text": "                    pass",
+            "lineNumber": 143
+          },
+          {
+            "text": "            ",
+            "lineNumber": 144
+          },
+          {
+            "text": "            self.current_index += 1",
+            "lineNumber": 145
+          },
+          {
+            "text": "            progress = (self.current_index / len(self.selected_images)) * 25.0",
+            "lineNumber": 146
+          },
+          {
+            "text": "            props.operation_progress = progress",
+            "lineNumber": 147
+          },
+          {
+            "text": "            ",
+            "lineNumber": 148
+          },
+          {
+            "text": "        elif self.current_step == 1:",
+            "lineNumber": 149
+          },
+          {
+            "text": "            # Step 2: Remove extensions (this is a quick operation)",
+            "lineNumber": 150
+          },
+          {
+            "text": "            try:",
+            "lineNumber": 151
+          },
+          {
+            "text": "                bpy.ops.bst.remove_extensions()",
+            "lineNumber": 152
+          },
+          {
+            "text": "            except Exception as e:",
+            "lineNumber": 153
+          },
+          {
+            "text": "                pass  # Continue even if this fails",
+            "lineNumber": 154
+          },
+          {
+            "text": "            ",
+            "lineNumber": 155
+          },
+          {
+            "text": "            self.current_step = 2",
+            "lineNumber": 156
+          },
+          {
+            "text": "            self.current_index = 0",
+            "lineNumber": 157
+          },
+          {
+            "text": "            props.operation_status = \"Analyzing material usage...\"",
+            "lineNumber": 158
+          },
+          {
+            "text": "            props.operation_progress = 30.0",
+            "lineNumber": 159
+          },
+          {
+            "text": "            ",
+            "lineNumber": 160
+          },
+          {
+            "text": "        elif self.current_step == 2:",
+            "lineNumber": 161
+          }
+        ]
+      },
+      "score": 0.35649099946022034
+    },
+    {
+      "codeBlock": {
+        "relativeWorkspacePath": ".\\ops\\AutoMatExtractor.py",
+        "range": {
+          "startPosition": {
+            "line": 64
+          },
+          "endPosition": {
+            "line": 537
+          }
+        },
+        "contents": "class RBST_AutoMat_OT_AutoMatExtractor(bpy.types.Operator):\n\n\n    def sanitize_filename(self, filename):\n        \"\"\"Sanitize filename/folder name for filesystem compatibility\"\"\"\n        # First, remove potential file extensions, including numerical ones like .001\n        base_name = re.sub(r'\\.\\d{3}$', '', filename) # Remove .001, .002 etc.\n        base_name = os.path.splitext(base_name)[0] # Remove standard extensions\n        \n        # Remove or replace invalid characters for Windows/Mac/Linux\n        sanitized = re.sub(r'[&lt;&gt;:\"/\\\\|?*]', '_', base_name)\n        # Remove leading/trailing spaces and dots\n        sanitized = sanitized.strip(' .')\n        # Ensure it's not empty\n        if not sanitized:\n            sanitized = \"unnamed\"\n        return sanitized\n    \n    def get_image_material_mapping(self, images):\n        \"\"\"Create mapping of image names to materials that use them\"\"\"\n        image_to_materials = {}\n        \n        # Initialize mapping\n        for img in images:\n            image_to_materials[img.name] = []\n        \n        # Check all materials for image usage\n        for material in bpy.data.materials:\n            if not material.use_nodes:\n                continue\n                \n            material_images = set()\n            \n            # Find all image texture nodes in this material\n            for node in material.node_tree.nodes:\n                if node.type == 'TEX_IMAGE' and node.image:\n                    material_images.add(node.image.name)\n            \n            # Add this material to each image's usage list\n            for img_name in material_images:\n                if img_name in image_to_materials:\n                    image_to_materials[img_name].append(material.name)\n        \n        return image_to_materials\n\n    def is_udim_image(self, image):\n        \"\"\"Return True when the image contains UDIM/tiled data\"\"\"",
+        "signatures": {
+          "ranges": [
+            {
+              "startPosition": {
+                "line": 65,
+                "column": 1
+              },
+              "endPosition": {
+                "line": 66,
+                "column": 5
+              }
+            }
+          ]
+        },
+        "detailedLines": [
+          {
+            "text": "class RBST_AutoMat_OT_AutoMatExtractor(bpy.types.Operator):",
+            "lineNumber": 65,
+            "isSignature": true
+          },
+          {
+            "lineNumber": 403
+          },
+          {
+            "lineNumber": 404
+          },
+          {
+            "text": "    def sanitize_filename(self, filename):",
+            "lineNumber": 405
+          },
+          {
+            "text": "        \"\"\"Sanitize filename/folder name for filesystem compatibility\"\"\"",
+            "lineNumber": 406
+          },
+          {
+            "text": "        # First, remove potential file extensions, including numerical ones like .001",
+            "lineNumber": 407
+          },
+          {
+            "text": "        base_name = re.sub(r'\\.\\d{3}$', '', filename) # Remove .001, .002 etc.",
+            "lineNumber": 408
+          },
+          {
+            "text": "        base_name = os.path.splitext(base_name)[0] # Remove standard extensions",
+            "lineNumber": 409
+          },
+          {
+            "text": "        ",
+            "lineNumber": 410
+          },
+          {
+            "text": "        # Remove or replace invalid characters for Windows/Mac/Linux",
+            "lineNumber": 411
+          },
+          {
+            "text": "        sanitized = re.sub(r'[&lt;&gt;:\"/\\\\|?*]', '_', base_name)",
+            "lineNumber": 412
+          },
+          {
+            "text": "        # Remove leading/trailing spaces and dots",
+            "lineNumber": 413
+          },
+          {
+            "text": "        sanitized = sanitized.strip(' .')",
+            "lineNumber": 414
+          },
+          {
+            "text": "        # Ensure it's not empty",
+            "lineNumber": 415
+          },
+          {
+            "text": "        if not sanitized:",
+            "lineNumber": 416
+          },
+          {
+            "text": "            sanitized = \"unnamed\"",
+            "lineNumber": 417
+          },
+          {
+            "text": "        return sanitized",
+            "lineNumber": 418
+          },
+          {
+            "text": "    ",
+            "lineNumber": 419
+          },
+          {
+            "text": "    def get_image_material_mapping(self, images):",
+            "lineNumber": 420
+          },
+          {
+            "text": "        \"\"\"Create mapping of image names to materials that use them\"\"\"",
+            "lineNumber": 421
+          },
+          {
+            "text": "        image_to_materials = {}",
+            "lineNumber": 422
+          },
+          {
+            "text": "        ",
+            "lineNumber": 423
+          },
+          {
+            "text": "        # Initialize mapping",
+            "lineNumber": 424
+          },
+          {
+            "text": "        for img in images:",
+            "lineNumber": 425
+          },
+          {
+            "text": "            image_to_materials[img.name] = []",
+            "lineNumber": 426
+          },
+          {
+            "text": "        ",
+            "lineNumber": 427
+          },
+          {
+            "text": "        # Check all materials for image usage",
+            "lineNumber": 428
+          },
+          {
+            "text": "        for material in bpy.data.materials:",
+            "lineNumber": 429
+          },
+          {
+            "text": "            if not material.use_nodes:",
+            "lineNumber": 430
+          },
+          {
+            "text": "                continue",
+            "lineNumber": 431
+          },
+          {
+            "text": "                ",
+            "lineNumber": 432
+          },
+          {
+            "text": "            material_images = set()",
+            "lineNumber": 433
+          },
+          {
+            "text": "            ",
+            "lineNumber": 434
+          },
+          {
+            "text": "            # Find all image texture nodes in this material",
+            "lineNumber": 435
+          },
+          {
+            "text": "            for node in material.node_tree.nodes:",
+            "lineNumber": 436
+          },
+          {
+            "text": "                if node.type == 'TEX_IMAGE' and node.image:",
+            "lineNumber": 437
+          },
+          {
+            "text": "                    material_images.add(node.image.name)",
+            "lineNumber": 438
+          },
+          {
+            "text": "            ",
+            "lineNumber": 439
+          },
+          {
+            "text": "            # Add this material to each image's usage list",
+            "lineNumber": 440
+          },
+          {
+            "text": "            for img_name in material_images:",
+            "lineNumber": 441
+          },
+          {
+            "text": "                if img_name in image_to_materials:",
+            "lineNumber": 442
+          },
+          {
+            "text": "                    image_to_materials[img_name].append(material.name)",
+            "lineNumber": 443
+          },
+          {
+            "text": "        ",
+            "lineNumber": 444
+          },
+          {
+            "text": "        return image_to_materials",
+            "lineNumber": 445
+          },
+          {
+            "lineNumber": 446
+          },
+          {
+            "text": "    def is_udim_image(self, image):",
+            "lineNumber": 447
+          },
+          {
+            "text": "        \"\"\"Return True when the image contains UDIM/tiled data\"\"\"",
+            "lineNumber": 448
+          }
+        ]
+      },
+      "score": 0.32188260555267334
+    },
+    {
+      "codeBlock": {
+        "relativeWorkspacePath": ".\\panels\\bulk_path_management.py",
+        "range": {
+          "startPosition": {
+            "line": 1061
+          },
+          "endPosition": {
+            "line": 1353
+          }
+        },
+        "contents": "class RBST_PathMan_OT_remove_extensions(Operator):\ndef execute(self, context):\n\n        \n        if removal_list:\n            print(f\"\\nDetailed removal log:\")\n            for original, new, ext in removal_list:\n                print(f\"  '{original}' → '{new}' (removed {ext})\")\n        \n        print(f\"==================================\\n\")\n        \n        # Show popup summary dialog\n        self.show_summary_dialog(context, len(selected_images), removed_count, no_extension_count, linked_count, removal_list)\n        \n        return {'FINISHED'}\n    \n    def show_summary_dialog(self, context, total_selected, removed_count, no_extension_count, linked_count, removal_list):\n        \"\"\"Show a popup dialog with the removal summary\"\"\"\n        # Prepare detailed removal information for display\n        details_text = \"\"\n        if removal_list:\n            for original, new, ext in removal_list:\n                details_text += f\"'{original}' → '{new}' (removed {ext})\\n\"\n        \n        # Invoke the summary dialog\n        dialog = bpy.ops.remove_ext.summary_dialog('INVOKE_DEFAULT',\n                                                  total_selected=total_selected,\n                                                  removed_count=removed_count,\n                                                  no_extension_count=no_extension_count,\n                                                  linked_count=linked_count,\n                                                  removal_details=details_text.strip())\n\n# Add new operator for flat color texture renaming\nclass RBST_PathMan_OT_rename_flat_colors(Operator):\n    \"\"\"Rename flat color textures to their hex color values\"\"\"",
+        "signatures": {
+          "ranges": [
+            {
+              "startPosition": {
+                "line": 1062,
+                "column": 1
+              },
+              "endPosition": {
+                "line": 1063,
+                "column": 5
+              }
+            },
+            {
+              "startPosition": {
+                "line": 1068,
+                "column": 5
+              },
+              "endPosition": {
+                "line": 1069,
+                "column": 9
+              }
+            }
+          ]
+        },
+        "detailedLines": [
+          {
+            "text": "class RBST_PathMan_OT_remove_extensions(Operator):",
+            "lineNumber": 1062,
+            "isSignature": true
+          },
+          {
+            "text": "def execute(self, context):",
+            "lineNumber": 1068
+          },
+          {
+            "lineNumber": 1120
+          },
+          {
+            "text": "        ",
+            "lineNumber": 1121
+          },
+          {
+            "text": "        if removal_list:",
+            "lineNumber": 1122
+          },
+          {
+            "text": "            print(f\"\\nDetailed removal log:\")",
+            "lineNumber": 1123
+          },
+          {
+            "text": "            for original, new, ext in removal_list:",
+            "lineNumber": 1124
+          },
+          {
+            "text": "                print(f\"  '{original}' → '{new}' (removed {ext})\")",
+            "lineNumber": 1125
+          },
+          {
+            "text": "        ",
+            "lineNumber": 1126
+          },
+          {
+            "text": "        print(f\"==================================\\n\")",
+            "lineNumber": 1127
+          },
+          {
+            "text": "        ",
+            "lineNumber": 1128
+          },
+          {
+            "text": "        # Show popup summary dialog",
+            "lineNumber": 1129
+          },
+          {
+            "text": "        self.show_summary_dialog(context, len(selected_images), removed_count, no_extension_count, linked_count, removal_list)",
+            "lineNumber": 1130
+          },
+          {
+            "text": "        ",
+            "lineNumber": 1131
+          },
+          {
+            "text": "        return {'FINISHED'}",
+            "lineNumber": 1132
+          },
+          {
+            "text": "    ",
+            "lineNumber": 1133
+          },
+          {
+            "text": "    def show_summary_dialog(self, context, total_selected, removed_count, no_extension_count, linked_count, removal_list):",
+            "lineNumber": 1134
+          },
+          {
+            "text": "        \"\"\"Show a popup dialog with the removal summary\"\"\"",
+            "lineNumber": 1135
+          },
+          {
+            "text": "        # Prepare detailed removal information for display",
+            "lineNumber": 1136
+          },
+          {
+            "text": "        details_text = \"\"",
+            "lineNumber": 1137
+          },
+          {
+            "text": "        if removal_list:",
+            "lineNumber": 1138
+          },
+          {
+            "text": "            for original, new, ext in removal_list:",
+            "lineNumber": 1139
+          },
+          {
+            "text": "                details_text += f\"'{original}' → '{new}' (removed {ext})\\n\"",
+            "lineNumber": 1140
+          },
+          {
+            "text": "        ",
+            "lineNumber": 1141
+          },
+          {
+            "text": "        # Invoke the summary dialog",
+            "lineNumber": 1142
+          },
+          {
+            "text": "        dialog = bpy.ops.remove_ext.summary_dialog('INVOKE_DEFAULT',",
+            "lineNumber": 1143
+          },
+          {
+            "text": "                                                  total_selected=total_selected,",
+            "lineNumber": 1144
+          },
+          {
+            "text": "                                                  removed_count=removed_count,",
+            "lineNumber": 1145
+          },
+          {
+            "text": "                                                  no_extension_count=no_extension_count,",
+            "lineNumber": 1146
+          },
+          {
+            "text": "                                                  linked_count=linked_count,",
+            "lineNumber": 1147
+          },
+          {
+            "text": "                                                  removal_details=details_text.strip())",
+            "lineNumber": 1148,
+            "isSignature": true
+          },
+          {
+            "lineNumber": 1149
+          },
+          {
+            "text": "# Add new operator for flat color texture renaming",
+            "lineNumber": 1150
+          },
+          {
+            "text": "class RBST_PathMan_OT_rename_flat_colors(Operator):",
+            "lineNumber": 1151,
+            "isSignature": true
+          },
+          {
+            "text": "    \"\"\"Rename flat color textures to their hex color values\"\"\"",
+            "lineNumber": 1152
+          }
+        ]
+      },
+      "score": 0.3218199908733368
+    },
+    {
+      "codeBlock": {
+        "relativeWorkspacePath": ".\\panels\\bulk_path_management.py",
+        "range": {
+          "startPosition": {
+            "line": 7
+          },
+          "endPosition": {
+            "line": 73
+          }
+        },
+        "contents": "class RBST_PathMan_OT_summary_dialog(bpy.types.Operator):\n\n    \n    def draw(self, context):\n        layout = self.layout\n        \n        # Title\n        layout.label(text=\"Remove Extensions - Summary\", icon='INFO')\n        layout.separator()\n        \n        # Statistics box\n        box = layout.box()\n        col = box.column(align=True)\n        col.label(text=f\"Total selected images: {self.total_selected}\")\n        col.label(text=f\"Extensions removed: {self.removed_count}\", icon='CHECKMARK')\n        \n        if self.no_extension_count &gt; 0:\n            col.label(text=f\"No extension found: {self.no_extension_count}\", icon='RADIOBUT_OFF')\n        if self.linked_count &gt; 0:\n            col.label(text=f\"Linked images skipped: {self.linked_count}\", icon='RADIOBUT_OFF')\n        \n        # Detailed results if any removals occurred\n        if self.removed_count &gt; 0 and self.removal_details:\n            layout.separator()\n            layout.label(text=\"Processed Images:\", icon='OUTLINER_DATA_FONT')\n            \n            details_box = layout.box()\n            details_col = details_box.column(align=True)\n            \n            # Parse and display removal details\n            for line in self.removal_details.split('\\n'):\n                if line.strip():\n                    details_col.label(text=line, icon='RIGHTARROW_THIN')\n        \n        layout.separator()\n    \n    def execute(self, context):\n        return {'FINISHED'}\n    \n    def invoke(self, context, event):\n        return context.window_manager.invoke_popup(self, width=500)\n\ndef get_image_paths(image_name):\n    \"\"\"",
+        "signatures": {
+          "ranges": [
+            {
+              "startPosition": {
+                "line": 8,
+                "column": 1
+              },
+              "endPosition": {
+                "line": 9,
+                "column": 5
+              }
+            }
+          ]
+        },
+        "detailedLines": [
+          {
+            "text": "class RBST_PathMan_OT_summary_dialog(bpy.types.Operator):",
+            "lineNumber": 8,
+            "isSignature": true
+          },
+          {
+            "lineNumber": 19
+          },
+          {
+            "text": "    ",
+            "lineNumber": 20
+          },
+          {
+            "text": "    def draw(self, context):",
+            "lineNumber": 21
+          },
+          {
+            "text": "        layout = self.layout",
+            "lineNumber": 22
+          },
+          {
+            "text": "        ",
+            "lineNumber": 23
+          },
+          {
+            "text": "        # Title",
+            "lineNumber": 24
+          },
+          {
+            "text": "        layout.label(text=\"Remove Extensions - Summary\", icon='INFO')",
+            "lineNumber": 25
+          },
+          {
+            "text": "        layout.separator()",
+            "lineNumber": 26
+          },
+          {
+            "text": "        ",
+            "lineNumber": 27
+          },
+          {
+            "text": "        # Statistics box",
+            "lineNumber": 28
+          },
+          {
+            "text": "        box = layout.box()",
+            "lineNumber": 29
+          },
+          {
+            "text": "        col = box.column(align=True)",
+            "lineNumber": 30
+          },
+          {
+            "text": "        col.label(text=f\"Total selected images: {self.total_selected}\")",
+            "lineNumber": 31
+          },
+          {
+            "text": "        col.label(text=f\"Extensions removed: {self.removed_count}\", icon='CHECKMARK')",
+            "lineNumber": 32
+          },
+          {
+            "text": "        ",
+            "lineNumber": 33
+          },
+          {
+            "text": "        if self.no_extension_count &gt; 0:",
+            "lineNumber": 34
+          },
+          {
+            "text": "            col.label(text=f\"No extension found: {self.no_extension_count}\", icon='RADIOBUT_OFF')",
+            "lineNumber": 35
+          },
+          {
+            "text": "        if self.linked_count &gt; 0:",
+            "lineNumber": 36
+          },
+          {
+            "text": "            col.label(text=f\"Linked images skipped: {self.linked_count}\", icon='RADIOBUT_OFF')",
+            "lineNumber": 37
+          },
+          {
+            "text": "        ",
+            "lineNumber": 38
+          },
+          {
+            "text": "        # Detailed results if any removals occurred",
+            "lineNumber": 39
+          },
+          {
+            "text": "        if self.removed_count &gt; 0 and self.removal_details:",
+            "lineNumber": 40
+          },
+          {
+            "text": "            layout.separator()",
+            "lineNumber": 41
+          },
+          {
+            "text": "            layout.label(text=\"Processed Images:\", icon='OUTLINER_DATA_FONT')",
+            "lineNumber": 42
+          },
+          {
+            "text": "            ",
+            "lineNumber": 43
+          },
+          {
+            "text": "            details_box = layout.box()",
+            "lineNumber": 44
+          },
+          {
+            "text": "            details_col = details_box.column(align=True)",
+            "lineNumber": 45
+          },
+          {
+            "text": "            ",
+            "lineNumber": 46
+          },
+          {
+            "text": "            # Parse and display removal details",
+            "lineNumber": 47
+          },
+          {
+            "text": "            for line in self.removal_details.split('\\n'):",
+            "lineNumber": 48
+          },
+          {
+            "text": "                if line.strip():",
+            "lineNumber": 49
+          },
+          {
+            "text": "                    details_col.label(text=line, icon='RIGHTARROW_THIN')",
+            "lineNumber": 50
+          },
+          {
+            "text": "        ",
+            "lineNumber": 51
+          },
+          {
+            "text": "        layout.separator()",
+            "lineNumber": 52
+          },
+          {
+            "text": "    ",
+            "lineNumber": 53
+          },
+          {
+            "text": "    def execute(self, context):",
+            "lineNumber": 54
+          },
+          {
+            "text": "        return {'FINISHED'}",
+            "lineNumber": 55
+          },
+          {
+            "text": "    ",
+            "lineNumber": 56
+          },
+          {
+            "text": "    def invoke(self, context, event):",
+            "lineNumber": 57
+          },
+          {
+            "text": "        return context.window_manager.invoke_popup(self, width=500)",
+            "lineNumber": 58,
+            "isSignature": true
+          },
+          {
+            "lineNumber": 59
+          },
+          {
+            "text": "def get_image_paths(image_name):",
+            "lineNumber": 60,
+            "isSignature": true
+          },
+          {
+            "text": "    \"\"\"",
+            "lineNumber": 61
+          }
+        ]
+      },
+      "score": 0.2858426570892334
+    },
+    {
+      "codeBlock": {
+        "relativeWorkspacePath": ".\\panels\\bulk_path_management.py",
+        "range": {
+          "startPosition": {
+            "line": 917,
+            "column": 27
+          },
+          "endPosition": {
+            "line": 1058
+          }
+        },
+        "contents": "# Remove Packed Images Operator\nclass RBST_PathMan_OT_remove_packed_images(Operator):\n    bl_idname = \"bst.remove_packed_images\"\n    bl_label = \"Remove Packed Data\"\n    bl_description = \"Remove packed image data without saving to disk\"\n    bl_options = {'REGISTER', 'UNDO'}\n    \n    def execute(self, context):\n        removed_count = 0\n        failed_count = 0\n        \n        # Get all selected images or all images if none selected\n        selected_images = [img for img in bpy.data.images if hasattr(img, \"bst_selected\") and img.bst_selected]\n        if not selected_images:\n            selected_images = list(bpy.data.images)\n        \n        for img in selected_images:\n            if img.packed_file:\n                try:\n                    print(f\"DEBUG: Removing packed data for image: {img.name}\")\n                    img.unpack(method='REMOVE')\n                    removed_count += 1\n                except Exception as e:\n                    print(f\"DEBUG: Failed to remove packed data for {img.name}: {str(e)}\")\n                    failed_count += 1\n        \n        if removed_count &gt; 0:\n            self.report({'INFO'}, f\"Successfully removed packed data from {removed_count} images\" + \n                       (f\", {failed_count} failed\" if failed_count &gt; 0 else \"\"))\n        else:\n            self.report({'WARNING'}, \"No packed data was removed\" +\n                        (f\", {failed_count} failed\" if failed_count &gt; 0 else \"\"))\n        \n        return {'FINISHED'}\n\n# Save All Images Operator\nclass RBST_PathMan_OT_save_all_images(Operator):\n    bl_idname = \"bst.save_all_images\"",
+        "signatures": {},
+        "detailedLines": [
+          {
+            "text": "# Remove Packed Images Operator",
+            "lineNumber": 920
+          },
+          {
+            "text": "class RBST_PathMan_OT_remove_packed_images(Operator):",
+            "lineNumber": 921,
+            "isSignature": true
+          },
+          {
+            "text": "    bl_idname = \"bst.remove_packed_images\"",
+            "lineNumber": 922
+          },
+          {
+            "text": "    bl_label = \"Remove Packed Data\"",
+            "lineNumber": 923
+          },
+          {
+            "text": "    bl_description = \"Remove packed image data without saving to disk\"",
+            "lineNumber": 924
+          },
+          {
+            "text": "    bl_options = {'REGISTER', 'UNDO'}",
+            "lineNumber": 925
+          },
+          {
+            "text": "    ",
+            "lineNumber": 926
+          },
+          {
+            "text": "    def execute(self, context):",
+            "lineNumber": 927
+          },
+          {
+            "text": "        removed_count = 0",
+            "lineNumber": 928
+          },
+          {
+            "text": "        failed_count = 0",
+            "lineNumber": 929
+          },
+          {
+            "text": "        ",
+            "lineNumber": 930
+          },
+          {
+            "text": "        # Get all selected images or all images if none selected",
+            "lineNumber": 931
+          },
+          {
+            "text": "        selected_images = [img for img in bpy.data.images if hasattr(img, \"bst_selected\") and img.bst_selected]",
+            "lineNumber": 932
+          },
+          {
+            "text": "        if not selected_images:",
+            "lineNumber": 933
+          },
+          {
+            "text": "            selected_images = list(bpy.data.images)",
+            "lineNumber": 934
+          },
+          {
+            "text": "        ",
+            "lineNumber": 935
+          },
+          {
+            "text": "        for img in selected_images:",
+            "lineNumber": 936
+          },
+          {
+            "text": "            if img.packed_file:",
+            "lineNumber": 937
+          },
+          {
+            "text": "                try:",
+            "lineNumber": 938
+          },
+          {
+            "text": "                    print(f\"DEBUG: Removing packed data for image: {img.name}\")",
+            "lineNumber": 939
+          },
+          {
+            "text": "                    img.unpack(method='REMOVE')",
+            "lineNumber": 940
+          },
+          {
+            "text": "                    removed_count += 1",
+            "lineNumber": 941
+          },
+          {
+            "text": "                except Exception as e:",
+            "lineNumber": 942
+          },
+          {
+            "text": "                    print(f\"DEBUG: Failed to remove packed data for {img.name}: {str(e)}\")",
+            "lineNumber": 943
+          },
+          {
+            "text": "                    failed_count += 1",
+            "lineNumber": 944
+          },
+          {
+            "text": "        ",
+            "lineNumber": 945
+          },
+          {
+            "text": "        if removed_count &gt; 0:",
+            "lineNumber": 946
+          },
+          {
+            "text": "            self.report({'INFO'}, f\"Successfully removed packed data from {removed_count} images\" + ",
+            "lineNumber": 947
+          },
+          {
+            "text": "                       (f\", {failed_count} failed\" if failed_count &gt; 0 else \"\"))",
+            "lineNumber": 948
+          },
+          {
+            "text": "        else:",
+            "lineNumber": 949
+          },
+          {
+            "text": "            self.report({'WARNING'}, \"No packed data was removed\" +",
+            "lineNumber": 950
+          },
+          {
+            "text": "                        (f\", {failed_count} failed\" if failed_count &gt; 0 else \"\"))",
+            "lineNumber": 951
+          },
+          {
+            "text": "        ",
+            "lineNumber": 952
+          },
+          {
+            "text": "        return {'FINISHED'}",
+            "lineNumber": 953,
+            "isSignature": true
+          },
+          {
+            "lineNumber": 954
+          },
+          {
+            "text": "# Save All Images Operator",
+            "lineNumber": 955
+          },
+          {
+            "text": "class RBST_PathMan_OT_save_all_images(Operator):",
+            "lineNumber": 956,
+            "isSignature": true
+          },
+          {
+            "text": "    bl_idname = \"bst.save_all_images\"",
+            "lineNumber": 957
+          }
+        ]
+      },
+      "score": 0.28422653675079346
+    },
+    {
+      "codeBlock": {
+        "relativeWorkspacePath": ".\\panels\\bulk_data_remap.py",
+        "range": {
+          "startPosition": {
+            "line": 242,
+            "column": 24
+          },
+          "endPosition": {
+            "line": 593
+          }
+        },
+        "contents": "def RBST_DatRem_remap_data_blocks(context, remap_images, remap_materials, remap_fonts, remap_worlds):\n    \"\"\"Remap redundant data blocks to their base versions like Blender's Remap Users function, and clean up names.\"\"\"\n    remapped_count = 0\n    cleaned_count = 0\n    \n    # Process images\n    if remap_images:\n        # First remap duplicates\n        image_groups = RBST_DatRem_find_data_groups(bpy.data.images)\n        for base_name, images in image_groups.items():\n            # Skip excluded groups\n            if f\"images:{base_name}\" in context.scene.excluded_remap_groups:\n                continue\n                \n            target_image = RBST_DatRem_find_target_data(images)\n            \n            # Rename the target if it has a numbered suffix and is the youngest\n            if RBST_DatRem_get_base_name(target_image.name) != target_image.name:\n                try:\n                    target_image.name = RBST_DatRem_get_base_name(target_image.name)\n                except AttributeError:\n                    # Skip if the target is linked and can't be renamed\n                    print(f\"Warning: Cannot rename linked image {target_image.name}\")\n                    continue\n            \n            # Try to use Blender's built-in functionality for remapping",
+        "signatures": {},
+        "detailedLines": [
+          {
+            "text": "def RBST_DatRem_remap_data_blocks(context, remap_images, remap_materials, remap_fonts, remap_worlds):",
+            "lineNumber": 245,
+            "isSignature": true
+          },
+          {
+            "text": "    \"\"\"Remap redundant data blocks to their base versions like Blender's Remap Users function, and clean up names.\"\"\"",
+            "lineNumber": 246
+          },
+          {
+            "text": "    remapped_count = 0",
+            "lineNumber": 247
+          },
+          {
+            "text": "    cleaned_count = 0",
+            "lineNumber": 248
+          },
+          {
+            "text": "    ",
+            "lineNumber": 249
+          },
+          {
+            "text": "    # Process images",
+            "lineNumber": 250
+          },
+          {
+            "text": "    if remap_images:",
+            "lineNumber": 251
+          },
+          {
+            "text": "        # First remap duplicates",
+            "lineNumber": 252
+          },
+          {
+            "text": "        image_groups = RBST_DatRem_find_data_groups(bpy.data.images)",
+            "lineNumber": 253
+          },
+          {
+            "text": "        for base_name, images in image_groups.items():",
+            "lineNumber": 254
+          },
+          {
+            "text": "            # Skip excluded groups",
+            "lineNumber": 255
+          },
+          {
+            "text": "            if f\"images:{base_name}\" in context.scene.excluded_remap_groups:",
+            "lineNumber": 256
+          },
+          {
+            "text": "                continue",
+            "lineNumber": 257
+          },
+          {
+            "text": "                ",
+            "lineNumber": 258
+          },
+          {
+            "text": "            target_image = RBST_DatRem_find_target_data(images)",
+            "lineNumber": 259
+          },
+          {
+            "text": "            ",
+            "lineNumber": 260
+          },
+          {
+            "text": "            # Rename the target if it has a numbered suffix and is the youngest",
+            "lineNumber": 261
+          },
+          {
+            "text": "            if RBST_DatRem_get_base_name(target_image.name) != target_image.name:",
+            "lineNumber": 262
+          },
+          {
+            "text": "                try:",
+            "lineNumber": 263
+          },
+          {
+            "text": "                    target_image.name = RBST_DatRem_get_base_name(target_image.name)",
+            "lineNumber": 264
+          },
+          {
+            "text": "                except AttributeError:",
+            "lineNumber": 265
+          },
+          {
+            "text": "                    # Skip if the target is linked and can't be renamed",
+            "lineNumber": 266
+          },
+          {
+            "text": "                    print(f\"Warning: Cannot rename linked image {target_image.name}\")",
+            "lineNumber": 267
+          },
+          {
+            "text": "                    continue",
+            "lineNumber": 268
+          },
+          {
+            "text": "            ",
+            "lineNumber": 269
+          },
+          {
+            "text": "            # Try to use Blender's built-in functionality for remapping",
+            "lineNumber": 270
+          }
+        ]
+      },
+      "score": 0.2838689982891083
+    },
+    {
+      "codeBlock": {
+        "relativeWorkspacePath": ".\\panels\\bulk_path_management.py",
+        "range": {
+          "startPosition": {
+            "line": 85,
+            "column": 45
+          },
+          "endPosition": {
+            "line": 181
+          }
+        },
+        "contents": "def get_image_extension(image):\n    \"\"\"\n    Get the file extension from an image\n\n    Args:\n        image: The image datablock\n\n    Returns:\n        str: The file extension including the dot (e.g. '.png') or empty string if not found\n    \"\"\"\n    # Debug print statements\n    print(f\"DEBUG: Getting extension for image: {image.name}\")\n    print(f\"DEBUG: Image file_format is: {image.file_format}\")\n    \n    # Use the file_format property\n    format_map = {\n        'PNG': '.png',\n        'JPEG': '.jpg',\n        'JPEG2000': '.jp2',\n        'TARGA': '.tga',\n        'TARGA_RAW': '.tga',\n        'BMP': '.bmp',\n        'OPEN_EXR': '.exr',\n        'OPEN_EXR_MULTILAYER': '.exr',\n        'HDR': '.hdr',\n        'TIFF': '.tif',\n    }\n    \n    if image.file_format in format_map:\n        ext = format_map[image.file_format]\n        print(f\"DEBUG: Matched format, using extension: {ext}\")\n        return ext\n    \n    # Default to no extension if we can't determine it\n    print(f\"DEBUG: No matching format found, returning empty extension\")\n    return ''\n\ndef set_image_paths(image_name, new_path, tile_paths=None):\n    \"\"\"",
+        "signatures": {},
+        "detailedLines": [
+          {
+            "text": "def get_image_extension(image):",
+            "lineNumber": 88,
+            "isSignature": true
+          },
+          {
+            "text": "    \"\"\"",
+            "lineNumber": 89
+          },
+          {
+            "text": "    Get the file extension from an image",
+            "lineNumber": 90
+          },
+          {
+            "lineNumber": 91
+          },
+          {
+            "text": "    Args:",
+            "lineNumber": 92
+          },
+          {
+            "text": "        image: The image datablock",
+            "lineNumber": 93
+          },
+          {
+            "lineNumber": 94
+          },
+          {
+            "text": "    Returns:",
+            "lineNumber": 95
+          },
+          {
+            "text": "        str: The file extension including the dot (e.g. '.png') or empty string if not found",
+            "lineNumber": 96
+          },
+          {
+            "text": "    \"\"\"",
+            "lineNumber": 97
+          },
+          {
+            "text": "    # Debug print statements",
+            "lineNumber": 98
+          },
+          {
+            "text": "    print(f\"DEBUG: Getting extension for image: {image.name}\")",
+            "lineNumber": 99
+          },
+          {
+            "text": "    print(f\"DEBUG: Image file_format is: {image.file_format}\")",
+            "lineNumber": 100
+          },
+          {
+            "text": "    ",
+            "lineNumber": 101
+          },
+          {
+            "text": "    # Use the file_format property",
+            "lineNumber": 102
+          },
+          {
+            "text": "    format_map = {",
+            "lineNumber": 103
+          },
+          {
+            "text": "        'PNG': '.png',",
+            "lineNumber": 104
+          },
+          {
+            "text": "        'JPEG': '.jpg',",
+            "lineNumber": 105
+          },
+          {
+            "text": "        'JPEG2000': '.jp2',",
+            "lineNumber": 106
+          },
+          {
+            "text": "        'TARGA': '.tga',",
+            "lineNumber": 107
+          },
+          {
+            "text": "        'TARGA_RAW': '.tga',",
+            "lineNumber": 108
+          },
+          {
+            "text": "        'BMP': '.bmp',",
+            "lineNumber": 109
+          },
+          {
+            "text": "        'OPEN_EXR': '.exr',",
+            "lineNumber": 110
+          },
+          {
+            "text": "        'OPEN_EXR_MULTILAYER': '.exr',",
+            "lineNumber": 111
+          },
+          {
+            "text": "        'HDR': '.hdr',",
+            "lineNumber": 112
+          },
+          {
+            "text": "        'TIFF': '.tif',",
+            "lineNumber": 113
+          },
+          {
+            "text": "    }",
+            "lineNumber": 114
+          },
+          {
+            "text": "    ",
+            "lineNumber": 115
+          },
+          {
+            "text": "    if image.file_format in format_map:",
+            "lineNumber": 116
+          },
+          {
+            "text": "        ext = format_map[image.file_format]",
+            "lineNumber": 117
+          },
+          {
+            "text": "        print(f\"DEBUG: Matched format, using extension: {ext}\")",
+            "lineNumber": 118
+          },
+          {
+            "text": "        return ext",
+            "lineNumber": 119
+          },
+          {
+            "text": "    ",
+            "lineNumber": 120
+          },
+          {
+            "text": "    # Default to no extension if we can't determine it",
+            "lineNumber": 121
+          },
+          {
+            "text": "    print(f\"DEBUG: No matching format found, returning empty extension\")",
+            "lineNumber": 122
+          },
+          {
+            "text": "    return ''",
+            "lineNumber": 123,
+            "isSignature": true
+          },
+          {
+            "lineNumber": 124
+          },
+          {
+            "text": "def set_image_paths(image_name, new_path, tile_paths=None):",
+            "lineNumber": 125,
+            "isSignature": true
+          },
+          {
+            "text": "    \"\"\"",
+            "lineNumber": 126
+          }
+        ]
+      },
+      "score": 0.2789928913116455
+    },
+    {
+      "codeBlock": {
+        "relativeWorkspacePath": ".\\panels\\bulk_path_management.py",
+        "range": {
+          "startPosition": {
+            "line": 1435
+          },
+          "endPosition": {
+            "line": 1642
+          }
+        },
+        "contents": "class RBST_PathMan_PT_bulk_path_tools(Panel):\ndef draw(self, context):\n\n        split.operator(\"bst.remove_packed_images\", text=\"Remove Pack\", icon='TRASH')\n        split.operator(\"bst.remove_extensions\", text=\"Remove Ext\", icon='X')\n        \n        # Make paths relative/absolute split\n        split = col.split(factor=0.5, align=True)\n        split.operator(\"bst.make_paths_relative\", text=\"Make Relative\", icon='FILE_FOLDER')\n        split.operator(\"bst.make_paths_absolute\", text=\"Make Absolute\", icon='FILE_FOLDER')\n\n        # Flat color renaming (full width)\n        col.operator(\"bst.rename_flat_colors\", text=\"Rename Flat Colors\", icon='COLOR')\n        \n        # Save images (full width)\n        col.operator(\"bst.save_all_images\", text=\"Save All\", icon='EXPORT')\n        \n        # Path Settings UI\n        box.separator()\n        \n        # Base path\n        row = box.row(align=True)\n        row.prop(path_props, \"smart_base_path\", text=\"Base Path\")\n        \n        # Blend subfolder\n        row = box.row()\n        subrow = row.row()\n        subrow.prop(path_props, \"use_blend_subfolder\", text=\"\")\n        subrow = row.row()\n        subrow.enabled = path_props.use_blend_subfolder\n        subrow.prop(path_props, \"blend_subfolder\", text=\"Blend Subfolder\")\n        reuse_blend = subrow.operator(\"bst.reuse_blend_name\", text=\"\", icon='FILE_REFRESH')\n        \n        # Material subfolder\n        row = box.row()\n        subrow = row.row()\n        subrow.prop(path_props, \"use_material_subfolder\", text=\"\")\n        subrow = row.row()\n        subrow.enabled = path_props.use_material_subfolder\n        subrow.prop(path_props, \"material_subfolder\", text=\"Material Subfolder\")\n        reuse_material = subrow.operator(\"bst.reuse_material_path\", text=\"\", icon='FILE_REFRESH')\n        \n        # Example path\n        example_path = get_combined_path(context, \"texture_name\", \".png\")\n        row = box.row()\n        row.alignment = 'RIGHT'\n        row.label(text=f\"Preview: {example_path}\")\n        \n        # Remap selected button - placed right under the preview",
+        "signatures": {
+          "ranges": [
+            {
+              "startPosition": {
+                "line": 1436,
+                "column": 1
+              },
+              "endPosition": {
+                "line": 1437,
+                "column": 5
+              }
+            },
+            {
+              "startPosition": {
+                "line": 1448,
+                "column": 5
+              },
+              "endPosition": {
+                "line": 1449,
+                "column": 9
+              }
+            }
+          ]
+        },
+        "detailedLines": [
+          {
+            "text": "class RBST_PathMan_PT_bulk_path_tools(Panel):",
+            "lineNumber": 1436,
+            "isSignature": true
+          },
+          {
+            "text": "def draw(self, context):",
+            "lineNumber": 1448
+          },
+          {
+            "lineNumber": 1489
+          },
+          {
+            "text": "        split.operator(\"bst.remove_packed_images\", text=\"Remove Pack\", icon='TRASH')",
+            "lineNumber": 1490
+          },
+          {
+            "text": "        split.operator(\"bst.remove_extensions\", text=\"Remove Ext\", icon='X')",
+            "lineNumber": 1491
+          },
+          {
+            "text": "        ",
+            "lineNumber": 1492
+          },
+          {
+            "text": "        # Make paths relative/absolute split",
+            "lineNumber": 1493
+          },
+          {
+            "text": "        split = col.split(factor=0.5, align=True)",
+            "lineNumber": 1494
+          },
+          {
+            "text": "        split.operator(\"bst.make_paths_relative\", text=\"Make Relative\", icon='FILE_FOLDER')",
+            "lineNumber": 1495
+          },
+          {
+            "text": "        split.operator(\"bst.make_paths_absolute\", text=\"Make Absolute\", icon='FILE_FOLDER')",
+            "lineNumber": 1496
+          },
+          {
+            "lineNumber": 1497
+          },
+          {
+            "text": "        # Flat color renaming (full width)",
+            "lineNumber": 1498
+          },
+          {
+            "text": "        col.operator(\"bst.rename_flat_colors\", text=\"Rename Flat Colors\", icon='COLOR')",
+            "lineNumber": 1499
+          },
+          {
+            "text": "        ",
+            "lineNumber": 1500
+          },
+          {
+            "text": "        # Save images (full width)",
+            "lineNumber": 1501
+          },
+          {
+            "text": "        col.operator(\"bst.save_all_images\", text=\"Save All\", icon='EXPORT')",
+            "lineNumber": 1502
+          },
+          {
+            "text": "        ",
+            "lineNumber": 1503
+          },
+          {
+            "text": "        # Path Settings UI",
+            "lineNumber": 1504
+          },
+          {
+            "text": "        box.separator()",
+            "lineNumber": 1505
+          },
+          {
+            "text": "        ",
+            "lineNumber": 1506
+          },
+          {
+            "text": "        # Base path",
+            "lineNumber": 1507
+          },
+          {
+            "text": "        row = box.row(align=True)",
+            "lineNumber": 1508
+          },
+          {
+            "text": "        row.prop(path_props, \"smart_base_path\", text=\"Base Path\")",
+            "lineNumber": 1509
+          },
+          {
+            "text": "        ",
+            "lineNumber": 1510
+          },
+          {
+            "text": "        # Blend subfolder",
+            "lineNumber": 1511
+          },
+          {
+            "text": "        row = box.row()",
+            "lineNumber": 1512
+          },
+          {
+            "text": "        subrow = row.row()",
+            "lineNumber": 1513
+          },
+          {
+            "text": "        subrow.prop(path_props, \"use_blend_subfolder\", text=\"\")",
+            "lineNumber": 1514
+          },
+          {
+            "text": "        subrow = row.row()",
+            "lineNumber": 1515
+          },
+          {
+            "text": "        subrow.enabled = path_props.use_blend_subfolder",
+            "lineNumber": 1516
+          },
+          {
+            "text": "        subrow.prop(path_props, \"blend_subfolder\", text=\"Blend Subfolder\")",
+            "lineNumber": 1517
+          },
+          {
+            "text": "        reuse_blend = subrow.operator(\"bst.reuse_blend_name\", text=\"\", icon='FILE_REFRESH')",
+            "lineNumber": 1518
+          },
+          {
+            "text": "        ",
+            "lineNumber": 1519
+          },
+          {
+            "text": "        # Material subfolder",
+            "lineNumber": 1520
+          },
+          {
+            "text": "        row = box.row()",
+            "lineNumber": 1521
+          },
+          {
+            "text": "        subrow = row.row()",
+            "lineNumber": 1522
+          },
+          {
+            "text": "        subrow.prop(path_props, \"use_material_subfolder\", text=\"\")",
+            "lineNumber": 1523
+          },
+          {
+            "text": "        subrow = row.row()",
+            "lineNumber": 1524
+          },
+          {
+            "text": "        subrow.enabled = path_props.use_material_subfolder",
+            "lineNumber": 1525
+          },
+          {
+            "text": "        subrow.prop(path_props, \"material_subfolder\", text=\"Material Subfolder\")",
+            "lineNumber": 1526
+          },
+          {
+            "text": "        reuse_material = subrow.operator(\"bst.reuse_material_path\", text=\"\", icon='FILE_REFRESH')",
+            "lineNumber": 1527
+          },
+          {
+            "text": "        ",
+            "lineNumber": 1528
+          },
+          {
+            "text": "        # Example path",
+            "lineNumber": 1529
+          },
+          {
+            "text": "        example_path = get_combined_path(context, \"texture_name\", \".png\")",
+            "lineNumber": 1530
+          },
+          {
+            "text": "        row = box.row()",
+            "lineNumber": 1531
+          },
+          {
+            "text": "        row.alignment = 'RIGHT'",
+            "lineNumber": 1532
+          },
+          {
+            "text": "        row.label(text=f\"Preview: {example_path}\")",
+            "lineNumber": 1533
+          },
+          {
+            "text": "        ",
+            "lineNumber": 1534
+          },
+          {
+            "text": "        # Remap selected button - placed right under the preview",
+            "lineNumber": 1535
+          }
+        ]
+      },
+      "score": 0.2788921594619751
+    },
+    {
+      "codeBlock": {
+        "relativeWorkspacePath": ".\\ops\\AutoMatExtractor.py",
+        "range": {
+          "startPosition": {
+            "line": 64
+          },
+          "endPosition": {
+            "line": 537
+          }
+        },
+        "contents": "class RBST_AutoMat_OT_AutoMatExtractor(bpy.types.Operator):\ndef _process_step(self):\n\n            \n        elif self.current_step == 3:\n            # Step 4: Build path mapping\n            if self.current_index &gt;= len(self.selected_images):\n                # Path building complete, move to remapping\n                self.current_step = 4\n                self.current_index = 0\n                props.operation_status = \"Remapping image paths...\"\n                props.operation_progress = 70.0\n                return 0.01\n            \n            # Build path for current image\n            img = self.selected_images[self.current_index]\n            props.operation_status = f\"Building path for {img.name}...\"\n            \n            # Get blend file name - respect user preference if set\n            if props.use_blend_subfolder:\n                blend_name = props.blend_subfolder\n                if not blend_name:\n                    # Fall back to filename if not specified\n                    blend_path = bpy.data.filepath\n                    if blend_path:\n                        blend_name = os.path.splitext(os.path.basename(blend_path))[0]\n                    else:\n                        blend_name = \"untitled\"\n            else:\n                # Derive from filename\n                blend_path = bpy.data.filepath\n                if blend_path:\n                    blend_name = os.path.splitext(os.path.basename(blend_path))[0]\n                else:\n                    blend_name = \"untitled\"\n            blend_name = self.sanitize_filename(blend_name)\n            \n            # Determine common path\n            if self.common_outside:\n                common_path_part = \"common\"\n            else:\n                common_path_part = f\"{blend_name}\\\\common\"\n            \n            # Get extension and build path\n            extension = get_image_extension(img)\n            sanitized_base_name = self.sanitize_filename(img.name)\n            filename = f\"{sanitized_base_name}{extension}\"\n            \n            if img.name.startswith('#'):",
+        "signatures": {
+          "ranges": [
+            {
+              "startPosition": {
+                "line": 65,
+                "column": 1
+              },
+              "endPosition": {
+                "line": 66,
+                "column": 5
+              }
+            },
+            {
+              "startPosition": {
+                "line": 111,
+                "column": 5
+              },
+              "endPosition": {
+                "line": 112,
+                "column": 9
+              }
+            }
+          ]
+        },
+        "detailedLines": [
+          {
+            "text": "class RBST_AutoMat_OT_AutoMatExtractor(bpy.types.Operator):",
+            "lineNumber": 65,
+            "isSignature": true
+          },
+          {
+            "text": "def _process_step(self):",
+            "lineNumber": 111
+          },
+          {
+            "lineNumber": 179
+          },
+          {
+            "text": "            ",
+            "lineNumber": 180
+          },
+          {
+            "text": "        elif self.current_step == 3:",
+            "lineNumber": 181
+          },
+          {
+            "text": "            # Step 4: Build path mapping",
+            "lineNumber": 182
+          },
+          {
+            "text": "            if self.current_index &gt;= len(self.selected_images):",
+            "lineNumber": 183
+          },
+          {
+            "text": "                # Path building complete, move to remapping",
+            "lineNumber": 184
+          },
+          {
+            "text": "                self.current_step = 4",
+            "lineNumber": 185
+          },
+          {
+            "text": "                self.current_index = 0",
+            "lineNumber": 186
+          },
+          {
+            "text": "                props.operation_status = \"Remapping image paths...\"",
+            "lineNumber": 187
+          },
+          {
+            "text": "                props.operation_progress = 70.0",
+            "lineNumber": 188
+          },
+          {
+            "text": "                return 0.01",
+            "lineNumber": 189
+          },
+          {
+            "text": "            ",
+            "lineNumber": 190
+          },
+          {
+            "text": "            # Build path for current image",
+            "lineNumber": 191
+          },
+          {
+            "text": "            img = self.selected_images[self.current_index]",
+            "lineNumber": 192
+          },
+          {
+            "text": "            props.operation_status = f\"Building path for {img.name}...\"",
+            "lineNumber": 193
+          },
+          {
+            "text": "            ",
+            "lineNumber": 194
+          },
+          {
+            "text": "            # Get blend file name - respect user preference if set",
+            "lineNumber": 195
+          },
+          {
+            "text": "            if props.use_blend_subfolder:",
+            "lineNumber": 196
+          },
+          {
+            "text": "                blend_name = props.blend_subfolder",
+            "lineNumber": 197
+          },
+          {
+            "text": "                if not blend_name:",
+            "lineNumber": 198
+          },
+          {
+            "text": "                    # Fall back to filename if not specified",
+            "lineNumber": 199
+          },
+          {
+            "text": "                    blend_path = bpy.data.filepath",
+            "lineNumber": 200
+          },
+          {
+            "text": "                    if blend_path:",
+            "lineNumber": 201
+          },
+          {
+            "text": "                        blend_name = os.path.splitext(os.path.basename(blend_path))[0]",
+            "lineNumber": 202
+          },
+          {
+            "text": "                    else:",
+            "lineNumber": 203
+          },
+          {
+            "text": "                        blend_name = \"untitled\"",
+            "lineNumber": 204
+          },
+          {
+            "text": "            else:",
+            "lineNumber": 205
+          },
+          {
+            "text": "                # Derive from filename",
+            "lineNumber": 206
+          },
+          {
+            "text": "                blend_path = bpy.data.filepath",
+            "lineNumber": 207
+          },
+          {
+            "text": "                if blend_path:",
+            "lineNumber": 208
+          },
+          {
+            "text": "                    blend_name = os.path.splitext(os.path.basename(blend_path))[0]",
+            "lineNumber": 209
+          },
+          {
+            "text": "                else:",
+            "lineNumber": 210
+          },
+          {
+            "text": "                    blend_name = \"untitled\"",
+            "lineNumber": 211
+          },
+          {
+            "text": "            blend_name = self.sanitize_filename(blend_name)",
+            "lineNumber": 212
+          },
+          {
+            "text": "            ",
+            "lineNumber": 213
+          },
+          {
+            "text": "            # Determine common path",
+            "lineNumber": 214
+          },
+          {
+            "text": "            if self.common_outside:",
+            "lineNumber": 215
+          },
+          {
+            "text": "                common_path_part = \"common\"",
+            "lineNumber": 216
+          },
+          {
+            "text": "            else:",
+            "lineNumber": 217
+          },
+          {
+            "text": "                common_path_part = f\"{blend_name}\\\\common\"",
+            "lineNumber": 218
+          },
+          {
+            "text": "            ",
+            "lineNumber": 219
+          },
+          {
+            "text": "            # Get extension and build path",
+            "lineNumber": 220
+          },
+          {
+            "text": "            extension = get_image_extension(img)",
+            "lineNumber": 221
+          },
+          {
+            "text": "            sanitized_base_name = self.sanitize_filename(img.name)",
+            "lineNumber": 222
+          },
+          {
+            "text": "            filename = f\"{sanitized_base_name}{extension}\"",
+            "lineNumber": 223
+          },
+          {
+            "text": "            ",
+            "lineNumber": 224
+          },
+          {
+            "text": "            if img.name.startswith('#'):",
+            "lineNumber": 225
+          }
+        ]
+      },
+      "score": 0.27614855766296387
+    },
+    {
+      "codeBlock": {
+        "relativeWorkspacePath": ".\\ops\\Rename_images_by_mat.py",
+        "range": {
+          "startPosition": {
+            "line": 68
+          },
+          "endPosition": {
+            "line": 501,
+            "column": 9
+          }
+        },
+        "contents": "class RBST_RenameImg_OT_Rename_images_by_mat(bpy.types.Operator):\n\n    \n    def has_potential_suffix(self, name):\n        \"\"\"Check if the image name has a potential suffix pattern that we should try to recognize\"\"\"\n        # Remove file extension first\n        base_name = re.sub(r'\\.[^.]+$', '', name)\n        \n        # Check for common suffix patterns: _something, -something, .something, or space something\n        suffix_patterns = [\n            r'[._-][a-zA-Z0-9]+$',  # Underscore, dot, or dash followed by alphanumeric\n            r'\\s+[a-zA-Z0-9\\s]+$',  # Space followed by alphanumeric (for multi-word suffixes)\n        ]\n        \n        for pattern in suffix_patterns:\n            if re.search(pattern, base_name):\n                return True\n        \n        return False\n\n\n# Registration classes - need to register both operators\nclasses =",
+        "signatures": {
+          "ranges": [
+            {
+              "startPosition": {
+                "line": 69,
+                "column": 1
+              },
+              "endPosition": {
+                "line": 70,
+                "column": 5
+              }
+            }
+          ]
+        },
+        "detailedLines": [
+          {
+            "text": "class RBST_RenameImg_OT_Rename_images_by_mat(bpy.types.Operator):",
+            "lineNumber": 69,
+            "isSignature": true
+          },
+          {
+            "lineNumber": 481
+          },
+          {
+            "text": "    ",
+            "lineNumber": 482
+          },
+          {
+            "text": "    def has_potential_suffix(self, name):",
+            "lineNumber": 483
+          },
+          {
+            "text": "        \"\"\"Check if the image name has a potential suffix pattern that we should try to recognize\"\"\"",
+            "lineNumber": 484
+          },
+          {
+            "text": "        # Remove file extension first",
+            "lineNumber": 485
+          },
+          {
+            "text": "        base_name = re.sub(r'\\.[^.]+$', '', name)",
+            "lineNumber": 486
+          },
+          {
+            "text": "        ",
+            "lineNumber": 487
+          },
+          {
+            "text": "        # Check for common suffix patterns: _something, -something, .something, or space something",
+            "lineNumber": 488
+          },
+          {
+            "text": "        suffix_patterns = [",
+            "lineNumber": 489
+          },
+          {
+            "text": "            r'[._-][a-zA-Z0-9]+$',  # Underscore, dot, or dash followed by alphanumeric",
+            "lineNumber": 490
+          },
+          {
+            "text": "            r'\\s+[a-zA-Z0-9\\s]+$',  # Space followed by alphanumeric (for multi-word suffixes)",
+            "lineNumber": 491
+          },
+          {
+            "text": "        ]",
+            "lineNumber": 492
+          },
+          {
+            "text": "        ",
+            "lineNumber": 493
+          },
+          {
+            "text": "        for pattern in suffix_patterns:",
+            "lineNumber": 494
+          },
+          {
+            "text": "            if re.search(pattern, base_name):",
+            "lineNumber": 495
+          },
+          {
+            "text": "                return True",
+            "lineNumber": 496
+          },
+          {
+            "text": "        ",
+            "lineNumber": 497
+          },
+          {
+            "text": "        return False",
+            "lineNumber": 498,
+            "isSignature": true
+          },
+          {
+            "lineNumber": 499
+          },
+          {
+            "lineNumber": 500
+          },
+          {
+            "text": "# Registration classes - need to register both operators",
+            "lineNumber": 501
+          },
+          {
+            "text": "classes =",
+            "lineNumber": 502
+          }
+        ]
+      },
+      "score": 0.27546051144599915
+    },
+    {
+      "codeBlock": {
+        "relativeWorkspacePath": ".\\ops\\Rename_images_by_mat.py",
+        "range": {
+          "startPosition": {
+            "line": 68
+          },
+          "endPosition": {
+            "line": 497
+          }
+        },
+        "contents": "class RBST_RenameImg_OT_Rename_images_by_mat(bpy.types.Operator):\ndef extract_texture_suffix(self, name):\n, 'msmnao pack', 'roughness pack', 'sstm pack',\n            'flow_pack', 'msmnao_pack', 'roughness_pack', 'sstm_pack',\n            \n            # Hair-related multi-word suffixes (spaces)\n            'hair flow map', 'hair id map', 'hair root map', 'hair depth map',\n            'flow map', 'id map', 'root map', 'depth map',\n            \n            # Additional common variations\n            'tex', 'map', 'img', 'texture',\n            'd', 'n', 'r', 'm', 's', 'a', 'h', 'o', 'e'  # Single letter abbreviations\n        ]\n        \n        # Remove file extension first\n        base_name = re.sub(r'\\.[^.]+$', '', name)\n        \n        # Sort suffixes by length (longest first) to prioritize more specific matches\n        sorted_suffixes = sorted(suffixes, key=len, reverse=True)\n        \n        # First, try to find multi-word suffixes with spaces (case-insensitive)\n        for suffix in sorted_suffixes:\n            if ' ' in suffix:  # Multi-word suffix\n                # Pattern: ends with space + suffix\n                pattern = rf'\\s+({re.escape(suffix)})$'\n                match = re.search(pattern, base_name, re.IGNORECASE)\n                if match:\n                    return match.group(1).lower()\n                \n                # Pattern: ends with suffix (no space separator, but exact match)\n                if base_name.lower().endswith(suffix.lower()) and len(base_name) &gt; len(suffix):\n                    # Check if there's a word boundary before the suffix\n                    prefix_end = len(base_name) - len(suffix)\n                    if prefix_end &gt; 0 and base_name[prefix_end - 1] in ' _-':\n                        return suffix.lower()\n        \n        # Then try single-word suffixes with traditional separators",
+        "signatures": {
+          "ranges": [
+            {
+              "startPosition": {
+                "line": 69,
+                "column": 1
+              },
+              "endPosition": {
+                "line": 70,
+                "column": 5
+              }
+            },
+            {
+              "startPosition": {
+                "line": 232,
+                "column": 5
+              },
+              "endPosition": {
+                "line": 233,
+                "column": 9
+              }
+            }
+          ]
+        },
+        "detailedLines": [
+          {
+            "text": "class RBST_RenameImg_OT_Rename_images_by_mat(bpy.types.Operator):",
+            "lineNumber": 69,
+            "isSignature": true
+          },
+          {
+            "text": "def extract_texture_suffix(self, name):",
+            "lineNumber": 232
+          },
+          {
+            "text": ", 'msmnao pack', 'roughness pack', 'sstm pack',",
+            "lineNumber": 268
+          },
+          {
+            "text": "            'flow_pack', 'msmnao_pack', 'roughness_pack', 'sstm_pack',",
+            "lineNumber": 269
+          },
+          {
+            "text": "            ",
+            "lineNumber": 270
+          },
+          {
+            "text": "            # Hair-related multi-word suffixes (spaces)",
+            "lineNumber": 271
+          },
+          {
+            "text": "            'hair flow map', 'hair id map', 'hair root map', 'hair depth map',",
+            "lineNumber": 272
+          },
+          {
+            "text": "            'flow map', 'id map', 'root map', 'depth map',",
+            "lineNumber": 273
+          },
+          {
+            "text": "            ",
+            "lineNumber": 274
+          },
+          {
+            "text": "            # Additional common variations",
+            "lineNumber": 275
+          },
+          {
+            "text": "            'tex', 'map', 'img', 'texture',",
+            "lineNumber": 276
+          },
+          {
+            "text": "            'd', 'n', 'r', 'm', 's', 'a', 'h', 'o', 'e'  # Single letter abbreviations",
+            "lineNumber": 277
+          },
+          {
+            "text": "        ]",
+            "lineNumber": 278
+          },
+          {
+            "text": "        ",
+            "lineNumber": 279
+          },
+          {
+            "text": "        # Remove file extension first",
+            "lineNumber": 280
+          },
+          {
+            "text": "        base_name = re.sub(r'\\.[^.]+$', '', name)",
+            "lineNumber": 281
+          },
+          {
+            "text": "        ",
+            "lineNumber": 282
+          },
+          {
+            "text": "        # Sort suffixes by length (longest first) to prioritize more specific matches",
+            "lineNumber": 283
+          },
+          {
+            "text": "        sorted_suffixes = sorted(suffixes, key=len, reverse=True)",
+            "lineNumber": 284
+          },
+          {
+            "text": "        ",
+            "lineNumber": 285
+          },
+          {
+            "text": "        # First, try to find multi-word suffixes with spaces (case-insensitive)",
+            "lineNumber": 286
+          },
+          {
+            "text": "        for suffix in sorted_suffixes:",
+            "lineNumber": 287
+          },
+          {
+            "text": "            if ' ' in suffix:  # Multi-word suffix",
+            "lineNumber": 288
+          },
+          {
+            "text": "                # Pattern: ends with space + suffix",
+            "lineNumber": 289
+          },
+          {
+            "text": "                pattern = rf'\\s+({re.escape(suffix)})$'",
+            "lineNumber": 290
+          },
+          {
+            "text": "                match = re.search(pattern, base_name, re.IGNORECASE)",
+            "lineNumber": 291
+          },
+          {
+            "text": "                if match:",
+            "lineNumber": 292
+          },
+          {
+            "text": "                    return match.group(1).lower()",
+            "lineNumber": 293
+          },
+          {
+            "text": "                ",
+            "lineNumber": 294
+          },
+          {
+            "text": "                # Pattern: ends with suffix (no space separator, but exact match)",
+            "lineNumber": 295
+          },
+          {
+            "text": "                if base_name.lower().endswith(suffix.lower()) and len(base_name) &gt; len(suffix):",
+            "lineNumber": 296
+          },
+          {
+            "text": "                    # Check if there's a word boundary before the suffix",
+            "lineNumber": 297
+          },
+          {
+            "text": "                    prefix_end = len(base_name) - len(suffix)",
+            "lineNumber": 298
+          },
+          {
+            "text": "                    if prefix_end &gt; 0 and base_name[prefix_end - 1] in ' _-':",
+            "lineNumber": 299
+          },
+          {
+            "text": "                        return suffix.lower()",
+            "lineNumber": 300
+          },
+          {
+            "text": "        ",
+            "lineNumber": 301
+          },
+          {
+            "text": "        # Then try single-word suffixes with traditional separators",
+            "lineNumber": 302
+          }
+        ]
+      },
+      "score": 0.2740611433982849
+    },
+    {
+      "codeBlock": {
+        "relativeWorkspacePath": ".\\rainys_repo_bootstrap.py",
+        "range": {
+          "startPosition": {
+            "line": 14
+          },
+          "endPosition": {
+            "line": 162
+          }
+        },
+        "contents": "def ensure_rainys_extensions_repo(_deferred: bool = False) -&gt; None:\n\n    extensions_obj = getattr(prefs, \"extensions\", None)\n    if extensions_obj:\n        if hasattr(extensions_obj, \"repos\"):\n            repositories = extensions_obj.repos\n        elif hasattr(extensions_obj, \"repositories\"):\n            repositories = extensions_obj.repositories\n\n    if repositories is None:\n        filepaths = getattr(prefs, \"filepaths\", None)\n        repositories = getattr(filepaths, \"extension_repos\", None) if filepaths else None\n\n    if repositories is None:\n        _log(\"extension repositories collection missing; skipping\")\n        return\n\n    def _repo_matches(repo) -&gt; bool:\n        return getattr(repo, \"remote_url\", \"\") == RAINYS_EXTENSIONS_REPO_URL or getattr(\n            repo, \"url\", \"\"\n        ) == RAINYS_EXTENSIONS_REPO_URL\n\n    matching_indices = [idx for idx, repo in enumerate(repositories) if _repo_matches(repo)]\n\n    target_repo = None\n    if matching_indices:\n        target_repo = repositories[matching_indices[0]]\n        if len(matching_indices) &gt; 1 and hasattr(repositories, \"remove\"):\n            for dup_idx in reversed(matching_indices[1:]):\n                try:\n                    repositories.remove(dup_idx)\n                    _log(f\"removed duplicate repository entry at index {dup_idx}\")\n                except Exception as exc:\n                    _log(f\"could not remove duplicate repository at index {dup_idx}: {exc}\")\n    else:\n        target_repo = next(\n            (\n                repo\n                for repo in repositories\n                if getattr(repo, \"name\", \"\") == RAINYS_EXTENSIONS_REPO_NAME\n            ),\n            None,\n        )\n\n    if target_repo is None:\n        _log(\"repo missing; creating new entry\")",
+        "signatures": {
+          "ranges": [
+            {
+              "startPosition": {
+                "line": 15,
+                "column": 1
+              },
+              "endPosition": {
+                "line": 16,
+                "column": 5
+              }
+            }
+          ]
+        },
+        "detailedLines": [
+          {
+            "text": "def ensure_rainys_extensions_repo(_deferred: bool = False) -&gt; None:",
+            "lineNumber": 15,
+            "isSignature": true
+          },
+          {
+            "lineNumber": 72
+          },
+          {
+            "text": "    extensions_obj = getattr(prefs, \"extensions\", None)",
+            "lineNumber": 73
+          },
+          {
+            "text": "    if extensions_obj:",
+            "lineNumber": 74
+          },
+          {
+            "text": "        if hasattr(extensions_obj, \"repos\"):",
+            "lineNumber": 75
+          },
+          {
+            "text": "            repositories = extensions_obj.repos",
+            "lineNumber": 76
+          },
+          {
+            "text": "        elif hasattr(extensions_obj, \"repositories\"):",
+            "lineNumber": 77
+          },
+          {
+            "text": "            repositories = extensions_obj.repositories",
+            "lineNumber": 78
+          },
+          {
+            "lineNumber": 79
+          },
+          {
+            "text": "    if repositories is None:",
+            "lineNumber": 80
+          },
+          {
+            "text": "        filepaths = getattr(prefs, \"filepaths\", None)",
+            "lineNumber": 81
+          },
+          {
+            "text": "        repositories = getattr(filepaths, \"extension_repos\", None) if filepaths else None",
+            "lineNumber": 82
+          },
+          {
+            "lineNumber": 83
+          },
+          {
+            "text": "    if repositories is None:",
+            "lineNumber": 84
+          },
+          {
+            "text": "        _log(\"extension repositories collection missing; skipping\")",
+            "lineNumber": 85
+          },
+          {
+            "text": "        return",
+            "lineNumber": 86
+          },
+          {
+            "lineNumber": 87
+          },
+          {
+            "text": "    def _repo_matches(repo) -&gt; bool:",
+            "lineNumber": 88
+          },
+          {
+            "text": "        return getattr(repo, \"remote_url\", \"\") == RAINYS_EXTENSIONS_REPO_URL or getattr(",
+            "lineNumber": 89
+          },
+          {
+            "text": "            repo, \"url\", \"\"",
+            "lineNumber": 90
+          },
+          {
+            "text": "        ) == RAINYS_EXTENSIONS_REPO_URL",
+            "lineNumber": 91
+          },
+          {
+            "lineNumber": 92
+          },
+          {
+            "text": "    matching_indices = [idx for idx, repo in enumerate(repositories) if _repo_matches(repo)]",
+            "lineNumber": 93
+          },
+          {
+            "lineNumber": 94
+          },
+          {
+            "text": "    target_repo = None",
+            "lineNumber": 95
+          },
+          {
+            "text": "    if matching_indices:",
+            "lineNumber": 96
+          },
+          {
+            "text": "        target_repo = repositories[matching_indices[0]]",
+            "lineNumber": 97
+          },
+          {
+            "text": "        if len(matching_indices) &gt; 1 and hasattr(repositories, \"remove\"):",
+            "lineNumber": 98
+          },
+          {
+            "text": "            for dup_idx in reversed(matching_indices[1:]):",
+            "lineNumber": 99
+          },
+          {
+            "text": "                try:",
+            "lineNumber": 100
+          },
+          {
+            "text": "                    repositories.remove(dup_idx)",
+            "lineNumber": 101
+          },
+          {
+            "text": "                    _log(f\"removed duplicate repository entry at index {dup_idx}\")",
+            "lineNumber": 102
+          },
+          {
+            "text": "                except Exception as exc:",
+            "lineNumber": 103
+          },
+          {
+            "text": "                    _log(f\"could not remove duplicate repository at index {dup_idx}: {exc}\")",
+            "lineNumber": 104
+          },
+          {
+            "text": "    else:",
+            "lineNumber": 105
+          },
+          {
+            "text": "        target_repo = next(",
+            "lineNumber": 106
+          },
+          {
+            "text": "            (",
+            "lineNumber": 107
+          },
+          {
+            "text": "                repo",
+            "lineNumber": 108
+          },
+          {
+            "text": "                for repo in repositories",
+            "lineNumber": 109
+          },
+          {
+            "text": "                if getattr(repo, \"name\", \"\") == RAINYS_EXTENSIONS_REPO_NAME",
+            "lineNumber": 110
+          },
+          {
+            "text": "            ),",
+            "lineNumber": 111
+          },
+          {
+            "text": "            None,",
+            "lineNumber": 112
+          },
+          {
+            "text": "        )",
+            "lineNumber": 113
+          },
+          {
+            "lineNumber": 114
+          },
+          {
+            "text": "    if target_repo is None:",
+            "lineNumber": 115
+          },
+          {
+            "text": "        _log(\"repo missing; creating new entry\")",
+            "lineNumber": 116
+          }
+        ]
+      },
+      "score": 0.26989710330963135
+    },
+    {
+      "codeBlock": {
+        "relativeWorkspacePath": ".\\panels\\bulk_path_management.py",
+        "range": {
+          "startPosition": {
+            "line": 396
+          },
+          "endPosition": {
+            "line": 534
+          }
+        },
+        "contents": "class RBST_PathMan_OT_bulk_remap(Operator):\n\n    \n    def _process_batch(self):\n        \"\"\"Process images in batches to avoid blocking the UI\"\"\"\n        # Check for cancellation\n        props = bpy.context.scene.bst_path_props\n        if props.cancel_operation:\n            props.is_operation_running = False\n            props.operation_progress = 0.0\n            props.operation_status = \"Operation cancelled\"\n            props.cancel_operation = False\n            return None\n        \n        if self.current_index &gt;= len(self.selected_images):\n            # Operation complete\n            props = bpy.context.scene.bst_path_props\n            props.is_operation_running = False\n            props.operation_progress = 100.0\n            props.operation_status = f\"Completed! Remapped {self.remap_count} images\"\n            \n            # Force UI update\n            for area in bpy.context.screen.areas:\n                area.tag_redraw()\n            \n            return None\n        \n        # Process next image\n        img = self.selected_images[self.current_index]\n        \n        # Update status\n        props = bpy.context.scene.bst_path_props\n        props.operation_status = f\"Remapping {img.name}...\"\n        \n        # Get file extension for this image\n        extension = get_image_extension(img)\n        \n        # Get the combined path\n        full_path = get_combined_path(bpy.context, img.name, extension)\n        \n        success = set_image_paths(img.name, full_path)\n        if success:\n            self.remap_count += 1\n        \n        # Update progress\n        self.current_index += 1\n        progress = (self.current_index / len(self.selected_images)) * 100.0\n        props.operation_progress = progress\n        \n        # Force UI update\n        for area in bpy.context.screen.areas:\n            area.tag_redraw()\n        \n        # Continue processing with shorter intervals for better responsiveness\n        return 0.05  # Process next item in 0.05 seconds (50ms) for better stability\n\n# Operator to toggle path editing mode\nclass RBST_PathMan_OT_toggle_path_edit(Operator):\n    bl_idname = \"bst.toggle_path_edit\"",
+        "signatures": {
+          "ranges": [
+            {
+              "startPosition": {
+                "line": 397,
+                "column": 1
+              },
+              "endPosition": {
+                "line": 398,
+                "column": 5
+              }
+            }
+          ]
+        },
+        "detailedLines": [
+          {
+            "text": "class RBST_PathMan_OT_bulk_remap(Operator):",
+            "lineNumber": 397,
+            "isSignature": true
+          },
+          {
+            "lineNumber": 440
+          },
+          {
+            "text": "    ",
+            "lineNumber": 441
+          },
+          {
+            "text": "    def _process_batch(self):",
+            "lineNumber": 442
+          },
+          {
+            "text": "        \"\"\"Process images in batches to avoid blocking the UI\"\"\"",
+            "lineNumber": 443
+          },
+          {
+            "text": "        # Check for cancellation",
+            "lineNumber": 444
+          },
+          {
+            "text": "        props = bpy.context.scene.bst_path_props",
+            "lineNumber": 445
+          },
+          {
+            "text": "        if props.cancel_operation:",
+            "lineNumber": 446
+          },
+          {
+            "text": "            props.is_operation_running = False",
+            "lineNumber": 447
+          },
+          {
+            "text": "            props.operation_progress = 0.0",
+            "lineNumber": 448
+          },
+          {
+            "text": "            props.operation_status = \"Operation cancelled\"",
+            "lineNumber": 449
+          },
+          {
+            "text": "            props.cancel_operation = False",
+            "lineNumber": 450
+          },
+          {
+            "text": "            return None",
+            "lineNumber": 451
+          },
+          {
+            "text": "        ",
+            "lineNumber": 452
+          },
+          {
+            "text": "        if self.current_index &gt;= len(self.selected_images):",
+            "lineNumber": 453
+          },
+          {
+            "text": "            # Operation complete",
+            "lineNumber": 454
+          },
+          {
+            "text": "            props = bpy.context.scene.bst_path_props",
+            "lineNumber": 455
+          },
+          {
+            "text": "            props.is_operation_running = False",
+            "lineNumber": 456
+          },
+          {
+            "text": "            props.operation_progress = 100.0",
+            "lineNumber": 457
+          },
+          {
+            "text": "            props.operation_status = f\"Completed! Remapped {self.remap_count} images\"",
+            "lineNumber": 458
+          },
+          {
+            "text": "            ",
+            "lineNumber": 459
+          },
+          {
+            "text": "            # Force UI update",
+            "lineNumber": 460
+          },
+          {
+            "text": "            for area in bpy.context.screen.areas:",
+            "lineNumber": 461
+          },
+          {
+            "text": "                area.tag_redraw()",
+            "lineNumber": 462
+          },
+          {
+            "text": "            ",
+            "lineNumber": 463
+          },
+          {
+            "text": "            return None",
+            "lineNumber": 464
+          },
+          {
+            "text": "        ",
+            "lineNumber": 465
+          },
+          {
+            "text": "        # Process next image",
+            "lineNumber": 466
+          },
+          {
+            "text": "        img = self.selected_images[self.current_index]",
+            "lineNumber": 467
+          },
+          {
+            "text": "        ",
+            "lineNumber": 468
+          },
+          {
+            "text": "        # Update status",
+            "lineNumber": 469
+          },
+          {
+            "text": "        props = bpy.context.scene.bst_path_props",
+            "lineNumber": 470
+          },
+          {
+            "text": "        props.operation_status = f\"Remapping {img.name}...\"",
+            "lineNumber": 471
+          },
+          {
+            "text": "        ",
+            "lineNumber": 472
+          },
+          {
+            "text": "        # Get file extension for this image",
+            "lineNumber": 473
+          },
+          {
+            "text": "        extension = get_image_extension(img)",
+            "lineNumber": 474
+          },
+          {
+            "text": "        ",
+            "lineNumber": 475
+          },
+          {
+            "text": "        # Get the combined path",
+            "lineNumber": 476
+          },
+          {
+            "text": "        full_path = get_combined_path(bpy.context, img.name, extension)",
+            "lineNumber": 477
+          },
+          {
+            "text": "        ",
+            "lineNumber": 478
+          },
+          {
+            "text": "        success = set_image_paths(img.name, full_path)",
+            "lineNumber": 479
+          },
+          {
+            "text": "        if success:",
+            "lineNumber": 480
+          },
+          {
+            "text": "            self.remap_count += 1",
+            "lineNumber": 481
+          },
+          {
+            "text": "        ",
+            "lineNumber": 482
+          },
+          {
+            "text": "        # Update progress",
+            "lineNumber": 483
+          },
+          {
+            "text": "        self.current_index += 1",
+            "lineNumber": 484
+          },
+          {
+            "text": "        progress = (self.current_index / len(self.selected_images)) * 100.0",
+            "lineNumber": 485
+          },
+          {
+            "text": "        props.operation_progress = progress",
+            "lineNumber": 486
+          },
+          {
+            "text": "        ",
+            "lineNumber": 487
+          },
+          {
+            "text": "        # Force UI update",
+            "lineNumber": 488
+          },
+          {
+            "text": "        for area in bpy.context.screen.areas:",
+            "lineNumber": 489
+          },
+          {
+            "text": "            area.tag_redraw()",
+            "lineNumber": 490
+          },
+          {
+            "text": "        ",
+            "lineNumber": 491
+          },
+          {
+            "text": "        # Continue processing with shorter intervals for better responsiveness",
+            "lineNumber": 492
+          },
+          {
+            "text": "        return 0.05  # Process next item in 0.05 seconds (50ms) for better stability",
+            "lineNumber": 493,
+            "isSignature": true
+          },
+          {
+            "lineNumber": 494
+          },
+          {
+            "text": "# Operator to toggle path editing mode",
+            "lineNumber": 495
+          },
+          {
+            "text": "class RBST_PathMan_OT_toggle_path_edit(Operator):",
+            "lineNumber": 496,
+            "isSignature": true
+          },
+          {
+            "text": "    bl_idname = \"bst.toggle_path_edit\"",
+            "lineNumber": 497
+          }
+        ]
+      },
+      "score": 0.26669061183929443
+    },
+    {
+      "codeBlock": {
+        "relativeWorkspacePath": ".\\panels\\bulk_path_management.py",
+        "range": {
+          "startPosition": {},
+          "endPosition": {
+            "line": 57
+          }
+        },
+        "contents": "import bpy # type: ignore\nfrom bpy.types import Panel, Operator, PropertyGroup # type: ignore\nfrom bpy.props import StringProperty, BoolProperty, EnumProperty, PointerProperty, CollectionProperty # type: ignore\nimport os\nimport re\nfrom ..utils import compat\n\nclass RBST_PathMan_OT_summary_dialog(bpy.types.Operator):\n    \"\"\"Show remove extensions operation summary\"\"\"\n    bl_idname = \"remove_ext.summary_dialog\"\n    bl_label = \"Remove Extensions Summary\"\n    bl_options = {'REGISTER', 'INTERNAL'}\n    \n    # Properties to store summary data\n    total_selected: bpy.props.IntProperty(default=0)\n    removed_count: bpy.props.IntProperty(default=0)\n    no_extension_count: bpy.props.IntProperty(default=0)\n    linked_count: bpy.props.IntProperty(default=0)\n    removal_details: bpy.props.StringProperty(default=\"\")\n    \n    def draw(self, context):\n        layout = self.layout",
+        "signatures": {},
+        "detailedLines": [
+          {
+            "text": "import bpy # type: ignore",
+            "lineNumber": 1
+          },
+          {
+            "text": "from bpy.types import Panel, Operator, PropertyGroup # type: ignore",
+            "lineNumber": 2
+          },
+          {
+            "text": "from bpy.props import StringProperty, BoolProperty, EnumProperty, PointerProperty, CollectionProperty # type: ignore",
+            "lineNumber": 3
+          },
+          {
+            "text": "import os",
+            "lineNumber": 4
+          },
+          {
+            "text": "import re",
+            "lineNumber": 5
+          },
+          {
+            "text": "from ..utils import compat",
+            "lineNumber": 6
+          },
+          {
+            "lineNumber": 7
+          },
+          {
+            "text": "class RBST_PathMan_OT_summary_dialog(bpy.types.Operator):",
+            "lineNumber": 8,
+            "isSignature": true
+          },
+          {
+            "text": "    \"\"\"Show remove extensions operation summary\"\"\"",
+            "lineNumber": 9
+          },
+          {
+            "text": "    bl_idname = \"remove_ext.summary_dialog\"",
+            "lineNumber": 10
+          },
+          {
+            "text": "    bl_label = \"Remove Extensions Summary\"",
+            "lineNumber": 11
+          },
+          {
+            "text": "    bl_options = {'REGISTER', 'INTERNAL'}",
+            "lineNumber": 12
+          },
+          {
+            "text": "    ",
+            "lineNumber": 13
+          },
+          {
+            "text": "    # Properties to store summary data",
+            "lineNumber": 14
+          },
+          {
+            "text": "    total_selected: bpy.props.IntProperty(default=0)",
+            "lineNumber": 15
+          },
+          {
+            "text": "    removed_count: bpy.props.IntProperty(default=0)",
+            "lineNumber": 16
+          },
+          {
+            "text": "    no_extension_count: bpy.props.IntProperty(default=0)",
+            "lineNumber": 17
+          },
+          {
+            "text": "    linked_count: bpy.props.IntProperty(default=0)",
+            "lineNumber": 18
+          },
+          {
+            "text": "    removal_details: bpy.props.StringProperty(default=\"\")",
+            "lineNumber": 19
+          },
+          {
+            "text": "    ",
+            "lineNumber": 20
+          },
+          {
+            "text": "    def draw(self, context):",
+            "lineNumber": 21
+          },
+          {
+            "text": "        layout = self.layout",
+            "lineNumber": 22
+          }
+        ]
+      },
+      "score": 0.2631886899471283
+    },
+    {
+      "codeBlock": {
+        "relativeWorkspacePath": ".\\ops\\Rename_images_by_mat.py",
+        "range": {
+          "startPosition": {
+            "line": 68
+          },
+          "endPosition": {
+            "line": 497
+          }
+        },
+        "contents": "class RBST_RenameImg_OT_Rename_images_by_mat(bpy.types.Operator):\ndef extract_texture_suffix(self, name):\n\n        \n        # Then try single-word suffixes with traditional separators\n        for suffix in sorted_suffixes:\n            if ' ' not in suffix:  # Single word suffix\n                # Pattern: ends with _suffix or -suffix or .suffix\n                pattern = rf'[._-]({re.escape(suffix)})$'\n                match = re.search(pattern, base_name, re.IGNORECASE)\n                if match:\n                    return match.group(1).lower()\n        \n        # Check for numeric suffixes (like _01, _02, etc.)\n        numeric_match = re.search(r'[._-](\\d+)$', base_name)\n        if numeric_match:\n            return numeric_match.group(1)\n        \n        return None\n    \n    def ensure_unique_name(self, proposed_name):\n        \"\"\"Ensure the proposed name is unique among all images\"\"\"\n        if proposed_name not in bpy.data.images:\n            return proposed_name\n        \n        # If name exists, add numerical suffix\n        counter = 1\n        while f\"{proposed_name}.{counter:03d}\" in bpy.data.images:\n            counter += 1\n        \n        return f\"{proposed_name}.{counter:03d}\"\n    \n    def capitalize_suffix(self, suffix):\n        \"\"\"Properly capitalize texture type suffixes with correct formatting\"\"\"",
+        "signatures": {
+          "ranges": [
+            {
+              "startPosition": {
+                "line": 69,
+                "column": 1
+              },
+              "endPosition": {
+                "line": 70,
+                "column": 5
+              }
+            },
+            {
+              "startPosition": {
+                "line": 232,
+                "column": 5
+              },
+              "endPosition": {
+                "line": 233,
+                "column": 9
+              }
+            }
+          ]
+        },
+        "detailedLines": [
+          {
+            "text": "class RBST_RenameImg_OT_Rename_images_by_mat(bpy.types.Operator):",
+            "lineNumber": 69,
+            "isSignature": true
+          },
+          {
+            "text": "def extract_texture_suffix(self, name):",
+            "lineNumber": 232
+          },
+          {
+            "lineNumber": 300
+          },
+          {
+            "text": "        ",
+            "lineNumber": 301
+          },
+          {
+            "text": "        # Then try single-word suffixes with traditional separators",
+            "lineNumber": 302
+          },
+          {
+            "text": "        for suffix in sorted_suffixes:",
+            "lineNumber": 303
+          },
+          {
+            "text": "            if ' ' not in suffix:  # Single word suffix",
+            "lineNumber": 304
+          },
+          {
+            "text": "                # Pattern: ends with _suffix or -suffix or .suffix",
+            "lineNumber": 305
+          },
+          {
+            "text": "                pattern = rf'[._-]({re.escape(suffix)})$'",
+            "lineNumber": 306
+          },
+          {
+            "text": "                match = re.search(pattern, base_name, re.IGNORECASE)",
+            "lineNumber": 307
+          },
+          {
+            "text": "                if match:",
+            "lineNumber": 308
+          },
+          {
+            "text": "                    return match.group(1).lower()",
+            "lineNumber": 309
+          },
+          {
+            "text": "        ",
+            "lineNumber": 310
+          },
+          {
+            "text": "        # Check for numeric suffixes (like _01, _02, etc.)",
+            "lineNumber": 311
+          },
+          {
+            "text": "        numeric_match = re.search(r'[._-](\\d+)$', base_name)",
+            "lineNumber": 312
+          },
+          {
+            "text": "        if numeric_match:",
+            "lineNumber": 313
+          },
+          {
+            "text": "            return numeric_match.group(1)",
+            "lineNumber": 314
+          },
+          {
+            "text": "        ",
+            "lineNumber": 315
+          },
+          {
+            "text": "        return None",
+            "lineNumber": 316
+          },
+          {
+            "text": "    ",
+            "lineNumber": 317
+          },
+          {
+            "text": "    def ensure_unique_name(self, proposed_name):",
+            "lineNumber": 318
+          },
+          {
+            "text": "        \"\"\"Ensure the proposed name is unique among all images\"\"\"",
+            "lineNumber": 319
+          },
+          {
+            "text": "        if proposed_name not in bpy.data.images:",
+            "lineNumber": 320
+          },
+          {
+            "text": "            return proposed_name",
+            "lineNumber": 321
+          },
+          {
+            "text": "        ",
+            "lineNumber": 322
+          },
+          {
+            "text": "        # If name exists, add numerical suffix",
+            "lineNumber": 323
+          },
+          {
+            "text": "        counter = 1",
+            "lineNumber": 324
+          },
+          {
+            "text": "        while f\"{proposed_name}.{counter:03d}\" in bpy.data.images:",
+            "lineNumber": 325
+          },
+          {
+            "text": "            counter += 1",
+            "lineNumber": 326
+          },
+          {
+            "text": "        ",
+            "lineNumber": 327
+          },
+          {
+            "text": "        return f\"{proposed_name}.{counter:03d}\"",
+            "lineNumber": 328
+          },
+          {
+            "text": "    ",
+            "lineNumber": 329
+          },
+          {
+            "text": "    def capitalize_suffix(self, suffix):",
+            "lineNumber": 330
+          },
+          {
+            "text": "        \"\"\"Properly capitalize texture type suffixes with correct formatting\"\"\"",
+            "lineNumber": 331
+          }
+        ]
+      },
+      "score": 0.25760066509246826
+    },
+    {
+      "codeBlock": {
+        "relativeWorkspacePath": ".\\ops\\Rename_images_by_mat.py",
+        "range": {
+          "startPosition": {
+            "line": 68
+          },
+          "endPosition": {
+            "line": 497
+          }
+        },
+        "contents": "class RBST_RenameImg_OT_Rename_images_by_mat(bpy.types.Operator):\ndef execute(self, context):\n        # Get selected images\n\n                continue\n            elif len(materials) == 1:\n                # Single material usage - check suffix recognition\n                material_name = materials[0]\n                suffix = self.extract_texture_suffix(img.name)\n                original_name = img.name\n                \n                # Skip images with unrecognized suffixes (only if they have a potential suffix pattern)\n                if suffix is None and self.has_potential_suffix(img.name):\n                    unrecognized_suffix_count += 1\n                    unrecognized_list.append(img.name)\n                    print(f\"DEBUG: Skipped image with unrecognized suffix: {img.name}\")\n                    continue\n                \n                if suffix:\n                    # Capitalize the suffix properly\n                    capitalized_suffix = self.capitalize_suffix(suffix)\n                    expected_name = f\"{material_name}_{capitalized_suffix}\"\n                else:\n                    # No suffix detected, use material name only\n                    expected_name = material_name\n                \n                # Check if the image is already correctly named\n                if img.name == expected_name:\n                    already_correct_count += 1\n                    print(f\"DEBUG: Skipped already correctly named: {img.name}\")\n                    continue\n                \n                # Avoid duplicate names\n                new_name = self.ensure_unique_name(expected_name)\n                \n                img.name = new_name\n                renamed_count += 1\n                renamed_list.append((original_name, new_name, material_name, capitalized_suffix if suffix else None))\n                print(f\"DEBUG: Renamed '{original_name}' → '{new_name}' (Material: {material_name}, Suffix: {capitalized_suffix if suffix else 'none'})\")\n            else:\n                # Shared across multiple materials - skip\n                shared_count += 1",
+        "signatures": {
+          "ranges": [
+            {
+              "startPosition": {
+                "line": 69,
+                "column": 1
+              },
+              "endPosition": {
+                "line": 70,
+                "column": 5
+              }
+            },
+            {
+              "startPosition": {
+                "line": 75,
+                "column": 5
+              },
+              "endPosition": {
+                "line": 77,
+                "column": 9
+              }
+            }
+          ]
+        },
+        "detailedLines": [
+          {
+            "text": "class RBST_RenameImg_OT_Rename_images_by_mat(bpy.types.Operator):",
+            "lineNumber": 69,
+            "isSignature": true
+          },
+          {
+            "text": "def execute(self, context):",
+            "lineNumber": 75
+          },
+          {
+            "text": "        # Get selected images",
+            "lineNumber": 76
+          },
+          {
+            "lineNumber": 114
+          },
+          {
+            "text": "                continue",
+            "lineNumber": 115
+          },
+          {
+            "text": "            elif len(materials) == 1:",
+            "lineNumber": 116
+          },
+          {
+            "text": "                # Single material usage - check suffix recognition",
+            "lineNumber": 117
+          },
+          {
+            "text": "                material_name = materials[0]",
+            "lineNumber": 118
+          },
+          {
+            "text": "                suffix = self.extract_texture_suffix(img.name)",
+            "lineNumber": 119
+          },
+          {
+            "text": "                original_name = img.name",
+            "lineNumber": 120
+          },
+          {
+            "text": "                ",
+            "lineNumber": 121
+          },
+          {
+            "text": "                # Skip images with unrecognized suffixes (only if they have a potential suffix pattern)",
+            "lineNumber": 122
+          },
+          {
+            "text": "                if suffix is None and self.has_potential_suffix(img.name):",
+            "lineNumber": 123
+          },
+          {
+            "text": "                    unrecognized_suffix_count += 1",
+            "lineNumber": 124
+          },
+          {
+            "text": "                    unrecognized_list.append(img.name)",
+            "lineNumber": 125
+          },
+          {
+            "text": "                    print(f\"DEBUG: Skipped image with unrecognized suffix: {img.name}\")",
+            "lineNumber": 126
+          },
+          {
+            "text": "                    continue",
+            "lineNumber": 127
+          },
+          {
+            "text": "                ",
+            "lineNumber": 128
+          },
+          {
+            "text": "                if suffix:",
+            "lineNumber": 129
+          },
+          {
+            "text": "                    # Capitalize the suffix properly",
+            "lineNumber": 130
+          },
+          {
+            "text": "                    capitalized_suffix = self.capitalize_suffix(suffix)",
+            "lineNumber": 131
+          },
+          {
+            "text": "                    expected_name = f\"{material_name}_{capitalized_suffix}\"",
+            "lineNumber": 132
+          },
+          {
+            "text": "                else:",
+            "lineNumber": 133
+          },
+          {
+            "text": "                    # No suffix detected, use material name only",
+            "lineNumber": 134
+          },
+          {
+            "text": "                    expected_name = material_name",
+            "lineNumber": 135
+          },
+          {
+            "text": "                ",
+            "lineNumber": 136
+          },
+          {
+            "text": "                # Check if the image is already correctly named",
+            "lineNumber": 137
+          },
+          {
+            "text": "                if img.name == expected_name:",
+            "lineNumber": 138
+          },
+          {
+            "text": "                    already_correct_count += 1",
+            "lineNumber": 139
+          },
+          {
+            "text": "                    print(f\"DEBUG: Skipped already correctly named: {img.name}\")",
+            "lineNumber": 140
+          },
+          {
+            "text": "                    continue",
+            "lineNumber": 141
+          },
+          {
+            "text": "                ",
+            "lineNumber": 142
+          },
+          {
+            "text": "                # Avoid duplicate names",
+            "lineNumber": 143
+          },
+          {
+            "text": "                new_name = self.ensure_unique_name(expected_name)",
+            "lineNumber": 144
+          },
+          {
+            "text": "                ",
+            "lineNumber": 145
+          },
+          {
+            "text": "                img.name = new_name",
+            "lineNumber": 146
+          },
+          {
+            "text": "                renamed_count += 1",
+            "lineNumber": 147
+          },
+          {
+            "text": "                renamed_list.append((original_name, new_name, material_name, capitalized_suffix if suffix else None))",
+            "lineNumber": 148
+          },
+          {
+            "text": "                print(f\"DEBUG: Renamed '{original_name}' → '{new_name}' (Material: {material_name}, Suffix: {capitalized_suffix if suffix else 'none'})\")",
+            "lineNumber": 149
+          },
+          {
+            "text": "            else:",
+            "lineNumber": 150
+          },
+          {
+            "text": "                # Shared across multiple materials - skip",
+            "lineNumber": 151
+          },
+          {
+            "text": "                shared_count += 1",
+            "lineNumber": 152
+          }
+        ]
+      },
+      "score": 0.25534743070602417
+    },
+    {
+      "codeBlock": {
+        "relativeWorkspacePath": ".\\ops\\Rename_images_by_mat.py",
+        "range": {
+          "startPosition": {
+            "line": 66,
+            "column": 67
+          },
+          "endPosition": {
+            "line": 497
+          }
+        },
+        "contents": "class RBST_RenameImg_OT_Rename_images_by_mat(bpy.types.Operator):\n    bl_idname = \"bst.rename_images_by_mat\"\n    bl_label = \"Rename Images by Material\"\n    bl_description = \"Rename selected images based on their material usage, preserving texture type suffixes\"\n    bl_options = {'REGISTER', 'UNDO'}\n\n    def execute(self, context):\n        # Get selected images\n        selected_images = [img for img in bpy.data.images if hasattr(img, \"bst_selected\") and img.bst_selected]\n        \n        if not selected_images:\n            self.report({'WARNING'}, \"No images selected for renaming\")\n            return {'CANCELLED'}\n        \n        # Get image to material mapping\n        image_to_materials = self.get_image_material_mapping(selected_images)\n        \n        renamed_count = 0\n        shared_count = 0\n        unused_count = 0\n        cc3iid_count = 0  # Track CC3 ID textures\n        flatcolor_count = 0  # Track flat color textures\n        already_correct_count = 0  # Track images already correctly named\n        unrecognized_suffix_count = 0  # Track images with unrecognized suffixes\n        renamed_list = []  # Track renamed images for debug\n        unrecognized_list = []  # Track images with unrecognized suffixes\n        \n        for img in selected_images:",
+        "signatures": {},
+        "detailedLines": [
+          {
+            "text": "class RBST_RenameImg_OT_Rename_images_by_mat(bpy.types.Operator):",
+            "lineNumber": 69,
+            "isSignature": true
+          },
+          {
+            "text": "    bl_idname = \"bst.rename_images_by_mat\"",
+            "lineNumber": 70
+          },
+          {
+            "text": "    bl_label = \"Rename Images by Material\"",
+            "lineNumber": 71
+          },
+          {
+            "text": "    bl_description = \"Rename selected images based on their material usage, preserving texture type suffixes\"",
+            "lineNumber": 72
+          },
+          {
+            "text": "    bl_options = {'REGISTER', 'UNDO'}",
+            "lineNumber": 73
+          },
+          {
+            "lineNumber": 74
+          },
+          {
+            "text": "    def execute(self, context):",
+            "lineNumber": 75
+          },
+          {
+            "text": "        # Get selected images",
+            "lineNumber": 76
+          },
+          {
+            "text": "        selected_images = [img for img in bpy.data.images if hasattr(img, \"bst_selected\") and img.bst_selected]",
+            "lineNumber": 77
+          },
+          {
+            "text": "        ",
+            "lineNumber": 78
+          },
+          {
+            "text": "        if not selected_images:",
+            "lineNumber": 79
+          },
+          {
+            "text": "            self.report({'WARNING'}, \"No images selected for renaming\")",
+            "lineNumber": 80
+          },
+          {
+            "text": "            return {'CANCELLED'}",
+            "lineNumber": 81
+          },
+          {
+            "text": "        ",
+            "lineNumber": 82
+          },
+          {
+            "text": "        # Get image to material mapping",
+            "lineNumber": 83
+          },
+          {
+            "text": "        image_to_materials = self.get_image_material_mapping(selected_images)",
+            "lineNumber": 84
+          },
+          {
+            "text": "        ",
+            "lineNumber": 85
+          },
+          {
+            "text": "        renamed_count = 0",
+            "lineNumber": 86
+          },
+          {
+            "text": "        shared_count = 0",
+            "lineNumber": 87
+          },
+          {
+            "text": "        unused_count = 0",
+            "lineNumber": 88
+          },
+          {
+            "text": "        cc3iid_count = 0  # Track CC3 ID textures",
+            "lineNumber": 89
+          },
+          {
+            "text": "        flatcolor_count = 0  # Track flat color textures",
+            "lineNumber": 90
+          },
+          {
+            "text": "        already_correct_count = 0  # Track images already correctly named",
+            "lineNumber": 91
+          },
+          {
+            "text": "        unrecognized_suffix_count = 0  # Track images with unrecognized suffixes",
+            "lineNumber": 92
+          },
+          {
+            "text": "        renamed_list = []  # Track renamed images for debug",
+            "lineNumber": 93
+          },
+          {
+            "text": "        unrecognized_list = []  # Track images with unrecognized suffixes",
+            "lineNumber": 94
+          },
+          {
+            "text": "        ",
+            "lineNumber": 95
+          },
+          {
+            "text": "        for img in selected_images:",
+            "lineNumber": 96
+          }
+        ]
+      },
+      "score": 0.2536381483078003
+    },
+    {
+      "codeBlock": {
+        "relativeWorkspacePath": ".\\ops\\Rename_images_by_mat.py",
+        "range": {
+          "startPosition": {
+            "line": 68
+          },
+          "endPosition": {
+            "line": 497
+          }
+        },
+        "contents": "class RBST_RenameImg_OT_Rename_images_by_mat(bpy.types.Operator):\n\n    \n    def extract_texture_suffix(self, name):\n        \"\"\"Extract texture type suffix from image name (case-insensitive)\"\"\"\n        # Comprehensive list of texture suffixes\n        suffixes = [\n            # Standard PBR suffixes\n            'diffuse', 'basecolor', 'base_color', 'albedo', 'color', 'col',\n            'normal', 'norm', 'nrm', 'bump',\n            'roughness', 'rough', 'rgh',\n            'metallic', 'metal', 'mtl',\n            'specular', 'spec', 'spc',\n            'ao', 'ambient_occlusion', 'ambientocclusion', 'occlusion',\n            'gradao',\n            'height', 'displacement', 'disp', 'displace',\n            'opacity', 'alpha', 'mask',\n            'emission', 'emissive', 'emit',\n            'subsurface', 'sss', 'transmission',\n            \n            # Character Creator / iClone suffixes\n            'base', 'diffusemap', 'normalmap', 'roughnessmap', 'metallicmap',\n            'aomap', 'opacitymap', 'emissionmap', 'heightmap', 'displacementmap',\n            'detail_normal', 'detail_diffuse', 'detail_mask',\n            'blend', 'id', 'cavity', 'curvature', 'transmap', 'rgbamask', 'sssmap', 'micronmask',\n            'bcbmap', 'mnaomask', 'specmask', 'micron', 'cfulcmask', 'nmuilmask', 'nbmap', 'enmask', 'blend_multiply',\n            \n            # Hair-related compound suffixes (no spaces)\n            'hairflowmap', 'hairidmap', 'hairrootmap', 'hairdepthmap',\n            'flowmap', 'idmap', 'rootmap', 'depthmap',\n            \n            # Wrinkle map suffixes (Character Creator)\n            'wrinkle_normal1', 'wrinkle_normal2', 'wrinkle_normal3',\n            'wrinkle_roughness1', 'wrinkle_roughness2', 'wrinkle_roughness3',\n            'wrinkle_diffuse1', 'wrinkle_diffuse2', 'wrinkle_diffuse3',\n            'wrinkle_mask1', 'wrinkle_mask2', 'wrinkle_mask3',\n            'wrinkle_flow1', 'wrinkle_flow2', 'wrinkle_flow3',\n            \n            # Character Creator pack suffixes (with spaces)\n            'flow pack', 'msmnao pack', 'roughness pack', 'sstm pack',\n            'flow_pack', 'msmnao_pack', 'roughness_pack', 'sstm_pack',\n            \n            # Hair-related multi-word suffixes (spaces)",
+        "signatures": {
+          "ranges": [
+            {
+              "startPosition": {
+                "line": 69,
+                "column": 1
+              },
+              "endPosition": {
+                "line": 70,
+                "column": 5
+              }
+            }
+          ]
+        },
+        "detailedLines": [
+          {
+            "text": "class RBST_RenameImg_OT_Rename_images_by_mat(bpy.types.Operator):",
+            "lineNumber": 69,
+            "isSignature": true
+          },
+          {
+            "lineNumber": 230
+          },
+          {
+            "text": "    ",
+            "lineNumber": 231
+          },
+          {
+            "text": "    def extract_texture_suffix(self, name):",
+            "lineNumber": 232
+          },
+          {
+            "text": "        \"\"\"Extract texture type suffix from image name (case-insensitive)\"\"\"",
+            "lineNumber": 233
+          },
+          {
+            "text": "        # Comprehensive list of texture suffixes",
+            "lineNumber": 234
+          },
+          {
+            "text": "        suffixes = [",
+            "lineNumber": 235
+          },
+          {
+            "text": "            # Standard PBR suffixes",
+            "lineNumber": 236
+          },
+          {
+            "text": "            'diffuse', 'basecolor', 'base_color', 'albedo', 'color', 'col',",
+            "lineNumber": 237
+          },
+          {
+            "text": "            'normal', 'norm', 'nrm', 'bump',",
+            "lineNumber": 238
+          },
+          {
+            "text": "            'roughness', 'rough', 'rgh',",
+            "lineNumber": 239
+          },
+          {
+            "text": "            'metallic', 'metal', 'mtl',",
+            "lineNumber": 240
+          },
+          {
+            "text": "            'specular', 'spec', 'spc',",
+            "lineNumber": 241
+          },
+          {
+            "text": "            'ao', 'ambient_occlusion', 'ambientocclusion', 'occlusion',",
+            "lineNumber": 242
+          },
+          {
+            "text": "            'gradao',",
+            "lineNumber": 243
+          },
+          {
+            "text": "            'height', 'displacement', 'disp', 'displace',",
+            "lineNumber": 244
+          },
+          {
+            "text": "            'opacity', 'alpha', 'mask',",
+            "lineNumber": 245
+          },
+          {
+            "text": "            'emission', 'emissive', 'emit',",
+            "lineNumber": 246
+          },
+          {
+            "text": "            'subsurface', 'sss', 'transmission',",
+            "lineNumber": 247
+          },
+          {
+            "text": "            ",
+            "lineNumber": 248
+          },
+          {
+            "text": "            # Character Creator / iClone suffixes",
+            "lineNumber": 249
+          },
+          {
+            "text": "            'base', 'diffusemap', 'normalmap', 'roughnessmap', 'metallicmap',",
+            "lineNumber": 250
+          },
+          {
+            "text": "            'aomap', 'opacitymap', 'emissionmap', 'heightmap', 'displacementmap',",
+            "lineNumber": 251
+          },
+          {
+            "text": "            'detail_normal', 'detail_diffuse', 'detail_mask',",
+            "lineNumber": 252
+          },
+          {
+            "text": "            'blend', 'id', 'cavity', 'curvature', 'transmap', 'rgbamask', 'sssmap', 'micronmask',",
+            "lineNumber": 253
+          },
+          {
+            "text": "            'bcbmap', 'mnaomask', 'specmask', 'micron', 'cfulcmask', 'nmuilmask', 'nbmap', 'enmask', 'blend_multiply',",
+            "lineNumber": 254
+          },
+          {
+            "text": "            ",
+            "lineNumber": 255
+          },
+          {
+            "text": "            # Hair-related compound suffixes (no spaces)",
+            "lineNumber": 256
+          },
+          {
+            "text": "            'hairflowmap', 'hairidmap', 'hairrootmap', 'hairdepthmap',",
+            "lineNumber": 257
+          },
+          {
+            "text": "            'flowmap', 'idmap', 'rootmap', 'depthmap',",
+            "lineNumber": 258
+          },
+          {
+            "text": "            ",
+            "lineNumber": 259
+          },
+          {
+            "text": "            # Wrinkle map suffixes (Character Creator)",
+            "lineNumber": 260
+          },
+          {
+            "text": "            'wrinkle_normal1', 'wrinkle_normal2', 'wrinkle_normal3',",
+            "lineNumber": 261
+          },
+          {
+            "text": "            'wrinkle_roughness1', 'wrinkle_roughness2', 'wrinkle_roughness3',",
+            "lineNumber": 262
+          },
+          {
+            "text": "            'wrinkle_diffuse1', 'wrinkle_diffuse2', 'wrinkle_diffuse3',",
+            "lineNumber": 263
+          },
+          {
+            "text": "            'wrinkle_mask1', 'wrinkle_mask2', 'wrinkle_mask3',",
+            "lineNumber": 264
+          },
+          {
+            "text": "            'wrinkle_flow1', 'wrinkle_flow2', 'wrinkle_flow3',",
+            "lineNumber": 265
+          },
+          {
+            "text": "            ",
+            "lineNumber": 266
+          },
+          {
+            "text": "            # Character Creator pack suffixes (with spaces)",
+            "lineNumber": 267
+          },
+          {
+            "text": "            'flow pack', 'msmnao pack', 'roughness pack', 'sstm pack',",
+            "lineNumber": 268
+          },
+          {
+            "text": "            'flow_pack', 'msmnao_pack', 'roughness_pack', 'sstm_pack',",
+            "lineNumber": 269
+          },
+          {
+            "text": "            ",
+            "lineNumber": 270
+          },
+          {
+            "text": "            # Hair-related multi-word suffixes (spaces)",
+            "lineNumber": 271
+          }
+        ]
+      },
+      "score": 0.25207099318504333
+    },
+    {
+      "codeBlock": {
+        "relativeWorkspacePath": ".\\ops\\flat_color_texture_renamer.py",
+        "range": {
+          "startPosition": {
+            "line": 91,
+            "column": 74
+          },
+          "endPosition": {
+            "line": 187
+          }
+        },
+        "contents": "def safe_rename_image(image, new_name):\n    \"\"\"Safely rename an image datablock using context override.\"\"\"\n    try:\n        # Method 1: Try direct assignment first (works in some contexts)\n        image.name = new_name\n        return True\n    except:\n        try:\n            # Method 2: Use context override with outliner\n            for area in bpy.context.screen.areas:\n                if area.type == 'OUTLINER':\n                    with bpy.context.temp_override(area=area):\n                        image.name = new_name\n                    return True\n        except:\n            try:\n                # Method 3: Use bpy.ops with context override\n                # Set the image as active and use the rename operator\n                bpy.context.view_layer.objects.active = None\n                \n                # Create a temporary override context\n                override_context = bpy.context.copy()\n                override_context['edit_image'] = image\n                \n                with bpy.context.temp_override(**override_context):\n                    image.name = new_name\n                return True\n            except:\n                # Method 4: Try using the data API directly with update\n                try:\n                    old_name = image.name\n                    # Force an update cycle\n                    bpy.context.view_layer.update()\n                    image.name = new_name\n                    bpy.context.view_layer.update()\n                    return True\n                except:\n                    return False\n\ndef rename_flat_color_textures():\n    \"\"\"Main function to find and rename flat color textures.\"\"\"",
+        "signatures": {},
+        "detailedLines": [
+          {
+            "text": "def safe_rename_image(image, new_name):",
+            "lineNumber": 94,
+            "isSignature": true
+          },
+          {
+            "text": "    \"\"\"Safely rename an image datablock using context override.\"\"\"",
+            "lineNumber": 95
+          },
+          {
+            "text": "    try:",
+            "lineNumber": 96
+          },
+          {
+            "text": "        # Method 1: Try direct assignment first (works in some contexts)",
+            "lineNumber": 97
+          },
+          {
+            "text": "        image.name = new_name",
+            "lineNumber": 98
+          },
+          {
+            "text": "        return True",
+            "lineNumber": 99
+          },
+          {
+            "text": "    except:",
+            "lineNumber": 100
+          },
+          {
+            "text": "        try:",
+            "lineNumber": 101
+          },
+          {
+            "text": "            # Method 2: Use context override with outliner",
+            "lineNumber": 102
+          },
+          {
+            "text": "            for area in bpy.context.screen.areas:",
+            "lineNumber": 103
+          },
+          {
+            "text": "                if area.type == 'OUTLINER':",
+            "lineNumber": 104
+          },
+          {
+            "text": "                    with bpy.context.temp_override(area=area):",
+            "lineNumber": 105
+          },
+          {
+            "text": "                        image.name = new_name",
+            "lineNumber": 106
+          },
+          {
+            "text": "                    return True",
+            "lineNumber": 107
+          },
+          {
+            "text": "        except:",
+            "lineNumber": 108
+          },
+          {
+            "text": "            try:",
+            "lineNumber": 109
+          },
+          {
+            "text": "                # Method 3: Use bpy.ops with context override",
+            "lineNumber": 110
+          },
+          {
+            "text": "                # Set the image as active and use the rename operator",
+            "lineNumber": 111
+          },
+          {
+            "text": "                bpy.context.view_layer.objects.active = None",
+            "lineNumber": 112
+          },
+          {
+            "text": "                ",
+            "lineNumber": 113
+          },
+          {
+            "text": "                # Create a temporary override context",
+            "lineNumber": 114
+          },
+          {
+            "text": "                override_context = bpy.context.copy()",
+            "lineNumber": 115
+          },
+          {
+            "text": "                override_context['edit_image'] = image",
+            "lineNumber": 116
+          },
+          {
+            "text": "                ",
+            "lineNumber": 117
+          },
+          {
+            "text": "                with bpy.context.temp_override(**override_context):",
+            "lineNumber": 118
+          },
+          {
+            "text": "                    image.name = new_name",
+            "lineNumber": 119
+          },
+          {
+            "text": "                return True",
+            "lineNumber": 120
+          },
+          {
+            "text": "            except:",
+            "lineNumber": 121
+          },
+          {
+            "text": "                # Method 4: Try using the data API directly with update",
+            "lineNumber": 122
+          },
+          {
+            "text": "                try:",
+            "lineNumber": 123
+          },
+          {
+            "text": "                    old_name = image.name",
+            "lineNumber": 124
+          },
+          {
+            "text": "                    # Force an update cycle",
+            "lineNumber": 125
+          },
+          {
+            "text": "                    bpy.context.view_layer.update()",
+            "lineNumber": 126
+          },
+          {
+            "text": "                    image.name = new_name",
+            "lineNumber": 127
+          },
+          {
+            "text": "                    bpy.context.view_layer.update()",
+            "lineNumber": 128
+          },
+          {
+            "text": "                    return True",
+            "lineNumber": 129
+          },
+          {
+            "text": "                except:",
+            "lineNumber": 130
+          },
+          {
+            "text": "                    return False",
+            "lineNumber": 131,
+            "isSignature": true
+          },
+          {
+            "lineNumber": 132
+          },
+          {
+            "text": "def rename_flat_color_textures():",
+            "lineNumber": 133,
+            "isSignature": true
+          },
+          {
+            "text": "    \"\"\"Main function to find and rename flat color textures.\"\"\"",
+            "lineNumber": 134
+          }
+        ]
+      },
+      "score": 0.2467108964920044
+    },
+    {
+      "codeBlock": {
+        "relativeWorkspacePath": ".\\ops\\Rename_images_by_mat.py",
+        "range": {
+          "startPosition": {
+            "line": 68
+          },
+          "endPosition": {
+            "line": 497
+          }
+        },
+        "contents": "class RBST_RenameImg_OT_Rename_images_by_mat(bpy.types.Operator):\ndef execute(self, context):\n        # Get selected images\n\n        \n        for img in selected_images:\n            # Skip CC3 ID textures (ignore case)\n            if img.name.lower().startswith('cc3iid'):\n                cc3iid_count += 1\n                print(f\"DEBUG: Skipped CC3 ID texture: {img.name}\")\n                continue\n            \n            # Skip flat color textures (start with #)\n            if img.name.startswith('#'):\n                flatcolor_count += 1\n                print(f\"DEBUG: Skipped flat color texture: {img.name}\")\n                continue\n                \n            materials = image_to_materials.get(img.name, [])\n            \n            if len(materials) == 0:\n                # Unused image - skip\n                unused_count += 1\n                print(f\"DEBUG: Skipped unused image: {img.name}\")\n                continue\n            elif len(materials) == 1:\n                # Single material usage - check suffix recognition\n                material_name = materials[0]",
+        "signatures": {
+          "ranges": [
+            {
+              "startPosition": {
+                "line": 69,
+                "column": 1
+              },
+              "endPosition": {
+                "line": 70,
+                "column": 5
+              }
+            },
+            {
+              "startPosition": {
+                "line": 75,
+                "column": 5
+              },
+              "endPosition": {
+                "line": 77,
+                "column": 9
+              }
+            }
+          ]
+        },
+        "detailedLines": [
+          {
+            "text": "class RBST_RenameImg_OT_Rename_images_by_mat(bpy.types.Operator):",
+            "lineNumber": 69,
+            "isSignature": true
+          },
+          {
+            "text": "def execute(self, context):",
+            "lineNumber": 75
+          },
+          {
+            "text": "        # Get selected images",
+            "lineNumber": 76
+          },
+          {
+            "lineNumber": 94
+          },
+          {
+            "text": "        ",
+            "lineNumber": 95
+          },
+          {
+            "text": "        for img in selected_images:",
+            "lineNumber": 96
+          },
+          {
+            "text": "            # Skip CC3 ID textures (ignore case)",
+            "lineNumber": 97
+          },
+          {
+            "text": "            if img.name.lower().startswith('cc3iid'):",
+            "lineNumber": 98
+          },
+          {
+            "text": "                cc3iid_count += 1",
+            "lineNumber": 99
+          },
+          {
+            "text": "                print(f\"DEBUG: Skipped CC3 ID texture: {img.name}\")",
+            "lineNumber": 100
+          },
+          {
+            "text": "                continue",
+            "lineNumber": 101
+          },
+          {
+            "text": "            ",
+            "lineNumber": 102
+          },
+          {
+            "text": "            # Skip flat color textures (start with #)",
+            "lineNumber": 103
+          },
+          {
+            "text": "            if img.name.startswith('#'):",
+            "lineNumber": 104
+          },
+          {
+            "text": "                flatcolor_count += 1",
+            "lineNumber": 105
+          },
+          {
+            "text": "                print(f\"DEBUG: Skipped flat color texture: {img.name}\")",
+            "lineNumber": 106
+          },
+          {
+            "text": "                continue",
+            "lineNumber": 107
+          },
+          {
+            "text": "                ",
+            "lineNumber": 108
+          },
+          {
+            "text": "            materials = image_to_materials.get(img.name, [])",
+            "lineNumber": 109
+          },
+          {
+            "text": "            ",
+            "lineNumber": 110
+          },
+          {
+            "text": "            if len(materials) == 0:",
+            "lineNumber": 111
+          },
+          {
+            "text": "                # Unused image - skip",
+            "lineNumber": 112
+          },
+          {
+            "text": "                unused_count += 1",
+            "lineNumber": 113
+          },
+          {
+            "text": "                print(f\"DEBUG: Skipped unused image: {img.name}\")",
+            "lineNumber": 114
+          },
+          {
+            "text": "                continue",
+            "lineNumber": 115
+          },
+          {
+            "text": "            elif len(materials) == 1:",
+            "lineNumber": 116
+          },
+          {
+            "text": "                # Single material usage - check suffix recognition",
+            "lineNumber": 117
+          },
+          {
+            "text": "                material_name = materials[0]",
+            "lineNumber": 118
+          }
+        ]
+      },
+      "score": 0.24529874324798584
+    },
+    {
+      "codeBlock": {
+        "relativeWorkspacePath": ".\\ops\\flat_color_texture_renamer.py",
+        "range": {
+          "startPosition": {
+            "line": 130,
+            "column": 32
+          },
+          "endPosition": {
+            "line": 187
+          }
+        },
+        "contents": "def rename_flat_color_textures():\n    \"\"\"Main function to find and rename flat color textures.\"\"\"\n    renamed_count = 0\n    failed_count = 0\n    processed_count = 0\n    \n    print(\"Scanning for flat color textures...\")\n    \n    # Store rename operations to perform them in batch\n    rename_operations = []\n    \n    for image in bpy.data.images:\n        processed_count += 1\n        \n        # Skip if image has no pixel data\n        if not hasattr(image, 'pixels') or len(image.pixels) == 0:\n            print(f\"Skipping '{image.name}': No pixel data available\")\n            continue\n        \n        # Check if image has flat color\n        is_flat, color = is_flat_color_image(image)\n        \n        if is_flat and color:\n            # Convert color to hex\n            hex_color = rgb_to_hex(*color)\n            \n            # Store original name for logging\n            original_name = image.name\n            \n            # Check if name is already a hex color (to avoid renaming again)\n            if not original_name.startswith('#'):\n                rename_operations.append((image, original_name, hex_color, color))\n            else:\n                print(f\"Skipping '{original_name}': Already appears to be hex-named\")\n        else:\n            print(f\"'{image.name}': Not a flat color texture\")\n    \n    # Perform rename operations\n    print(f\"\\nPerforming {len(rename_operations)} rename operation(s)...\")\n    \n    for image, original_name, hex_color, color in rename_operations:\n        success = safe_rename_image(image, hex_color)\n        if success:\n            print(f\"Renamed '{original_name}' to '{hex_color}' (Color: RGBA{color})\")\n            renamed_count += 1\n        else:\n            print(f\"Failed to rename '{original_name}' to '{hex_color}' - Context restriction\")\n            failed_count += 1\n    \n    print(f\"\\nSummary:\")\n    print(f\"Processed: {processed_count} images\")\n    print(f\"Successfully renamed: {renamed_count} flat color textures\")\n    if failed_count &gt; 0:\n        print(f\"Failed to rename: {failed_count}",
+        "signatures": {},
+        "detailedLines": [
+          {
+            "text": "def rename_flat_color_textures():",
+            "lineNumber": 133,
+            "isSignature": true
+          },
+          {
+            "text": "    \"\"\"Main function to find and rename flat color textures.\"\"\"",
+            "lineNumber": 134
+          },
+          {
+            "text": "    renamed_count = 0",
+            "lineNumber": 135
+          },
+          {
+            "text": "    failed_count = 0",
+            "lineNumber": 136
+          },
+          {
+            "text": "    processed_count = 0",
+            "lineNumber": 137
+          },
+          {
+            "text": "    ",
+            "lineNumber": 138
+          },
+          {
+            "text": "    print(\"Scanning for flat color textures...\")",
+            "lineNumber": 139
+          },
+          {
+            "text": "    ",
+            "lineNumber": 140
+          },
+          {
+            "text": "    # Store rename operations to perform them in batch",
+            "lineNumber": 141
+          },
+          {
+            "text": "    rename_operations = []",
+            "lineNumber": 142
+          },
+          {
+            "text": "    ",
+            "lineNumber": 143
+          },
+          {
+            "text": "    for image in bpy.data.images:",
+            "lineNumber": 144
+          },
+          {
+            "text": "        processed_count += 1",
+            "lineNumber": 145
+          },
+          {
+            "text": "        ",
+            "lineNumber": 146
+          },
+          {
+            "text": "        # Skip if image has no pixel data",
+            "lineNumber": 147
+          },
+          {
+            "text": "        if not hasattr(image, 'pixels') or len(image.pixels) == 0:",
+            "lineNumber": 148
+          },
+          {
+            "text": "            print(f\"Skipping '{image.name}': No pixel data available\")",
+            "lineNumber": 149
+          },
+          {
+            "text": "            continue",
+            "lineNumber": 150
+          },
+          {
+            "text": "        ",
+            "lineNumber": 151
+          },
+          {
+            "text": "        # Check if image has flat color",
+            "lineNumber": 152
+          },
+          {
+            "text": "        is_flat, color = is_flat_color_image(image)",
+            "lineNumber": 153
+          },
+          {
+            "text": "        ",
+            "lineNumber": 154
+          },
+          {
+            "text": "        if is_flat and color:",
+            "lineNumber": 155
+          },
+          {
+            "text": "            # Convert color to hex",
+            "lineNumber": 156
+          },
+          {
+            "text": "            hex_color = rgb_to_hex(*color)",
+            "lineNumber": 157
+          },
+          {
+            "text": "            ",
+            "lineNumber": 158
+          },
+          {
+            "text": "            # Store original name for logging",
+            "lineNumber": 159
+          },
+          {
+            "text": "            original_name = image.name",
+            "lineNumber": 160
+          },
+          {
+            "text": "            ",
+            "lineNumber": 161
+          },
+          {
+            "text": "            # Check if name is already a hex color (to avoid renaming again)",
+            "lineNumber": 162
+          },
+          {
+            "text": "            if not original_name.startswith('#'):",
+            "lineNumber": 163
+          },
+          {
+            "text": "                rename_operations.append((image, original_name, hex_color, color))",
+            "lineNumber": 164
+          },
+          {
+            "text": "            else:",
+            "lineNumber": 165
+          },
+          {
+            "text": "                print(f\"Skipping '{original_name}': Already appears to be hex-named\")",
+            "lineNumber": 166
+          },
+          {
+            "text": "        else:",
+            "lineNumber": 167
+          },
+          {
+            "text": "            print(f\"'{image.name}': Not a flat color texture\")",
+            "lineNumber": 168
+          },
+          {
+            "text": "    ",
+            "lineNumber": 169
+          },
+          {
+            "text": "    # Perform rename operations",
+            "lineNumber": 170
+          },
+          {
+            "text": "    print(f\"\\nPerforming {len(rename_operations)} rename operation(s)...\")",
+            "lineNumber": 171
+          },
+          {
+            "text": "    ",
+            "lineNumber": 172
+          },
+          {
+            "text": "    for image, original_name, hex_color, color in rename_operations:",
+            "lineNumber": 173
+          },
+          {
+            "text": "        success = safe_rename_image(image, hex_color)",
+            "lineNumber": 174
+          },
+          {
+            "text": "        if success:",
+            "lineNumber": 175
+          },
+          {
+            "text": "            print(f\"Renamed '{original_name}' to '{hex_color}' (Color: RGBA{color})\")",
+            "lineNumber": 176
+          },
+          {
+            "text": "            renamed_count += 1",
+            "lineNumber": 177
+          },
+          {
+            "text": "        else:",
+            "lineNumber": 178
+          },
+          {
+            "text": "            print(f\"Failed to rename '{original_name}' to '{hex_color}' - Context restriction\")",
+            "lineNumber": 179
+          },
+          {
+            "text": "            failed_count += 1",
+            "lineNumber": 180
+          },
+          {
+            "text": "    ",
+            "lineNumber": 181
+          },
+          {
+            "text": "    print(f\"\\nSummary:\")",
+            "lineNumber": 182
+          },
+          {
+            "text": "    print(f\"Processed: {processed_count} images\")",
+            "lineNumber": 183
+          },
+          {
+            "text": "    print(f\"Successfully renamed: {renamed_count} flat color textures\")",
+            "lineNumber": 184
+          },
+          {
+            "text": "    if failed_count &gt; 0:",
+            "lineNumber": 185
+          },
+          {
+            "text": "        print(f\"Failed to rename: {failed_count}",
+            "lineNumber": 186
+          }
+        ]
+      },
+      "score": 0.23997889459133148
+    },
+    {
+      "codeBlock": {
+        "relativeWorkspacePath": ".\\changelog.md",
+        "range": {
+          "startPosition": {},
+          "endPosition": {
+            "line": 40,
+            "column": 2
+          }
+        },
+        "contents": "# v0.15.0 2026-01-07\n  - Refactored all class, function, and constant names to use consistent RBST_ prefix system with module-specific sub-prefixes\n  - Added Data-Block Utils integration: Merge Duplicates button in Bulk Data Remap panel that automates finding and merging duplicates across Node Groups, Materials, Lights, Images, and Meshes\n\n# v0.14.1\n  - Fixed crash in Blender 5.0 when refreshing material previews (#11)\n    - Removed problematic batch preview operators and unsafe icon_id access that caused crashes\n    - Added version-specific optimizations for 4.2/4.5 vs 5.0+ compatibility\n    - Improved cleanup and reduced CPU usage\n\n# v0.14.0\n  - Added operator to select all images with absolute paths (#3)\n  - Added search functionality to filter datablocks in PathMan and Data Remapper panels (#4)\n\n# v0.13.1\n  - Fix github workflow to include new utils folder\n\n# v0.13.0\n  - Set up compat for #9, still needs bugchecking, but the main setup is complete.\n  - Fixed #10\n\n# v0.12.0\n  - Integrate Rainy's Extension Repo bootstrapper\n  - Set minimum Blender version to 4.2 for #9\n\n# v0.11.0\n  - Ported to blender extension type\n  - Removed CGCookie autoupdater\n\n# v 0.10.0\n- **AutoMat Extractor**\n  - Added UDIM/tiled image detection so multi-tile textures are organized alongside standard images without errors. #8\n    - Path builder now emits UDIM filename templates (e.g., &#96;name.[UDIM].png&#96;) plus per-tile targets (e.g., &#96;name.1001.png&#96;), preventing collisions during relocation.\n  - Remapping helper sets tile-level &#96;filepath&#96; values and ensures directories exist before saving.\n  - Saving routine attempts whole-image writes first, then falls back to per-tile saves via the Image Editor context, with summary logs noting UDIM sets processed.\n- **Viewport Colors**\n  - Added a Refresh Material Previews button that clears thumbnails, assigns each material to a temporary preview mesh, and forces &#96;preview_ensure()&#96; so stubborn viewport colors now reliably pick up thumbnail data. #7\n\n# v 0.9.1\n- **Convert Relations to Constraint**\n  ",
+        "signatures": {},
+        "detailedLines": [
+          {
+            "text": "# v0.15.0 2026-01-07",
+            "lineNumber": 1
+          },
+          {
+            "text": "  - Refactored all class, function, and constant names to use consistent RBST_ prefix system with module-specific sub-prefixes",
+            "lineNumber": 2
+          },
+          {
+            "text": "  - Added Data-Block Utils integration: Merge Duplicates button in Bulk Data Remap panel that automates finding and merging duplicates across Node Groups, Materials, Lights, Images, and Meshes",
+            "lineNumber": 3
+          },
+          {
+            "lineNumber": 4
+          },
+          {
+            "text": "# v0.14.1",
+            "lineNumber": 5
+          },
+          {
+            "text": "  - Fixed crash in Blender 5.0 when refreshing material previews (#11)",
+            "lineNumber": 6
+          },
+          {
+            "text": "    - Removed problematic batch preview operators and unsafe icon_id access that caused crashes",
+            "lineNumber": 7
+          },
+          {
+            "text": "    - Added version-specific optimizations for 4.2/4.5 vs 5.0+ compatibility",
+            "lineNumber": 8
+          },
+          {
+            "text": "    - Improved cleanup and reduced CPU usage",
+            "lineNumber": 9
+          },
+          {
+            "lineNumber": 10
+          },
+          {
+            "text": "# v0.14.0",
+            "lineNumber": 11
+          },
+          {
+            "text": "  - Added operator to select all images with absolute paths (#3)",
+            "lineNumber": 12
+          },
+          {
+            "text": "  - Added search functionality to filter datablocks in PathMan and Data Remapper panels (#4)",
+            "lineNumber": 13
+          },
+          {
+            "lineNumber": 14
+          },
+          {
+            "text": "# v0.13.1",
+            "lineNumber": 15
+          },
+          {
+            "text": "  - Fix github workflow to include new utils folder",
+            "lineNumber": 16
+          },
+          {
+            "lineNumber": 17
+          },
+          {
+            "text": "# v0.13.0",
+            "lineNumber": 18
+          },
+          {
+            "text": "  - Set up compat for #9, still needs bugchecking, but the main setup is complete.",
+            "lineNumber": 19
+          },
+          {
+            "text": "  - Fixed #10",
+            "lineNumber": 20
+          },
+          {
+            "lineNumber": 21
+          },
+          {
+            "text": "# v0.12.0",
+            "lineNumber": 22
+          },
+          {
+            "text": "  - Integrate Rainy's Extension Repo bootstrapper",
+            "lineNumber": 23
+          },
+          {
+            "text": "  - Set minimum Blender version to 4.2 for #9",
+            "lineNumber": 24
+          },
+          {
+            "lineNumber": 25
+          },
+          {
+            "text": "# v0.11.0",
+            "lineNumber": 26
+          },
+          {
+            "text": "  - Ported to blender extension type",
+            "lineNumber": 27
+          },
+          {
+            "text": "  - Removed CGCookie autoupdater",
+            "lineNumber": 28
+          },
+          {
+            "lineNumber": 29
+          },
+          {
+            "text": "# v 0.10.0",
+            "lineNumber": 30
+          },
+          {
+            "text": "- **AutoMat Extractor**",
+            "lineNumber": 31
+          },
+          {
+            "text": "  - Added UDIM/tiled image detection so multi-tile textures are organized alongside standard images without errors. #8",
+            "lineNumber": 32
+          },
+          {
+            "text": "    - Path builder now emits UDIM filename templates (e.g., &#96;name.[UDIM].png&#96;) plus per-tile targets (e.g., &#96;name.1001.png&#96;), preventing collisions during relocation.",
+            "lineNumber": 33
+          },
+          {
+            "text": "  - Remapping helper sets tile-level &#96;filepath&#96; values and ensures directories exist before saving.",
+            "lineNumber": 34
+          },
+          {
+            "text": "  - Saving routine attempts whole-image writes first, then falls back to per-tile saves via the Image Editor context, with summary logs noting UDIM sets processed.",
+            "lineNumber": 35
+          },
+          {
+            "text": "- **Viewport Colors**",
+            "lineNumber": 36
+          },
+          {
+            "text": "  - Added a Refresh Material Previews button that clears thumbnails, assigns each material to a temporary preview mesh, and forces &#96;preview_ensure()&#96; so stubborn viewport colors now reliably pick up thumbnail data. #7",
+            "lineNumber": 37
+          },
+          {
+            "lineNumber": 38
+          },
+          {
+            "text": "# v 0.9.1",
+            "lineNumber": 39
+          },
+          {
+            "text": "- **Convert Relations to Constraint**",
+            "lineNumber": 40
+          },
+          {
+            "text": "  ",
+            "lineNumber": 41
+          }
+        ]
+      },
+      "score": 0.23628459870815277
+    },
+    {
+      "codeBlock": {
+        "relativeWorkspacePath": ".\\panels\\bulk_path_management.py",
+        "range": {
+          "startPosition": {
+            "line": 1657,
+            "column": 59
+          },
+          "endPosition": {
+            "line": 1713
+          }
+        },
+        "contents": "# Registration function for this module\nclasses = (\n    RBST_PathMan_OT_summary_dialog,\n    RBST_PathMan_PG_PathProperties,\n    RBST_PathMan_OT_remap_path,\n    RBST_PathMan_OT_toggle_select_all,\n    RBST_PathMan_OT_bulk_remap,\n    RBST_PathMan_OT_toggle_path_edit,\n    RBST_PathMan_OT_select_material_images,\n    RBST_PathMan_OT_select_active_images,\n    RBST_PathMan_OT_select_absolute_images,\n    RBST_PathMan_OT_rename_datablock,\n    RBST_PathMan_OT_toggle_image_selection,\n    RBST_PathMan_OT_reuse_material_path,\n    RBST_PathMan_OT_reuse_blend_name,\n    RBST_PathMan_OT_make_paths_relative,\n    RBST_PathMan_OT_make_paths_absolute,\n    RBST_PathMan_OT_pack_images,\n    RBST_PathMan_OT_unpack_images,\n    RBST_PathMan_OT_remove_packed_images,\n    RBST_PathMan_OT_save_all_images,\n    RBST_PathMan_OT_remove_extensions,\n    RBST_PathMan_OT_rename_flat_colors,\n    RBST_PathMan_OT_cancel_operation,\n    RBST_PathMan_PT_bulk_path_tools,\n    RBST_PathMan_PT_bulk_path_subpanel,\n)\n\ndef register():\n    for cls in classes:\n        compat.safe_register_class(cls)\n    \n    # Register properties\n    bpy.types.Scene.bst_path_props = PointerProperty(type=RBST_PathMan_PG_PathProperties)\n    \n    # Add custom property to images for selection\n    bpy.types.Image.bst_selected = BoolProperty(\n        name=\"Selected for Bulk Operations\",\n        default=False\n    )\n    \n    # For debugging only\n    print(\"Bulk Path Management registered successfully\")\n\ndef unregister():\n    # Remove custom property\n    if",
+        "signatures": {},
+        "detailedLines": [
+          {
+            "text": "# Registration function for this module",
+            "lineNumber": 1660
+          },
+          {
+            "text": "classes = (",
+            "lineNumber": 1661
+          },
+          {
+            "text": "    RBST_PathMan_OT_summary_dialog,",
+            "lineNumber": 1662
+          },
+          {
+            "text": "    RBST_PathMan_PG_PathProperties,",
+            "lineNumber": 1663
+          },
+          {
+            "text": "    RBST_PathMan_OT_remap_path,",
+            "lineNumber": 1664
+          },
+          {
+            "text": "    RBST_PathMan_OT_toggle_select_all,",
+            "lineNumber": 1665
+          },
+          {
+            "text": "    RBST_PathMan_OT_bulk_remap,",
+            "lineNumber": 1666
+          },
+          {
+            "text": "    RBST_PathMan_OT_toggle_path_edit,",
+            "lineNumber": 1667
+          },
+          {
+            "text": "    RBST_PathMan_OT_select_material_images,",
+            "lineNumber": 1668
+          },
+          {
+            "text": "    RBST_PathMan_OT_select_active_images,",
+            "lineNumber": 1669
+          },
+          {
+            "text": "    RBST_PathMan_OT_select_absolute_images,",
+            "lineNumber": 1670
+          },
+          {
+            "text": "    RBST_PathMan_OT_rename_datablock,",
+            "lineNumber": 1671
+          },
+          {
+            "text": "    RBST_PathMan_OT_toggle_image_selection,",
+            "lineNumber": 1672
+          },
+          {
+            "text": "    RBST_PathMan_OT_reuse_material_path,",
+            "lineNumber": 1673
+          },
+          {
+            "text": "    RBST_PathMan_OT_reuse_blend_name,",
+            "lineNumber": 1674
+          },
+          {
+            "text": "    RBST_PathMan_OT_make_paths_relative,",
+            "lineNumber": 1675
+          },
+          {
+            "text": "    RBST_PathMan_OT_make_paths_absolute,",
+            "lineNumber": 1676
+          },
+          {
+            "text": "    RBST_PathMan_OT_pack_images,",
+            "lineNumber": 1677
+          },
+          {
+            "text": "    RBST_PathMan_OT_unpack_images,",
+            "lineNumber": 1678
+          },
+          {
+            "text": "    RBST_PathMan_OT_remove_packed_images,",
+            "lineNumber": 1679
+          },
+          {
+            "text": "    RBST_PathMan_OT_save_all_images,",
+            "lineNumber": 1680
+          },
+          {
+            "text": "    RBST_PathMan_OT_remove_extensions,",
+            "lineNumber": 1681
+          },
+          {
+            "text": "    RBST_PathMan_OT_rename_flat_colors,",
+            "lineNumber": 1682
+          },
+          {
+            "text": "    RBST_PathMan_OT_cancel_operation,",
+            "lineNumber": 1683
+          },
+          {
+            "text": "    RBST_PathMan_PT_bulk_path_tools,",
+            "lineNumber": 1684
+          },
+          {
+            "text": "    RBST_PathMan_PT_bulk_path_subpanel,",
+            "lineNumber": 1685
+          },
+          {
+            "text": ")",
+            "lineNumber": 1686
+          },
+          {
+            "lineNumber": 1687
+          },
+          {
+            "text": "def register():",
+            "lineNumber": 1688,
+            "isSignature": true
+          },
+          {
+            "text": "    for cls in classes:",
+            "lineNumber": 1689
+          },
+          {
+            "text": "        compat.safe_register_class(cls)",
+            "lineNumber": 1690
+          },
+          {
+            "text": "    ",
+            "lineNumber": 1691
+          },
+          {
+            "text": "    # Register properties",
+            "lineNumber": 1692
+          },
+          {
+            "text": "    bpy.types.Scene.bst_path_props = PointerProperty(type=RBST_PathMan_PG_PathProperties)",
+            "lineNumber": 1693
+          },
+          {
+            "text": "    ",
+            "lineNumber": 1694
+          },
+          {
+            "text": "    # Add custom property to images for selection",
+            "lineNumber": 1695
+          },
+          {
+            "text": "    bpy.types.Image.bst_selected = BoolProperty(",
+            "lineNumber": 1696
+          },
+          {
+            "text": "        name=\"Selected for Bulk Operations\",",
+            "lineNumber": 1697
+          },
+          {
+            "text": "        default=False",
+            "lineNumber": 1698
+          },
+          {
+            "text": "    )",
+            "lineNumber": 1699
+          },
+          {
+            "text": "    ",
+            "lineNumber": 1700
+          },
+          {
+            "text": "    # For debugging only",
+            "lineNumber": 1701
+          },
+          {
+            "text": "    print(\"Bulk Path Management registered successfully\")",
+            "lineNumber": 1702,
+            "isSignature": true
+          },
+          {
+            "lineNumber": 1703
+          },
+          {
+            "text": "def unregister():",
+            "lineNumber": 1704,
+            "isSignature": true
+          },
+          {
+            "text": "    # Remove custom property",
+            "lineNumber": 1705,
+            "isSignature": true
+          },
+          {
+            "text": "    if",
+            "lineNumber": 1706
+          }
+        ]
+      },
+      "score": 0.23035509884357452
+    }
+  ]
+}
+```
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+
+Reviewing the `remove_extensions` implementation to understand its behavior:
+
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_path_management.py</summary>
+
+</details>
+</tool-use>
+
+---
+
+
+Creating a plan to fix the MSMNAO Pack handling issue:
+
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="create_plan">
+<details>
+<summary>Tool use: **create_plan**</summary>
+
+
+Parameters:
+
+```json
+{
+  "plan": "# Fix MSMNAO Pack Texture Handling in AutoMatExtractor\n\n## Problem Analysis\n\nThe issue occurs in the &#96;sanitize_filename&#96; function in &#96;[ops/AutoMatExtractor.py](ops/AutoMatExtractor.py)&#96;. For CC/iC Pack textures like &#96;Std_Skin_Head.001_MSMNAO Pack.png&#96;:\n\n1. **Step 1** (line 152): &#96;remove_extensions&#96; removes &#96;.png&#96; → &#96;Std_Skin_Head.001_MSMNAO Pack&#96;\n2. **Step 3** (line 222): &#96;sanitize_filename&#96; processes the name:\n   - Line 408: &#96;re.sub(r'\\.\\d{3}$', '', filename)&#96; only removes &#96;.001&#96; if it's at the END of the string\n   - For &#96;Std_Skin_Head.001_MSMNAO Pack&#96;, &#96;.001&#96; is in the middle, so it's NOT removed\n   - The function should remove &#96;.001&#96; even when it appears before a texture type suffix\n   - However, the texture type suffix (&#96;MSMNAO Pack&#96;, &#96;SSTM Pack&#96;, etc.) must be preserved\n\n## Solution\n\nModify &#96;sanitize_filename&#96; in &#96;[ops/AutoMatExtractor.py](ops/AutoMatExtractor.py)&#96; to:\n\n1. **Remove &#96;.001&#96;, &#96;.002&#96;, etc. suffixes** even when they appear in the middle of the filename (before texture type suffixes)\n2. **Preserve texture type suffixes** like \"MSMNAO Pack\", \"SSTM Pack\", \"Roughness Pack\", \"Flow Pack\"\n3. **Handle the pattern**: &#96;MaterialName.001_TextureType Pack&#96; → &#96;MaterialName_TextureType Pack&#96;\n\n### Implementation Details\n\nUpdate the &#96;sanitize_filename&#96; method (lines 405-418) to:\n- First remove file extensions (already done)\n- Then remove &#96;.001&#96;, &#96;.002&#96;, etc. patterns that appear before underscores or spaces (not just at the end)\n- Use a regex pattern like &#96;r'\\.\\d{3}(?=[_\\s])'&#96; to match &#96;.001&#96; followed by underscore or space\n- This will transform &#96;Std_Skin_Head.001_MSMNAO Pack&#96; → &#96;Std_Skin_Head_MSMNAO Pack&#96;\n- Preserve spaces in texture type suffixes (they're valid in filenames on most systems)\n\n### Code Changes\n\nIn &#96;[ops/AutoMatExtractor.py](ops/AutoMatExtractor.py)&#96;, modify the &#96;sanitize_filename&#96; method:\n\n&#96;&#96;&#96;python\ndef sanitize_filename(self, filename):\n    \"\"\"Sanitize filename/folder name for filesystem compatibility\"\"\"\n    # First, remove potential file extensions, including numerical ones like .001\n    # But preserve .001 when it's part of a texture type suffix pattern\n    base_name = re.sub(r'\\.\\d{3}(?=[_\\s])', '', filename)  # Remove .001, .002 etc. when followed by _ or space\n    base_name = re.sub(r'\\.\\d{3}$', '', base_name)  # Also remove if at the end\n    base_name = os.path.splitext(base_name)[0]  # Remove standard extensions\n    \n    # Remove or replace invalid characters for Windows/Mac/Linux\n    sanitized = re.sub(r'[&lt;&gt;:\"/\\\\|?*]', '_', base_name)\n    # Remove leading/trailing spaces and dots\n    sanitized = sanitized.strip(' .')\n    # Ensure it's not empty\n    if not sanitized:\n        sanitized = \"unnamed\"\n    return sanitized\n&#96;&#96;&#96;\n\nThis will ensure:\n- &#96;Std_Skin_Head.001_MSMNAO Pack.png&#96; → &#96;Std_Skin_Head_MSMNAO Pack&#96;\n- &#96;Std_Skin_Head.001_SSTM Pack.png&#96; → &#96;Std_Skin_Head_SSTM Pack&#96;\n- &#96;Std_Skin_Head.001_Roughness Pack.png&#96; → &#96;Std_Skin_Head_Roughness Pack&#96;\n- Each Pack texture gets a unique filename preserving its texture type\n\n## Testing Considerations\n\nAfter the fix, verify that:\n- MSMNAO Pack textures save to &#96;Std_Skin_Head_MSMNAO Pack.png&#96; (not &#96;Std_Skin_Head.png&#96;)\n- SSTM Pack textures save to &#96;Std_Skin_Head_SSTM Pack.png&#96; (not &#96;Std_Skin_Head.png&#96;)\n- Other Pack textures (Roughness Pack, Flow Pack) also preserve their suffixes\n- Non-Pack textures continue to work as before",
+  "name": "Fix MSMNAO Pack texture handling",
+  "overview": "Fix AutoMatExtractor to properly preserve CC/iC Pack texture type suffixes (MSMNAO Pack, SSTM Pack, etc.) when sanitizing filenames, ensuring each Pack texture gets a unique file path instead of all collapsing to the same filename."
+}
+```
+Additional data:
+
+```json
+{
+  "reviewData": {
+    "status": "Requested",
+    "selectedOption": "none",
+    "isShowingInput": false
+  },
+  "planUri": "file:///c%3A/Users/Nathan/.cursor/plans/fix_msmnao_pack_texture_handling_ce908be6.plan.md",
+  "hasOpenedEditor": true
+}
+```
+Result:
+
+```json
+{
+  "rejected": {}
+}
+```
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+_**User**_
+
+Implement the plan as specified, it is attached for your reference. Do NOT edit the plan file itself.
+
+To-do's from the plan have already been created. Do not create them again. Mark them as in_progress as you work, starting with the first one. Don't stop until you have completed all the to-dos.
 
 ---
 

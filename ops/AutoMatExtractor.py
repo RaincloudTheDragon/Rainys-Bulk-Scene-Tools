@@ -405,8 +405,10 @@ class RBST_AutoMat_OT_AutoMatExtractor(bpy.types.Operator):
     def sanitize_filename(self, filename):
         """Sanitize filename/folder name for filesystem compatibility"""
         # First, remove potential file extensions, including numerical ones like .001
-        base_name = re.sub(r'\.\d{3}$', '', filename) # Remove .001, .002 etc.
-        base_name = os.path.splitext(base_name)[0] # Remove standard extensions
+        # Remove .001, .002 etc. when followed by _ or space (for CC/iC Pack textures)
+        base_name = re.sub(r'\.\d{3}(?=[_\s])', '', filename)  # Remove .001, .002 etc. when followed by _ or space
+        base_name = re.sub(r'\.\d{3}$', '', base_name)  # Also remove if at the end
+        base_name = os.path.splitext(base_name)[0]  # Remove standard extensions
         
         # Remove or replace invalid characters for Windows/Mac/Linux
         sanitized = re.sub(r'[<>:"/\\|?*]', '_', base_name)
