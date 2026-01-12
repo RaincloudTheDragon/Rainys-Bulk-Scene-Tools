@@ -1,3 +1,8 @@
+# v0.15.1 2026-01-12
+  - Fixed AutoMatExtractor MSMNAO Pack texture handling: preserve texture type suffixes (MSMNAO Pack, SSTM Pack, etc.) when sanitizing filenames
+  - Fixed issue #12: corrected duplicated prefix in RBST_ViewDisp_MaterialStatus enum definition
+  - Added Props subcollection under Char in SpawnSceneStructure operator
+
 # v0.15.0 2026-01-07
   - Refactored all class, function, and constant names to use consistent RBST_ prefix system with module-specific sub-prefixes
   - Added Data-Block Utils integration: Merge Duplicates button in Bulk Data Remap panel that automates finding and merging duplicates across Node Groups, Materials, Lights, Images, and Meshes
