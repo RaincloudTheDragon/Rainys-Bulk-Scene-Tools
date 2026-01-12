@@ -9,7 +9,7 @@ from ..utils import compat
 from ..utils import version
 
 # Material processing status enum
-class RBST_ViewDisp_RBST_ViewDisp_MaterialStatus(Enum):
+class RBST_ViewDisp_MaterialStatus(Enum):
     PENDING = 0
     PROCESSING = 1
     COMPLETED = 2
