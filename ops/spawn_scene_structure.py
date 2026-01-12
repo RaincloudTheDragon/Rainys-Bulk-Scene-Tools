@@ -81,6 +81,23 @@ class SpawnSceneStructure(bpy.types.Operator):
                             layer_collection = self.find_layer_collection(view_layer.layer_collection, subcollection_name)
                             if layer_collection:
                                 layer_collection.exclude = True
+                    
+                    # Create Props collection under Char
+                    if subcollection_name == "Char":
+                        char_collection = existing_subcollection if subcollection_exists else subcollection
+                        props_exists = False
+                        existing_props = None
+                        for child in char_collection.children:
+                            if child.name == "Props":
+                                props_exists = True
+                                existing_props = child
+                                skipped_collections.append(f"{main_collection_name}/{subcollection_name}/Props")
+                                break
+                        
+                        if not props_exists:
+                            props_collection = bpy.data.collections.new("Props")
+                            char_collection.children.link(props_collection)
+                            created_collections.append(f"{main_collection_name}/{subcollection_name}/Props")
             
             # Report results
             if created_collections:

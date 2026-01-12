@@ -46280,3 +46280,1628 @@ Status: **completed**
 
 ---
 
+
+Fixed the duplicated prefix. Verifying the fix and checking for other issues:
+
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_viewport_display.py</summary>
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search">
+<details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+
+Parameters:
+
+```json
+{
+  "pattern": "^class |^def |^[A-Z_]+ = ",
+  "path": "E:\\Rainys_Bulk_Scene_Tools\\panels\\bulk_viewport_display.py",
+  "caseInsensitive": false
+}
+```
+Result:
+
+```json
+{
+  "success": {
+    "pattern": "^class |^def |^[A-Z_]+ = ",
+    "path": "E:\\Rainys_Bulk_Scene_Tools\\panels\\bulk_viewport_display.py",
+    "outputMode": "content",
+    "workspaceResults": {
+      "E:\\Rainys_Bulk_Scene_Tools": {
+        "content": {
+          "matches": [
+            {
+              "file": "panels\\bulk_viewport_display.py",
+              "matches": [
+                {
+                  "lineNumber": 12,
+                  "content": "class RBST_ViewDisp_MaterialStatus(Enum):"
+                },
+                {
+                  "lineNumber": 30,
+                  "content": "def RBST_ViewDisp_register_properties():"
+                },
+                {
+                  "lineNumber": 97,
+                  "content": "def unregister_viewport_properties():"
+                },
+                {
+                  "lineNumber": 108,
+                  "content": "class RBST_ViewDisp_OT_SetViewportColors(bpy.types.Operator):"
+                },
+                {
+                  "lineNumber": 272,
+                  "content": "class RBST_ViewDisp_OT_RefreshMaterialPreviews(bpy.types.Operator):"
+                },
+                {
+                  "lineNumber": 424,
+                  "content": "def correct_viewport_color(color):"
+                },
+                {
+                  "lineNumber": 458,
+                  "content": "def process_material(material, use_vectorized=True):"
+                },
+                {
+                  "lineNumber": 491,
+                  "content": "def get_average_color(image, use_vectorized=True):"
+                },
+                {
+                  "lineNumber": 525,
+                  "content": "def find_image_node(node, visited=None):"
+                },
+                {
+                  "lineNumber": 549,
+                  "content": "def find_color_source(node, socket_name=None, visited=None):"
+                },
+                {
+                  "lineNumber": 678,
+                  "content": "def get_final_color(material):"
+                },
+                {
+                  "lineNumber": 774,
+                  "content": "def find_diffuse_texture(material):"
+                },
+                {
+                  "lineNumber": 806,
+                  "content": "def get_status_icon(status):"
+                },
+                {
+                  "lineNumber": 821,
+                  "content": "def get_status_text(status):"
+                },
+                {
+                  "lineNumber": 836,
+                  "content": "class RBST_ViewDisp_PT_BulkViewportDisplay(bpy.types.Panel):"
+                },
+                {
+                  "lineNumber": 957,
+                  "content": "class RBST_ViewDisp_OT_SelectInEditor(bpy.types.Operator):"
+                },
+                {
+                  "lineNumber": 1007,
+                  "content": "def get_color_from_preview(material, use_vectorized=True):"
+                },
+                {
+                  "lineNumber": 1078,
+                  "content": "class RBST_ViewDisp_OT_SelectDiffuseNodes(bpy.types.Operator):"
+                },
+                {
+                  "lineNumber": 1102,
+                  "content": "def register():"
+                },
+                {
+                  "lineNumber": 1109,
+                  "content": "def unregister():"
+                }
+              ]
+            }
+          ],
+          "totalLines": 20,
+          "totalMatchedLines": 20
+        }
+      }
+    }
+  }
+}
+```
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="read_lints">
+<details>
+<summary>Tool use: **read_lints**</summary>
+
+
+Parameters:
+
+```json
+{
+  "paths": [
+    "panels"
+  ]
+}
+```
+Result:
+
+```json
+{
+  "linterErrorsByFile": [
+    {
+      "relativeWorkspacePath": "panels"
+    }
+  ]
+}
+```
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+
+Checking for other potential refactoring issues:
+
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search">
+<details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+
+Parameters:
+
+```json
+{
+  "pattern": "MaterialStatus|VIEWPORT_|MATERIAL_|DATAREMAP_|PATH_|BST_OT_|BST_PT_|BST_PG_",
+  "path": "E:\\Rainys_Bulk_Scene_Tools\\panels\\bulk_viewport_display.py",
+  "caseInsensitive": true
+}
+```
+Result:
+
+```json
+{
+  "success": {
+    "pattern": "MaterialStatus|VIEWPORT_|MATERIAL_|DATAREMAP_|PATH_|BST_OT_|BST_PT_|BST_PG_",
+    "path": "E:\\Rainys_Bulk_Scene_Tools\\panels\\bulk_viewport_display.py",
+    "outputMode": "content",
+    "workspaceResults": {
+      "E:\\Rainys_Bulk_Scene_Tools": {
+        "content": {
+          "matches": [
+            {
+              "file": "panels\\bulk_viewport_display.py",
+              "matches": [
+                {
+                  "lineNumber": 12,
+                  "content": "class RBST_ViewDisp_MaterialStatus(Enum):"
+                },
+                {
+                  "lineNumber": 20,
+                  "content": "material_results = {}  # {material_name: (color, status)}"
+                },
+                {
+                  "lineNumber": 26,
+                  "content": "material_queue = []"
+                },
+                {
+                  "lineNumber": 31,
+                  "content": "    bpy.types.Scene.viewport_colors_selected_only = bpy.props.BoolProperty(  # type: ignore"
+                },
+                {
+                  "lineNumber": 37,
+                  "content": "    bpy.types.Scene.viewport_colors_batch_size = bpy.props.IntProperty(  # type: ignore"
+                },
+                {
+                  "lineNumber": 45,
+                  "content": "    bpy.types.Scene.viewport_colors_use_vectorized = bpy.props.BoolProperty(  # type: ignore"
+                },
+                {
+                  "lineNumber": 51,
+                  "content": "    bpy.types.Scene.viewport_colors_darken_amount = bpy.props.FloatProperty(  # type: ignore"
+                },
+                {
+                  "lineNumber": 60,
+                  "content": "    bpy.types.Scene.viewport_colors_value_amount = bpy.props.FloatProperty(  # type: ignore"
+                },
+                {
+                  "lineNumber": 69,
+                  "content": "    bpy.types.Scene.viewport_colors_progress = bpy.props.FloatProperty(  # type: ignore"
+                },
+                {
+                  "lineNumber": 78,
+                  "content": "    bpy.types.Scene.viewport_colors_show_advanced = bpy.props.BoolProperty(  # type: ignore"
+                },
+                {
+                  "lineNumber": 85,
+                  "content": "    bpy.types.Scene.viewport_colors_use_preview = bpy.props.BoolProperty(  # type: ignore"
+                },
+                {
+                  "lineNumber": 91,
+                  "content": "    bpy.types.Scene.show_material_results = bpy.props.BoolProperty("
+                },
+                {
+                  "lineNumber": 97,
+                  "content": "def unregister_viewport_properties():"
+                },
+                {
+                  "lineNumber": 98,
+                  "content": "    del bpy.types.Scene.viewport_colors_use_preview"
+                },
+                {
+                  "lineNumber": 99,
+                  "content": "    del bpy.types.Scene.viewport_colors_batch_size"
+                },
+                {
+                  "lineNumber": 100,
+                  "content": "    del bpy.types.Scene.viewport_colors_use_vectorized"
+                },
+                {
+                  "lineNumber": 101,
+                  "content": "    del bpy.types.Scene.viewport_colors_darken_amount"
+                },
+                {
+                  "lineNumber": 102,
+                  "content": "    del bpy.types.Scene.viewport_colors_value_amount"
+                },
+                {
+                  "lineNumber": 103,
+                  "content": "    del bpy.types.Scene.viewport_colors_progress"
+                },
+                {
+                  "lineNumber": 104,
+                  "content": "    del bpy.types.Scene.viewport_colors_selected_only"
+                },
+                {
+                  "lineNumber": 105,
+                  "content": "    del bpy.types.Scene.viewport_colors_show_advanced"
+                },
+                {
+                  "lineNumber": 106,
+                  "content": "    del bpy.types.Scene.show_material_results"
+                },
+                {
+                  "lineNumber": 110,
+                  "content": "    bl_idname = \"bst.set_viewport_colors\""
+                },
+                {
+                  "lineNumber": 115,
+                  "content": "        global material_results, current_material, processed_count, total_materials, start_time, is_processing, material_queue, current_index"
+                },
+                {
+                  "lineNumber": 118,
+                  "content": "        material_results = {}"
+                },
+                {
+                  "lineNumber": 126,
+                  "content": "        if context.scene.viewport_colors_selected_only:"
+                },
+                {
+                  "lineNumber": 139,
+                  "content": "        material_queue = materials.copy()"
+                },
+                {
+                  "lineNumber": 147,
+                  "content": "        context.scene.viewport_colors_progress = 0.0"
+                },
+                {
+                  "lineNumber": 155,
+                  "content": "        global material_results, current_material, processed_count, total_materials, is_processing, material_queue, current_index"
+                },
+                {
+                  "lineNumber": 157,
+                  "content": "        if not is_processing or len(material_queue) == 0:"
+                },
+                {
+                  "lineNumber": 163,
+                  "content": "        batch_size = bpy.context.scene.viewport_colors_batch_size"
+                },
+                {
+                  "lineNumber": 164,
+                  "content": "        use_vectorized = bpy.context.scene.viewport_colors_use_vectorized"
+                },
+                {
+                  "lineNumber": 167,
+                  "content": "        batch_end = min(current_index + batch_size, len(material_queue))"
+                },
+                {
+                  "lineNumber": 168,
+                  "content": "        batch = material_queue[current_index:batch_end]"
+                },
+                {
+                  "lineNumber": 184,
+                  "content": "                material_results[material.name] = (color, status)"
+                },
+                {
+                  "lineNumber": 191,
+                  "content": "                material_results[material.name] = (None, status)"
+                },
+                {
+                  "lineNumber": 198,
+                  "content": "                bpy.context.scene.viewport_colors_progress = (processed_count / total_materials) * 100"
+                },
+                {
+                  "lineNumber": 208,
+                  "content": "        if current_index &gt;= len(material_queue):"
+                },
+                {
+                  "lineNumber": 255,
+                  "content": "        for _, status in material_results.values():"
+                },
+                {
+                  "lineNumber": 256,
+                  "content": "            if status == RBST_ViewDisp_MaterialStatus.PREVIEW_BASED:"
+                },
+                {
+                  "lineNumber": 258,
+                  "content": "            elif status == RBST_ViewDisp_MaterialStatus.COMPLETED:"
+                },
+                {
+                  "lineNumber": 260,
+                  "content": "            elif status == RBST_ViewDisp_MaterialStatus.FAILED:"
+                },
+                {
+                  "lineNumber": 274,
+                  "content": "    bl_idname = \"bst.refresh_material_previews\""
+                },
+                {
+                  "lineNumber": 424,
+                  "content": "def correct_viewport_color(color):"
+                },
+                {
+                  "lineNumber": 429,
+                  "content": "    color_adjustment = bpy.context.scene.viewport_colors_darken_amount * 0.1"
+                },
+                {
+                  "lineNumber": 432,
+                  "content": "    saturation_adjustment = bpy.context.scene.viewport_colors_value_amount * 0.1"
+                },
+                {
+                  "lineNumber": 462,
+                  "content": "        return (1, 1, 1), RBST_ViewDisp_MaterialStatus.PREVIEW_BASED"
+                },
+                {
+                  "lineNumber": 466,
+                  "content": "        return (1, 1, 1), RBST_ViewDisp_MaterialStatus.PREVIEW_BASED"
+                },
+                {
+                  "lineNumber": 479,
+                  "content": "            corrected_color = correct_viewport_color(color)"
+                },
+                {
+                  "lineNumber": 482,
+                  "content": "            return corrected_color, RBST_ViewDisp_MaterialStatus.PREVIEW_BASED"
+                },
+                {
+                  "lineNumber": 485,
+                  "content": "            return (1, 1, 1), RBST_ViewDisp_MaterialStatus.PREVIEW_BASED"
+                },
+                {
+                  "lineNumber": 489,
+                  "content": "        return (1, 1, 1), RBST_ViewDisp_MaterialStatus.FAILED"
+                },
+                {
+                  "lineNumber": 808,
+                  "content": "    if status == RBST_ViewDisp_MaterialStatus.PENDING:"
+                },
+                {
+                  "lineNumber": 810,
+                  "content": "    elif status == RBST_ViewDisp_MaterialStatus.PROCESSING:"
+                },
+                {
+                  "lineNumber": 812,
+                  "content": "    elif status == RBST_ViewDisp_MaterialStatus.COMPLETED:"
+                },
+                {
+                  "lineNumber": 814,
+                  "content": "    elif status == RBST_ViewDisp_MaterialStatus.PREVIEW_BASED:"
+                },
+                {
+                  "lineNumber": 816,
+                  "content": "    elif status == RBST_ViewDisp_MaterialStatus.FAILED:"
+                },
+                {
+                  "lineNumber": 823,
+                  "content": "    if status == RBST_ViewDisp_MaterialStatus.PENDING:"
+                },
+                {
+                  "lineNumber": 825,
+                  "content": "    elif status == RBST_ViewDisp_MaterialStatus.PROCESSING:"
+                },
+                {
+                  "lineNumber": 827,
+                  "content": "    elif status == RBST_ViewDisp_MaterialStatus.COMPLETED:"
+                },
+                {
+                  "lineNumber": 829,
+                  "content": "    elif status == RBST_ViewDisp_MaterialStatus.PREVIEW_BASED:"
+                },
+                {
+                  "lineNumber": 831,
+                  "content": "    elif status == RBST_ViewDisp_MaterialStatus.FAILED:"
+                },
+                {
+                  "lineNumber": 839,
+                  "content": "    bl_idname = \"RBST_ViewDisp_PT_bulk_viewport_display\""
+                },
+                {
+                  "lineNumber": 859,
+                  "content": "        col.prop(context.scene, \"viewport_colors_selected_only\")"
+                },
+                {
+                  "lineNumber": 860,
+                  "content": "        col.operator(\"bst.refresh_material_previews\", icon='FILE_REFRESH')"
+                },
+                {
+                  "lineNumber": 864,
+                  "content": "        row.prop(context.scene, \"viewport_colors_show_advanced\","
+                },
+                {
+                  "lineNumber": 865,
+                  "content": "                 icon='DISCLOSURE_TRI_DOWN' if context.scene.viewport_colors_show_advanced else 'DISCLOSURE_TRI_RIGHT',"
+                },
+                {
+                  "lineNumber": 869,
+                  "content": "        if context.scene.viewport_colors_show_advanced:"
+                },
+                {
+                  "lineNumber": 871,
+                  "content": "            adv_col.prop(context.scene, \"viewport_colors_batch_size\")"
+                },
+                {
+                  "lineNumber": 872,
+                  "content": "            adv_col.prop(context.scene, \"viewport_colors_use_vectorized\")"
+                },
+                {
+                  "lineNumber": 873,
+                  "content": "            adv_col.prop(context.scene, \"viewport_colors_darken_amount\")"
+                },
+                {
+                  "lineNumber": 874,
+                  "content": "            adv_col.prop(context.scene, \"viewport_colors_value_amount\")"
+                },
+                {
+                  "lineNumber": 879,
+                  "content": "        row.operator(\"bst.set_viewport_colors\")"
+                },
+                {
+                  "lineNumber": 888,
+                  "content": "            row.prop(context.scene, \"viewport_colors_progress\", text=\"\")"
+                },
+                {
+                  "lineNumber": 891,
+                  "content": "        if material_results:"
+                },
+                {
+                  "lineNumber": 894,
+                  "content": "            row.prop(context.scene, \"show_material_results\","
+                },
+                {
+                  "lineNumber": 895,
+                  "content": "                     icon='DISCLOSURE_TRI_DOWN' if context.scene.show_material_results else 'DISCLOSURE_TRI_RIGHT',"
+                },
+                {
+                  "lineNumber": 898,
+                  "content": "            if context.scene.show_material_results:"
+                },
+                {
+                  "lineNumber": 900,
+                  "content": "                material_box = box.box()"
+                },
+                {
+                  "lineNumber": 901,
+                  "content": "                row = material_box.row()"
+                },
+                {
+                  "lineNumber": 912,
+                  "content": "                for material_name in list(material_results.keys()):"
+                },
+                {
+                  "lineNumber": 913,
+                  "content": "                    color, status = material_results[material_name]"
+                },
+                {
+                  "lineNumber": 916,
+                  "content": "                    if status == RBST_ViewDisp_MaterialStatus.PREVIEW_BASED:"
+                },
+                {
+                  "lineNumber": 918,
+                  "content": "                    elif status == RBST_ViewDisp_MaterialStatus.FAILED:"
+                },
+                {
+                  "lineNumber": 927,
+                  "content": "                    op = row.operator(\"bst.select_in_editor\", text=material_name)"
+                },
+                {
+                  "lineNumber": 928,
+                  "content": "                    op.material_name = material_name"
+                },
+                {
+                  "lineNumber": 932,
+                  "content": "                        material = bpy.data.materials.get(material_name)"
+                },
+                {
+                  "lineNumber": 939,
+                  "content": "                            materials_to_remove.append(material_name)"
+                },
+                {
+                  "lineNumber": 942,
+                  "content": "                for material_name in materials_to_remove:"
+                },
+                {
+                  "lineNumber": 943,
+                  "content": "                    material_results.pop(material_name, None)"
+                },
+                {
+                  "lineNumber": 946,
+                  "content": "                if len(material_results) &gt; 0:"
+                },
+                {
+                  "lineNumber": 947,
+                  "content": "                    material_box.separator()"
+                },
+                {
+                  "lineNumber": 948,
+                  "content": "                    stats_col = material_box.column(align=True)"
+                },
+                {
+                  "lineNumber": 949,
+                  "content": "                    stats_col.label(text=f\"Total: {len(material_results)} materials\")"
+                },
+                {
+                  "lineNumber": 963,
+                  "content": "    material_name: bpy.props.StringProperty(  # type: ignore"
+                },
+                {
+                  "lineNumber": 971,
+                  "content": "        material = bpy.data.materials.get(self.material_name)"
+                },
+                {
+                  "lineNumber": 973,
+                  "content": "            # Remove this entry from material_results to avoid future errors"
+                },
+                {
+                  "lineNumber": 974,
+                  "content": "            if self.material_name in material_results:"
+                },
+                {
+                  "lineNumber": 975,
+                  "content": "                material_results.pop(self.material_name, None)"
+                },
+                {
+                  "lineNumber": 979,
+                  "content": "            self.report({'ERROR'}, f\"Material '{self.material_name}' not found\")"
+                },
+                {
+                  "lineNumber": 993,
+                  "content": "                        obj.active_material_index = i"
+                },
+                {
+                  "lineNumber": 1004,
+                  "content": "        self.report({'WARNING'}, f\"No object using material '{self.material_name}' found\")"
+                }
+              ]
+            }
+          ],
+          "totalLines": 102,
+          "totalMatchedLines": 102
+        }
+      }
+    }
+  }
+}
+```
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search">
+<details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+
+Parameters:
+
+```json
+{
+  "pattern": "MaterialStatus|VIEWPORT_|MATERIAL_|DATAREMAP_|PATH_|BST_OT_|BST_PT_|BST_PG_",
+  "path": "E:\\Rainys_Bulk_Scene_Tools\\panels\\bulk_data_remap.py",
+  "caseInsensitive": true
+}
+```
+Result:
+
+```json
+{
+  "success": {
+    "pattern": "MaterialStatus|VIEWPORT_|MATERIAL_|DATAREMAP_|PATH_|BST_OT_|BST_PT_|BST_PG_",
+    "path": "E:\\Rainys_Bulk_Scene_Tools\\panels\\bulk_data_remap.py",
+    "outputMode": "content",
+    "workspaceResults": {
+      "E:\\Rainys_Bulk_Scene_Tools": {
+        "content": {
+          "matches": [
+            {
+              "file": "panels\\bulk_data_remap.py",
+              "matches": [
+                {
+                  "lineNumber": 24,
+                  "content": "    bpy.types.Scene.dataremap_images = bpy.props.BoolProperty(  # type: ignore"
+                },
+                {
+                  "lineNumber": 30,
+                  "content": "    bpy.types.Scene.dataremap_materials = bpy.props.BoolProperty(  # type: ignore"
+                },
+                {
+                  "lineNumber": 36,
+                  "content": "    bpy.types.Scene.dataremap_fonts = bpy.props.BoolProperty(  # type: ignore"
+                },
+                {
+                  "lineNumber": 42,
+                  "content": "    bpy.types.Scene.dataremap_worlds = bpy.props.BoolProperty(  # type: ignore"
+                },
+                {
+                  "lineNumber": 55,
+                  "content": "    bpy.types.Scene.show_material_duplicates = bpy.props.BoolProperty(  # type: ignore"
+                },
+                {
+                  "lineNumber": 74,
+                  "content": "    bpy.types.Scene.dataremap_sort_images = bpy.props.BoolProperty(  # type: ignore"
+                },
+                {
+                  "lineNumber": 79,
+                  "content": "    bpy.types.Scene.dataremap_sort_materials = bpy.props.BoolProperty(  # type: ignore"
+                },
+                {
+                  "lineNumber": 84,
+                  "content": "    bpy.types.Scene.dataremap_sort_fonts = bpy.props.BoolProperty(  # type: ignore"
+                },
+                {
+                  "lineNumber": 89,
+                  "content": "    bpy.types.Scene.dataremap_sort_worlds = bpy.props.BoolProperty(  # type: ignore"
+                },
+                {
+                  "lineNumber": 96,
+                  "content": "    bpy.types.Scene.dataremap_search_images = bpy.props.StringProperty(  # type: ignore"
+                },
+                {
+                  "lineNumber": 102,
+                  "content": "    bpy.types.Scene.dataremap_search_materials = bpy.props.StringProperty(  # type: ignore"
+                },
+                {
+                  "lineNumber": 108,
+                  "content": "    bpy.types.Scene.dataremap_search_fonts = bpy.props.StringProperty(  # type: ignore"
+                },
+                {
+                  "lineNumber": 114,
+                  "content": "    bpy.types.Scene.dataremap_search_worlds = bpy.props.StringProperty(  # type: ignore"
+                },
+                {
+                  "lineNumber": 140,
+                  "content": "    del bpy.types.Scene.dataremap_images"
+                },
+                {
+                  "lineNumber": 141,
+                  "content": "    del bpy.types.Scene.dataremap_materials"
+                },
+                {
+                  "lineNumber": 142,
+                  "content": "    del bpy.types.Scene.dataremap_fonts"
+                },
+                {
+                  "lineNumber": 143,
+                  "content": "    del bpy.types.Scene.dataremap_worlds"
+                },
+                {
+                  "lineNumber": 145,
+                  "content": "    del bpy.types.Scene.show_material_duplicates"
+                },
+                {
+                  "lineNumber": 156,
+                  "content": "    del bpy.types.Scene.dataremap_sort_images"
+                },
+                {
+                  "lineNumber": 157,
+                  "content": "    del bpy.types.Scene.dataremap_sort_materials"
+                },
+                {
+                  "lineNumber": 158,
+                  "content": "    del bpy.types.Scene.dataremap_sort_fonts"
+                },
+                {
+                  "lineNumber": 159,
+                  "content": "    del bpy.types.Scene.dataremap_sort_worlds"
+                },
+                {
+                  "lineNumber": 331,
+                  "content": "        material_groups = RBST_DatRem_find_data_groups(bpy.data.materials)"
+                },
+                {
+                  "lineNumber": 332,
+                  "content": "        for base_name, materials in material_groups.items():"
+                },
+                {
+                  "lineNumber": 370,
+                  "content": "                                for i, mat_slot in enumerate(obj.material_slots):"
+                },
+                {
+                  "lineNumber": 373,
+                  "content": "                                            obj.material_slots[i].material = target_material"
+                },
+                {
+                  "lineNumber": 432,
+                  "content": "                                if obj.type == 'GPENCIL' and hasattr(obj, 'material_slots'):"
+                },
+                {
+                  "lineNumber": 433,
+                  "content": "                                    for i, mat_slot in enumerate(obj.material_slots):"
+                },
+                {
+                  "lineNumber": 436,
+                  "content": "                                                obj.material_slots[i].material = target_material"
+                },
+                {
+                  "lineNumber": 604,
+                  "content": "        remap_images = context.scene.dataremap_images"
+                },
+                {
+                  "lineNumber": 605,
+                  "content": "        remap_materials = context.scene.dataremap_materials"
+                },
+                {
+                  "lineNumber": 606,
+                  "content": "        remap_fonts = context.scene.dataremap_fonts"
+                },
+                {
+                  "lineNumber": 607,
+                  "content": "        remap_worlds = context.scene.dataremap_worlds"
+                },
+                {
+                  "lineNumber": 611,
+                  "content": "        material_groups = RBST_DatRem_find_data_groups(bpy.data.materials) if remap_materials else {}"
+                },
+                {
+                  "lineNumber": 615,
+                  "content": "        total_duplicates = sum(len(group) - 1 for groups in [image_groups, material_groups, font_groups, world_groups] for group in groups.values())"
+                },
+                {
+                  "lineNumber": 993,
+                  "content": "    sort_prop_name = f\"dataremap_sort_{data_type}\""
+                },
+                {
+                  "lineNumber": 1000,
+                  "content": "    search_prop_name = f\"dataremap_search_{data_type}\""
+                },
+                {
+                  "lineNumber": 1014,
+                  "content": "    search_prop_name = f\"dataremap_search_{data_type}\""
+                },
+                {
+                  "lineNumber": 1023,
+                  "content": "    sort_prop_name = f\"dataremap_sort_{data_type}\""
+                },
+                {
+                  "lineNumber": 1143,
+                  "content": "        if context.scene.dataremap_images and RBST_DatRem_has_linked_datablocks(bpy.data.images):"
+                },
+                {
+                  "lineNumber": 1148,
+                  "content": "        if context.scene.dataremap_materials and RBST_DatRem_has_linked_datablocks(bpy.data.materials):"
+                },
+                {
+                  "lineNumber": 1153,
+                  "content": "        if context.scene.dataremap_fonts and RBST_DatRem_has_linked_datablocks(bpy.data.fonts):"
+                },
+                {
+                  "lineNumber": 1158,
+                  "content": "        if context.scene.dataremap_worlds and RBST_DatRem_has_linked_datablocks(bpy.data.worlds):"
+                },
+                {
+                  "lineNumber": 1192,
+                  "content": "        material_groups = RBST_DatRem_find_data_groups(bpy.data.materials)"
+                },
+                {
+                  "lineNumber": 1197,
+                  "content": "        material_duplicates = sum(len(group) - 1 for group in material_groups.values())"
+                },
+                {
+                  "lineNumber": 1202,
+                  "content": "        material_numbered = sum(1 for mat in bpy.data.materials if mat.users &gt; 0 and RBST_DatRem_get_base_name(mat.name) != mat.name)"
+                },
+                {
+                  "lineNumber": 1217,
+                  "content": "        op = sub_row.operator(\"bst.toggle_data_type\", text=\"\", icon='IMAGE_DATA', depress=context.scene.dataremap_images)"
+                },
+                {
+                  "lineNumber": 1221,
+                  "content": "        if context.scene.dataremap_images:"
+                },
+                {
+                  "lineNumber": 1239,
+                  "content": "        if context.scene.show_image_duplicates and image_duplicates &gt; 0 and context.scene.dataremap_images:"
+                },
+                {
+                  "lineNumber": 1248,
+                  "content": "        op = sub_row.operator(\"bst.toggle_data_type\", text=\"\", icon='MATERIAL', depress=context.scene.dataremap_materials)"
+                },
+                {
+                  "lineNumber": 1252,
+                  "content": "        if context.scene.dataremap_materials:"
+                },
+                {
+                  "lineNumber": 1259,
+                  "content": "        if material_duplicates &gt; 0:"
+                },
+                {
+                  "lineNumber": 1260,
+                  "content": "            sub_row.prop(context.scene, \"show_material_duplicates\","
+                },
+                {
+                  "lineNumber": 1261,
+                  "content": "                         text=f\"{material_duplicates} duplicates\","
+                },
+                {
+                  "lineNumber": 1262,
+                  "content": "                         icon='DISCLOSURE_TRI_DOWN' if context.scene.show_material_duplicates else 'DISCLOSURE_TRI_RIGHT',"
+                },
+                {
+                  "lineNumber": 1264,
+                  "content": "        elif material_numbered &gt; 0:"
+                },
+                {
+                  "lineNumber": 1265,
+                  "content": "            sub_row.label(text=f\"{material_numbered} numbered\")"
+                },
+                {
+                  "lineNumber": 1270,
+                  "content": "        if context.scene.show_material_duplicates and material_duplicates &gt; 0 and context.scene.dataremap_materials:"
+                },
+                {
+                  "lineNumber": 1271,
+                  "content": "            RBST_DatRem_draw_data_duplicates(col, context, \"materials\", material_groups)"
+                },
+                {
+                  "lineNumber": 1279,
+                  "content": "        op = sub_row.operator(\"bst.toggle_data_type\", text=\"\", icon='FONT_DATA', depress=context.scene.dataremap_fonts)"
+                },
+                {
+                  "lineNumber": 1283,
+                  "content": "        if context.scene.dataremap_fonts:"
+                },
+                {
+                  "lineNumber": 1301,
+                  "content": "        if context.scene.show_font_duplicates and font_duplicates &gt; 0 and context.scene.dataremap_fonts:"
+                },
+                {
+                  "lineNumber": 1310,
+                  "content": "        op = sub_row.operator(\"bst.toggle_data_type\", text=\"\", icon='WORLD', depress=context.scene.dataremap_worlds)"
+                },
+                {
+                  "lineNumber": 1314,
+                  "content": "        if context.scene.dataremap_worlds:"
+                },
+                {
+                  "lineNumber": 1332,
+                  "content": "        if context.scene.show_world_duplicates and world_duplicates &gt; 0 and context.scene.dataremap_worlds:"
+                },
+                {
+                  "lineNumber": 1358,
+                  "content": "        total_duplicates = image_duplicates + material_duplicates + font_duplicates + world_duplicates"
+                },
+                {
+                  "lineNumber": 1359,
+                  "content": "        total_numbered = image_numbered + material_numbered + font_numbered + world_numbered"
+                },
+                {
+                  "lineNumber": 1417,
+                  "content": "            context.scene.dataremap_images = not context.scene.dataremap_images"
+                },
+                {
+                  "lineNumber": 1419,
+                  "content": "            context.scene.dataremap_materials = not context.scene.dataremap_materials"
+                },
+                {
+                  "lineNumber": 1421,
+                  "content": "            context.scene.dataremap_fonts = not context.scene.dataremap_fonts"
+                },
+                {
+                  "lineNumber": 1423,
+                  "content": "            context.scene.dataremap_worlds = not context.scene.dataremap_worlds"
+                },
+                {
+                  "lineNumber": 1494,
+                  "content": "            bpy.ops.wm.path_open(filepath=self.filepath)"
+                }
+              ]
+            }
+          ],
+          "totalLines": 72,
+          "totalMatchedLines": 72
+        }
+      }
+    }
+  }
+}
+```
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search">
+<details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+
+Parameters:
+
+```json
+{
+  "pattern": "MaterialStatus|VIEWPORT_|MATERIAL_|DATAREMAP_|PATH_|BST_OT_|BST_PT_|BST_PG_",
+  "path": "E:\\Rainys_Bulk_Scene_Tools\\panels\\bulk_path_management.py",
+  "caseInsensitive": true
+}
+```
+Result:
+
+```json
+{
+  "success": {
+    "pattern": "MaterialStatus|VIEWPORT_|MATERIAL_|DATAREMAP_|PATH_|BST_OT_|BST_PT_|BST_PG_",
+    "path": "E:\\Rainys_Bulk_Scene_Tools\\panels\\bulk_path_management.py",
+    "outputMode": "content",
+    "workspaceResults": {
+      "E:\\Rainys_Bulk_Scene_Tools": {
+        "content": {
+          "matches": [
+            {
+              "file": "panels\\bulk_path_management.py",
+              "matches": [
+                {
+                  "lineNumber": 62,
+                  "content": "    Get both filepath and filepath_raw for an image using its datablock name"
+                },
+                {
+                  "lineNumber": 68,
+                  "content": "        tuple: (filepath, filepath_raw) if image exists, (None, None) if not found"
+                },
+                {
+                  "lineNumber": 72,
+                  "content": "        return (img.filepath, img.filepath_raw)"
+                },
+                {
+                  "lineNumber": 127,
+                  "content": "    Set filepath and filepath_raw for an image using its datablock name"
+                },
+                {
+                  "lineNumber": 146,
+                  "content": "        img.filepath_raw = new_path"
+                },
+                {
+                  "lineNumber": 158,
+                  "content": "                # If it fails, the original filepaths (img.filepath and img.filepath_raw)"
+                },
+                {
+                  "lineNumber": 227,
+                  "content": "    edit_filepath_raw: BoolProperty("
+                },
+                {
+                  "lineNumber": 229,
+                  "content": "        description=\"Toggle editing mode for filepath_raw\","
+                },
+                {
+                  "lineNumber": 240,
+                  "content": "    temp_filepath_raw: StringProperty("
+                },
+                {
+                  "lineNumber": 242,
+                  "content": "        description=\"Temporary storage for editing filepath_raw\","
+                },
+                {
+                  "lineNumber": 289,
+                  "content": "    use_material_subfolder: BoolProperty("
+                },
+                {
+                  "lineNumber": 295,
+                  "content": "    material_subfolder: StringProperty("
+                },
+                {
+                  "lineNumber": 334,
+                  "content": "    bl_description = \"Change the filepath and filepath_raw for a datablock\""
+                },
+                {
+                  "lineNumber": 346,
+                  "content": "        active_image = context.scene.bst_path_props.active_image"
+                },
+                {
+                  "lineNumber": 369,
+                  "content": "        props = context.scene.bst_path_props"
+                },
+                {
+                  "lineNumber": 427,
+                  "content": "        props = context.scene.bst_path_props"
+                },
+                {
+                  "lineNumber": 445,
+                  "content": "        props = bpy.context.scene.bst_path_props"
+                },
+                {
+                  "lineNumber": 455,
+                  "content": "            props = bpy.context.scene.bst_path_props"
+                },
+                {
+                  "lineNumber": 470,
+                  "content": "        props = bpy.context.scene.bst_path_props"
+                },
+                {
+                  "lineNumber": 496,
+                  "content": "class RBST_PathMan_OT_toggle_path_edit(Operator):"
+                },
+                {
+                  "lineNumber": 497,
+                  "content": "    bl_idname = \"bst.toggle_path_edit\""
+                },
+                {
+                  "lineNumber": 504,
+                  "content": "        description=\"Whether toggling filepath_raw instead of filepath\","
+                },
+                {
+                  "lineNumber": 510,
+                  "content": "        path_props = scene.bst_path_props"
+                },
+                {
+                  "lineNumber": 511,
+                  "content": "        active_image = path_props.active_image"
+                },
+                {
+                  "lineNumber": 515,
+                  "content": "                # Toggle edit mode for filepath_raw"
+                },
+                {
+                  "lineNumber": 516,
+                  "content": "                if not path_props.edit_filepath_raw:"
+                },
+                {
+                  "lineNumber": 518,
+                  "content": "                    path_props.temp_filepath_raw = active_image.filepath_raw"
+                },
+                {
+                  "lineNumber": 521,
+                  "content": "                    active_image.filepath_raw = path_props.temp_filepath_raw"
+                },
+                {
+                  "lineNumber": 523,
+                  "content": "                path_props.edit_filepath_raw = not path_props.edit_filepath_raw"
+                },
+                {
+                  "lineNumber": 526,
+                  "content": "                if not path_props.edit_filepath:"
+                },
+                {
+                  "lineNumber": 528,
+                  "content": "                    path_props.temp_filepath = active_image.filepath"
+                },
+                {
+                  "lineNumber": 531,
+                  "content": "                    active_image.filepath = path_props.temp_filepath"
+                },
+                {
+                  "lineNumber": 533,
+                  "content": "                path_props.edit_filepath = not path_props.edit_filepath"
+                },
+                {
+                  "lineNumber": 538,
+                  "content": "class RBST_PathMan_OT_select_material_images(Operator):"
+                },
+                {
+                  "lineNumber": 539,
+                  "content": "    bl_idname = \"bst.select_material_images\""
+                },
+                {
+                  "lineNumber": 624,
+                  "content": "            if not img.filepath and not img.filepath_raw:"
+                },
+                {
+                  "lineNumber": 627,
+                  "content": "            # Check both filepath and filepath_raw for absolute paths"
+                },
+                {
+                  "lineNumber": 639,
+                  "content": "            # Check filepath_raw if filepath wasn't absolute"
+                },
+                {
+                  "lineNumber": 640,
+                  "content": "            if not is_absolute and img.filepath_raw:"
+                },
+                {
+                  "lineNumber": 642,
+                  "content": "                if not img.filepath_raw.startswith('//'):"
+                },
+                {
+                  "lineNumber": 644,
+                  "content": "                    abs_path = bpy.path.abspath(img.filepath_raw)"
+                },
+                {
+                  "lineNumber": 727,
+                  "content": "        props = context.scene.bst_path_props"
+                },
+                {
+                  "lineNumber": 762,
+                  "content": "class RBST_PathMan_OT_reuse_material_path(Operator):"
+                },
+                {
+                  "lineNumber": 764,
+                  "content": "    bl_idname = \"bst.reuse_material_path\""
+                },
+                {
+                  "lineNumber": 770,
+                  "content": "        material_name = None"
+                },
+                {
+                  "lineNumber": 774,
+                  "content": "            material_name = obj.active_material.name"
+                },
+                {
+                  "lineNumber": 782,
+                  "content": "                material_name = bpy.data.materials[node_tree_name].name"
+                },
+                {
+                  "lineNumber": 784,
+                  "content": "                material_name = node_tree_name"
+                },
+                {
+                  "lineNumber": 786,
+                  "content": "        if material_name:"
+                },
+                {
+                  "lineNumber": 788,
+                  "content": "            context.scene.bst_path_props.material_subfolder = material_name"
+                },
+                {
+                  "lineNumber": 789,
+                  "content": "            self.report({'INFO'}, f\"Set material subfolder to {material_name}\")"
+                },
+                {
+                  "lineNumber": 812,
+                  "content": "            context.scene.bst_path_props.blend_subfolder = blend_name"
+                },
+                {
+                  "lineNumber": 973,
+                  "content": "        props = context.scene.bst_path_props"
+                },
+                {
+                  "lineNumber": 992,
+                  "content": "        props = bpy.context.scene.bst_path_props"
+                },
+                {
+                  "lineNumber": 1002,
+                  "content": "            props = bpy.context.scene.bst_path_props"
+                },
+                {
+                  "lineNumber": 1017,
+                  "content": "        props = bpy.context.scene.bst_path_props"
+                },
+                {
+                  "lineNumber": 1160,
+                  "content": "        props = context.scene.bst_path_props"
+                },
+                {
+                  "lineNumber": 1196,
+                  "content": "            props = bpy.context.scene.bst_path_props"
+                },
+                {
+                  "lineNumber": 1215,
+                  "content": "                props = bpy.context.scene.bst_path_props"
+                },
+                {
+                  "lineNumber": 1238,
+                  "content": "                props = bpy.context.scene.bst_path_props"
+                },
+                {
+                  "lineNumber": 1260,
+                  "content": "            props = bpy.context.scene.bst_path_props"
+                },
+                {
+                  "lineNumber": 1328,
+                  "content": "                props = bpy.context.scene.bst_path_props"
+                },
+                {
+                  "lineNumber": 1346,
+                  "content": "        props = bpy.context.scene.bst_path_props"
+                },
+                {
+                  "lineNumber": 1364,
+                  "content": "        props = context.scene.bst_path_props"
+                },
+                {
+                  "lineNumber": 1384,
+                  "content": "    props = context.scene.bst_path_props"
+                },
+                {
+                  "lineNumber": 1405,
+                  "content": "    if props.use_material_subfolder:"
+                },
+                {
+                  "lineNumber": 1406,
+                  "content": "        subfolder = props.material_subfolder"
+                },
+                {
+                  "lineNumber": 1409,
+                  "content": "            material_name = None"
+                },
+                {
+                  "lineNumber": 1413,
+                  "content": "                material_name = obj.active_material.name"
+                },
+                {
+                  "lineNumber": 1421,
+                  "content": "                    material_name = bpy.data.materials[node_tree_name].name"
+                },
+                {
+                  "lineNumber": 1423,
+                  "content": "                    material_name = node_tree_name"
+                },
+                {
+                  "lineNumber": 1425,
+                  "content": "            if material_name:"
+                },
+                {
+                  "lineNumber": 1426,
+                  "content": "                subfolder = material_name"
+                },
+                {
+                  "lineNumber": 1436,
+                  "content": "class RBST_PathMan_PT_bulk_path_tools(Panel):"
+                },
+                {
+                  "lineNumber": 1438,
+                  "content": "    bl_idname = \"RBST_PathMan_PT_bulk_path_tools\""
+                },
+                {
+                  "lineNumber": 1451,
+                  "content": "        path_props = scene.bst_path_props"
+                },
+                {
+                  "lineNumber": 1456,
+                  "content": "        if path_props.is_operation_running:"
+                },
+                {
+                  "lineNumber": 1462,
+                  "content": "            row.prop(path_props, \"operation_progress\", text=\"\")"
+                },
+                {
+                  "lineNumber": 1465,
+                  "content": "            if path_props.operation_status:"
+                },
+                {
+                  "lineNumber": 1467,
+                  "content": "                row.label(text=path_props.operation_status, icon='INFO')"
+                },
+                {
+                  "lineNumber": 1509,
+                  "content": "        row.prop(path_props, \"smart_base_path\", text=\"Base Path\")"
+                },
+                {
+                  "lineNumber": 1514,
+                  "content": "        subrow.prop(path_props, \"use_blend_subfolder\", text=\"\")"
+                },
+                {
+                  "lineNumber": 1516,
+                  "content": "        subrow.enabled = path_props.use_blend_subfolder"
+                },
+                {
+                  "lineNumber": 1517,
+                  "content": "        subrow.prop(path_props, \"blend_subfolder\", text=\"Blend Subfolder\")"
+                },
+                {
+                  "lineNumber": 1523,
+                  "content": "        subrow.prop(path_props, \"use_material_subfolder\", text=\"\")"
+                },
+                {
+                  "lineNumber": 1525,
+                  "content": "        subrow.enabled = path_props.use_material_subfolder"
+                },
+                {
+                  "lineNumber": 1526,
+                  "content": "        subrow.prop(path_props, \"material_subfolder\", text=\"Material Subfolder\")"
+                },
+                {
+                  "lineNumber": 1527,
+                  "content": "        reuse_material = subrow.operator(\"bst.reuse_material_path\", text=\"\", icon='FILE_REFRESH')"
+                },
+                {
+                  "lineNumber": 1569,
+                  "content": "        row.prop(path_props, \"show_bulk_operations\","
+                },
+                {
+                  "lineNumber": 1571,
+                  "content": "                 icon=\"TRIA_DOWN\" if path_props.show_bulk_operations else \"TRIA_RIGHT\","
+                },
+                {
+                  "lineNumber": 1576,
+                  "content": "        if path_props.show_bulk_operations:"
+                },
+                {
+                  "lineNumber": 1587,
+                  "content": "            row.operator(\"bst.select_material_images\", text=\"Material Images\")"
+                },
+                {
+                  "lineNumber": 1593,
+                  "content": "            row.prop(path_props, \"sort_by_selected\", text=\"Sort by Selected\")"
+                },
+                {
+                  "lineNumber": 1598,
+                  "content": "            row.prop(path_props, \"search_filter\", text=\"\")"
+                },
+                {
+                  "lineNumber": 1605,
+                  "content": "                if path_props.sort_by_selected:"
+                },
+                {
+                  "lineNumber": 1614,
+                  "content": "                search_filter = path_props.search_filter"
+                },
+                {
+                  "lineNumber": 1646,
+                  "content": "class RBST_PathMan_PT_bulk_path_subpanel(Panel):"
+                },
+                {
+                  "lineNumber": 1648,
+                  "content": "    bl_idname = \"RBST_PathMan_PT_bulk_path_subpanel\""
+                },
+                {
+                  "lineNumber": 1658,
+                  "content": "        RBST_PathMan_PT_bulk_path_tools.draw(self, context)"
+                },
+                {
+                  "lineNumber": 1667,
+                  "content": "    RBST_PathMan_OT_toggle_path_edit,"
+                },
+                {
+                  "lineNumber": 1668,
+                  "content": "    RBST_PathMan_OT_select_material_images,"
+                },
+                {
+                  "lineNumber": 1673,
+                  "content": "    RBST_PathMan_OT_reuse_material_path,"
+                },
+                {
+                  "lineNumber": 1684,
+                  "content": "    RBST_PathMan_PT_bulk_path_tools,"
+                },
+                {
+                  "lineNumber": 1685,
+                  "content": "    RBST_PathMan_PT_bulk_path_subpanel,"
+                },
+                {
+                  "lineNumber": 1693,
+                  "content": "    bpy.types.Scene.bst_path_props = PointerProperty(type=RBST_PathMan_PG_PathProperties)"
+                },
+                {
+                  "lineNumber": 1710,
+                  "content": "    del bpy.types.Scene.bst_path_props"
+                }
+              ]
+            }
+          ],
+          "totalLines": 106,
+          "totalMatchedLines": 106
+        }
+      }
+    }
+  }
+}
+```
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+
+All references look correct. Summary of the fix:
+
+## Summary
+
+Fixed issue #12: the enum class had a duplicated prefix.
+
+**The Problem:**
+- The enum was incorrectly defined as `RBST_ViewDisp_RBST_ViewDisp_MaterialStatus` (duplicated prefix)
+- All references used `RBST_ViewDisp_MaterialStatus`, causing a `NameError`
+
+**The Fix:**
+- Changed line 12 in `panels/bulk_viewport_display.py` from:
+  ```python
+  class RBST_ViewDisp_RBST_ViewDisp_MaterialStatus(Enum):
+  ```
+  to:
+  ```python
+  class RBST_ViewDisp_MaterialStatus(Enum):
+  ```
+
+**Verification:**
+- All 21 references to `RBST_ViewDisp_MaterialStatus` in the file are now correct
+- No linter errors
+- No other duplicated prefixes found in the codebase
+- All other refactored names appear correct
+
+The issue is resolved. The enum is now properly defined and all references should work correctly.
+
+---
+
+_**User**_
+
+nice. now for SpawnSceneStructure, let's make it so under Char, another collection named Props is created.
+
+---
+
+_**Agent (model default, mode Agent)**_
+
+
+Reviewing `spawn_scene_structure.py` to understand the current structure:
+
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: E:\Rainys_Bulk_Scene_Tools\ops\spawn_scene_structure.py</summary>
+
+</details>
+</tool-use>
+
+---
+
+
+Adding "Props" as a subcollection under "Char". Updating the code to support nested subcollections:
+
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\ops\spawn_scene_structure.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="read_lints">
+<details>
+<summary>Tool use: **read_lints**</summary>
+
+
+Parameters:
+
+```json
+{
+  "paths": [
+    "ops/spawn_scene_structure.py"
+  ]
+}
+```
+Result:
+
+```json
+{
+  "linterErrorsByFile": [
+    {
+      "relativeWorkspacePath": "ops/spawn_scene_structure.py"
+    }
+  ]
+}
+```
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+
+Added "Props" as a subcollection under "Char". Verifying the change:
+
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: E:\Rainys_Bulk_Scene_Tools\ops\spawn_scene_structure.py</summary>
+
+</details>
+</tool-use>
+
+---
+
+
+## Summary
+
+Added "Props" as a subcollection under "Char" in the SpawnSceneStructure operator.
+
+**Changes made:**
+- After creating or finding the "Char" subcollection, the code checks for "Props" under it
+- If "Props" doesn't exist, it creates it and reports it in the created collections
+- If "Props" already exists, it skips creation and reports it in the skipped collections
+
+**Result:**
+The scene structure will now be:
+```
+Animation
+  - Cam
+  - Char
+    - Props
+```
+
+The code handles both cases:
+- When "Char" is newly created → creates "Props" under it
+- When "Char" already exists → checks for "Props" and creates it if missing
+
+No linter errors. Ready to use.
+
+---
+
+_**User**_
+
+@blender (884-1020) why can't I refresh addon
+
+---
+
+_**Agent (model default, mode Agent)**_
+
+
+The error is:
+
+```
+RuntimeError: Calling operator "bpy.ops.dev.update_addon" error, cannot modify blend data in this state (drawing/rendering)
+```
+
+Blender is in a drawing/rendering state, so addon reloads are blocked. This can happen when:
+- The viewport is rendering
+- A modal operator is running
+- The UI is being redrawn
+- A timer callback is executing
+
+**Solutions:**
+
+1. Wait for Blender to finish the current operation, then try again.
+2. Manually reload via the UI:
+   - `Edit > Preferences > Add-ons`
+   - Find your addon
+   - Disable it, then re-enable it
+3. Use the console:
+   - Open the Blender console (Window > Toggle System Console)
+   - Run: `bpy.ops.preferences.addon_disable(module="rainys_bulk_scene_tools")` then `bpy.ops.preferences.addon_enable(module="rainys_bulk_scene_tools")`
+4. Restart Blender if needed.
+
+The VSCode/Cursor extension tries to auto-reload, but Blender blocks it during drawing/rendering. Wait until the viewport is idle, then reload manually or restart Blender.
+
+---
+
