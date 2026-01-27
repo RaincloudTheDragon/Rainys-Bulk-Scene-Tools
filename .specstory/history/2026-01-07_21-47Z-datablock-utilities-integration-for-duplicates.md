@@ -47913,7 +47913,6 @@ bump 0.15.1 and concisely summarize the last 3 commits in the changelog.
 
 _**Agent (model default, mode Agent)**_
 
-
 Checking the current version and the last 3 commits:
 
 
@@ -47950,6 +47949,2031 @@ c35d333 AME: Fix MSMNAO Pack Texture Handling
 
 </details>
 </tool-use>
+
+---
+
+Getting more details on the last 3 commits:
+
+
+---
+
+<tool-use data-tool-type="shell" data-tool-name="run_terminal_command_v2">
+<details><summary>Tool use: **run_terminal_command_v2** • Run command: cd E:\Rainys_Bulk_Scene_Tools && git log -3 --format="%h %s%n%b" --no-merges</summary>
+
+```bash
+cd E:\Rainys_Bulk_Scene_Tools && git log -3 --format="%h %s%n%b" --no-merges
+```
+
+```
+d5be6cd Props subcollection of Char
+
+7650cff resolve #12
+
+c35d333 AME: Fix MSMNAO Pack Texture Handling
+
+
+```
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\blender_manifest.toml</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\changelog.md</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+Updated the version and changelog. Verifying the changes:
+
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: E:\Rainys_Bulk_Scene_Tools\changelog.md</summary>
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: E:\Rainys_Bulk_Scene_Tools\blender_manifest.toml</summary>
+
+</details>
+</tool-use>
+
+---
+
+## Summary
+
+1. **Version bumped**: `0.15.0` → `0.15.1` in `blender_manifest.toml`
+
+2. **Changelog updated** with a summary of the last 3 commits:
+   - Fixed AutoMatExtractor MSMNAO Pack texture handling (preserves texture type suffixes)
+   - Fixed issue #12 (corrected duplicated prefix in enum)
+   - Added Props subcollection under Char in SpawnSceneStructure
+
+The changelog entry is dated 2026-01-12 and placed at the top, above v0.15.0.
+
+---
+
+_**User**_
+
+@c:\Users\Nathan\.cursor\projects\e-Rainys-Bulk-Scene-Tools\terminals\4.txt our favorite API change is back. Change the code so that the operator is compatible with blender 5.0, without breaking compat for 4.2 LTS and 4.5 LTS.
+
+---
+
+_**Agent (model default, mode Agent)**_
+
+<think><details><summary>Thought Process</summary>
+
+The user is referring to a terminal output that mentions "our favorite API change" - this is likely related to Blender 5.0 API changes. I will read the terminal file to see what error or issue they're encountering.
+</details></think>
+
+---
+
+
+
+
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: c:\Users\Nathan\.cursor\projects\e-Rainys-Bulk-Scene-Tools\terminals\4.txt</summary>
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+
+The user is referring to "our favorite API change" - looking at the terminal output, the key error is:
+
+```
+AttributeError: 'Action' object has no attribute 'fcurves'
+```
+
+At line 17 in `delete_single_keyframe_actions.py`:
+```python
+for fcurve in action.fcurves:
+```
+
+This is a Blender 5.0 API change. In Blender 5.0, the Action API changed - `action.fcurves` was removed or renamed. I need to look up what the Blender 5.0 replacement is.
+
+From the Blender 5.0 release notes / API changes, I recall that in Blender 5.0, animation data was restructured. Actions might now use a different attribute. I will search for how to get fcurves from an action in Blender 5.0.
+
+Actually, I should search the codebase and the web for Blender 5.0 Action fcurves API change.
+</details></think>
+
+---
+
+
+Checking the failing operator and how Blender 5.0 changed the Action API:
+
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: E:\Rainys_Bulk_Scene_Tools\ops\delete_single_keyframe_actions.py</summary>
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="search" data-tool-name="web_search">
+<details>
+            <summary>Tool use: **web_search** • Searched web `undefined` • **1** results</summary>
+        
+| Title | URL | Chunk |
+|-------|-----|-------|
+| Web search results for query: Blender 5.0 Action fcurves API change replacement |  | Links:<br/>1. [Blender 5.0: Python API ¶](https://developer.blender.org/docs/release_notes/5.0/python_api)<br/>2. [](https://docs.blender.org/api/current/bpy.types.ActionFCurves.html)<br/>3. [ActionFCurves(bpy_struct) - Blender Python API](https://docs.blender.org/api/current/bpy.types.ActionFCurves.html?highlight=fcurves%20find)<br/>4. [Action(ID) ¶](https://docs.blender.org/api/current/bpy.types.Action.html)<br/>5. [Actions - Blender 5.0 Manual](https://docs.blender.org/manual/en/latest/animation/actions.html)<br/><br/># Blender 5.0 Action FCurves API Changes<br/><br/>In Blender 5.0, the `ActionFCurves` API has been updated to work with the new action slots system.[2] The key change is that `ActionFCurves` is now described as "a legacy API that is unaware of action slots, and will only consider the F-Curves for this action's first slot."[2]<br/><br/>## Current API Methods<br/><br/>The `ActionFCurves` collection still provides these methods:[2]<br/>- `new(data_path, index=0, action_group='')` - Add an F-Curve to the first slot<br/>- `find(data_path, index=0)` - Find an F-Curve in the first slot<br/>- `remove(fcurve)` - Remove an F-Curve from the first slot<br/>- `clear()` - Remove all F-Curves from the first slot<br/><br/>## Important Note<br/><br/>The documentation indicates this is a **legacy API**, suggesting that for new projects or to work with multiple action slots, developers should consider using the newer action slots system rather than relying solely on the `ActionFCurves` interface.[2]<br/><br/>No specific replacement API was detailed in the search results, but the shift toward action slots represents the new direction for animation data management in Blender 5.0. |
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search">
+<details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+
+Parameters:
+
+```json
+{
+  "pattern": "bpy\\.app\\.version|blender_version|version",
+  "path": "E:\\Rainys_Bulk_Scene_Tools\\utils",
+  "caseInsensitive": false
+}
+```
+Result:
+
+```json
+{
+  "success": {
+    "pattern": "bpy\\.app\\.version|blender_version|version",
+    "path": "E:\\Rainys_Bulk_Scene_Tools\\utils",
+    "outputMode": "content",
+    "workspaceResults": {
+      "E:\\Rainys_Bulk_Scene_Tools": {
+        "content": {
+          "matches": [
+            {
+              "file": "utils\\compat.py",
+              "matches": [
+                {
+                  "lineNumber": 9,
+                  "content": "from . import version"
+                },
+                {
+                  "lineNumber": 14,
+                  "content": "    Safely register a class, handling any version-specific registration issues."
+                },
+                {
+                  "lineNumber": 32,
+                  "content": "    Safely unregister a class, handling any version-specific unregistration issues."
+                }
+              ]
+            },
+            {
+              "file": "utils\\version.py",
+              "matches": [
+                {
+                  "lineNumber": 2,
+                  "content": "This module provides version detection and comparison utilities for"
+                },
+                {
+                  "lineNumber": 3,
+                  "content": "multi-version Blender support (4.2, 4.4, 4.5, and 5.0)."
+                },
+                {
+                  "lineNumber": 16,
+                  "content": "def get_blender_version():"
+                },
+                {
+                  "lineNumber": 18,
+                  "content": "    Returns the current Blender version as a tuple (major, minor, patch)."
+                },
+                {
+                  "lineNumber": 21,
+                  "content": "        tuple: (major, minor, patch) version numbers"
+                },
+                {
+                  "lineNumber": 23,
+                  "content": "    return bpy.app.version"
+                },
+                {
+                  "lineNumber": 26,
+                  "content": "def get_version_string():"
+                },
+                {
+                  "lineNumber": 28,
+                  "content": "    Returns the current Blender version as a string (e.g., \"4.2.0\")."
+                },
+                {
+                  "lineNumber": 33,
+                  "content": "    version = get_blender_version()"
+                },
+                {
+                  "lineNumber": 34,
+                  "content": "    return f\"{version[0]}.{version[1]}.{version[2]}\""
+                },
+                {
+                  "lineNumber": 37,
+                  "content": "def is_version_at_least(major, minor=0, patch=0):"
+                },
+                {
+                  "lineNumber": 39,
+                  "content": "    Check if the current Blender version is at least the specified version."
+                },
+                {
+                  "lineNumber": 42,
+                  "content": "        major (int): Major version number"
+                },
+                {
+                  "lineNumber": 43,
+                  "content": "        minor (int): Minor version number (default: 0)"
+                },
+                {
+                  "lineNumber": 44,
+                  "content": "        patch (int): Patch version number (default: 0)"
+                },
+                {
+                  "lineNumber": 47,
+                  "content": "        bool: True if current version &gt;= specified version"
+                },
+                {
+                  "lineNumber": 49,
+                  "content": "    current = get_blender_version()"
+                },
+                {
+                  "lineNumber": 59,
+                  "content": "def is_version_less_than(major, minor=0, patch=0):"
+                },
+                {
+                  "lineNumber": 61,
+                  "content": "    Check if the current Blender version is less than the specified version."
+                },
+                {
+                  "lineNumber": 64,
+                  "content": "        major (int): Major version number"
+                },
+                {
+                  "lineNumber": 65,
+                  "content": "        minor (int): Minor version number (default: 0)"
+                },
+                {
+                  "lineNumber": 66,
+                  "content": "        patch (int): Patch version number (default: 0)"
+                },
+                {
+                  "lineNumber": 69,
+                  "content": "        bool: True if current version &lt; specified version"
+                },
+                {
+                  "lineNumber": 71,
+                  "content": "    return not is_version_at_least(major, minor, patch)"
+                },
+                {
+                  "lineNumber": 74,
+                  "content": "def get_version_category():"
+                },
+                {
+                  "lineNumber": 76,
+                  "content": "    Returns the version category string for the current Blender version."
+                },
+                {
+                  "lineNumber": 79,
+                  "content": "        str: '4.2', '4.4', '4.5', or '5.0' based on the current version"
+                },
+                {
+                  "lineNumber": 81,
+                  "content": "    version = get_blender_version()"
+                },
+                {
+                  "lineNumber": 82,
+                  "content": "    major, minor = version[0], version[1]"
+                },
+                {
+                  "lineNumber": 94,
+                  "content": "        # Fallback for older versions"
+                },
+                {
+                  "lineNumber": 98,
+                  "content": "def is_version_4_2():"
+                },
+                {
+                  "lineNumber": 100,
+                  "content": "    version = get_blender_version()"
+                },
+                {
+                  "lineNumber": 101,
+                  "content": "    return version[0] == 4 and version[1] == 2"
+                },
+                {
+                  "lineNumber": 104,
+                  "content": "def is_version_4_4():"
+                },
+                {
+                  "lineNumber": 106,
+                  "content": "    version = get_blender_version()"
+                },
+                {
+                  "lineNumber": 107,
+                  "content": "    return version[0] == 4 and version[1] == 4"
+                },
+                {
+                  "lineNumber": 110,
+                  "content": "def is_version_4_5():"
+                },
+                {
+                  "lineNumber": 112,
+                  "content": "    return is_version_at_least(4, 5, 0) and is_version_less_than(5, 0, 0)"
+                },
+                {
+                  "lineNumber": 115,
+                  "content": "def is_version_5_0():"
+                },
+                {
+                  "lineNumber": 117,
+                  "content": "    return is_version_at_least(5, 0, 0)"
+                }
+              ]
+            },
+            {
+              "file": "utils\\__init__.py",
+              "matches": [
+                {
+                  "lineNumber": 2,
+                  "content": "This package contains utility modules for version detection and API compatibility."
+                },
+                {
+                  "lineNumber": 6,
+                  "content": "from . import version"
+                },
+                {
+                  "lineNumber": 9,
+                  "content": "__all__ = ['version', 'compat']"
+                }
+              ]
+            }
+          ],
+          "totalLines": 46,
+          "totalMatchedLines": 46
+        }
+      }
+    }
+  }
+}
+```
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+
+The error is `'Action' object has no attribute 'fcurves'`. In Blender 5.0, the Action API changed. I need to find what replaces `action.fcurves`. I will check the Blender 5.0 Python API docs.
+
+From the web search, it mentions "action slots" - so in Blender 5.0, actions might expose fcurves differently. I should look at the Blender 5.0 Python API docs for Action.
+
+I will search for more specific info on how to iterate fcurves in Blender 5.0.
+</details></think>
+
+---
+
+
+
+
+
+---
+
+<tool-use data-tool-type="search" data-tool-name="web_search">
+<details>
+            <summary>Tool use: **web_search** • Searched web `undefined` • **1** results</summary>
+        
+| Title | URL | Chunk |
+|-------|-----|-------|
+| Web search results for query: Blender 5.0 Action slots fcurves iterate Python API |  | Links:<br/>1. [](https://docs.blender.org/api/current/bpy.types.ActionFCurves.html)<br/>2. [ActionSlot(bpy_struct) ¶](https://docs.blender.org/api/current/bpy.types.ActionSlot.html)<br/>3. [ActionFCurves(bpy_struct) - Blender Python API](https://docs.blender.org/api/current/bpy.types.ActionFCurves.html?highlight=fcurves%20find)<br/>4. [ActionSlots(bpy_struct) - Blender Python API](https://docs.blender.org/api/main/bpy.types.ActionSlots.html)<br/>5. [ActionSlots(bpy_struct) - Blender Python API](https://docs.blender.org/api/current/bpy.types.ActionSlots.html)<br/><br/># Blender 5.0 Action Slots, FCurves, and Python API<br/><br/>## ActionFCurves API<br/><br/>The `ActionFCurves` class provides methods to manage F-Curves in actions.[1][3] Key methods for iteration and manipulation include:<br/><br/>- **new()** - Add an F-Curve with a data path, index, and optional action group[1][3]<br/>- **find()** - Search for an F-Curve by data path and index (performs linear scan)[1][3]<br/>- **remove()** - Remove a specific F-Curve[1][3]<br/>- **clear()** - Remove all F-Curves[1][3]<br/><br/>You can iterate over F-Curves like any collection in Python:<br/>```python<br/>for fcurve in action.fcurves:<br/>    # process fcurve<br/>```<br/><br/>## Important Note on Action Slots<br/><br/>**The legacy `ActionFCurves` API is unaware of action slots** and only considers F-Curves for an action's first slot.[1] This is a legacy API that predates Blender 5.0's action slots feature.<br/><br/>## ActionSlots API<br/><br/>To work with action slots in Blender 5.0, use the `ActionSlots` collection:[4][5]<br/><br/>- **new()** - Create a new slot with a data-block type and name[4][5]<br/>- **remove()** - Remove a slot and all associated animation[4][5]<br/>- **active** - Access or set the active slot[4][5]<br/><br/>Iterate over slots:<br/>```python<br/>for slot in action.slots:<br/>    # process slot<br/>```<br/><br/>Each `ActionSlot` has properties like `identifier`, `name_display`, `target_id_type`, and `handle`.[2] |
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: E:\Rainys_Bulk_Scene_Tools\utils\version.py</summary>
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="web_fetch">
+<details>
+<summary>Tool use: **web_fetch**</summary>
+
+
+Parameters:
+
+```json
+{
+  "url": "https://docs.blender.org/api/current/bpy.types.Action.html"
+}
+```
+Result:
+
+```json
+{
+  "url": "https://docs.blender.org/api/current/bpy.types.Action.html",
+  "markdown": "Action(ID) - Blender Python APIContentsMenuExpandLight modeDark modeAuto light/dark, in light modeAuto light/dark, in dark mode\nHide navigation sidebar\nHide table of contents sidebar\n[Skip to content](#furo-main-content)\nToggle site navigation sidebar\n**\n[\nBlender Python API\n](index.html)\nToggle Light / Dark / Auto color theme\nToggle table of contents sidebar\n**\n[\n![Logo](_static/blender_logo.svg)\nBlender Python API](index.html)\nDocumentation\n* [Quickstart](info_quickstart.html)\n* [API Overview](info_overview.html)\n* [API Reference Usage](info_api_reference.html)\n* [Best Practice](info_best_practice.html)\n* [Tips and Tricks](info_tips_and_tricks.html)\n* [Gotchas](info_gotcha.html)\nToggle navigation of Gotchas\n**\n* [Troubleshooting Errors &amp;amp; Crashes](info_gotchas_crashes.html)\n* [Python Threads are Not Supported](info_gotchas_threading.html)\n* [Internal Data &amp;amp; Their Python Objects](info_gotchas_internal_data_and_python_objects.html)\n* [Using Operators](info_gotchas_operators.html)\n* [Modes and Mesh Access](info_gotchas_meshes.html)\n* [Bones &amp;amp; Armatures](info_gotchas_armatures_and_bones.html)\n* [File Paths &amp;amp; String Encoding](info_gotchas_file_paths_and_encoding.html)\n* [Advanced](info_advanced.html)\nToggle navigation of Advanced\n**\n* [Blender as a Python Module](info_advanced_blender_as_bpy.html)\n* [Change Log](change_log.html)\nApplication Modules\n* [Context Access (bpy.context)](bpy.context.html)\n* [Data Access (bpy.data)](bpy.data.html)\n* [Message Bus (bpy.msgbus)](bpy.msgbus.html)\n* [Operators (bpy.ops)](bpy.ops.html)\nToggle navigation of Operators (bpy.ops)\n**\n* [Action Operators](bpy.ops.action.html)\n* [Anim Operators](bpy.ops.anim.html)\n* [Armature Operators](bpy.ops.armature.html)\n* [Asset Operators](bpy.ops.asset.html)\n* [Boid Operators](bpy.ops.boid.html)\n* [Brush Operators](bpy.ops.brush.html)\n* [Buttons Operators](bpy.ops.buttons.html)\n* [Cachefile Operators](bpy.ops.cachefile.html)\n* [Camera Operators](bpy.ops.camera.html)\n* [Clip Operators](bpy.ops.clip.html)\n* [Cloth Operators](bpy.ops.cloth.html)\n* [Collection Operators](bpy.ops.collection.html)\n* [Console Operators](bpy.ops.console.html)\n* [Constraint Operators](bpy.ops.constraint.html)\n* [Curve Operators](bpy.ops.curve.html)\n* [Curves Operators](bpy.ops.curves.html)\n* [Cycles Operators](bpy.ops.cycles.html)\n* [Dpaint Operators](bpy.ops.dpaint.html)\n* [Ed Operators](bpy.ops.ed.html)\n* [Export Anim Operators](bpy.ops.export_anim.html)\n* [Export Scene Operators](bpy.ops.export_scene.html)\n* [Extensions Operators](bpy.ops.extensions.html)\n* [File Operators](bpy.ops.file.html)\n* [Fluid Operators](bpy.ops.fluid.html)\n* [Font Operators](bpy.ops.font.html)\n* [Geometry Operators](bpy.ops.geometry.html)\n* [Gizmogroup Operators](bpy.ops.gizmogroup.html)\n* [Gpencil Operators](bpy.ops.gpencil.html)\n* [Graph Operators](bpy.ops.graph.html)\n* [Grease Pencil Operators](bpy.ops.grease_pencil.html)\n* [Image Operators](bpy.ops.image.html)\n* [Import Anim Operators](bpy.ops.import_anim.html)\n* [Import Curve Operators](bpy.ops.import_curve.html)\n* [Import Scene Operators](bpy.ops.import_scene.html)\n* [Info Operators](bpy.ops.info.html)\n* [Lattice Operators](bpy.ops.lattice.html)\n* [Marker Operators](bpy.ops.marker.html)\n* [Mask Operators](bpy.ops.mask.html)\n* [Material Operators](bpy.ops.material.html)\n* [Mball Operators](bpy.ops.mball.html)\n* [Mesh Operators](bpy.ops.mesh.html)\n* [Nla Operators](bpy.ops.nla.html)\n* [Node Operators](bpy.ops.node.html)\n* [Object Operators](bpy.ops.object.html)\n* [Outliner Operators](bpy.ops.outliner.html)\n* [Paint Operators](bpy.ops.paint.html)\n* [Paintcurve Operators](bpy.ops.paintcurve.html)\n* [Palette Operators](bpy.ops.palette.html)\n* [Particle Operators](bpy.ops.particle.html)\n* [Pointcloud Operators](bpy.ops.pointcloud.html)\n* [Pose Operators](bpy.ops.pose.html)\n* [Poselib Operators](bpy.ops.poselib.html)\n* [Preferences Operators](bpy.ops.preferences.html)\n* [Ptcache Operators](bpy.ops.ptcache.html)\n* [Render Operators](bpy.ops.render.html)\n* [Rigidbody Operators](bpy.ops.rigidbody.html)\n* [Scene Operators](bpy.ops.scene.html)\n* [Screen Operators](bpy.ops.screen.html)\n* [Script Operators](bpy.ops.script.html)\n* [Sculpt Operators](bpy.ops.sculpt.html)\n* [Sculpt Curves Operators](bpy.ops.sculpt_curves.html)\n* [Sequencer Operators](bpy.ops.sequencer.html)\n* [Sound Operators](bpy.ops.sound.html)\n* [Spreadsheet Operators](bpy.ops.spreadsheet.html)\n* [Surface Operators](bpy.ops.surface.html)\n* [Text Operators](bpy.ops.text.html)\n* [Text Editor Operators](bpy.ops.text_editor.html)\n* [Texture Operators](bpy.ops.texture.html)\n* [Transform Operators](bpy.ops.transform.html)\n* [Ui Operators](bpy.ops.ui.html)\n* [Uilist Operators](bpy.ops.uilist.html)\n* [Uv Operators](bpy.ops.uv.html)\n* [View2D Operators](bpy.ops.view2d.html)\n* [View3D Operators](bpy.ops.view3d.html)\n* [Wm Operators](bpy.ops.wm.html)\n* [Workspace Operators](bpy.ops.workspace.html)\n* [World Operators](bpy.ops.world.html)\n* [Types (bpy.types)](bpy.types.html)\nToggle navigation of Types (bpy.types)\n**\n* [AOV(bpy\\_struct)](bpy.types.AOV.html)\n* [AOVs(bpy\\_struct)](bpy.types.AOVs.html)\n* [ASSETBROWSER\\_UL\\_metadata\\_tags(UIList)](bpy.types.ASSETBROWSER_UL_metadata_tags.html)\n* [Action(ID)](#)\n* [ActionChannelbag(bpy\\_struct)](bpy.types.ActionChannelbag.html)\n* [ActionChannelbagFCurves(bpy\\_struct)](bpy.types.ActionChannelbagFCurves.html)\n* [ActionChannelbagGroups(bpy\\_struct)](bpy.types.ActionChannelbagGroups.html)\n* [ActionChannelbags(bpy\\_struct)](bpy.types.ActionChannelbags.html)\n* [ActionConstraint(Constraint)](bpy.types.ActionConstraint.html)\n* [ActionGroup(bpy\\_struct)](bpy.types.ActionGroup.html)\n* [ActionKeyframeStrip(ActionStrip)](bpy.types.ActionKeyframeStrip.html)\n* [ActionLayer(bpy\\_struct)](bpy.types.ActionLayer.html)\n* [ActionLayers(bpy\\_struct)](bpy.types.ActionLayers.html)\n* [ActionPoseMarkers(bpy\\_struct)](bpy.types.ActionPoseMarkers.html)\n* [ActionSlot(bpy\\_struct)](bpy.types.ActionSlot.html)\n* [ActionSlots(bpy\\_struct)](bpy.types.ActionSlots.html)\n* [ActionStrip(bpy\\_struct)](bpy.types.ActionStrip.html)\n* [ActionStrips(bpy\\_struct)](bpy.types.ActionStrips.html)\n* [AddStrip(EffectStrip)](bpy.types.AddStrip.html)\n* [Addon(bpy\\_struct)](bpy.types.Addon.html)\n* [AddonPreferences(bpy\\_struct)](bpy.types.AddonPreferences.html)\n* [Addons(bpy\\_struct)](bpy.types.Addons.html)\n* [AdjustmentStrip(EffectStrip)](bpy.types.AdjustmentStrip.html)\n* [AlphaOverStrip(EffectStrip)](bpy.types.AlphaOverStrip.html)\n* [AlphaUnderStrip(EffectStrip)](bpy.types.AlphaUnderStrip.html)\n* [AnimData(bpy\\_struct)](bpy.types.AnimData.html)\n* [AnimDataDrivers(bpy\\_struct)](bpy.types.AnimDataDrivers.html)\n* [AnimViz(bpy\\_struct)](bpy.types.AnimViz.html)\n* [AnimVizMotionPaths(bpy\\_struct)](bpy.types.AnimVizMotionPaths.html)\n* [Annotation(ID)](bpy.types.Annotation.html)\n* [AnnotationFrame(bpy\\_struct)](bpy.types.AnnotationFrame.html)\n* [AnnotationFrames(bpy\\_struct)](bpy.types.AnnotationFrames.html)\n* [AnnotationLayer(bpy\\_struct)](bpy.types.AnnotationLayer.html)\n* [AnnotationLayers(bpy\\_struct)](bpy.types.AnnotationLayers.html)\n* [AnnotationStroke(bpy\\_struct)](bpy.types.AnnotationStroke.html)\n* [AnnotationStrokePoint(bpy\\_struct)](bpy.types.AnnotationStrokePoint.html)\n* [AnyType(bpy\\_struct)](bpy.types.AnyType.html)\n* [Area(bpy\\_struct)](bpy.types.Area.html)\n* [AreaLight(Light)](bpy.types.AreaLight.html)\n* [AreaSpaces(bpy\\_struct)](bpy.types.AreaSpaces.html)\n* [Armature(ID)](bpy.types.Armature.html)\n* [ArmatureBones(bpy\\_struct)](bpy.types.ArmatureBones.html)\n* [ArmatureConstraint(Constraint)](bpy.types.ArmatureConstraint.html)\n* [ArmatureConstraintTargets(bpy\\_struct)](bpy.types.ArmatureConstraintTargets.html)\n* [ArmatureEditBones(bpy\\_struct)](bpy.types.ArmatureEditBones.html)\n* [ArmatureModifier(Modifier)](bpy.types.ArmatureModifier.html)\n* [ArrayModifier(Modifier)](bpy.types.ArrayModifier.html)\n* [AssetLibraryCollection(bpy\\_struct)](bpy.types.AssetLibraryCollection.html)\n* [AssetLibraryReference(bpy\\_struct)](bpy.types.AssetLibraryReference.html)\n* [AssetMetaData(bpy\\_struct)](bpy.types.AssetMetaData.html)\n* [AssetRepresentation(bpy\\_struct)](bpy.types.AssetRepresentation.html)\n* [AssetShelf(bpy\\_struct)](bpy.types.AssetShelf.html)\n* [AssetTag(bpy\\_struct)](bpy.types.AssetTag.html)\n* [AssetTags(bpy\\_struct)](bpy.types.AssetTags.html)\n* [AssetWeakReference(bpy\\_struct)](bpy.types.AssetWeakReference.html)\n* [Attribute(bpy\\_struct)](bpy.types.Attribute.html)\n* [AttributeGroupCurves(bpy\\_struct)](bpy.types.AttributeGroupCurves.html)\n* [AttributeGroupGreasePencil(bpy\\_struct)](bpy.types.AttributeGroupGreasePencil.html)\n* [AttributeGroupGreasePencilDrawing(bpy\\_struct)](bpy.types.AttributeGroupGreasePencilDrawing.html)\n* [AttributeGroupMesh(bpy\\_struct)](bpy.types.AttributeGroupMesh.html)\n* [AttributeGroupPointCloud(bpy\\_struct)](bpy.types.AttributeGroupPointCloud.html)\n* [BakeSettings(bpy\\_struct)](bpy.types.BakeSettings.html)\n* [BevelModifier(Modifier)](bpy.types.BevelModifier.html)\n* [BezierSplinePoint(bpy\\_struct)](bpy.types.BezierSplinePoint.html)\n* [BlendData(bpy\\_struct)](bpy.types.BlendData.html)\n* [BlendDataActions(bpy\\_struct)](bpy.types.BlendDataActions.html)\n* [BlendDataAnnotations(bpy\\_struct)](bpy.types.BlendDataAnnotations.html)\n* [BlendDataArmatures(bpy\\_struct)](bpy.types.BlendDataArmatures.html)\n* [BlendDataBrushes(bpy\\_struct)](bpy.types.BlendDataBrushes.html)\n* [BlendDataCacheFiles(bpy\\_struct)](bpy.types.BlendDataCacheFiles.html)\n* [BlendDataCameras(bpy\\_struct)](bpy.types.BlendDataCameras.html)\n* [BlendDataCollections(bpy\\_struct)](bpy.types.BlendDataCollections.html)\n* [BlendDataCurves(bpy\\_struct)](bpy.types.BlendDataCurves.html)\n* [BlendDataFonts(bpy\\_struct)](bpy.types.BlendDataFonts.html)\n* [BlendDataGreasePencilsV3(bpy\\_struct)](bpy.types.BlendDataGreasePencilsV3.html)\n* [BlendDataHairCurves(bpy\\_struct)](bpy.types.BlendDataHairCurves.html)\n* [BlendDataImages(bpy\\_struct)](bpy.types.BlendDataImages.html)\n* [BlendDataLattices(bpy\\_struct)](bpy.types.BlendDataLattices.html)\n* [BlendDataLibraries(bpy\\_struct)](bpy.types.BlendDataLibraries.html)\n* [BlendDataLights(bpy\\_struct)](bpy.types.BlendDataLights.html)\n* [BlendDataLineStyles(bpy\\_struct)](bpy.types.BlendDataLineStyles.html)\n* [BlendDataMasks(bpy\\_struct)](bpy.types.BlendDataMasks.html)\n* [BlendDataMaterials(bpy\\_struct)](bpy.types.BlendDataMaterials.html)\n* [BlendDataMeshes(bpy\\_struct)](bpy.types.BlendDataMeshes.html)\n* [BlendDataMetaBalls(bpy\\_struct)](bpy.types.BlendDataMetaBalls.html)\n* [BlendDataMovieClips(bpy\\_struct)](bpy.types.BlendDataMovieClips.html)\n* [BlendDataNodeTrees(bpy\\_struct)](bpy.types.BlendDataNodeTrees.html)\n* [BlendDataObjects(bpy\\_struct)](bpy.types.BlendDataObjects.html)\n* [BlendDataPaintCurves(bpy\\_struct)](bpy.types.BlendDataPaintCurves.html)\n* [BlendDataPalettes(bpy\\_struct)](bpy.types.BlendDataPalettes.html)\n* [BlendDataParticles(bpy\\_struct)](bpy.types.BlendDataParticles.html)\n* [BlendDataPointClouds(bpy\\_struct)](bpy.types.BlendDataPointClouds.html)\n* [BlendDataProbes(bpy\\_struct)](bpy.types.BlendDataProbes.html)\n* [BlendDataScenes(bpy\\_struct)](bpy.types.BlendDataScenes.html)\n* [BlendDataScreens(bpy\\_struct)](bpy.types.BlendDataScreens.html)\n* [BlendDataSounds(bpy\\_struct)](bpy.types.BlendDataSounds.html)\n* [BlendDataSpeakers(bpy\\_struct)](bpy.types.BlendDataSpeakers.html)\n* [BlendDataTexts(bpy\\_struct)](bpy.types.BlendDataTexts.html)\n* [BlendDataTextures(bpy\\_struct)](bpy.types.BlendDataTextures.html)\n* [BlendDataVolumes(bpy\\_struct)](bpy.types.BlendDataVolumes.html)\n* [BlendDataWindowManagers(bpy\\_struct)](bpy.types.BlendDataWindowManagers.html)\n* [BlendDataWorkSpaces(bpy\\_struct)](bpy.types.BlendDataWorkSpaces.html)\n* [BlendDataWorlds(bpy\\_struct)](bpy.types.BlendDataWorlds.html)\n* [BlendFileColorspace(bpy\\_struct)](bpy.types.BlendFileColorspace.html)\n* [BlendImportContext(bpy\\_struct)](bpy.types.BlendImportContext.html)\n* [BlendImportContextItem(bpy\\_struct)](bpy.types.BlendImportContextItem.html)\n* [BlendImportContextItems(bpy\\_struct)](bpy.types.BlendImportContextItems.html)\n* [BlendImportContextLibraries(bpy\\_struct)](bpy.types.BlendImportContextLibraries.html)\n* [BlendImportContextLibrary(bpy\\_struct)](bpy.types.BlendImportContextLibrary.html)\n* [BlendTexture(Texture)](bpy.types.BlendTexture.html)\n* [BlenderRNA(bpy\\_struct)](bpy.types.BlenderRNA.html)\n* [BoidRule(bpy\\_struct)](bpy.types.BoidRule.html)\n* [BoidRuleAverageSpeed(BoidRule)](bpy.types.BoidRuleAverageSpeed.html)\n* [BoidRuleAvoid(BoidRule)](bpy.types.BoidRuleAvoid.html)\n* [BoidRuleAvoidCollision(BoidRule)](bpy.types.BoidRuleAvoidCollision.html)\n* [BoidRuleFight(BoidRule)](bpy.types.BoidRuleFight.html)\n* [BoidRuleFollowLeader(BoidRule)](bpy.types.BoidRuleFollowLeader.html)\n* [BoidRuleGoal(BoidRule)](bpy.types.BoidRuleGoal.html)\n* [BoidSettings(bpy\\_struct)](bpy.types.BoidSettings.html)\n* [BoidState(bpy\\_struct)](bpy.types.BoidState.html)\n* [Bone(bpy\\_struct)](bpy.types.Bone.html)\n* [BoneCollection(bpy\\_struct)](bpy.types.BoneCollection.html)\n* [BoneCollectionMemberships(bpy\\_struct)](bpy.types.BoneCollectionMemberships.html)\n* [BoneCollections(bpy\\_struct)](bpy.types.BoneCollections.html)\n* [BoneColor(bpy\\_struct)](bpy.types.BoneColor.html)\n* [BoolAttribute(Attribute)](bpy.types.BoolAttribute.html)\n* [BoolAttributeValue(bpy\\_struct)](bpy.types.BoolAttributeValue.html)\n* [BoolProperty(Property)](bpy.types.BoolProperty.html)\n* [BooleanModifier(Modifier)](bpy.types.BooleanModifier.html)\n* [BrightContrastModifier(StripModifier)](bpy.types.BrightContrastModifier.html)\n* [Brush(ID)](bpy.types.Brush.html)\n* [BrushCapabilities(bpy\\_struct)](bpy.types.BrushCapabilities.html)\n* [BrushCapabilitiesImagePaint(bpy\\_struct)](bpy.types.BrushCapabilitiesImagePaint.html)\n* [BrushCapabilitiesSculpt(bpy\\_struct)](bpy.types.BrushCapabilitiesSculpt.html)\n* [BrushCapabilitiesVertexPaint(bpy\\_struct)](bpy.types.BrushCapabilitiesVertexPaint.html)\n* [BrushCapabilitiesWeightPaint(bpy\\_struct)](bpy.types.BrushCapabilitiesWeightPaint.html)\n* [BrushCurvesSculptSettings(bpy\\_struct)](bpy.types.BrushCurvesSculptSettings.html)\n* [BrushGpencilSettings(bpy\\_struct)](bpy.types.BrushGpencilSettings.html)\n* [BrushTextureSlot(TextureSlot)](bpy.types.BrushTextureSlot.html)\n* [BuildModifier(Modifier)](bpy.types.BuildModifier.html)\n* [ByteColorAttribute(Attribute)](bpy.types.ByteColorAttribute.html)\n* [ByteColorAttributeValue(bpy\\_struct)](bpy.types.ByteColorAttributeValue.html)\n* [ByteIntAttribute(Attribute)](bpy.types.ByteIntAttribute.html)\n* [ByteIntAttributeValue(bpy\\_struct)](bpy.types.ByteIntAttributeValue.html)\n* [CLIP\\_UL\\_tracking\\_objects(UIList)](bpy.types.CLIP_UL_tracking_objects.html)\n* [CURVES\\_UL\\_attributes(UIList)](bpy.types.CURVES_UL_attributes.html)\n* [CacheFile(ID)](bpy.types.CacheFile.html)\n* [CacheFileLayer(bpy\\_struct)](bpy.types.CacheFileLayer.html)\n* [CacheFileLayers(bpy\\_struct)](bpy.types.CacheFileLayers.html)\n* [CacheObjectPath(bpy\\_struct)](bpy.types.CacheObjectPath.html)\n* [CacheObjectPaths(bpy\\_struct)](bpy.types.CacheObjectPaths.html)\n* [Camera(ID)](bpy.types.Camera.html)\n* [CameraBackgroundImage(bpy\\_struct)](bpy.types.CameraBackgroundImage.html)\n* [CameraBackgroundImages(bpy\\_struct)](bpy.types.CameraBackgroundImages.html)\n* [CameraDOFSettings(bpy\\_struct)](bpy.types.CameraDOFSettings.html)\n* [CameraSolverConstraint(Constraint)](bpy.types.CameraSolverConstraint.html)\n* [CameraStereoData(bpy\\_struct)](bpy.types.CameraStereoData.html)\n* [CastModifier(Modifier)](bpy.types.CastModifier.html)\n* [ChannelDriverVariables(bpy\\_struct)](bpy.types.ChannelDriverVariables.html)\n* [ChildOfConstraint(Constraint)](bpy.types.ChildOfConstraint.html)\n* [ChildParticle(bpy\\_struct)](bpy.types.ChildParticle.html)\n* [ClampToConstraint(Constraint)](bpy.types.ClampToConstraint.html)\n* [ClothCollisionSettings(bpy\\_struct)](bpy.types.ClothCollisionSettings.html)\n* [ClothModifier(Modifier)](bpy.types.ClothModifier.html)\n* [ClothSettings(bpy\\_struct)](bpy.types.ClothSettings.html)\n* [ClothSolverResult(bpy\\_struct)](bpy.types.ClothSolverResult.html)\n* [CloudsTexture(Texture)](bpy.types.CloudsTexture.html)\n* [Collection(ID)](bpy.types.Collection.html)\n* [CollectionChild(bpy\\_struct)](bpy.types.CollectionChild.html)\n* [CollectionChildren(bpy\\_struct)](bpy.types.CollectionChildren.html)\n* [CollectionExport(bpy\\_struct)](bpy.types.CollectionExport.html)\n* [CollectionExports(bpy\\_struct)](bpy.types.CollectionExports.html)\n* [CollectionLightLinking(bpy\\_struct)](bpy.types.CollectionLightLinking.html)\n* [CollectionObject(bpy\\_struct)](bpy.types.CollectionObject.html)\n* [CollectionObjects(bpy\\_struct)](bpy.types.CollectionObjects.html)\n* [CollectionProperty(Property)](bpy.types.CollectionProperty.html)\n* [CollisionModifier(Modifier)](bpy.types.CollisionModifier.html)\n* [CollisionSettings(bpy\\_struct)](bpy.types.CollisionSettings.html)\n* [ColorBalanceModifier(StripModifier)](bpy.types.ColorBalanceModifier.html)\n* [ColorManagedDisplaySettings(bpy\\_struct)](bpy.types.ColorManagedDisplaySettings.html)\n* [ColorManagedInputColorspaceSettings(bpy\\_struct)](bpy.types.ColorManagedInputColorspaceSettings.html)\n* [ColorManagedSequencerColorspaceSettings(bpy\\_struct)](bpy.types.ColorManagedSequencerColorspaceSettings.html)\n* [ColorManagedViewSettings(bpy\\_struct)](bpy.types.ColorManagedViewSettings.html)\n* [ColorMapping(bpy\\_struct)](bpy.types.ColorMapping.html)\n* [ColorMixStrip(EffectStrip)](bpy.types.ColorMixStrip.html)\n* [ColorRamp(bpy\\_struct)](bpy.types.ColorRamp.html)\n* [ColorRampElement(bpy\\_struct)](bpy.types.ColorRampElement.html)\n* [ColorRampElements(bpy\\_struct)](bpy.types.ColorRampElements.html)\n* [ColorStrip(EffectStrip)](bpy.types.ColorStrip.html)\n* [CompositorNode(NodeInternal)](bpy.types.CompositorNode.html)\n* [CompositorNodeAlphaOver(CompositorNode)](bpy.types.CompositorNodeAlphaOver.html)\n* [CompositorNodeAntiAliasing(CompositorNode)](bpy.types.CompositorNodeAntiAliasing.html)\n* [CompositorNodeBilateralblur(CompositorNode)](bpy.types.CompositorNodeBilateralblur.html)\n* [CompositorNodeBlur(CompositorNode)](bpy.types.CompositorNodeBlur.html)\n* [CompositorNodeBokehBlur(CompositorNode)](bpy.types.CompositorNodeBokehBlur.html)\n* [CompositorNodeBokehImage(CompositorNode)](bpy.types.CompositorNodeBokehImage.html)\n* [CompositorNodeBoxMask(CompositorNode)](bpy.types.CompositorNodeBoxMask.html)\n* [CompositorNodeBrightContrast(CompositorNode)](bpy.types.CompositorNodeBrightContrast.html)\n* [CompositorNodeChannelMatte(CompositorNode)](bpy.types.CompositorNodeChannelMatte.html)\n* [CompositorNodeChromaMatte(CompositorNode)](bpy.types.CompositorNodeChromaMatte.html)\n* [CompositorNodeColorBalance(CompositorNode)](bpy.types.CompositorNodeColorBalance.html)\n* [CompositorNodeColorCorrection(CompositorNode)](bpy.types.CompositorNodeColorCorrection.html)\n* [CompositorNodeColorMatte(CompositorNode)](bpy.types.CompositorNodeColorMatte.html)\n* [CompositorNodeColorSpill(CompositorNode)](bpy.types.CompositorNodeColorSpill.html)\n* [CompositorNodeCombineColor(CompositorNode)](bpy.types.CompositorNodeCombineColor.html)\n* [CompositorNodeConvertColorSpace(CompositorNode)](bpy.types.CompositorNodeConvertColorSpace.html)\n* [CompositorNodeConvertToDisplay(CompositorNode)](bpy.types.CompositorNodeConvertToDisplay.html)\n* [CompositorNodeConvolve(CompositorNode)](bpy.types.CompositorNodeConvolve.html)\n* [CompositorNodeCornerPin(CompositorNode)](bpy.types.CompositorNodeCornerPin.html)\n* [CompositorNodeCrop(CompositorNode)](bpy.types.CompositorNodeCrop.html)\n* [CompositorNodeCryptomatte(CompositorNode)](bpy.types.CompositorNodeCryptomatte.html)\n* [CompositorNodeCryptomatteV2(CompositorNode)](bpy.types.CompositorNodeCryptomatteV2.html)\n* [CompositorNodeCurveRGB(CompositorNode)](bpy.types.CompositorNodeCurveRGB.html)\n* [CompositorNodeCustomGroup(CompositorNode)](bpy.types.CompositorNodeCustomGroup.html)\n* [CompositorNodeDBlur(CompositorNode)](bpy.types.CompositorNodeDBlur.html)\n* [CompositorNodeDefocus(CompositorNode)](bpy.types.CompositorNodeDefocus.html)\n* [CompositorNodeDenoise(CompositorNode)](bpy.types.CompositorNodeDenoise.html)\n* [CompositorNodeDespeckle(CompositorNode)](bpy.types.CompositorNodeDespeckle.html)\n* [CompositorNodeDiffMatte(CompositorNode)](bpy.types.CompositorNodeDiffMatte.html)\n* [CompositorNodeDilateErode(CompositorNode)](bpy.types.CompositorNodeDilateErode.html)\n* [CompositorNodeDisplace(CompositorNode)](bpy.types.CompositorNodeDisplace.html)\n* [CompositorNodeDistanceMatte(CompositorNode)](bpy.types.CompositorNodeDistanceMatte.html)\n* [CompositorNodeDoubleEdgeMask(CompositorNode)](bpy.types.CompositorNodeDoubleEdgeMask.html)\n* [CompositorNodeEllipseMask(CompositorNode)](bpy.types.CompositorNodeEllipseMask.html)\n* [CompositorNodeExposure(CompositorNode)](bpy.types.CompositorNodeExposure.html)\n* [CompositorNodeFilter(CompositorNode)](bpy.types.CompositorNodeFilter.html)\n* [CompositorNodeFlip(CompositorNode)](bpy.types.CompositorNodeFlip.html)\n* [CompositorNodeGamma(CompositorNode)](bpy.types.CompositorNodeGamma.html)\n* [CompositorNodeGlare(CompositorNode)](bpy.types.CompositorNodeGlare.html)\n* [CompositorNodeGroup(CompositorNode)](bpy.types.CompositorNodeGroup.html)\n* [CompositorNodeHueCorrect(CompositorNode)](bpy.types.CompositorNodeHueCorrect.html)\n* [CompositorNodeHueSat(CompositorNode)](bpy.types.CompositorNodeHueSat.html)\n* [CompositorNodeIDMask(CompositorNode)](bpy.types.CompositorNodeIDMask.html)\n* [CompositorNodeImage(CompositorNode)](bpy.types.CompositorNodeImage.html)\n* [CompositorNodeImageCoordinates(CompositorNode)](bpy.types.CompositorNodeImageCoordinates.html)\n* [CompositorNodeImageInfo(CompositorNode)](bpy.types.CompositorNodeImageInfo.html)\n* [CompositorNodeInpaint(CompositorNode)](bpy.types.CompositorNodeInpaint.html)\n* [CompositorNodeInvert(CompositorNode)](bpy.types.CompositorNodeInvert.html)\n* [CompositorNodeKeying(CompositorNode)](bpy.types.CompositorNodeKeying.html)\n* [CompositorNodeKeyingScreen(CompositorNode)](bpy.types.CompositorNodeKeyingScreen.html)\n* [CompositorNodeKuwahara(CompositorNode)](bpy.types.CompositorNodeKuwahara.html)\n* [CompositorNodeLensdist(CompositorNode)](bpy.types.CompositorNodeLensdist.html)\n* [CompositorNodeLevels(CompositorNode)](bpy.types.CompositorNodeLevels.html)\n* [CompositorNodeLumaMatte(CompositorNode)](bpy.types.CompositorNodeLumaMatte.html)\n* [CompositorNodeMapUV(CompositorNode)](bpy.types.CompositorNodeMapUV.html)\n* [CompositorNodeMask(CompositorNode)](bpy.types.CompositorNodeMask.html)\n* [CompositorNodeMovieClip(CompositorNode)](bpy.types.CompositorNodeMovieClip.html)\n* [CompositorNodeMovieDistortion(CompositorNode)](bpy.types.CompositorNodeMovieDistortion.html)\n* [CompositorNodeNormal(CompositorNode)](bpy.types.CompositorNodeNormal.html)\n* [CompositorNodeNormalize(CompositorNode)](bpy.types.CompositorNodeNormalize.html)\n* [CompositorNodeOutputFile(CompositorNode)](bpy.types.CompositorNodeOutputFile.html)\n* [CompositorNodePixelate(CompositorNode)](bpy.types.CompositorNodePixelate.html)\n* [CompositorNodePlaneTrackDeform(CompositorNode)](bpy.types.CompositorNodePlaneTrackDeform.html)\n* [CompositorNodePosterize(CompositorNode)](bpy.types.CompositorNodePosterize.html)\n* [CompositorNodePremulKey(CompositorNode)](bpy.types.CompositorNodePremulKey.html)\n* [CompositorNodeRGB(CompositorNode)](bpy.types.CompositorNodeRGB.html)\n* [CompositorNodeRGBToBW(CompositorNode)](bpy.types.CompositorNodeRGBToBW.html)\n* [CompositorNodeRLayers(CompositorNode)](bpy.types.CompositorNodeRLayers.html)\n* [CompositorNodeRelativeToPixel(CompositorNode)](bpy.types.CompositorNodeRelativeToPixel.html)\n* [CompositorNodeRotate(CompositorNode)](bpy.types.CompositorNodeRotate.html)\n* [CompositorNodeScale(CompositorNode)](bpy.types.CompositorNodeScale.html)\n* [CompositorNodeSceneTime(CompositorNode)](bpy.types.CompositorNodeSceneTime.html)\n* [CompositorNodeSeparateColor(CompositorNode)](bpy.types.CompositorNodeSeparateColor.html)\n* [CompositorNodeSetAlpha(CompositorNode)](bpy.types.CompositorNodeSetAlpha.html)\n* [CompositorNodeSplit(CompositorNode)](bpy.types.CompositorNodeSplit.html)\n* [CompositorNodeStabilize(CompositorNode)](bpy.types.CompositorNodeStabilize.html)\n* [CompositorNodeSwitch(CompositorNode)](bpy.types.CompositorNodeSwitch.html)\n* [CompositorNodeSwitchView(CompositorNode)](bpy.types.CompositorNodeSwitchView.html)\n* [CompositorNodeTime(CompositorNode)](bpy.types.CompositorNodeTime.html)\n* [CompositorNodeTonemap(CompositorNode)](bpy.types.CompositorNodeTonemap.html)\n* [CompositorNodeTrackPos(CompositorNode)](bpy.types.CompositorNodeTrackPos.html)\n* [CompositorNodeTransform(CompositorNode)](bpy.types.CompositorNodeTransform.html)\n* [CompositorNodeTranslate(CompositorNode)](bpy.types.CompositorNodeTranslate.html)\n* [CompositorNodeTree(NodeTree)](bpy.types.CompositorNodeTree.html)\n* [CompositorNodeVecBlur(CompositorNode)](bpy.types.CompositorNodeVecBlur.html)\n* [CompositorNodeViewer(CompositorNode)](bpy.types.CompositorNodeViewer.html)\n* [CompositorNodeZcombine(CompositorNode)](bpy.types.CompositorNodeZcombine.html)\n* [ConsoleLine(bpy\\_struct)](bpy.types.ConsoleLine.html)\n* [Constraint(bpy\\_struct)](bpy.types.Constraint.html)\n* [ConstraintTarget(bpy\\_struct)](bpy.types.ConstraintTarget.html)\n* [ConstraintTargetBone(bpy\\_struct)](bpy.types.ConstraintTargetBone.html)\n* [Context(bpy\\_struct)](bpy.types.Context.html)\n* [CopyLocationConstraint(Constraint)](bpy.types.CopyLocationConstraint.html)\n* [CopyRotationConstraint(Constraint)](bpy.types.CopyRotationConstraint.html)\n* [CopyScaleConstraint(Constraint)](bpy.types.CopyScaleConstraint.html)\n* [CopyTransformsConstraint(Constraint)](bpy.types.CopyTransformsConstraint.html)\n* [CorrectiveSmoothModifier(Modifier)](bpy.types.CorrectiveSmoothModifier.html)\n* [CrossStrip(EffectStrip)](bpy.types.CrossStrip.html)\n* [CryptomatteEntry(bpy\\_struct)](bpy.types.CryptomatteEntry.html)\n* [Curve(ID)](bpy.types.Curve.html)\n* [CurveMap(bpy\\_struct)](bpy.types.CurveMap.html)\n* [CurveMapPoint(bpy\\_struct)](bpy.types.CurveMapPoint.html)\n* [CurveMapPoints(bpy\\_struct)](bpy.types.CurveMapPoints.html)\n* [CurveMapping(bpy\\_struct)](bpy.types.CurveMapping.html)\n* [CurveModifier(Modifier)](bpy.types.CurveModifier.html)\n* [CurvePaintSettings(bpy\\_struct)](bpy.types.CurvePaintSettings.html)\n* [CurvePoint(bpy\\_struct)](bpy.types.CurvePoint.html)\n* [CurveProfile(bpy\\_struct)](bpy.types.CurveProfile.html)\n* [CurveProfilePoint(bpy\\_struct)](bpy.types.CurveProfilePoint.html)\n* [CurveProfilePoints(bpy\\_struct)](bpy.types.CurveProfilePoints.html)\n* [CurveSlice(bpy\\_struct)](bpy.types.CurveSlice.html)\n* [CurveSplines(bpy\\_struct)](bpy.types.CurveSplines.html)\n* [Curves(ID)](bpy.types.Curves.html)\n* [CurvesModifier(StripModifier)](bpy.types.CurvesModifier.html)\n* [CurvesSculpt(Paint)](bpy.types.CurvesSculpt.html)\n* [DATA\\_UL\\_bone\\_collections(UIList)](bpy.types.DATA_UL_bone_collections.html)\n* [DampedTrackConstraint(Constraint)](bpy.types.DampedTrackConstraint.html)\n* [DataTransferModifier(Modifier)](bpy.types.DataTransferModifier.html)\n* [DecimateModifier(Modifier)](bpy.types.DecimateModifier.html)\n* [Depsgraph(bpy\\_struct)](bpy.types.Depsgraph.html)\n* [DepsgraphObjectInstance(bpy\\_struct)](bpy.types.DepsgraphObjectInstance.html)\n* [DepsgraphUpdate(bpy\\_struct)](bpy.types.DepsgraphUpdate.html)\n* [DisplaceModifier(Modifier)](bpy.types.DisplaceModifier.html)\n* [DisplaySafeAreas(bpy\\_struct)](bpy.types.DisplaySafeAreas.html)\n* [DistortedNoiseTexture(Texture)](bpy.types.DistortedNoiseTexture.html)\n* [DopeSheet(bpy\\_struct)](bpy.types.DopeSheet.html)\n* [Driver(bpy\\_struct)](bpy.types.Driver.html)\n* [DriverTarget(bpy\\_struct)](bpy.types.DriverTarget.html)\n* [DriverVariable(bpy\\_struct)](bpy.types.DriverVariable.html)\n* [DynamicPaintBrushSettings(bpy\\_struct)](bpy.types.DynamicPaintBrushSettings.html)\n* [DynamicPaintCanvasSettings(bpy\\_struct)](bpy.types.DynamicPaintCanvasSettings.html)\n* [DynamicPaintModifier(Modifier)](bpy.types.DynamicPaintModifier.html)\n* [DynamicPaintSurface(bpy\\_struct)](bpy.types.DynamicPaintSurface.html)\n* [DynamicPaintSurfaces(bpy\\_struct)](bpy.types.DynamicPaintSurfaces.html)\n* [EQCurveMappingData(bpy\\_struct)](bpy.types.EQCurveMappingData.html)\n* [EdgeSplitModifier(Modifier)](bpy.types.EdgeSplitModifier.html)\n* [EditBone(bpy\\_struct)](bpy.types.EditBone.html)\n* [EffectStrip(Strip)](bpy.types.EffectStrip.html)\n* [EffectorWeights(bpy\\_struct)](bpy.types.EffectorWeights.html)\n* [EnumProperty(Property)](bpy.types.EnumProperty.html)\n* [EnumPropertyItem(bpy\\_struct)](bpy.types.EnumPropertyItem.html)\n* [EvaluateClosureNodeViewerPathElem(ViewerPathElem)](bpy.types.EvaluateClosureNodeViewerPathElem.html)\n* [Event(bpy\\_struct)](bpy.types.Event.html)\n* [ExplodeModifier(Modifier)](bpy.types.ExplodeModifier.html)\n* [FCurve(bpy\\_struct)](bpy.types.FCurve.html)\n* [FCurveKeyframePoints(bpy\\_struct)](bpy.types.FCurveKeyframePoints.html)\n* [FCurveModifiers(bpy\\_struct)](bpy.types.FCurveModifiers.html)\n* [FCurveSample(bpy\\_struct)](bpy.types.FCurveSample.html)\n* [FFmpegSettings(bpy\\_struct)](bpy.types.FFmpegSettings.html)\n* [FILEBROWSER\\_UL\\_dir(UIList)](bpy.types.FILEBROWSER_UL_dir.html)\n* [FModifier(bpy\\_struct)](bpy.types.FModifier.html)\n* [FModifierCycles(FModifier)](bpy.types.FModifierCycles.html)\n* [FModifierEnvelope(FModifier)](bpy.types.FModifierEnvelope.html)\n* [FModifierEnvelopeControlPoint(bpy\\_struct)](bpy.types.FModifierEnvelopeControlPoint.html)\n* [FModifierEnvelopeControlPoints(bpy\\_struct)](bpy.types.FModifierEnvelopeControlPoints.html)\n* [FModifierFunctionGenerator(FModifier)](bpy.types.FModifierFunctionGenerator.html)\n* [FModifierGenerator(FModifier)](bpy.types.FModifierGenerator.html)\n* [FModifierLimits(FModifier)](bpy.types.FModifierLimits.html)\n* [FModifierNoise(FModifier)](bpy.types.FModifierNoise.html)\n* [FModifierStepped(FModifier)](bpy.types.FModifierStepped.html)\n* [FieldSettings(bpy\\_struct)](bpy.types.FieldSettings.html)\n* [FileAssetSelectIDFilter(bpy\\_struct)](bpy.types.FileAssetSelectIDFilter.html)\n* [FileAssetSelectParams(FileSelectParams)](bpy.types.FileAssetSelectParams.html)\n* [FileBrowserFSMenuEntry(bpy\\_struct)](bpy.types.FileBrowserFSMenuEntry.html)\n* [FileHandler(bpy\\_struct)](bpy.types.FileHandler.html)\n* [FileSelectEntry(bpy\\_struct)](bpy.types.FileSelectEntry.html)\n* [FileSelectIDFilter(bpy\\_struct)](bpy.types.FileSelectIDFilter.html)\n* [FileSelectParams(bpy\\_struct)](bpy.types.FileSelectParams.html)\n* [Float2Attribute(Attribute)](bpy.types.Float2Attribute.html)\n* [Float2AttributeValue(bpy\\_struct)](bpy.types.Float2AttributeValue.html)\n* [Float4x4Attribute(Attribute)](bpy.types.Float4x4Attribute.html)\n* [Float4x4AttributeValue(bpy\\_struct)](bpy.types.Float4x4AttributeValue.html)\n* [FloatAttribute(Attribute)](bpy.types.FloatAttribute.html)\n* [FloatAttributeValue(bpy\\_struct)](bpy.types.FloatAttributeValue.html)\n* [FloatColorAttribute(Attribute)](bpy.types.FloatColorAttribute.html)\n* [FloatColorAttributeValue(bpy\\_struct)](bpy.types.FloatColorAttributeValue.html)\n* [FloatProperty(Property)](bpy.types.FloatProperty.html)\n* [FloatVectorAttribute(Attribute)](bpy.types.FloatVectorAttribute.html)\n* [FloatVectorAttributeValue(bpy\\_struct)](bpy.types.FloatVectorAttributeValue.html)\n* [FloatVectorValueReadOnly(bpy\\_struct)](bpy.types.FloatVectorValueReadOnly.html)\n* [FloorConstraint(Constraint)](bpy.types.FloorConstraint.html)\n* [FluidDomainSettings(bpy\\_struct)](bpy.types.FluidDomainSettings.html)\n* [FluidEffectorSettings(bpy\\_struct)](bpy.types.FluidEffectorSettings.html)\n* [FluidFlowSettings(bpy\\_struct)](bpy.types.FluidFlowSettings.html)\n* [FluidModifier(Modifier)](bpy.types.FluidModifier.html)\n* [FollowPathConstraint(Constraint)](bpy.types.FollowPathConstraint.html)\n* [FollowTrackConstraint(Constraint)](bpy.types.FollowTrackConstraint.html)\n* [ForeachGeometryElementGenerationItem(bpy\\_struct)](bpy.types.ForeachGeometryElementGenerationItem.html)\n* [ForeachGeometryElementInputItem(bpy\\_struct)](bpy.types.ForeachGeometryElementInputItem.html)\n* [ForeachGeometryElementMainItem(bpy\\_struct)](bpy.types.ForeachGeometryElementMainItem.html)\n* [ForeachGeometryElementZoneViewerPathElem(ViewerPathElem)](bpy.types.ForeachGeometryElementZoneViewerPathElem.html)\n* [FreestyleLineSet(bpy\\_struct)](bpy.types.FreestyleLineSet.html)\n* [FreestyleLineStyle(ID)](bpy.types.FreestyleLineStyle.html)\n* [FreestyleModuleSettings(bpy\\_struct)](bpy.types.FreestyleModuleSettings.html)\n* [FreestyleModules(bpy\\_struct)](bpy.types.FreestyleModules.html)\n* [FreestyleSettings(bpy\\_struct)](bpy.types.FreestyleSettings.html)\n* [Function(bpy\\_struct)](bpy.types.Function.html)\n* [FunctionNode(NodeInternal)](bpy.types.FunctionNode.html)\n* [FunctionNodeAlignEulerToVector(FunctionNode)](bpy.types.FunctionNodeAlignEulerToVector.html)\n* [FunctionNodeAlignRotationToVector(FunctionNode)](bpy.types.FunctionNodeAlignRotationToVector.html)\n* [FunctionNodeAxesToRotation(FunctionNode)](bpy.types.FunctionNodeAxesToRotation.html)\n* [FunctionNodeAxisAngleToRotation(FunctionNode)](bpy.types.FunctionNodeAxisAngleToRotation.html)\n* [FunctionNodeBitMath(FunctionNode)](bpy.types.FunctionNodeBitMath.html)\n* [FunctionNodeBooleanMath(FunctionNode)](bpy.types.FunctionNodeBooleanMath.html)\n* [FunctionNodeCombineColor(FunctionNode)](bpy.types.FunctionNodeCombineColor.html)\n* [FunctionNodeCombineMatrix(FunctionNode)](bpy.types.FunctionNodeCombineMatrix.html)\n* [FunctionNodeCombineTransform(FunctionNode)](bpy.types.FunctionNodeCombineTransform.html)\n* [FunctionNodeCompare(FunctionNode)](bpy.types.FunctionNodeCompare.html)\n* [FunctionNodeEulerToRotation(FunctionNode)](bpy.types.FunctionNodeEulerToRotation.html)\n* [FunctionNodeFindInString(FunctionNode)](bpy.types.FunctionNodeFindInString.html)\n* [FunctionNodeFloatToInt(FunctionNode)](bpy.types.FunctionNodeFloatToInt.html)\n* [FunctionNodeFormatString(FunctionNode)](bpy.types.FunctionNodeFormatString.html)\n* [FunctionNodeHashValue(FunctionNode)](bpy.types.FunctionNodeHashValue.html)\n* [FunctionNodeInputBool(FunctionNode)](bpy.types.FunctionNodeInputBool.html)\n* [FunctionNodeInputColor(FunctionNode)](bpy.types.FunctionNodeInputColor.html)\n* [FunctionNodeInputInt(FunctionNode)](bpy.types.FunctionNodeInputInt.html)\n* [FunctionNodeInputRotation(FunctionNode)](bpy.types.FunctionNodeInputRotation.html)\n* [FunctionNodeInputSpecialCharacters(FunctionNode)](bpy.types.FunctionNodeInputSpecialCharacters.html)\n* [FunctionNodeInputString(FunctionNode)](bpy.types.FunctionNodeInputString.html)\n* [FunctionNodeInputVector(FunctionNode)](bpy.types.FunctionNodeInputVector.html)\n* [FunctionNodeIntegerMath(FunctionNode)](bpy.types.FunctionNodeIntegerMath.html)\n* [FunctionNodeInvertMatrix(FunctionNode)](bpy.types.FunctionNodeInvertMatrix.html)\n* [FunctionNodeInvertRotation(FunctionNode)](bpy.types.FunctionNodeInvertRotation.html)\n* [FunctionNodeMatchString(FunctionNode)](bpy.types.FunctionNodeMatchString.html)\n* [FunctionNodeMatrixDeterminant(FunctionNode)](bpy.types.FunctionNodeMatrixDeterminant.html)\n* [FunctionNodeMatrixMultiply(FunctionNode)](bpy.types.FunctionNodeMatrixMultiply.html)\n* [FunctionNodeProjectPoint(FunctionNode)](bpy.types.FunctionNodeProjectPoint.html)\n* [FunctionNodeQuaternionToRotation(FunctionNode)](bpy.types.FunctionNodeQuaternionToRotation.html)\n* [FunctionNodeRandomValue(FunctionNode)](bpy.types.FunctionNodeRandomValue.html)\n* [FunctionNodeReplaceString(FunctionNode)](bpy.types.FunctionNodeReplaceString.html)\n* [FunctionNodeRotateEuler(FunctionNode)](bpy.types.FunctionNodeRotateEuler.html)\n* [FunctionNodeRotateRotation(FunctionNode)](bpy.types.FunctionNodeRotateRotation.html)\n* [FunctionNodeRotateVector(FunctionNode)](bpy.types.FunctionNodeRotateVector.html)\n* [FunctionNodeRotationToAxisAngle(FunctionNode)](bpy.types.FunctionNodeRotationToAxisAngle.html)\n* [FunctionNodeRotationToEuler(FunctionNode)](bpy.types.FunctionNodeRotationToEuler.html)\n* [FunctionNodeRotationToQuaternion(FunctionNode)](bpy.types.FunctionNodeRotationToQuaternion.html)\n* [FunctionNodeSeparateColor(FunctionNode)](bpy.types.FunctionNodeSeparateColor.html)\n* [FunctionNodeSeparateMatrix(FunctionNode)](bpy.types.FunctionNodeSeparateMatrix.html)\n* [FunctionNodeSeparateTransform(FunctionNode)](bpy.types.FunctionNodeSeparateTransform.html)\n* [FunctionNodeSliceString(FunctionNode)](bpy.types.FunctionNodeSliceString.html)\n* [FunctionNodeStringLength(FunctionNode)](bpy.types.FunctionNodeStringLength.html)\n* [FunctionNodeStringToValue(FunctionNode)](bpy.types.FunctionNodeStringToValue.html)\n* [FunctionNodeTransformDirection(FunctionNode)](bpy.types.FunctionNodeTransformDirection.html)\n* [FunctionNodeTransformPoint(FunctionNode)](bpy.types.FunctionNodeTransformPoint.html)\n* [FunctionNodeTransposeMatrix(FunctionNode)](bpy.types.FunctionNodeTransposeMatrix.html)\n* [FunctionNodeValueToString(FunctionNode)](bpy.types.FunctionNodeValueToString.html)\n* [GPENCIL\\_UL\\_annotation\\_layer(UIList)](bpy.types.GPENCIL_UL_annotation_layer.html)\n* [GPENCIL\\_UL\\_matslots(UIList)](bpy.types.GPENCIL_UL_matslots.html)\n* [GPencilInterpolateSettings(bpy\\_struct)](bpy.types.GPencilInterpolateSettings.html)\n* [GPencilSculptGuide(bpy\\_struct)](bpy.types.GPencilSculptGuide.html)\n* [GPencilSculptSettings(bpy\\_struct)](bpy.types.GPencilSculptSettings.html)\n* [GREASE\\_PENCIL\\_UL\\_attributes(UIList)](bpy.types.GREASE_PENCIL_UL_attributes.html)\n* [GREASE\\_PENCIL\\_UL\\_masks(UIList)](bpy.types.GREASE_PENCIL_UL_masks.html)\n* [GammaCrossStrip(EffectStrip)](bpy.types.GammaCrossStrip.html)\n* [GaussianBlurStrip(EffectStrip)](bpy.types.GaussianBlurStrip.html)\n* [GeometryAttributeConstraint(Constraint)](bpy.types.GeometryAttributeConstraint.html)\n* [GeometryNode(NodeInternal)](bpy.types.GeometryNode.html)\n* [GeometryNodeAccumulateField(GeometryNode)](bpy.types.GeometryNodeAccumulateField.html)\n* [GeometryNodeAttributeDomainSize(GeometryNode)](bpy.types.GeometryNodeAttributeDomainSize.html)\n* [GeometryNodeAttributeStatistic(GeometryNode)](bpy.types.GeometryNodeAttributeStatistic.html)\n* [GeometryNodeBake(GeometryNode)](bpy.types.GeometryNodeBake.html)\n* [GeometryNodeBlurAttribute(GeometryNode)](bpy.types.GeometryNodeBlurAttribute.html)\n* [GeometryNodeBoundBox(GeometryNode)](bpy.types.GeometryNodeBoundBox.html)\n* [GeometryNodeCameraInfo(GeometryNode)](bpy.types.GeometryNodeCameraInfo.html)\n* [GeometryNodeCaptureAttribute(GeometryNode)](bpy.types.GeometryNodeCaptureAttribute.html)\n* [GeometryNodeCollectionInfo(GeometryNode)](bpy.types.GeometryNodeCollectionInfo.html)\n* [GeometryNodeConvexHull(GeometryNode)](bpy.types.GeometryNodeConvexHull.html)\n* [GeometryNodeCornersOfEdge(GeometryNode)](bpy.types.GeometryNodeCornersOfEdge.html)\n* [GeometryNodeCornersOfFace(GeometryNode)](bpy.types.GeometryNodeCornersOfFace.html)\n* [GeometryNodeCornersOfVertex(GeometryNode)](bpy.types.GeometryNodeCornersOfVertex.html)\n* [GeometryNodeCurveArc(GeometryNode)](bpy.types.GeometryNodeCurveArc.html)\n* [GeometryNodeCurveEndpointSelection(GeometryNode)](bpy.types.GeometryNodeCurveEndpointSelection.html)\n* [GeometryNodeCurveHandleTypeSelection(GeometryNode)](bpy.types.GeometryNodeCurveHandleTypeSelection.html)\n* [GeometryNodeCurveLength(GeometryNode)](bpy.types.GeometryNodeCurveLength.html)\n* [GeometryNodeCurveOfPoint(GeometryNode)](bpy.types.GeometryNodeCurveOfPoint.html)\n* [GeometryNodeCurvePrimitiveBezierSegment(GeometryNode)](bpy.types.GeometryNodeCurvePrimitiveBezierSegment.html)\n* [GeometryNodeCurvePrimitiveCircle(GeometryNode)](bpy.types.GeometryNodeCurvePrimitiveCircle.html)\n* [GeometryNodeCurvePrimitiveLine(GeometryNode)](bpy.types.GeometryNodeCurvePrimitiveLine.html)\n* [GeometryNodeCurvePrimitiveQuadrilateral(GeometryNode)](bpy.types.GeometryNodeCurvePrimitiveQuadrilateral.html)\n* [GeometryNodeCurveQuadraticBezier(GeometryNode)](bpy.types.GeometryNodeCurveQuadraticBezier.html)\n* [GeometryNodeCurveSetHandles(GeometryNode)](bpy.types.GeometryNodeCurveSetHandles.html)\n* [GeometryNodeCurveSpiral(GeometryNode)](bpy.types.GeometryNodeCurveSpiral.html)\n* [GeometryNodeCurveSplineType(GeometryNode)](bpy.types.GeometryNodeCurveSplineType.html)\n* [GeometryNodeCurveStar(GeometryNode)](bpy.types.GeometryNodeCurveStar.html)\n* [GeometryNodeCurveToMesh(GeometryNode)](bpy.types.GeometryNodeCurveToMesh.html)\n* [GeometryNodeCurveToPoints(GeometryNode)](bpy.types.GeometryNodeCurveToPoints.html)\n* [GeometryNodeCurvesToGreasePencil(GeometryNode)](bpy.types.GeometryNodeCurvesToGreasePencil.html)\n* [GeometryNodeCustomGroup(GeometryNode)](bpy.types.GeometryNodeCustomGroup.html)\n* [GeometryNodeDeformCurvesOnSurface(GeometryNode)](bpy.types.GeometryNodeDeformCurvesOnSurface.html)\n* [GeometryNodeDeleteGeometry(GeometryNode)](bpy.types.GeometryNodeDeleteGeometry.html)\n* [GeometryNodeDistributePointsInGrid(GeometryNode)](bpy.types.GeometryNodeDistributePointsInGrid.html)\n* [GeometryNodeDistributePointsInVolume(GeometryNode)](bpy.types.GeometryNodeDistributePointsInVolume.html)\n* [GeometryNodeDistributePointsOnFaces(GeometryNode)](bpy.types.GeometryNodeDistributePointsOnFaces.html)\n* [GeometryNodeDualMesh(GeometryNode)](bpy.types.GeometryNodeDualMesh.html)\n* [GeometryNodeDuplicateElements(GeometryNode)](bpy.types.GeometryNodeDuplicateElements.html)\n* [GeometryNodeEdgePathsToCurves(GeometryNode)](bpy.types.GeometryNodeEdgePathsToCurves.html)\n* [GeometryNodeEdgePathsToSelection(GeometryNode)](bpy.types.GeometryNodeEdgePathsToSelection.html)\n* [GeometryNodeEdgesOfCorner(GeometryNode)](bpy.types.GeometryNodeEdgesOfCorner.html)\n* [GeometryNodeEdgesOfVertex(GeometryNode)](bpy.types.GeometryNodeEdgesOfVertex.html)\n* [GeometryNodeEdgesToFaceGroups(GeometryNode)](bpy.types.GeometryNodeEdgesToFaceGroups.html)\n* [GeometryNodeExtrudeMesh(GeometryNode)](bpy.types.GeometryNodeExtrudeMesh.html)\n* [GeometryNodeFaceOfCorner(GeometryNode)](bpy.types.GeometryNodeFaceOfCorner.html)\n* [GeometryNodeFieldAtIndex(GeometryNode)](bpy.types.GeometryNodeFieldAtIndex.html)\n* [GeometryNodeFieldAverage(GeometryNode)](bpy.types.GeometryNodeFieldAverage.html)\n* [GeometryNodeFieldMinAndMax(GeometryNode)](bpy.types.GeometryNodeFieldMinAndMax.html)\n* [GeometryNodeFieldOnDomain(GeometryNode)](bpy.types.GeometryNodeFieldOnDomain.html)\n* [GeometryNodeFieldToGrid(GeometryNode)](bpy.types.GeometryNodeFieldToGrid.html)\n* [GeometryNodeFieldToGridItem(bpy\\_struct)](bpy.types.GeometryNodeFieldToGridItem.html)\n* [GeometryNodeFieldToGridItems(bpy\\_struct)](bpy.types.GeometryNodeFieldToGridItems.html)\n* [GeometryNodeFieldVariance(GeometryNode)](bpy.types.GeometryNodeFieldVariance.html)\n* [GeometryNodeFillCurve(GeometryNode)](bpy.types.GeometryNodeFillCurve.html)\n* [GeometryNodeFilletCurve(GeometryNode)](bpy.types.GeometryNodeFilletCurve.html)\n* [GeometryNodeFlipFaces(GeometryNode)](bpy.types.GeometryNodeFlipFaces.html)\n* [GeometryNodeForeachGeometryElementInput(GeometryNode)](bpy.types.GeometryNodeForeachGeometryElementInput.html)\n* [GeometryNodeForeachGeometryElementOutput(GeometryNode)](bpy.types.GeometryNodeForeachGeometryElementOutput.html)\n* [GeometryNodeGeometryToInstance(GeometryNode)](bpy.types.GeometryNodeGeometryToInstance.html)\n* [GeometryNodeGetNamedGrid(GeometryNode)](bpy.types.GeometryNodeGetNamedGrid.html)\n* [GeometryNodeGizmoDial(GeometryNode)](bpy.types.GeometryNodeGizmoDial.html)\n* [GeometryNodeGizmoLinear(GeometryNode)](bpy.types.GeometryNodeGizmoLinear.html)\n* [GeometryNodeGizmoTransform(GeometryNode)](bpy.types.GeometryNodeGizmoTransform.html)\n* [GeometryNodeGreasePencilToCurves(GeometryNode)](bpy.types.GeometryNodeGreasePencilToCurves.html)\n* [GeometryNodeGridAdvect(GeometryNode)](bpy.types.GeometryNodeGridAdvect.html)\n* [GeometryNodeGridCurl(GeometryNode)](bpy.types.GeometryNodeGridCurl.html)\n* [GeometryNodeGridDivergence(GeometryNode)](bpy.types.GeometryNodeGridDivergence.html)\n* [GeometryNodeGridGradient(GeometryNode)](bpy.types.GeometryNodeGridGradient.html)\n* [GeometryNodeGridInfo(GeometryNode)](bpy.types.GeometryNodeGridInfo.html)\n* [GeometryNodeGridLaplacian(GeometryNode)](bpy.types.GeometryNodeGridLaplacian.html)\n* [GeometryNodeGridPrune(GeometryNode)](bpy.types.GeometryNodeGridPrune.html)\n* [GeometryNodeGridToMesh(GeometryNode)](bpy.types.GeometryNodeGridToMesh.html)\n* [GeometryNodeGridVoxelize(GeometryNode)](bpy.types.GeometryNodeGridVoxelize.html)\n* [GeometryNodeGroup(GeometryNode)](bpy.types.GeometryNodeGroup.html)\n* [GeometryNodeImageInfo(GeometryNode)](bpy.types.GeometryNodeImageInfo.html)\n* [GeometryNodeImageTexture(GeometryNode)](bpy.types.GeometryNodeImageTexture.html)\n* [GeometryNodeImportCSV(GeometryNode)](bpy.types.GeometryNodeImportCSV.html)\n* [GeometryNodeImportOBJ(GeometryNode)](bpy.types.GeometryNodeImportOBJ.html)\n* [GeometryNodeImportPLY(GeometryNode)](bpy.types.GeometryNodeImportPLY.html)\n* [GeometryNodeImportSTL(GeometryNode)](bpy.types.GeometryNodeImportSTL.html)\n* [GeometryNodeImportText(GeometryNode)](bpy.types.GeometryNodeImportText.html)\n* [GeometryNodeImportVDB(GeometryNode)](bpy.types.GeometryNodeImportVDB.html)\n* [GeometryNodeIndexOfNearest(GeometryNode)](bpy.types.GeometryNodeIndexOfNearest.html)\n* [GeometryNodeIndexSwitch(GeometryNode)](bpy.types.GeometryNodeIndexSwitch.html)\n* [GeometryNodeInputActiveCamera(GeometryNode)](bpy.types.GeometryNodeInputActiveCamera.html)\n* [GeometryNodeInputCollection(GeometryNode)](bpy.types.GeometryNodeInputCollection.html)\n* [GeometryNodeInputCurveHandlePositions(GeometryNode)](bpy.types.GeometryNodeInputCurveHandlePositions.html)\n* [GeometryNodeInputCurveTilt(GeometryNode)](bpy.types.GeometryNodeInputCurveTilt.html)\n* [GeometryNodeInputEdgeSmooth(GeometryNode)](bpy.types.GeometryNodeInputEdgeSmooth.html)\n* [GeometryNodeInputID(GeometryNode)](bpy.types.GeometryNodeInputID.html)\n* [GeometryNodeInputImage(GeometryNode)](bpy.types.GeometryNodeInputImage.html)\n* [GeometryNodeInputIndex(GeometryNode)](bpy.types.GeometryNodeInputIndex.html)\n* [GeometryNodeInputInstanceBounds(GeometryNode)](bpy.types.GeometryNodeInputInstanceBounds.html)\n* [GeometryNodeInputInstanceRotation(GeometryNode)](bpy.types.GeometryNodeInputInstanceRotation.html)\n* [GeometryNodeInputInstanceScale(GeometryNode)](bpy.types.GeometryNodeInputInstanceScale.html)\n* [GeometryNodeInputMaterial(GeometryNode)](bpy.types.GeometryNodeInputMaterial.html)\n* [GeometryNodeInputMaterialIndex(GeometryNode)](bpy.types.GeometryNodeInputMaterialIndex.html)\n* [GeometryNodeInputMeshEdgeAngle(GeometryNode)](bpy.types.GeometryNodeInputMeshEdgeAngle.html)\n* [GeometryNodeInputMeshEdgeNeighbors(GeometryNode)](bpy.types.GeometryNodeInputMeshEdgeNeighbors.html)\n* [GeometryNodeInputMeshEdgeVertices(GeometryNode)](bpy.types.GeometryNodeInputMeshEdgeVertices.html)\n* [GeometryNodeInputMeshFaceArea(GeometryNode)](bpy.types.GeometryNodeInputMeshFaceArea.html)\n* [GeometryNodeInputMeshFaceIsPlanar(GeometryNode)](bpy.types.GeometryNodeInputMeshFaceIsPlanar.html)\n* [GeometryNodeInputMeshFaceNeighbors(GeometryNode)](bpy.types.GeometryNodeInputMeshFaceNeighbors.html)\n* [GeometryNodeInputMeshIsland(GeometryNode)](bpy.types.GeometryNodeInputMeshIsland.html)\n* [GeometryNodeInputMeshVertexNeighbors(GeometryNode)](bpy.types.GeometryNodeInputMeshVertexNeighbors.html)\n* [GeometryNodeInputNamedAttribute(GeometryNode)](bpy.types.GeometryNodeInputNamedAttribute.html)\n* [GeometryNodeInputNamedLayerSelection(GeometryNode)](bpy.types.GeometryNodeInputNamedLayerSelection.html)\n* [GeometryNodeInputNormal(GeometryNode)](bpy.types.GeometryNodeInputNormal.html)\n* [GeometryNodeInputObject(GeometryNode)](bpy.types.GeometryNodeInputObject.html)\n* [GeometryNodeInputPosition(GeometryNode)](bpy.types.GeometryNodeInputPosition.html)\n* [GeometryNodeInputRadius(GeometryNode)](bpy.types.GeometryNodeInputRadius.html)\n* [GeometryNodeInputSceneTime(GeometryNode)](bpy.types.GeometryNodeInputSceneTime.html)\n* [GeometryNodeInputShadeSmooth(GeometryNode)](bpy.types.GeometryNodeInputShadeSmooth.html)\n* [GeometryNodeInputShortestEdgePaths(GeometryNode)](bpy.types.GeometryNodeInputShortestEdgePaths.html)\n* [GeometryNodeInputSplineCyclic(GeometryNode)](bpy.types.GeometryNodeInputSplineCyclic.html)\n* [GeometryNodeInputSplineResolution(GeometryNode)](bpy.types.GeometryNodeInputSplineResolution.html)\n* [GeometryNodeInputTangent(GeometryNode)](bpy.types.GeometryNodeInputTangent.html)\n* [GeometryNodeInputVoxelIndex(GeometryNode)](bpy.types.GeometryNodeInputVoxelIndex.html)\n* [GeometryNodeInstanceOnPoints(GeometryNode)](bpy.types.GeometryNodeInstanceOnPoints.html)\n* [GeometryNodeInstanceTransform(GeometryNode)](bpy.types.GeometryNodeInstanceTransform.html)\n* [GeometryNodeInstancesToPoints(GeometryNode)](bpy.types.GeometryNodeInstancesToPoints.html)\n* [GeometryNodeInterpolateCurves(GeometryNode)](bpy.types.GeometryNodeInterpolateCurves.html)\n* [GeometryNodeIsViewport(GeometryNode)](bpy.types.GeometryNodeIsViewport.html)\n* [GeometryNodeJoinGeometry(GeometryNode)](bpy.types.GeometryNodeJoinGeometry.html)\n* [GeometryNodeList(GeometryNode)](bpy.types.GeometryNodeList.html)\n* [GeometryNodeListGetItem(GeometryNode)](bpy.types.GeometryNodeListGetItem.html)\n* [GeometryNodeListLength(GeometryNode)](bpy.types.GeometryNodeListLength.html)\n* [GeometryNodeMaterialSelection(GeometryNode)](bpy.types.GeometryNodeMaterialSelection.html)\n* [GeometryNodeMenuSwitch(GeometryNode)](bpy.types.GeometryNodeMenuSwitch.html)\n* [GeometryNodeMergeByDistance(GeometryNode)](bpy.types.GeometryNodeMergeByDistance.html)\n* [GeometryNodeMergeLayers(GeometryNode)](bpy.types.GeometryNodeMergeLayers.html)\n* [GeometryNodeMeshBoolean(GeometryNode)](bpy.types.GeometryNodeMeshBoolean.html)\n* [GeometryNodeMeshCircle(GeometryNode)](bpy.types.GeometryNodeMeshCircle.html)\n* [GeometryNodeMeshCone(GeometryNode)](bpy.types.GeometryNodeMeshCone.html)\n* [GeometryNodeMeshCube(GeometryNode)](bpy.types.GeometryNodeMeshCube.html)\n* [GeometryNodeMeshCylinder(GeometryNode)](bpy.types.GeometryNodeMeshCylinder.html)\n* [GeometryNodeMeshFaceSetBoundaries(GeometryNode)](bpy.types.GeometryNodeMeshFaceSetBoundaries.html)\n* [GeometryNodeMeshGrid(GeometryNode)](bpy.types.GeometryNodeMeshGrid.html)\n* [GeometryNodeMeshIcoSphere(GeometryNode)](bpy.types.GeometryNodeMeshIcoSphere.html)\n* [GeometryNodeMeshLine(GeometryNode)](bpy.types.GeometryNodeMeshLine.html)\n* [GeometryNodeMeshToCurve(GeometryNode)](bpy.types.GeometryNodeMeshToCurve.html)\n* [GeometryNodeMeshToDensityGrid(GeometryNode)](bpy.types.GeometryNodeMeshToDensityGrid.html)\n* [GeometryNodeMeshToPoints(GeometryNode)](bpy.types.GeometryNodeMeshToPoints.html)\n* [GeometryNodeMeshToSDFGrid(GeometryNode)](bpy.types.GeometryNodeMeshToSDFGrid.html)\n* [GeometryNodeMeshToVolume(GeometryNode)](bpy.types.GeometryNodeMeshToVolume.html)\n* [GeometryNodeMeshUVSphere(GeometryNode)](bpy.types.GeometryNodeMeshUVSphere.html)\n* [GeometryNodeObjectInfo(GeometryNode)](bpy.types.GeometryNodeObjectInfo.html)\n* [GeometryNodeOffsetCornerInFace(GeometryNode)](bpy.types.GeometryNodeOffsetCornerInFace.html)\n* [GeometryNodeOffsetPointInCurve(GeometryNode)](bpy.types.GeometryNodeOffsetPointInCurve.html)\n* [GeometryNodePoints(GeometryNode)](bpy.types.GeometryNodePoints.html)\n* [GeometryNodePointsOfCurve(GeometryNode)](bpy.types.GeometryNodePointsOfCurve.html)\n* [GeometryNodePointsToCurves(GeometryNode)](bpy.types.GeometryNodePointsToCurves.html)\n* [GeometryNodePointsToSDFGrid(GeometryNode)](bpy.types.GeometryNodePointsToSDFGrid.html)\n* [GeometryNodePointsToVertices(GeometryNode)](bpy.types.GeometryNodePointsToVertices.html)\n* [GeometryNodePointsToVolume(GeometryNode)](bpy.types.GeometryNodePointsToVolume.html)\n* [GeometryNodeProximity(GeometryNode)](bpy.types.GeometryNodeProximity.html)\n* [GeometryNodeRaycast(GeometryNode)](bpy.types.GeometryNodeRaycast.html)\n* [GeometryNodeRealizeInstances(GeometryNode)](bpy.types.GeometryNodeRealizeInstances.html)\n* [GeometryNodeRemoveAttribute(GeometryNode)](bpy.types.GeometryNodeRemoveAttribute.html)\n* [GeometryNodeRepeatInput(GeometryNode)](bpy.types.GeometryNodeRepeatInput.html)\n* [GeometryNodeRepeatOutput(GeometryNode)](bpy.types.GeometryNodeRepeatOutput.html)\n* [GeometryNodeReplaceMaterial(GeometryNode)](bpy.types.GeometryNodeReplaceMaterial.html)\n* [GeometryNodeResampleCurve(GeometryNode)](bpy.types.GeometryNodeResampleCurve.html)\n* [GeometryNodeReverseCurve(GeometryNode)](bpy.types.GeometryNodeReverseCurve.html)\n* [GeometryNodeRotateInstances(GeometryNode)](bpy.types.GeometryNodeRotateInstances.html)\n* [GeometryNodeSDFGridBoolean(GeometryNode)](bpy.types.GeometryNodeSDFGridBoolean.html)\n* [GeometryNodeSDFGridFillet(GeometryNode)](bpy.types.GeometryNodeSDFGridFillet.html)\n* [GeometryNodeSDFGridLaplacian(GeometryNode)](bpy.types.GeometryNodeSDFGridLaplacian.html)\n* [GeometryNodeSDFGridMean(GeometryNode)](bpy.types.GeometryNodeSDFGridMean.html)\n* [GeometryNodeSDFGridMeanCurvature(GeometryNode)](bpy.types.GeometryNodeSDFGridMeanCurvature.html)\n* [GeometryNodeSDFGridMedian(GeometryNode)](bpy.types.GeometryNodeSDFGridMedian.html)\n* [GeometryNodeSDFGridOffset(GeometryNode)](bpy.types.GeometryNodeSDFGridOffset.html)\n* [GeometryNodeSampleCurve(GeometryNode)](bpy.types.GeometryNodeSampleCurve.html)\n* [GeometryNodeSampleGrid(GeometryNode)](bpy.types.GeometryNodeSampleGrid.html)\n* [GeometryNodeSampleGridIndex(GeometryNode)](bpy.types.GeometryNodeSampleGridIndex.html)\n* [GeometryNodeSampleIndex(GeometryNode)](bpy.types.GeometryNodeSampleIndex.html)\n* [GeometryNodeSampleNearest(GeometryNode)](bpy.types.GeometryNodeSampleNearest.html)\n* [GeometryNodeSampleNearestSurface(GeometryNode)](bpy.types.GeometryNodeSampleNearestSurface.html)\n* [GeometryNodeSampleUVSurface(GeometryNode)](bpy.types.GeometryNodeSampleUVSurface.html)\n* [GeometryNodeScaleElements(GeometryNode)](bpy.types.GeometryNodeScaleElements.html)\n* [GeometryNodeScaleInstances(GeometryNode)](bpy.types.GeometryNodeScaleInstances.html)\n* [GeometryNodeSelfObject(GeometryNode)](bpy.types.GeometryNodeSelfObject.html)\n* [GeometryNodeSeparateComponents(GeometryNode)](bpy.types.GeometryNodeSeparateComponents.html)\n* [GeometryNodeSeparateGeometry(GeometryNode)](bpy.types.GeometryNodeSeparateGeometry.html)\n* [GeometryNodeSetCurveHandlePositions(GeometryNode)](bpy.types.GeometryNodeSetCurveHandlePositions.html)\n* [GeometryNodeSetCurveNormal(GeometryNode)](bpy.types.GeometryNodeSetCurveNormal.html)\n* [GeometryNodeSetCurveRadius(GeometryNode)](bpy.types.GeometryNodeSetCurveRadius.html)\n* [GeometryNodeSetCurveTilt(GeometryNode)](bpy.types.GeometryNodeSetCurveTilt.html)\n* [GeometryNodeSetGeometryName(GeometryNode)](bpy.types.GeometryNodeSetGeometryName.html)\n* [GeometryNodeSetGreasePencilColor(GeometryNode)](bpy.types.GeometryNodeSetGreasePencilColor.html)\n* [GeometryNodeSetGreasePencilDepth(GeometryNode)](bpy.types.GeometryNodeSetGreasePencilDepth.html)\n* [GeometryNodeSetGreasePencilSoftness(GeometryNode)](bpy.types.GeometryNodeSetGreasePencilSoftness.html)\n* [GeometryNodeSetGridBackground(GeometryNode)](bpy.types.GeometryNodeSetGridBackground.html)\n* [GeometryNodeSetGridTransform(GeometryNode)](bpy.types.GeometryNodeSetGridTransform.html)\n* [GeometryNodeSetID(GeometryNode)](bpy.types.GeometryNodeSetID.html)\n* [GeometryNodeSetInstanceTransform(GeometryNode)](bpy.types.GeometryNodeSetInstanceTransform.html)\n* [GeometryNodeSetMaterial(GeometryNode)](bpy.types.GeometryNodeSetMaterial.html)\n* [GeometryNodeSetMaterialIndex(GeometryNode)](bpy.types.GeometryNodeSetMaterialIndex.html)\n* [GeometryNodeSetMeshNormal(GeometryNode)](bpy.types.GeometryNodeSetMeshNormal.html)\n* [GeometryNodeSetPointRadius(GeometryNode)](bpy.types.GeometryNodeSetPointRadius.html)\n* [GeometryNodeSetPosition(GeometryNode)](bpy.types.GeometryNodeSetPosition.html)\n* [GeometryNodeSetShadeSmooth(GeometryNode)](bpy.types.GeometryNodeSetShadeSmooth.html)\n* [GeometryNodeSetSplineCyclic(GeometryNode)](bpy.types.GeometryNodeSetSplineCyclic.html)\n* [GeometryNodeSetSplineResolution(GeometryNode)](bpy.types.GeometryNodeSetSplineResolution.html)\n* [GeometryNodeSimulationInput(GeometryNode)](bpy.types.GeometryNodeSimulationInput.html)\n* [GeometryNodeSimulationOutput(GeometryNode)](bpy.types.GeometryNodeSimulationOutput.html)\n* [GeometryNodeSortElements(GeometryNode)](bpy.types.GeometryNodeSortElements.html)\n* [GeometryNodeSplineLength(GeometryNode)](bpy.types.GeometryNodeSplineLength.html)\n* [GeometryNodeSplineParameter(GeometryNode)](bpy.types.GeometryNodeSplineParameter.html)\n* [GeometryNodeSplitEdges(GeometryNode)](bpy.types.GeometryNodeSplitEdges.html)\n* [GeometryNodeSplitToInstances(GeometryNode)](bpy.types.GeometryNodeSplitToInstances.html)\n* [GeometryNodeStoreNamedAttribute(GeometryNode)](bpy.types.GeometryNodeStoreNamedAttribute.html)\n* [GeometryNodeStoreNamedGrid(GeometryNode)](bpy.types.GeometryNodeStoreNamedGrid.html)\n* [GeometryNodeStringJoin(GeometryNode)](bpy.types.GeometryNodeStringJoin.html)\n* [GeometryNodeStringToCurves(GeometryNode)](bpy.types.GeometryNodeStringToCurves.html)\n* [GeometryNodeSubdivideCurve(GeometryNode)](bpy.types.GeometryNodeSubdivideCurve.html)\n* [GeometryNodeSubdivideMesh(GeometryNode)](bpy.types.GeometryNodeSubdivideMesh.html)\n* [GeometryNodeSubdivisionSurface(GeometryNode)](bpy.types.GeometryNodeSubdivisionSurface.html)\n* [GeometryNodeSwitch(GeometryNode)](bpy.types.GeometryNodeSwitch.html)\n* [GeometryNodeTool3DCursor(GeometryNode)](bpy.types.GeometryNodeTool3DCursor.html)\n* [GeometryNodeToolActiveElement(GeometryNode)](bpy.types.GeometryNodeToolActiveElement.html)\n* [GeometryNodeToolFaceSet(GeometryNode)](bpy.types.GeometryNodeToolFaceSet.html)\n* [GeometryNodeToolMousePosition(GeometryNode)](bpy.types.GeometryNodeToolMousePosition.html)\n* [GeometryNodeToolSelection(GeometryNode)](bpy.types.GeometryNodeToolSelection.html)\n* [GeometryNodeToolSetFaceSet(GeometryNode)](bpy.types.GeometryNodeToolSetFaceSet.html)\n* [GeometryNodeToolSetSelection(GeometryNode)](bpy.types.GeometryNodeToolSetSelection.html)\n* [GeometryNodeTransform(GeometryNode)](bpy.types.GeometryNodeTransform.html)\n* [GeometryNodeTranslateInstances(GeometryNode)](bpy.types.GeometryNodeTranslateInstances.html)\n* [GeometryNodeTree(NodeTree)](bpy.types.GeometryNodeTree.html)\n* [GeometryNodeTriangulate(GeometryNode)](bpy.types.GeometryNodeTriangulate.html)\n* [GeometryNodeTrimCurve(GeometryNode)](bpy.types.GeometryNodeTrimCurve.html)\n* [GeometryNodeUVPackIslands(GeometryNode)](bpy.types.GeometryNodeUVPackIslands.html)\n* [GeometryNodeUVTangent(GeometryNode)](bpy.types.GeometryNodeUVTangent.html)\n* [GeometryNodeUVUnwrap(GeometryNode)](bpy.types.GeometryNodeUVUnwrap.html)\n* [GeometryNodeVertexOfCorner(GeometryNode)](bpy.types.GeometryNodeVertexOfCorner.html)\n* [GeometryNodeViewer(GeometryNode)](bpy.types.GeometryNodeViewer.html)\n* [GeometryNodeViewportTransform(GeometryNode)](bpy.types.GeometryNodeViewportTransform.html)\n* [GeometryNodeVolumeCube(GeometryNode)](bpy.types.GeometryNodeVolumeCube.html)\n* [GeometryNodeVolumeToMesh(GeometryNode)](bpy.types.GeometryNodeVolumeToMesh.html)\n* [GeometryNodeWarning(GeometryNode)](bpy.types.GeometryNodeWarning.html)\n* [GeometrySet](bpy.types.GeometrySet.html)\n* [Gizmo(bpy\\_struct)](bpy.types.Gizmo.html)\n* [GizmoGroup(bpy\\_struct)](bpy.types.GizmoGroup.html)\n* [GizmoGroupProperties(bpy\\_struct)](bpy.types.GizmoGroupProperties.html)\n* [GizmoProperties(bpy\\_struct)](bpy.types.GizmoProperties.html)\n* [Gizmos(bpy\\_struct)](bpy.types.Gizmos.html)\n* [GlowStrip(EffectStrip)](bpy.types.GlowStrip.html)\n* [GpPaint(Paint)](bpy.types.GpPaint.html)\n* [GpSculptPaint(Paint)](bpy.types.GpSculptPaint.html)\n* [GpVertexPaint(Paint)](bpy.types.GpVertexPaint.html)\n* [GpWeightPaint(Paint)](bpy.types.GpWeightPaint.html)\n* [GreasePencil(ID)](bpy.types.GreasePencil.html)\n* [GreasePencilArmatureModifier(Modifier)](bpy.types.GreasePencilArmatureModifier.html)\n* [GreasePencilArrayModifier(Modifier)](bpy.types.GreasePencilArrayModifier.html)\n* [GreasePencilBuildModifier(Modifier)](bpy.types.GreasePencilBuildModifier.html)\n* [GreasePencilColorModifier(Modifier)](bpy.types.GreasePencilColorModifier.html)\n* [GreasePencilDashModifierData(Modifier)](bpy.types.GreasePencilDashModifierData.html)\n* [GreasePencilDashModifierSegment(bpy\\_struct)](bpy.types.GreasePencilDashModifierSegment.html)\n* [GreasePencilDrawing(bpy\\_struct)](bpy.types.GreasePencilDrawing.html)\n* [GreasePencilEnvelopeModifier(Modifier)](bpy.types.GreasePencilEnvelopeModifier.html)\n* [GreasePencilFrame(bpy\\_struct)](bpy.types.GreasePencilFrame.html)\n* [GreasePencilFrames(bpy\\_struct)](bpy.types.GreasePencilFrames.html)\n* [GreasePencilHookModifier(Modifier)](bpy.types.GreasePencilHookModifier.html)\n* [GreasePencilLatticeModifier(Modifier)](bpy.types.GreasePencilLatticeModifier.html)\n* [GreasePencilLayer(GreasePencilTreeNode)](bpy.types.GreasePencilLayer.html)\n* [GreasePencilLayerGroup(GreasePencilTreeNode)](bpy.types.GreasePencilLayerGroup.html)\n* [GreasePencilLayerMask(bpy\\_struct)](bpy.types.GreasePencilLayerMask.html)\n* [GreasePencilLayerMasks(bpy\\_struct)](bpy.types.GreasePencilLayerMasks.html)\n* [GreasePencilLengthModifier(Modifier)](bpy.types.GreasePencilLengthModifier.html)\n* [GreasePencilLineartModifier(Modifier)](bpy.types.GreasePencilLineartModifier.html)\n* [GreasePencilMirrorModifier(Modifier)](bpy.types.GreasePencilMirrorModifier.html)\n* [GreasePencilMultiplyModifier(Modifier)](bpy.types.GreasePencilMultiplyModifier.html)\n* [GreasePencilNoiseModifier(Modifier)](bpy.types.GreasePencilNoiseModifier.html)\n* [GreasePencilOffsetModifier(Modifier)](bpy.types.GreasePencilOffsetModifier.html)\n* [GreasePencilOpacityModifier(Modifier)](bpy.types.GreasePencilOpacityModifier.html)\n* [GreasePencilOutlineModifier(Modifier)](bpy.types.GreasePencilOutlineModifier.html)\n* [GreasePencilShrinkwrapModifier(Modifier)](bpy.types.GreasePencilShrinkwrapModifier.html)\n* [GreasePencilSimplifyModifier(Modifier)](bpy.types.GreasePencilSimplifyModifier.html)\n* [GreasePencilSmoothModifier(Modifier)](bpy.types.GreasePencilSmoothModifier.html)\n* [GreasePencilSubdivModifier(Modifier)](bpy.types.GreasePencilSubdivModifier.html)\n* [GreasePencilTextureModifier(Modifier)](bpy.types.GreasePencilTextureModifier.html)\n* [GreasePencilThickModifierData(Modifier)](bpy.types.GreasePencilThickModifierData.html)\n* [GreasePencilTimeModifier(Modifier)](bpy.types.GreasePencilTimeModifier.html)\n* [GreasePencilTimeModifierSegment(bpy\\_struct)](bpy.types.GreasePencilTimeModifierSegment.html)\n* [GreasePencilTintModifier(Modifier)](bpy.types.GreasePencilTintModifier.html)\n* [GreasePencilTreeNode(bpy\\_struct)](bpy.types.GreasePencilTreeNode.html)\n* [GreasePencilWeightAngleModifier(Modifier)](bpy.types.GreasePencilWeightAngleModifier.html)\n* [GreasePencilWeightProximityModifier(Modifier)](bpy.types.GreasePencilWeightProximityModifier.html)\n* [GreasePencilv3LayerGroup(bpy\\_struct)](bpy.types.GreasePencilv3LayerGroup.html)\n* [GreasePencilv3Layers(bpy\\_struct)](bpy.types.GreasePencilv3Layers.html)\n* [GroupNodeViewerPathElem(ViewerPathElem)](bpy.types.GroupNodeViewerPathElem.html)\n* [Header(bpy\\_struct)](bpy.types.Header.html)\n* [Histogram(bpy\\_struct)](bpy.types.Histogram.html)\n* [HookModifier(Modifier)](bpy.types.HookModifier.html)\n* [HueCorrectModifier(StripModifier)](bpy.types.HueCorrectModifier.html)\n* [HydraRenderEngine(RenderEngine)](bpy.types.HydraRenderEngine.html)\n* [ID(bpy\\_struct)](bpy.types.ID.html)\n* [IDMaterials(bpy\\_struct)](bpy.types.IDMaterials.html)\n* [IDOverrideLibrary(bpy\\_struct)](bpy.types.IDOverrideLibrary.html)\n* [IDOverrideLibraryProperties(bpy\\_struct)](bpy.types.IDOverrideLibraryProperties.html)\n* [IDOverrideLibraryProperty(bpy\\_struct)](bpy.types.IDOverrideLibraryProperty.html)\n* [IDOverrideLibraryPropertyOperation(bpy\\_struct)](bpy.types.IDOverrideLibraryPropertyOperation.html)\n* [IDOverrideLibraryPropertyOperations(bpy\\_struct)](bpy.types.IDOverrideLibraryPropertyOperations.html)\n* [IDPropertyWrapPtr(bpy\\_struct)](bpy.types.IDPropertyWrapPtr.html)\n* [IDViewerPathElem(ViewerPathElem)](bpy.types.IDViewerPathElem.html)\n* [IKParam(bpy\\_struct)](bpy.types.IKParam.html)\n* [IMAGE\\_AST\\_brush\\_paint(AssetShelf)](bpy.types.IMAGE_AST_brush_paint.html)\n* [IMAGE\\_FH\\_drop\\_handler(FileHandler)](bpy.types.IMAGE_FH_drop_handler.html)\n* [IMAGE\\_UL\\_render\\_slots(UIList)](bpy.types.IMAGE_UL_render_slots.html)\n* [IMAGE\\_UL\\_udim\\_tiles(UIList)](bpy.types.IMAGE_UL_udim_tiles.html)\n* [IO\\_FH\\_gltf2(FileHandler)](bpy.types.IO_FH_gltf2.html)\n* [IO\\_FH\\_svg\\_as\\_curves(FileHandler)](bpy.types.IO_FH_svg_as_curves.html)\n* [Image(ID)](bpy.types.Image.html)\n* [ImageFormatSettings(bpy\\_struct)](bpy.types.ImageFormatSettings.html)\n* [ImagePackedFile(bpy\\_struct)](bpy.types.ImagePackedFile.html)\n* [ImagePaint(Paint)](bpy.types.ImagePaint.html)\n* [ImagePreview(bpy\\_struct)](bpy.types.ImagePreview.html)\n* [ImageStrip(Strip)](bpy.types.ImageStrip.html)\n* [ImageTexture(Texture)](bpy.types.ImageTexture.html)\n* [ImageUser(bpy\\_struct)](bpy.types.ImageUser.html)\n* [IndexSwitchItem(bpy\\_struct)](bpy.types.IndexSwitchItem.html)\n* [InlineShaderNodes](bpy.types.InlineShaderNodes.html)\n* [Int2Attribute(Attribute)](bpy.types.Int2Attribute.html)\n* [Int2AttributeValue(bpy\\_struct)](bpy.types.Int2AttributeValue.html)\n* [IntAttribute(Attribute)](bpy.types.IntAttribute.html)\n* [IntAttributeValue(bpy\\_struct)](bpy.types.IntAttributeValue.html)\n* [IntProperty(Property)](bpy.types.IntProperty.html)\n* [Itasc(IKParam)](bpy.types.Itasc.html)\n* [Key(ID)](bpy.types.Key.html)\n* [KeyConfig(bpy\\_struct)](bpy.types.KeyConfig.html)\n* [KeyConfigPreferences(bpy\\_struct)](bpy.types.KeyConfigPreferences.html)\n* [KeyConfigurations(bpy\\_struct)](bpy.types.KeyConfigurations.html)\n* [KeyMap(bpy\\_struct)](bpy.types.KeyMap.html)\n* [KeyMapItem(bpy\\_struct)](bpy.types.KeyMapItem.html)\n* [KeyMapItems(bpy\\_struct)](bpy.types.KeyMapItems.html)\n* [KeyMaps(bpy\\_struct)](bpy.types.KeyMaps.html)\n* [Keyframe(bpy\\_struct)](bpy.types.Keyframe.html)\n* [KeyingSet(bpy\\_struct)](bpy.types.KeyingSet.html)\n* [KeyingSetInfo(bpy\\_struct)](bpy.types.KeyingSetInfo.html)\n* [KeyingSetPath(bpy\\_struct)](bpy.types.KeyingSetPath.html)\n* [KeyingSetPaths(bpy\\_struct)](bpy.types.KeyingSetPaths.html)\n* [KeyingSets(bpy\\_struct)](bpy.types.KeyingSets.html)\n* [KeyingSetsAll(bpy\\_struct)](bpy.types.KeyingSetsAll.html)\n* [KinematicConstraint(Constraint)](bpy.types.KinematicConstraint.html)\n* [LaplacianDeformModifier(Modifier)](bpy.types.LaplacianDeformModifier.html)\n* [LaplacianSmoothModifier(Modifier)](bpy.types.LaplacianSmoothModifier.html)\n* [Lattice(ID)](bpy.types.Lattice.html)\n* [LatticeModifier(Modifier)](bpy.types.LatticeModifier.html)\n* [LatticePoint(bpy\\_struct)](bpy.types.LatticePoint.html)\n* [LayerCollection(bpy\\_struct)](bpy.types.LayerCollection.html)\n* [LayerObjects(bpy\\_struct)](bpy.types.LayerObjects.html)\n* [LayoutPanelState(bpy\\_struct)](bpy.types.LayoutPanelState.html)\n* [Library(ID)](bpy.types.Library.html)\n* [LibraryWeakReference(bpy\\_struct)](bpy.types.LibraryWeakReference.html)\n* [Light(ID)](bpy.types.Light.html)\n* [LightProbe(ID)](bpy.types.LightProbe.html)\n* [LightProbePlane(LightProbe)](bpy.types.LightProbePlane.html)\n* [LightProbeSphere(LightProbe)](bpy.types.LightProbeSphere.html)\n* [LightProbeVolume(LightProbe)](bpy.types.LightProbeVolume.html)\n* [Lightgroup(bpy\\_struct)](bpy.types.Lightgroup.html)\n* [Lightgroups(bpy\\_struct)](bpy.types.Lightgroups.html)\n* [LimitDistanceConstraint(Constraint)](bpy.types.LimitDistanceConstraint.html)\n* [LimitLocationConstraint(Constraint)](bpy.types.LimitLocationConstraint.html)\n* [LimitRotationConstraint(Constraint)](bpy.types.LimitRotationConstraint.html)\n* [LimitScaleConstraint(Constraint)](bpy.types.LimitScaleConstraint.html)\n* [LineStyleAlphaModifier(LineStyleModifier)](bpy.types.LineStyleAlphaModifier.html)\n* [LineStyleAlphaModifier\\_AlongStroke(LineStyleAlphaModifier)](bpy.types.LineStyleAlphaModifier_AlongStroke.html)\n* [LineStyleAlphaModifier\\_CreaseAngle(LineStyleAlphaModifier)](bpy.types.LineStyleAlphaModifier_CreaseAngle.html)\n* [LineStyleAlphaModifier\\_Curvature\\_3D(LineStyleAlphaModifier)](bpy.types.LineStyleAlphaModifier_Curvature_3D.html)\n* [LineStyleAlphaModifier\\_DistanceFromCamera(LineStyleAlphaModifier)](bpy.types.LineStyleAlphaModifier_DistanceFromCamera.html)\n* [LineStyleAlphaModifier\\_DistanceFromObject(LineStyleAlphaModifier)](bpy.types.LineStyleAlphaModifier_DistanceFromObject.html)\n* [LineStyleAlphaModifier\\_Material(LineStyleAlphaModifier)](bpy.types.LineStyleAlphaModifier_Material.html)\n* [LineStyleAlphaModifier\\_Noise(LineStyleAlphaModifier)](bpy.types.LineStyleAlphaModifier_Noise.html)\n* [LineStyleAlphaModifier\\_Tangent(LineStyleAlphaModifier)](bpy.types.LineStyleAlphaModifier_Tangent.html)\n* [LineStyleAlphaModifiers(bpy\\_struct)](bpy.types.LineStyleAlphaModifiers.html)\n* [LineStyleColorModifier(LineStyleModifier)](bpy.types.LineStyleColorModifier.html)\n* [LineStyleColorModifier\\_AlongStroke(LineStyleColorModifier)](bpy.types.LineStyleColorModifier_AlongStroke.html)\n* [LineStyleColorModifier\\_CreaseAngle(LineStyleColorModifier)](bpy.types.LineStyleColorModifier_CreaseAngle.html)\n* [LineStyleColorModifier\\_Curvature\\_3D(LineStyleColorModifier)](bpy.types.LineStyleColorModifier_Curvature_3D.html)\n* [LineStyleColorModifier\\_DistanceFromCamera(LineStyleColorModifier)](bpy.types.LineStyleColorModifier_DistanceFromCamera.html)\n* [LineStyleColorModifier\\_DistanceFromObject(LineStyleColorModifier)](bpy.types.LineStyleColorModifier_DistanceFromObject.html)\n* [LineStyleColorModifier\\_Material(LineStyleColorModifier)](bpy.types.LineStyleColorModifier_Material.html)\n* [LineStyleColorModifier\\_Noise(LineStyleColorModifier)](bpy.types.LineStyleColorModifier_Noise.html)\n* [LineStyleColorModifier\\_Tangent(LineStyleColorModifier)](bpy.types.LineStyleColorModifier_Tangent.html)\n* [LineStyleColorModifiers(bpy\\_struct)](bpy.types.LineStyleColorModifiers.html)\n* [LineStyleGeometryModifier(LineStyleModifier)](bpy.types.LineStyleGeometryModifier.html)\n* [LineStyleGeometryModifier\\_2DOffset(LineStyleGeometryModifier)](bpy.types.LineStyleGeometryModifier_2DOffset.html)\n* [LineStyleGeometryModifier\\_2DTransform(LineStyleGeometryModifier)](bpy.types.LineStyleGeometryModifier_2DTransform.html)\n* [LineStyleGeometryModifier\\_BackboneStretcher(LineStyleGeometryModifier)](bpy.types.LineStyleGeometryModifier_BackboneStretcher.html)\n* [LineStyleGeometryModifier\\_BezierCurve(LineStyleGeometryModifier)](bpy.types.LineStyleGeometryModifier_BezierCurve.html)\n* [LineStyleGeometryModifier\\_Blueprint(LineStyleGeometryModifier)](bpy.types.LineStyleGeometryModifier_Blueprint.html)\n* [LineStyleGeometryModifier\\_GuidingLines(LineStyleGeometryModifier)](bpy.types.LineStyleGeometryModifier_GuidingLines.html)\n* [LineStyleGeometryModifier\\_PerlinNoise1D(LineStyleGeometryModifier)](bpy.types.LineStyleGeometryModifier_PerlinNoise1D.html)\n* [LineStyleGeometryModifier\\_PerlinNoise2D(LineStyleGeometryModifier)](bpy.types.LineStyleGeometryModifier_PerlinNoise2D.html)\n* [LineStyleGeometryModifier\\_Polygonalization(LineStyleGeometryModifier)](bpy.types.LineStyleGeometryModifier_Polygonalization.html)\n* [LineStyleGeometryModifier\\_Sampling(LineStyleGeometryModifier)](bpy.types.LineStyleGeometryModifier_Sampling.html)\n* [LineStyleGeometryModifier\\_Simplification(LineStyleGeometryModifier)](bpy.types.LineStyleGeometryModifier_Simplification.html)\n* [LineStyleGeometryModifier\\_SinusDisplacement(LineStyleGeometryModifier)](bpy.types.LineStyleGeometryModifier_SinusDisplacement.html)\n* [LineStyleGeometryModifier\\_SpatialNoise(LineStyleGeometryModifier)](bpy.types.LineStyleGeometryModifier_SpatialNoise.html)\n* [LineStyleGeometryModifier\\_TipRemover(LineStyleGeometryModifier)](bpy.types.LineStyleGeometryModifier_TipRemover.html)\n* [LineStyleGeometryModifiers(bpy\\_struct)](bpy.types.LineStyleGeometryModifiers.html)\n* [LineStyleModifier(bpy\\_struct)](bpy.types.LineStyleModifier.html)\n* [LineStyleTextureSlot(TextureSlot)](bpy.types.LineStyleTextureSlot.html)\n* [LineStyleTextureSlots(bpy\\_struct)](bpy.types.LineStyleTextureSlots.html)\n* [LineStyleThicknessModifier(LineStyleModifier)](bpy.types.LineStyleThicknessModifier.html)\n* [LineStyleThicknessModifier\\_AlongStroke(LineStyleThicknessModifier)](bpy.types.LineStyleThicknessModifier_AlongStroke.html)\n* [LineStyleThicknessModifier\\_Calligraphy(LineStyleThicknessModifier)](bpy.types.LineStyleThicknessModifier_Calligraphy.html)\n* [LineStyleThicknessModifier\\_CreaseAngle(LineStyleThicknessModifier)](bpy.types.LineStyleThicknessModifier_CreaseAngle.html)\n* [LineStyleThicknessModifier\\_Curvature\\_3D(LineStyleThicknessModifier)](bpy.types.LineStyleThicknessModifier_Curvature_3D.html)\n* [LineStyleThicknessModifier\\_DistanceFromCamera(LineStyleThicknessModifier)](bpy.types.LineStyleThicknessModifier_DistanceFromCamera.html)\n* [LineStyleThicknessModifier\\_DistanceFromObject(LineStyleThicknessModifier)](bpy.types.LineStyleThicknessModifier_DistanceFromObject.html)\n* [LineStyleThicknessModifier\\_Material(LineStyleThicknessModifier)](bpy.types.LineStyleThicknessModifier_Material.html)\n* [LineStyleThicknessModifier\\_Noise(LineStyleThicknessModifier)](bpy.types.LineStyleThicknessModifier_Noise.html)\n* [LineStyleThicknessModifier\\_Tangent(LineStyleThicknessModifier)](bpy.types.LineStyleThicknessModifier_Tangent.html)\n* [LineStyleThicknessModifiers(bpy\\_struct)](bpy.types.LineStyleThicknessModifiers.html)\n* [Linesets(bpy\\_struct)](bpy.types.Linesets.html)\n* [LockedTrackConstraint(Constraint)](bpy.types.LockedTrackConstraint.html)\n* [LoopColors(bpy\\_struct)](bpy.types.LoopColors.html)\n* [MASK\\_UL\\_layers(UIList)](bpy.types.MASK_UL_layers.html)\n* [MATERIAL\\_UL\\_matslots(UIList)](bpy.types.MATERIAL_UL_matslots.html)\n* [MESH\\_UL\\_attributes(UIList)](bpy.types.MESH_UL_attributes.html)\n* [MESH\\_UL\\_color\\_attributes(UIList)](bpy.types.MESH_UL_color_attributes.html)\n* [MESH\\_UL\\_color\\_attributes\\_selector(UIList)](bpy.types.MESH_UL_color_attributes_selector.html)\n* [MESH\\_UL\\_uvmaps(UIList)](bpy.types.MESH_UL_uvmaps.html)\n* [MESH\\_UL\\_vgroups(UIList)](bpy.types.MESH_UL_vgroups.html)\n* [Macro(bpy\\_struct)](bpy.types.Macro.html)\n* [MagicTexture(Texture)](bpy.types.MagicTexture.html)\n* [MaintainVolumeConstraint(Constraint)](bpy.types.MaintainVolumeConstraint.html)\n* [MarbleTexture(Texture)](bpy.types.MarbleTexture.html)\n* [Mask(ID)](bpy.types.Mask.html)\n* [MaskLayer(bpy\\_struct)](bpy.types.MaskLayer.html)\n* [MaskLayers(bpy\\_struct)](bpy.types.MaskLayers.html)\n* [MaskModifier(Modifier)](bpy.types.MaskModifier.html)\n* [MaskParent(bpy\\_struct)](bpy.types.MaskParent.html)\n* [MaskSpline(bpy\\_struct)](bpy.types.MaskSpline.html)\n* [MaskSplinePoint(bpy\\_struct)](bpy.types.MaskSplinePoint.html)\n* [MaskSplinePointUW(bpy\\_struct)](bpy.types.MaskSplinePointUW.html)\n* [MaskSplinePoints(bpy\\_struct)](bpy.types.MaskSplinePoints.html)\n* [MaskSplines(bpy\\_struct)](bpy.types.MaskSplines.html)\n* [MaskStrip(Strip)](bpy.types.MaskStrip.html)\n* [MaskStripModifier(StripModifier)](bpy.types.MaskStripModifier.html)\n* [Material(ID)](bpy.types.Material.html)\n* [MaterialGPencilStyle(bpy\\_struct)](bpy.types.MaterialGPencilStyle.html)\n* [MaterialLineArt(bpy\\_struct)](bpy.types.MaterialLineArt.html)\n* [MaterialSlot(bpy\\_struct)](bpy.types.MaterialSlot.html)\n* [Menu(bpy\\_struct)](bpy.types.Menu.html)\n* [Mesh(ID)](bpy.types.Mesh.html)\n* [MeshCacheModifier(Modifier)](bpy.types.MeshCacheModifier.html)\n* [MeshDeformModifier(Modifier)](bpy.types.MeshDeformModifier.html)\n* [MeshEdge(bpy\\_struct)](bpy.types.MeshEdge.html)\n* [MeshEdges(bpy\\_struct)](bpy.types.MeshEdges.html)\n* [MeshLoop(bpy\\_struct)](bpy.types.MeshLoop.html)\n* [MeshLoopColor(bpy\\_struct)](bpy.types.MeshLoopColor.html)\n* [MeshLoopColorLayer(bpy\\_struct)](bpy.types.MeshLoopColorLayer.html)\n* [MeshLoopTriangle(bpy\\_struct)](bpy.types.MeshLoopTriangle.html)\n* [MeshLoopTriangles(bpy\\_struct)](bpy.types.MeshLoopTriangles.html)\n* [MeshLoops(bpy\\_struct)](bpy.types.MeshLoops.html)\n* [MeshNormalValue(bpy\\_struct)](bpy.types.MeshNormalValue.html)\n* [MeshPolygon(bpy\\_struct)](bpy.types.MeshPolygon.html)\n* [MeshPolygons(bpy\\_struct)](bpy.types.MeshPolygons.html)\n* [MeshSequenceCacheModifier(Modifier)](bpy.types.MeshSequenceCacheModifier.html)\n* [MeshSkinVertex(bpy\\_struct)](bpy.types.MeshSkinVertex.html)\n* [MeshSkinVertexLayer(bpy\\_struct)](bpy.types.MeshSkinVertexLayer.html)\n* [MeshStatVis(bpy\\_struct)](bpy.types.MeshStatVis.html)\n* [MeshToVolumeModifier(Modifier)](bpy.types.MeshToVolumeModifier.html)\n* [MeshUVLoop(bpy\\_struct)](bpy.types.MeshUVLoop.html)\n* [MeshUVLoopLayer(bpy\\_struct)](bpy.types.MeshUVLoopLayer.html)\n* [MeshVertex(bpy\\_struct)](bpy.types.MeshVertex.html)\n* [MeshVertices(bpy\\_struct)](bpy.types.MeshVertices.html)\n* [MetaBall(ID)](bpy.types.MetaBall.html)\n* [MetaBallElements(bpy\\_struct)](bpy.types.MetaBallElements.html)\n* [MetaElement(bpy\\_struct)](bpy.types.MetaElement.html)\n* [MetaStrip(Strip)](bpy.types.MetaStrip.html)\n* [MirrorModifier(Modifier)](bpy.types.MirrorModifier.html)\n* [Modifier(bpy\\_struct)](bpy.types.Modifier.html)\n* [ModifierViewerPathElem(ViewerPathElem)](bpy.types.ModifierViewerPathElem.html)\n* [MotionPath(bpy\\_struct)](bpy.types.MotionPath.html)\n* [MotionPathVert(bpy\\_struct)](bpy.types.MotionPathVert.html)\n* [MovieClip(ID)](bpy.types.MovieClip.html)\n* [MovieClipProxy(bpy\\_struct)](bpy.types.MovieClipProxy.html)\n* [MovieClipScopes(bpy\\_struct)](bpy.types.MovieClipScopes.html)\n* [MovieClipStrip(Strip)](bpy.types.MovieClipStrip.html)\n* [MovieClipUser(bpy\\_struct)](bpy.types.MovieClipUser.html)\n* [MovieReconstructedCamera(bpy\\_struct)](bpy.types.MovieReconstructedCamera.html)\n* [MovieStrip(Strip)](bpy.types.MovieStrip.html)\n* [MovieTracking(bpy\\_struct)](bpy.types.MovieTracking.html)\n* [MovieTrackingCamera(bpy\\_struct)](bpy.types.MovieTrackingCamera.html)\n* [MovieTrackingDopesheet(bpy\\_struct)](bpy.types.MovieTrackingDopesheet.html)\n* [MovieTrackingMarker(bpy\\_struct)](bpy.types.MovieTrackingMarker.html)\n* [MovieTrackingMarkers(bpy\\_struct)](bpy.types.MovieTrackingMarkers.html)\n* [MovieTrackingObject(bpy\\_struct)](bpy.types.MovieTrackingObject.html)\n* [MovieTrackingObjectPlaneTracks(bpy\\_struct)](bpy.types.MovieTrackingObjectPlaneTracks.html)\n* [MovieTrackingObjectTracks(bpy\\_struct)](bpy.types.MovieTrackingObjectTracks.html)\n* [MovieTrackingObjects(bpy\\_struct)](bpy.types.MovieTrackingObjects.html)\n* [MovieTrackingPlaneMarker(bpy\\_struct)](bpy.types.MovieTrackingPlaneMarker.html)\n* [MovieTrackingPlaneMarkers(bpy\\_struct)](bpy.types.MovieTrackingPlaneMarkers.html)\n* [MovieTrackingPlaneTrack(bpy\\_struct)](bpy.types.MovieTrackingPlaneTrack.html)\n* [MovieTrackingPlaneTracks(bpy\\_struct)](bpy.types.MovieTrackingPlaneTracks.html)\n* [MovieTrackingReconstructedCameras(bpy\\_struct)](bpy.types.MovieTrackingReconstructedCameras.html)\n* [MovieTrackingReconstruction(bpy\\_struct)](bpy.types.MovieTrackingReconstruction.html)\n* [MovieTrackingSettings(bpy\\_struct)](bpy.types.MovieTrackingSettings.html)\n* [MovieTrackingStabilization(bpy\\_struct)](bpy.types.MovieTrackingStabilization.html)\n* [MovieTrackingTrack(bpy\\_struct)](bpy.types.MovieTrackingTrack.html)\n* [MovieTrackingTracks(bpy\\_struct)](bpy.types.MovieTrackingTracks.html)\n* [MulticamStrip(EffectStrip)](bpy.types.MulticamStrip.html)\n* [MultiplyStrip(EffectStrip)](bpy.types.MultiplyStrip.html)\n* [MultiresModifier(Modifier)](bpy.types.MultiresModifier.html)\n* [MusgraveTexture(Texture)](bpy.types.MusgraveTexture.html)\n* [NDOFMotionEventData(bpy\\_struct)](bpy.types.NDOFMotionEventData.html)\n* [NODE\\_AST\\_compositor(AssetShelf)](bpy.types.NODE_AST_compositor.html)\n* [NODE\\_FH\\_image\\_node(FileHandler)](bpy.types.NODE_FH_image_node.html)\n* [NlaStrip(bpy\\_struct)](bpy.types.NlaStrip.html)\n* [NlaStripFCurves(bpy\\_struct)](bpy.types.NlaStripFCurves.html)\n* [NlaStrips(bpy\\_struct)](bpy.types.NlaStrips.html)\n* [NlaTrack(bpy\\_struct)](bpy.types.NlaTrack.html)\n* [NlaTracks(bpy\\_struct)](bpy.types.NlaTracks.html)\n* [Node(bpy\\_struct)](bpy.types.Node.html)\n* [NodeClosureInput(NodeInternal)](bpy.types.NodeClosureInput.html)\n* [NodeClosureInputItem(bpy\\_struct)](bpy.types.NodeClosureInputItem.html)\n* [NodeClosureInputItems(bpy\\_struct)](bpy.types.NodeClosureInputItems.html)\n* [NodeClosureOutput(NodeInternal)](bpy.types.NodeClosureOutput.html)\n* [NodeClosureOutputItem(bpy\\_struct)](bpy.types.NodeClosureOutputItem.html)\n* [NodeClosureOutputItems(bpy\\_struct)](bpy.types.NodeClosureOutputItems.html)\n* [NodeCombineBundle(NodeInternal)](bpy.types.NodeCombineBundle.html)\n* [NodeCombineBundleItem(bpy\\_struct)](bpy.types.NodeCombineBundleItem.html)\n* [NodeCombineBundleItems(bpy\\_struct)](bpy.types.NodeCombineBundleItems.html)\n* [NodeCompositorFileOutputItem(bpy\\_struct)](bpy.types.NodeCompositorFileOutputItem.html)\n* [NodeCompositorFileOutputItems(bpy\\_struct)](bpy.types.NodeCompositorFileOutputItems.html)\n* [NodeCustomGroup(Node)](bpy.types.NodeCustomGroup.html)\n* [NodeEnableOutput(NodeInternal)](bpy.types.NodeEnableOutput.html)\n* [NodeEnumItem(bpy\\_struct)](bpy.types.NodeEnumItem.html)\n* [NodeEvaluateClosure(NodeInternal)](bpy.types.NodeEvaluateClosure.html)\n* [NodeEvaluateClosureInputItem(bpy\\_struct)](bpy.types.NodeEvaluateClosureInputItem.html)\n* [NodeEvaluateClosureInputItems(bpy\\_struct)](bpy.types.NodeEvaluateClosureInputItems.html)\n* [NodeEvaluateClosureOutputItem(bpy\\_struct)](bpy.types.NodeEvaluateClosureOutputItem.html)\n* [NodeEvaluateClosureOutputItems(bpy\\_struct)](bpy.types.NodeEvaluateClosureOutputItems.html)\n* [NodeFrame(NodeInternal)](bpy.types.NodeFrame.html)\n* [NodeFunctionFormatStringItem(bpy\\_struct)](bpy.types.NodeFunctionFormatStringItem.html)\n* [NodeFunctionFormatStringItems(bpy\\_struct)](bpy.types.NodeFunctionFormatStringItems.html)\n* [NodeGeometryBakeItem(bpy\\_struct)](bpy.types.NodeGeometryBakeItem.html)\n* [NodeGeometryBakeItems(bpy\\_struct)](bpy.types.NodeGeometryBakeItems.html)\n* [NodeGeometryCaptureAttributeItem(bpy\\_struct)](bpy.types.NodeGeometryCaptureAttributeItem.html)\n* [NodeGeometryCaptureAttributeItems(bpy\\_struct)](bpy.types.NodeGeometryCaptureAttributeItems.html)\n* [NodeGeometryForeachGeometryElementGenerationItems(bpy\\_struct)](bpy.types.NodeGeometryForeachGeometryElementGenerationItems.html)\n* [NodeGeometryForeachGeometryElementInputItems(bpy\\_struct)](bpy.types.NodeGeometryForeachGeometryElementInputItems.html)\n* [NodeGeometryForeachGeometryElementMainItems(bpy\\_struct)](bpy.types.NodeGeometryForeachGeometryElementMainItems.html)\n* [NodeGeometryRepeatOutputItems(bpy\\_struct)](bpy.types.NodeGeometryRepeatOutputItems.html)\n* [NodeGeometrySimulationOutputItems(bpy\\_struct)](bpy.types.NodeGeometrySimulationOutputItems.html)\n* [NodeGeometryViewerItem(bpy\\_struct)](bpy.types.NodeGeometryViewerItem.html)\n* [NodeGeometryViewerItems(bpy\\_struct)](bpy.types.NodeGeometryViewerItems.html)\n* [NodeGroup(NodeInternal)](bpy.types.NodeGroup.html)\n* [NodeGroupInput(NodeInternal)](bpy.types.NodeGroupInput.html)\n* [NodeGroupOutput(NodeInternal)](bpy.types.NodeGroupOutput.html)\n* [NodeIndexSwitchItems(bpy\\_struct)](bpy.types.NodeIndexSwitchItems.html)\n* [NodeInputs(bpy\\_struct)](bpy.types.NodeInputs.html)\n* [NodeInstanceHash(bpy\\_struct)](bpy.types.NodeInstanceHash.html)\n* [NodeInternal(Node)](bpy.types.NodeInternal.html)\n* [NodeInternalSocketTemplate(bpy\\_struct)](bpy.types.NodeInternalSocketTemplate.html)\n* [NodeJoinBundle(NodeInternal)](bpy.types.NodeJoinBundle.html)\n* [NodeLink(bpy\\_struct)](bpy.types.NodeLink.html)\n* [NodeLinks(bpy\\_struct)](bpy.types.NodeLinks.html)\n* [NodeMenuSwitchItems(bpy\\_struct)](bpy.types.NodeMenuSwitchItems.html)\n* [NodeOutputs(bpy\\_struct)](bpy.types.NodeOutputs.html)\n* [NodeReroute(NodeInternal)](bpy.types.NodeReroute.html)\n* [NodeSeparateBundle(NodeInternal)](bpy.types.NodeSeparateBundle.html)\n* [NodeSeparateBundleItem(bpy\\_struct)](bpy.types.NodeSeparateBundleItem.html)\n* [NodeSeparateBundleItems(bpy\\_struct)](bpy.types.NodeSeparateBundleItems.html)\n* [NodeSocket(bpy\\_struct)](bpy.types.NodeSocket.html)\n* [NodeSocketBool(NodeSocketStandard)](bpy.types.NodeSocketBool.html)\n* [NodeSocketBundle(NodeSocketStandard)](bpy.types.NodeSocketBundle.html)\n* [NodeSocketClosure(NodeSocketStandard)](bpy.types.NodeSocketClosure.html)\n* [NodeSocketCollection(NodeSocketStandard)](bpy.types.NodeSocketCollection.html)\n* [NodeSocketColor(NodeSocketStandard)](bpy.types.NodeSocketColor.html)\n* [NodeSocketFloat(NodeSocketStandard)](bpy.types.NodeSocketFloat.html)\n* [NodeSocketFloatAngle(NodeSocketStandard)](bpy.types.NodeSocketFloatAngle.html)\n* [NodeSocketFloatColorTemperature(NodeSocketStandard)](bpy.types.NodeSocketFloatColorTemperature.html)\n* [NodeSocketFloatDistance(NodeSocketStandard)](bpy.types.NodeSocketFloatDistance.html)\n* [NodeSocketFloatFactor(NodeSocketStandard)](bpy.types.NodeSocketFloatFactor.html)\n* [NodeSocketFloatFrequency(NodeSocketStandard)](bpy.types.NodeSocketFloatFrequency.html)\n* [NodeSocketFloatPercentage(NodeSocketStandard)](bpy.types.NodeSocketFloatPercentage.html)\n* [NodeSocketFloatTime(NodeSocketStandard)](bpy.types.NodeSocketFloatTime.html)\n* [NodeSocketFloatTimeAbsolute(NodeSocketStandard)](bpy.types.NodeSocketFloatTimeAbsolute.html)\n* [NodeSocketFloatUnsigned(NodeSocketStandard)](bpy.types.NodeSocketFloatUnsigned.html)\n* [NodeSocketFloatWavelength(NodeSocketStandard)](bpy.types.NodeSocketFloatWavelength.html)\n* [NodeSocketGeometry(NodeSocketStandard)](bpy.types.NodeSocketGeometry.html)\n* [NodeSocketImage(NodeSocketStandard)](bpy.types.NodeSocketImage.html)\n* [NodeSocketInt(NodeSocketStandard)](bpy.types.NodeSocketInt.html)\n* [NodeSocketIntFactor(NodeSocketStandard)](bpy.types.NodeSocketIntFactor.html)\n* [NodeSocketIntPercentage(NodeSocketStandard)](bpy.types.NodeSocketIntPercentage.html)\n* [NodeSocketIntUnsigned(NodeSocketStandard)](bpy.types.NodeSocketIntUnsigned.html)\n* [NodeSocketMaterial(NodeSocketStandard)](bpy.types.NodeSocketMaterial.html)\n* [NodeSocketMatrix(NodeSocketStandard)](bpy.types.NodeSocketMatrix.html)\n* [NodeSocketMenu(NodeSocketStandard)](bpy.types.NodeSocketMenu.html)\n* [NodeSocketObject(NodeSocketStandard)](bpy.types.NodeSocketObject.html)\n* [NodeSocketRotation(NodeSocketStandard)](bpy.types.NodeSocketRotation.html)\n* [NodeSocketShader(NodeSocketStandard)](bpy.types.NodeSocketShader.html)\n* [NodeSocketStandard(NodeSocket)](bpy.types.NodeSocketStandard.html)\n* [NodeSocketString(NodeSocketStandard)](bpy.types.NodeSocketString.html)\n* [NodeSocketStringFilePath(NodeSocketStandard)](bpy.types.NodeSocketStringFilePath.html)\n* [NodeSocketTexture(NodeSocketStandard)](bpy.types.NodeSocketTexture.html)\n* [NodeSocketVector(NodeSocketStandard)](bpy.types.NodeSocketVector.html)\n* [NodeSocketVector2D(NodeSocketStandard)](bpy.types.NodeSocketVector2D.html)\n* [NodeSocketVector4D(NodeSocketStandard)](bpy.types.NodeSocketVector4D.html)\n* [NodeSocketVectorAcceleration(NodeSocketStandard)](bpy.types.NodeSocketVectorAcceleration.html)\n* [NodeSocketVectorAcceleration2D(NodeSocketStandard)](bpy.types.NodeSocketVectorAcceleration2D.html)\n* [NodeSocketVectorAcceleration4D(NodeSocketStandard)](bpy.types.NodeSocketVectorAcceleration4D.html)\n* [NodeSocketVectorDirection(NodeSocketStandard)](bpy.types.NodeSocketVectorDirection.html)\n* [NodeSocketVectorDirection2D(NodeSocketStandard)](bpy.types.NodeSocketVectorDirection2D.html)\n* [NodeSocketVectorDirection4D(NodeSocketStandard)](bpy.types.NodeSocketVectorDirection4D.html)\n* [NodeSocketVectorEuler(NodeSocketStandard)](bpy.types.NodeSocketVectorEuler.html)\n* [NodeSocketVectorEuler2D(NodeSocketStandard)](bpy.types.NodeSocketVectorEuler2D.html)\n* [NodeSocketVectorEuler4D(NodeSocketStandard)](bpy.types.NodeSocketVectorEuler4D.html)\n* [NodeSocketVectorFactor(NodeSocketStandard)](bpy.types.NodeSocketVectorFactor.html)\n* [NodeSocketVectorFactor2D(NodeSocketStandard)](bpy.types.NodeSocketVectorFactor2D.html)\n* [NodeSocketVectorFactor4D(NodeSocketStandard)](bpy.types.NodeSocketVectorFactor4D.html)\n* [NodeSocketVectorPercentage(NodeSocketStandard)](bpy.types.NodeSocketVectorPercentage.html)\n* [NodeSocketVectorPercentage2D(NodeSocketStandard)](bpy.types.NodeSocketVectorPercentage2D.html)\n* [NodeSocketVectorPercentage4D(NodeSocketStandard)](bpy.types.NodeSocketVectorPercentage4D.html)\n* [NodeSocketVectorTranslation(NodeSocketStandard)](bpy.types.NodeSocketVectorTranslation.html)\n* [NodeSocketVectorTranslation2D(NodeSocketStandard)](bpy.types.NodeSocketVectorTranslation2D.html)\n* [NodeSocketVectorTranslation4D(NodeSocketStandard)](bpy.types.NodeSocketVectorTranslation4D.html)\n* [NodeSocketVectorVelocity(NodeSocketStandard)](bpy.types.NodeSocketVectorVelocity.html)\n* [NodeSocketVectorVelocity2D(NodeSocketStandard)](bpy.types.NodeSocketVectorVelocity2D.html)\n* [NodeSocketVectorVelocity4D(NodeSocketStandard)](bpy.types.NodeSocketVectorVelocity4D.html)\n* [NodeSocketVectorXYZ(NodeSocketStandard)](bpy.types.NodeSocketVectorXYZ.html)\n* [NodeSocketVectorXYZ2D(NodeSocketStandard)](bpy.types.NodeSocketVectorXYZ2D.html)\n* [NodeSocketVectorXYZ4D(NodeSocketStandard)](bpy.types.NodeSocketVectorXYZ4D.html)\n* [NodeSocketVirtual(NodeSocketStandard)](bpy.types.NodeSocketVirtual.html)\n* [NodeTree(ID)](bpy.types.NodeTree.html)\n* [NodeTreeInterface(bpy\\_struct)](bpy.types.NodeTreeInterface.html)\n* [NodeTreeInterfaceItem(bpy\\_struct)](bpy.types.NodeTreeInterfaceItem.html)\n* [NodeTreeInterfacePanel(NodeTreeInterfaceItem)](bpy.types.NodeTreeInterfacePanel.html)\n* [NodeTreeInterfaceSocket(NodeTreeInterfaceItem)](bpy.types.NodeTreeInterfaceSocket.html)\n* [NodeTreeInterfaceSocketBool(NodeTreeInterfaceSocket)](bpy.types.NodeTreeInterfaceSocketBool.html)\n* [NodeTreeInterfaceSocketBundle(NodeTreeInterfaceSocket)](bpy.types.NodeTreeInterfaceSocketBundle.html)\n* [NodeTreeInterfaceSocketClosure(NodeTreeInterfaceSocket)](bpy.types.NodeTreeInterfaceSocketClosure.html)\n* [NodeTreeInterfaceSocketCollection(NodeTreeInterfaceSocket)](bpy.types.NodeTreeInterfaceSocketCollection.html)\n* [NodeTreeInterfaceSocketColor(NodeTreeInterfaceSocket)](bpy.types.NodeTreeInterfaceSocketColor.html)\n* [NodeTreeInterfaceSocketFloat(NodeTreeInterfaceSocket)](bpy.types.NodeTreeInterfaceSocketFloat.html)\n* [NodeTreeInterfaceSocketFloatAngle(NodeTreeInterfaceSocket)](bpy.types.NodeTreeInterfaceSocketFloatAngle.html)\n* [NodeTreeInterfaceSocketFloatColorTemperature(NodeTreeInterfaceSocket)](bpy.types.NodeTreeInterfaceSocketFloatColorTemperature.html)\n* [NodeTreeInterfaceSocketFloatDistance(NodeTreeInterfaceSocket)](bpy.types.NodeTreeInterfaceSocketFloatDistance.html)\n* [NodeTreeInterfaceSocketFloatFactor(NodeTreeInterfaceSocket)](bpy.types.NodeTreeInterfaceSocketFloatFactor.html)\n* [NodeTreeInterfaceSocketFloatFrequency(NodeTreeInterfaceSocket)](bpy.types.NodeTreeInterfaceSocketFloatFrequency.html)\n* [NodeTreeInterfaceSocketFloatPercentage(NodeTreeInterfaceSocket)](bpy.types.NodeTreeInterfaceSocketFloatPercentage.html)\n* [NodeTreeInterfaceSocketFloatTime(NodeTreeInterfaceSocket)](bpy.types.NodeTreeInterfaceSocketFloatTime.html)\n* [NodeTreeInterfaceSocketFloatTimeAbsolute(NodeTreeInterfaceSocket)](bpy.types.NodeTreeInterfaceSocketFloatTimeAbsolute.html)\n* [NodeTreeInterfaceSocketFloatUnsigned(NodeTreeInterfaceSocket)](bpy.types.NodeTreeInterfaceSocketFloatUnsigned.html)\n* [NodeTreeInterfaceSocketFloatWavelength(NodeTreeInterfaceSocket)](bpy.types.NodeTreeInterfaceSocketFloatWavelength.html)\n* [NodeTreeInterfaceSocketGeometry(NodeTreeInterfaceSocket)](bpy.types.NodeTreeInterfaceSocketGeometry.html)\n* [NodeTreeInterfaceSocketImage(NodeTreeInterfaceSocket)](bpy.types.NodeTreeInterfaceSocketImage.html)\n* [NodeTreeInterfaceSocketInt(NodeTreeInterfaceSocket)](bpy.types.NodeTreeInterfaceSocketInt.html)\n* [NodeTreeInterfaceSocketIntFactor(NodeTreeInterfaceSocket)](bpy.types.NodeTreeInterfaceSocketIntFactor.html)\n* [NodeTreeInterfaceSocketIntPercentage(NodeTreeInterfaceSocket)](bpy.types.NodeTreeInterfaceSocketIntPercentage.html)\n* [NodeTreeInterfaceSocketIntUnsigned(NodeTreeInterfaceSocket)](bpy.types.NodeTreeInterfaceSocketIntUnsigned.html)\n* [NodeTreeInterfaceSocketMaterial(NodeTreeInterfaceSocket)](bpy.types.NodeTreeInterfaceSocketMaterial.html)\n* [NodeTreeInterfaceSocketMatrix(NodeTreeInterfaceSocket)](bpy.types.NodeTreeInterfaceSocketMatrix.html)\n* [NodeTreeInterfaceSocketMenu(NodeTreeInterfaceSocket)](bpy.types.NodeTreeInterfaceSocketMenu.html)\n* [NodeTreeInterfaceSocketObject(NodeTreeInterfaceSocket)](bpy.types.NodeTreeInterfaceSocketObject.html)\n* [NodeTreeInterfaceSocketRotation(NodeTreeInterfaceSocket)](bpy.types.NodeTreeInterfaceSocketRotation.html)\n* [NodeTreeInterfaceSocketShader(NodeTreeInterfaceSocket)](bpy.types.NodeTreeInterfaceSocketShader.html)\n* [NodeTreeInterfaceSocketString(NodeTreeInterfaceSocket)](bpy.types.NodeTreeInterfaceSocketString.html)\n* [NodeTreeInterfaceSocketStringFilePath(NodeTreeInterfaceSocket)](bpy.types.NodeTreeInterfaceSocketStringFilePath.html)\n* [NodeTreeInterfaceSocketTexture(NodeTreeInterfaceSocket)](bpy.types.NodeTreeInterfaceSocketTexture.html)\n* [NodeTreeInterfaceSocketVector(NodeTreeInterfaceSocket)](bpy.types.NodeTreeInterfaceSocketVector.html)\n* [NodeTreeInterfaceSocketVector2D(NodeTreeInterfaceSocket)](bpy.types.NodeTreeInterfaceSocketVector2D.html)\n* [NodeTreeInterfaceSocketVector4D(NodeTreeInterfaceSocket)](bpy.types.NodeTreeInterfaceSocketVector4D.html)\n* [NodeTreeInterfaceSocketVectorAcceleration(NodeTreeInterfaceSocket)](bpy.types.NodeTreeInterfaceSocketVectorAcceleration.html)\n* [NodeTreeInterfaceSocketVectorAcceleration2D(NodeTreeInterfaceSocket)](bpy.types.NodeTreeInterfaceSocketVectorAcceleration2D.html)\n* [NodeTreeInterfaceSocketVectorAcceleration4D(NodeTreeInterfaceSocket)](bpy.types.NodeTreeInterfaceSocketVectorAcceleration4D.html)\n* [NodeTreeInterfaceSocketVectorDirection(NodeTreeInterfaceSocket)](bpy.types.NodeTreeInterfaceSocketVectorDirection.html)\n* [NodeTreeInterfaceSocketVectorDirection2D(NodeTreeInterfaceSocket)](bpy.types.NodeTreeInterfaceSocketVectorDirection2D.html)\n* [NodeTreeInterfaceSocketVectorDirection4D(NodeTreeInterfaceSocket)](bpy.types.NodeTreeInterfaceSocketVectorDirection4D.html)\n* [NodeTreeInterfaceSocketVectorEuler(NodeTreeInterfaceSocket)](bpy.types.NodeTreeInterfaceSocketVectorEuler.html)\n* [NodeTreeInterfaceSocketVectorEuler2D(NodeTreeInterfaceSocket)](bpy.types.NodeTreeInterfaceSocketVectorEuler2D.html)\n* [NodeTreeInterfaceSocketVectorEuler4D(NodeTreeInterfaceSocket)](bpy.types.NodeTreeInterfaceSocketVectorEuler4D.html)\n* [NodeTreeInterfaceSocketVectorFactor(NodeTreeInterfaceSocket)](bpy.types.NodeTreeInterfaceSocketVectorFactor.html)\n* [NodeTreeInterfaceSocketVectorFactor2D(NodeTreeInterfaceSocket)](bpy.types.NodeTreeInterfaceSocketVectorFactor2D.html)\n* [NodeTreeInterfaceSocketVectorFactor4D(NodeTreeInterfaceSocket)](bpy.types.NodeTreeInterfaceSocketVectorFactor4D.html)\n* [NodeTreeInterfaceSocketVectorPercentage(NodeTreeInterfaceSocket)](bpy.types.NodeTreeInterfaceSocketVectorPercentage.html)\n* [NodeTreeInterfaceSocketVectorPercentage2D(NodeTreeInterfaceSocket)](bpy.types.NodeTreeInterfaceSocketVectorPercentage2D.html)\n* [NodeTreeInterfaceSocketVectorPercentage4D(NodeTreeInterfaceSocket)](bpy.types.NodeTreeInterfaceSocketVectorPercentage4D.html)\n* [NodeTreeInterfaceSocketVectorTranslation(NodeTreeInterfaceSocket)](bpy.types.NodeTreeInterfaceSocketVectorTranslation.html)\n* [NodeTreeInterfaceSocketVectorTranslation2D(NodeTreeInterfaceSocket)](bpy.types.NodeTreeInterfaceSocketVectorTranslation2D.html)\n* [NodeTreeInterfaceSocketVectorTranslation4D(NodeTreeInterfaceSocket)](bpy.types.NodeTreeInterfaceSocketVectorTranslation4D.html)\n* [NodeTreeInterfaceSocketVectorVelocity(NodeTreeInterfaceSocket)](bpy.types.NodeTreeInterfaceSocketVectorVelocity.html)\n* [NodeTreeInterfaceSocketVectorVelocity2D(NodeTreeInterfaceSocket)](bpy.types.NodeTreeInterfaceSocketVectorVelocity2D.html)\n* [NodeTreeInterfaceSocketVectorVelocity4D(NodeTreeInterfaceSocket)](bpy.types.NodeTreeInterfaceSocketVectorVelocity4D.html)\n* [NodeTreeInterfaceSocketVectorXYZ(NodeTreeInterfaceSocket)](bpy.types.NodeTreeInterfaceSocketVectorXYZ.html)\n* [NodeTreeInterfaceSocketVectorXYZ2D(NodeTreeInterfaceSocket)](bpy.types.NodeTreeInterfaceSocketVectorXYZ2D.html)\n* [NodeTreeInterfaceSocketVectorXYZ4D(NodeTreeInterfaceSocket)](bpy.types.NodeTreeInterfaceSocketVectorXYZ4D.html)\n* [NodeTreePath(bpy\\_struct)](bpy.types.NodeTreePath.html)\n* [Nodes(bpy\\_struct)](bpy.types.Nodes.html)\n* [NodesModifier(Modifier)](bpy.types.NodesModifier.html)\n* [NodesModifierBake(bpy\\_struct)](bpy.types.NodesModifierBake.html)\n* [NodesModifierBakeDataBlocks(bpy\\_struct)](bpy.types.NodesModifierBakeDataBlocks.html)\n* [NodesModifierBakes(bpy\\_struct)](bpy.types.NodesModifierBakes.html)\n* [NodesModifierDataBlock(bpy\\_struct)](bpy.types.NodesModifierDataBlock.html)\n* [NodesModifierPanel(bpy\\_struct)](bpy.types.NodesModifierPanel.html)\n* [NodesModifierPanels(bpy\\_struct)](bpy.types.NodesModifierPanels.html)\n* [NodesModifierWarning(bpy\\_struct)](bpy.types.NodesModifierWarning.html)\n* [NoiseTexture(Texture)](bpy.types.NoiseTexture.html)\n* [NormalEditModifier(Modifier)](bpy.types.NormalEditModifier.html)\n* [Object(ID)](bpy.types.Object.html)\n* [ObjectBase(bpy\\_struct)](bpy.types.ObjectBase.html)\n* [ObjectConstraints(bpy\\_struct)](bpy.types.ObjectConstraints.html)\n* [ObjectDisplay(bpy\\_struct)](bpy.types.ObjectDisplay.html)\n* [ObjectLightLinking(bpy\\_struct)](bpy.types.ObjectLightLinking.html)\n* [ObjectLineArt(bpy\\_struct)](bpy.types.ObjectLineArt.html)\n* [ObjectModifiers(bpy\\_struct)](bpy.types.ObjectModifiers.html)\n* [ObjectShaderFx(bpy\\_struct)](bpy.types.ObjectShaderFx.html)\n* [ObjectSolverConstraint(Constraint)](bpy.types.ObjectSolverConstraint.html)\n* [OceanModifier(Modifier)](bpy.types.OceanModifier.html)\n* [Operator(bpy\\_struct)](bpy.types.Operator.html)\n* [OperatorFileListElement(PropertyGroup)](bpy.types.OperatorFileListElement.html)\n* [OperatorMacro(bpy\\_struct)](bpy.types.OperatorMacro.html)\n* [OperatorMousePath(PropertyGroup)](bpy.types.OperatorMousePath.html)\n* [OperatorOptions(bpy\\_struct)](bpy.types.OperatorOptions.html)\n* [OperatorProperties(bpy\\_struct)](bpy.types.OperatorProperties.html)\n* [OperatorStrokeElement(PropertyGroup)](bpy.types.OperatorStrokeElement.html)\n* [PARTICLE\\_UL\\_particle\\_systems(UIList)](bpy.types.PARTICLE_UL_particle_systems.html)\n* [PHYSICS\\_UL\\_dynapaint\\_surfaces(UIList)](bpy.types.PHYSICS_UL_dynapaint_surfaces.html)\n* [POINTCLOUD\\_UL\\_attributes(UIList)](bpy.types.POINTCLOUD_UL_attributes.html)\n* [POSE\\_UL\\_selection\\_set(UIList)](bpy.types.POSE_UL_selection_set.html)\n* [PackedFile(bpy\\_struct)](bpy.types.PackedFile.html)\n* [Paint(bpy\\_struct)](bpy.types.Paint.html)\n* [PaintCurve(ID)](bpy.types.PaintCurve.html)\n* [PaintModeSettings(bpy\\_struct)](bpy.types.PaintModeSettings.html)\n* [Palette(ID)](bpy.types.Palette.html)\n* [PaletteColor(bpy\\_struct)](bpy.types.PaletteColor.html)\n* [PaletteColors(bpy\\_struct)](bpy.types.PaletteColors.html)\n* [Panel(bpy\\_struct)](bpy.types.Panel.html)\n* [Particle(bpy\\_struct)](bpy.types.Particle.html)\n* [ParticleBrush(bpy\\_struct)](bpy.types.ParticleBrush.html)\n* [ParticleDupliWeight(bpy\\_struct)](bpy.types.ParticleDupliWeight.html)\n* [ParticleEdit(bpy\\_struct)](bpy.types.ParticleEdit.html)\n* [ParticleHairKey(bpy\\_struct)](bpy.types.ParticleHairKey.html)\n* [ParticleInstanceModifier(Modifier)](bpy.types.ParticleInstanceModifier.html)\n* [ParticleKey(bpy\\_struct)](bpy.types.ParticleKey.html)\n* [ParticleSettings(ID)](bpy.types.ParticleSettings.html)\n* [ParticleSettingsTextureSlot(TextureSlot)](bpy.types.ParticleSettingsTextureSlot.html)\n* [ParticleSettingsTextureSlots(bpy\\_struct)](bpy.types.ParticleSettingsTextureSlots.html)\n* [ParticleSystem(bpy\\_struct)](bpy.types.ParticleSystem.html)\n* [ParticleSystemModifier(Modifier)](bpy.types.ParticleSystemModifier.html)\n* [ParticleSystems(bpy\\_struct)](bpy.types.ParticleSystems.html)\n* [ParticleTarget(bpy\\_struct)](bpy.types.ParticleTarget.html)\n* [PathCompare(bpy\\_struct)](bpy.types.PathCompare.html)\n* [PathCompareCollection(bpy\\_struct)](bpy.types.PathCompareCollection.html)\n* [PivotConstraint(Constraint)](bpy.types.PivotConstraint.html)\n* [Point(bpy\\_struct)](bpy.types.Point.html)\n* [PointCache(bpy\\_struct)](bpy.types.PointCache.html)\n* [PointCacheItem(bpy\\_struct)](bpy.types.PointCacheItem.html)\n* [PointCaches(bpy\\_struct)](bpy.types.PointCaches.html)\n* [PointCloud(ID)](bpy.types.PointCloud.html)\n* [PointLight(Light)](bpy.types.PointLight.html)\n* [PointerProperty(Property)](bpy.types.PointerProperty.html)\n* [Pose(bpy\\_struct)](bpy.types.Pose.html)\n* [PoseBone(bpy\\_struct)](bpy.types.PoseBone.html)\n* [PoseBoneConstraints(bpy\\_struct)](bpy.types.PoseBoneConstraints.html)\n* [Preferences(bpy\\_struct)](bpy.types.Preferences.html)\n* [PreferencesApps(bpy\\_struct)](bpy.types.PreferencesApps.html)\n* [PreferencesEdit(bpy\\_struct)](bpy.types.PreferencesEdit.html)\n* [PreferencesExperimental(bpy\\_struct)](bpy.types.PreferencesExperimental.html)\n* [PreferencesExtensions(bpy\\_struct)](bpy.types.PreferencesExtensions.html)\n* [PreferencesFilePaths(bpy\\_struct)](bpy.types.PreferencesFilePaths.html)\n* [PreferencesInput(bpy\\_struct)](bpy.types.PreferencesInput.html)\n* [PreferencesKeymap(bpy\\_struct)](bpy.types.PreferencesKeymap.html)\n* [PreferencesSystem(bpy\\_struct)](bpy.types.PreferencesSystem.html)\n* [PreferencesView(bpy\\_struct)](bpy.types.PreferencesView.html)\n* [PrimitiveBoolean(bpy\\_struct)](bpy.types.PrimitiveBoolean.html)\n* [PrimitiveFloat(bpy\\_struct)](bpy.types.PrimitiveFloat.html)\n* [PrimitiveInt(bpy\\_struct)](bpy.types.PrimitiveInt.html)\n* [PrimitiveString(bpy\\_struct)](bpy.types.PrimitiveString.html)\n* [Property(bpy\\_struct)](bpy.types.Property.html)\n* [PropertyGroup(bpy\\_struct)](bpy.types.PropertyGroup.html)\n* [PropertyGroupItem(bpy\\_struct)](bpy.types.PropertyGroupItem.html)\n* [QuaternionAttribute(Attribute)](bpy.types.QuaternionAttribute.html)\n* [QuaternionAttributeValue(bpy\\_struct)](bpy.types.QuaternionAttributeValue.html)\n* [RENDER\\_UL\\_renderviews(UIList)](bpy.types.RENDER_UL_renderviews.html)\n* [RaytraceEEVEE(bpy\\_struct)](bpy.types.RaytraceEEVEE.html)\n* [ReadOnlyInteger(bpy\\_struct)](bpy.types.ReadOnlyInteger.html)\n* [Region(bpy\\_struct)](bpy.types.Region.html)\n* [RegionView3D(bpy\\_struct)](bpy.types.RegionView3D.html)\n* [RemeshModifier(Modifier)](bpy.types.RemeshModifier.html)\n* [RenderEngine(bpy\\_struct)](bpy.types.RenderEngine.html)\n* [RenderLayer(bpy\\_struct)](bpy.types.RenderLayer.html)\n* [RenderPass(bpy\\_struct)](bpy.types.RenderPass.html)\n* [RenderPasses(bpy\\_struct)](bpy.types.RenderPasses.html)\n* [RenderResult(bpy\\_struct)](bpy.types.RenderResult.html)\n* [RenderSettings(bpy\\_struct)](bpy.types.RenderSettings.html)\n* [RenderSlot(bpy\\_struct)](bpy.types.RenderSlot.html)\n* [RenderSlots(bpy\\_struct)](bpy.types.RenderSlots.html)\n* [RenderView(bpy\\_struct)](bpy.types.RenderView.html)\n* [RenderViews(bpy\\_struct)](bpy.types.RenderViews.html)\n* [RepeatItem(bpy\\_struct)](bpy.types.RepeatItem.html)\n* [RepeatZoneViewerPathElem(ViewerPathElem)](bpy.types.RepeatZoneViewerPathElem.html)\n* [RetimingKey(bpy\\_struct)](bpy.types.RetimingKey.html)\n* [RetimingKeys(bpy\\_struct)](bpy.types.RetimingKeys.html)\n* [RigidBodyConstraint(bpy\\_struct)](bpy.types.RigidBodyConstraint.html)\n* [RigidBodyObject(bpy\\_struct)](bpy.types.RigidBodyObject.html)\n* [RigidBodyWorld(bpy\\_struct)](bpy.types.RigidBodyWorld.html)\n* [SCENE\\_UL\\_gltf2\\_filter\\_action(UIList)](bpy.types.SCENE_UL_gltf2_filter_action.html)\n* [SCENE\\_UL\\_keying\\_set\\_paths(UIList)](bpy.types.SCENE_UL_keying_set_paths.html)\n* [SEQUENCER\\_FH\\_image\\_strip(FileHandler)](bpy.types.SEQUENCER_FH_image_strip.html)\n* [SEQUENCER\\_FH\\_movie\\_strip(FileHandler)](bpy.types.SEQUENCER_FH_movie_strip.html)\n* [SEQUENCER\\_FH\\_sound\\_strip(FileHandler)](bpy.types.SEQUENCER_FH_sound_strip.html)\n* [SPHFluidSettings(bpy\\_struct)](bpy.types.SPHFluidSettings.html)\n* [Scene(ID)](bpy.types.Scene.html)\n* [SceneDisplay(bpy\\_struct)](bpy.types.SceneDisplay.html)\n* [SceneEEVEE(bpy\\_struct)](bpy.types.SceneEEVEE.html)\n* [SceneGpencil(bpy\\_struct)](bpy.types.SceneGpencil.html)\n* [SceneHydra(bpy\\_struct)](bpy.types.SceneHydra.html)\n* [SceneObjects(bpy\\_struct)](bpy.types.SceneObjects.html)\n* [SceneRenderView(bpy\\_struct)](bpy.types.SceneRenderView.html)\n* [SceneStrip(Strip)](bpy.types.SceneStrip.html)\n* [Scopes(bpy\\_struct)](bpy.types.Scopes.html)\n* [Screen(ID)](bpy.types.Screen.html)\n* [ScrewModifier(Modifier)](bpy.types.ScrewModifier.html)\n* [ScriptDirectory(bpy\\_struct)](bpy.types.ScriptDirectory.html)\n* [ScriptDirectoryCollection(bpy\\_struct)](bpy.types.ScriptDirectoryCollection.html)\n* [Sculpt(Paint)](bpy.types.Sculpt.html)\n* [SelectedUvElement(PropertyGroup)](bpy.types.SelectedUvElement.html)\n* [SequenceEditor(bpy\\_struct)](bpy.types.SequenceEditor.html)\n* [SequenceTimelineChannel(bpy\\_struct)](bpy.types.SequenceTimelineChannel.html)\n* [SequencerCacheOverlay(bpy\\_struct)](bpy.types.SequencerCacheOverlay.html)\n* [SequencerCompositorModifierData(StripModifier)](bpy.types.SequencerCompositorModifierData.html)\n* [SequencerPreviewOverlay(bpy\\_struct)](bpy.types.SequencerPreviewOverlay.html)\n* [SequencerTimelineOverlay(bpy\\_struct)](bpy.types.SequencerTimelineOverlay.html)\n* [SequencerTonemapModifierData(StripModifier)](bpy.types.SequencerTonemapModifierData.html)\n* [SequencerToolSettings(bpy\\_struct)](bpy.types.SequencerToolSettings.html)\n* [ShaderFx(bpy\\_struct)](bpy.types.ShaderFx.html)\n* [ShaderFxBlur(ShaderFx)](bpy.types.ShaderFxBlur.html)\n* [ShaderFxColorize(ShaderFx)](bpy.types.ShaderFxColorize.html)\n* [ShaderFxFlip(ShaderFx)](bpy.types.ShaderFxFlip.html)\n* [ShaderFxGlow(ShaderFx)](bpy.types.ShaderFxGlow.html)\n* [ShaderFxPixel(ShaderFx)](bpy.types.ShaderFxPixel.html)\n* [ShaderFxRim(ShaderFx)](bpy.types.ShaderFxRim.html)\n* [ShaderFxShadow(ShaderFx)](bpy.types.ShaderFxShadow.html)\n* [ShaderFxSwirl(ShaderFx)](bpy.types.ShaderFxSwirl.html)\n* [ShaderFxWave(ShaderFx)](bpy.types.ShaderFxWave.html)\n* [ShaderNode(NodeInternal)](bpy.types.ShaderNode.html)\n* [ShaderNodeAddShader(ShaderNode)](bpy.types.ShaderNodeAddShader.html)\n* [ShaderNodeAmbientOcclusion(ShaderNode)](bpy.types.ShaderNodeAmbientOcclusion.html)\n* [ShaderNodeAttribute(ShaderNode)](bpy.types.ShaderNodeAttribute.html)\n* [ShaderNodeBackground(ShaderNode)](bpy.types.ShaderNodeBackground.html)\n* [ShaderNodeBevel(ShaderNode)](bpy.types.ShaderNodeBevel.html)\n* [ShaderNodeBlackbody(ShaderNode)](bpy.types.ShaderNodeBlackbody.html)\n* [ShaderNodeBrightContrast(ShaderNode)](bpy.types.ShaderNodeBrightContrast.html)\n* [ShaderNodeBsdfAnisotropic(ShaderNode)](bpy.types.ShaderNodeBsdfAnisotropic.html)\n* [ShaderNodeBsdfDiffuse(ShaderNode)](bpy.types.ShaderNodeBsdfDiffuse.html)\n* [ShaderNodeBsdfGlass(ShaderNode)](bpy.types.ShaderNodeBsdfGlass.html)\n* [ShaderNodeBsdfHair(ShaderNode)](bpy.types.ShaderNodeBsdfHair.html)\n* [ShaderNodeBsdfHairPrincipled(ShaderNode)](bpy.types.ShaderNodeBsdfHairPrincipled.html)\n* [ShaderNodeBsdfMetallic(ShaderNode)](bpy.types.ShaderNodeBsdfMetallic.html)\n* [ShaderNodeBsdfPrincipled(ShaderNode)](bpy.types.ShaderNodeBsdfPrincipled.html)\n* [ShaderNodeBsdfRayPortal(ShaderNode)](bpy.types.ShaderNodeBsdfRayPortal.html)\n* [ShaderNodeBsdfRefraction(ShaderNode)](bpy.types.ShaderNodeBsdfRefraction.html)\n* [ShaderNodeBsdfSheen(ShaderNode)](bpy.types.ShaderNodeBsdfSheen.html)\n* [ShaderNodeBsdfToon(ShaderNode)](bpy.types.ShaderNodeBsdfToon.html)\n* [ShaderNodeBsdfTranslucent(ShaderNode)](bpy.types.ShaderNodeBsdfTranslucent.html)\n* [ShaderNodeBsdfTransparent(ShaderNode)](bpy.types.ShaderNodeBsdfTransparent.html)\n* [ShaderNodeBump(ShaderNode)](bpy.types.ShaderNodeBump.html)\n* [ShaderNodeCameraData(ShaderNode)](bpy.types.ShaderNodeCameraData.html)\n* [ShaderNodeClamp(ShaderNode)](bpy.types.ShaderNodeClamp.html)\n* [ShaderNodeCombineColor(ShaderNode)](bpy.types.ShaderNodeCombineColor.html)\n* [ShaderNodeCombineXYZ(ShaderNode)](bpy.types.ShaderNodeCombineXYZ.html)\n* [ShaderNodeCustomGroup(ShaderNode)](bpy.types.ShaderNodeCustomGroup.html)\n* [ShaderNodeDisplacement(ShaderNode)](bpy.types.ShaderNodeDisplacement.html)\n* [ShaderNodeEeveeSpecular(ShaderNode)](bpy.types.ShaderNodeEeveeSpecular.html)\n* [ShaderNodeEmission(ShaderNode)](bpy.types.ShaderNodeEmission.html)\n* [ShaderNodeFloatCurve(ShaderNode)](bpy.types.ShaderNodeFloatCurve.html)\n* [ShaderNodeFresnel(ShaderNode)](bpy.types.ShaderNodeFresnel.html)\n* [ShaderNodeGamma(ShaderNode)](bpy.types.ShaderNodeGamma.html)\n* [ShaderNodeGroup(ShaderNode)](bpy.types.ShaderNodeGroup.html)\n* [ShaderNodeHairInfo(ShaderNode)](bpy.types.ShaderNodeHairInfo.html)\n* [ShaderNodeHoldout(ShaderNode)](bpy.types.ShaderNodeHoldout.html)\n* [ShaderNodeHueSaturation(ShaderNode)](bpy.types.ShaderNodeHueSaturation.html)\n* [ShaderNodeInvert(ShaderNode)](bpy.types.ShaderNodeInvert.html)\n* [ShaderNodeLayerWeight(ShaderNode)](bpy.types.ShaderNodeLayerWeight.html)\n* [ShaderNodeLightFalloff(ShaderNode)](bpy.types.ShaderNodeLightFalloff.html)\n* [ShaderNodeLightPath(ShaderNode)](bpy.types.ShaderNodeLightPath.html)\n* [ShaderNodeMapRange(ShaderNode)](bpy.types.ShaderNodeMapRange.html)\n* [ShaderNodeMapping(ShaderNode)](bpy.types.ShaderNodeMapping.html)\n* [ShaderNodeMath(ShaderNode)](bpy.types.ShaderNodeMath.html)\n* [ShaderNodeMix(ShaderNode)](bpy.types.ShaderNodeMix.html)\n* [ShaderNodeMixRGB(ShaderNode)](bpy.types.ShaderNodeMixRGB.html)\n* [ShaderNodeMixShader(ShaderNode)](bpy.types.ShaderNodeMixShader.html)\n* [ShaderNodeNewGeometry(ShaderNode)](bpy.types.ShaderNodeNewGeometry.html)\n* [ShaderNodeNormal(ShaderNode)](bpy.types.ShaderNodeNormal.html)\n* [ShaderNodeNormalMap(ShaderNode)](bpy.types.ShaderNodeNormalMap.html)\n* [ShaderNodeObjectInfo(ShaderNode)](bpy.types.ShaderNodeObjectInfo.html)\n* [ShaderNodeOutputAOV(ShaderNode)](bpy.types.ShaderNodeOutputAOV.html)\n* [ShaderNodeOutputLight(ShaderNode)](bpy.types.ShaderNodeOutputLight.html)\n* [ShaderNodeOutputLineStyle(ShaderNode)](bpy.types.ShaderNodeOutputLineStyle.html)\n* [ShaderNodeOutputMaterial(ShaderNode)](bpy.types.ShaderNodeOutputMaterial.html)\n* [ShaderNodeOutputWorld(ShaderNode)](bpy.types.ShaderNodeOutputWorld.html)\n* [ShaderNodeParticleInfo(ShaderNode)](bpy.types.ShaderNodeParticleInfo.html)\n* [ShaderNodePointInfo(ShaderNode)](bpy.types.ShaderNodePointInfo.html)\n* [ShaderNodeRGB(ShaderNode)](bpy.types.ShaderNodeRGB.html)\n* [ShaderNodeRGBCurve(ShaderNode)](bpy.types.ShaderNodeRGBCurve.html)\n* [ShaderNodeRGBToBW(ShaderNode)](bpy.types.ShaderNodeRGBToBW.html)\n* [ShaderNodeRadialTiling(ShaderNode)](bpy.types.ShaderNodeRadialTiling.html)\n* [ShaderNodeScript(ShaderNode)](bpy.types.ShaderNodeScript.html)\n* [ShaderNodeSeparateColor(ShaderNode)](bpy.types.ShaderNodeSeparateColor.html)\n* [ShaderNodeSeparateXYZ(ShaderNode)](bpy.types.ShaderNodeSeparateXYZ.html)\n* [ShaderNodeShaderToRGB(ShaderNode)](bpy.types.ShaderNodeShaderToRGB.html)\n* [ShaderNodeSqueeze(ShaderNode)](bpy.types.ShaderNodeSqueeze.html)\n* [ShaderNodeSubsurfaceScattering(ShaderNode)](bpy.types.ShaderNodeSubsurfaceScattering.html)\n* [ShaderNodeTangent(ShaderNode)](bpy.types.ShaderNodeTangent.html)\n* [ShaderNodeTexBrick(ShaderNode)](bpy.types.ShaderNodeTexBrick.html)\n* [ShaderNodeTexChecker(ShaderNode)](bpy.types.ShaderNodeTexChecker.html)\n* [ShaderNodeTexCoord(ShaderNode)](bpy.types.ShaderNodeTexCoord.html)\n* [ShaderNodeTexEnvironment(ShaderNode)](bpy.types.ShaderNodeTexEnvironment.html)\n* [ShaderNodeTexGabor(ShaderNode)](bpy.types.ShaderNodeTexGabor.html)\n* [ShaderNodeTexGradient(ShaderNode)](bpy.types.ShaderNodeTexGradient.html)\n* [ShaderNodeTexIES(ShaderNode)](bpy.types.ShaderNodeTexIES.html)\n* [ShaderNodeTexImage(ShaderNode)](bpy.types.ShaderNodeTexImage.html)\n* [ShaderNodeTexMagic(ShaderNode)](bpy.types.ShaderNodeTexMagic.html)\n* [ShaderNodeTexNoise(ShaderNode)](bpy.types.ShaderNodeTexNoise.html)\n* [ShaderNodeTexSky(ShaderNode)](bpy.types.ShaderNodeTexSky.html)\n* [ShaderNodeTexVoronoi(ShaderNode)](bpy.types.ShaderNodeTexVoronoi.html)\n* [ShaderNodeTexWave(ShaderNode)](bpy.types.ShaderNodeTexWave.html)\n* [ShaderNodeTexWhiteNoise(ShaderNode)](bpy.types.ShaderNodeTexWhiteNoise.html)\n* [ShaderNodeTree(NodeTree)](bpy.types.ShaderNodeTree.html)\n* [ShaderNodeUVAlongStroke(ShaderNode)](bpy.types.ShaderNodeUVAlongStroke.html)\n* [ShaderNodeUVMap(ShaderNode)](bpy.types.ShaderNodeUVMap.html)\n* [ShaderNodeValToRGB(ShaderNode)](bpy.types.ShaderNodeValToRGB.html)\n* [ShaderNodeValue(ShaderNode)](bpy.types.ShaderNodeValue.html)\n* [ShaderNodeVectorCurve(ShaderNode)](bpy.types.ShaderNodeVectorCurve.html)\n* [ShaderNodeVectorDisplacement(ShaderNode)](bpy.types.ShaderNodeVectorDisplacement.html)\n* [ShaderNodeVectorMath(ShaderNode)](bpy.types.ShaderNodeVectorMath.html)\n* [ShaderNodeVectorRotate(ShaderNode)](bpy.types.ShaderNodeVectorRotate.html)\n* [ShaderNodeVectorTransform(ShaderNode)](bpy.types.ShaderNodeVectorTransform.html)\n* [ShaderNodeVertexColor(ShaderNode)](bpy.types.ShaderNodeVertexColor.html)\n* [ShaderNodeVolumeAbsorption(ShaderNode)](bpy.types.ShaderNodeVolumeAbsorption.html)\n* [ShaderNodeVolumeCoefficients(ShaderNode)](bpy.types.ShaderNodeVolumeCoefficients.html)\n* [ShaderNodeVolumeInfo(ShaderNode)](bpy.types.ShaderNodeVolumeInfo.html)\n* [ShaderNodeVolumePrincipled(ShaderNode)](bpy.types.ShaderNodeVolumePrincipled.html)\n* [ShaderNodeVolumeScatter(ShaderNode)](bpy.types.ShaderNodeVolumeScatter.html)\n* [ShaderNodeWavelength(ShaderNode)](bpy.types.ShaderNodeWavelength.html)\n* [ShaderNodeWireframe(ShaderNode)](bpy.types.ShaderNodeWireframe.html)\n* [ShapeKey(bpy\\_struct)](bpy.types.ShapeKey.html)\n* [ShapeKeyBezierPoint(bpy\\_struct)](bpy.types.ShapeKeyBezierPoint.html)\n* [ShapeKeyCurvePoint(bpy\\_struct)](bpy.types.ShapeKeyCurvePoint.html)\n* [ShapeKeyPoint(bpy\\_struct)](bpy.types.ShapeKeyPoint.html)\n* [Short2Attribute(Attribute)](bpy.types.Short2Attribute.html)\n* [Short2AttributeValue(bpy\\_struct)](bpy.types.Short2AttributeValue.html)\n* [ShrinkwrapConstraint(Constraint)](bpy.types.ShrinkwrapConstraint.html)\n* [ShrinkwrapModifier(Modifier)](bpy.types.ShrinkwrapModifier.html)\n* [SimpleDeformModifier(Modifier)](bpy.types.SimpleDeformModifier.html)\n* [SimulationStateItem(bpy\\_struct)](bpy.types.SimulationStateItem.html)\n* [SimulationZoneViewerPathElem(ViewerPathElem)](bpy.types.SimulationZoneViewerPathElem.html)\n* [SkinModifier(Modifier)](bpy.types.SkinModifier.html)\n* [SmoothModifier(Modifier)](bpy.types.SmoothModifier.html)\n* [SoftBodyModifier(Modifier)](bpy.types.SoftBodyModifier.html)\n* [SoftBodySettings(bpy\\_struct)](bpy.types.SoftBodySettings.html)\n* [SolidifyModifier(Modifier)](bpy.types.SolidifyModifier.html)\n* [Sound(ID)](bpy.types.Sound.html)\n* [SoundEqualizerModifier(StripModifier)](bpy.types.SoundEqualizerModifier.html)\n* [SoundStrip(Strip)](bpy.types.SoundStrip.html)\n* [Space(bpy\\_struct)](bpy.types.Space.html)\n* [SpaceClipEditor(Space)](bpy.types.SpaceClipEditor.html)\n* [SpaceClipOverlay(bpy\\_struct)](bpy.types.SpaceClipOverlay.html)\n* [SpaceConsole(Space)](bpy.types.SpaceConsole.html)\n* [SpaceDopeSheetEditor(Space)](bpy.types.SpaceDopeSheetEditor.html)\n* [SpaceDopeSheetOverlay(bpy\\_struct)](bpy.types.SpaceDopeSheetOverlay.html)\n* [SpaceFileBrowser(Space)](bpy.types.SpaceFileBrowser.html)\n* [SpaceGraphEditor(Space)](bpy.types.SpaceGraphEditor.html)\n* [SpaceImageEditor(Space)](bpy.types.SpaceImageEditor.html)\n* [SpaceImageOverlay(bpy\\_struct)](bpy.types.SpaceImageOverlay.html)\n* [SpaceInfo(Space)](bpy.types.SpaceInfo.html)\n* [SpaceNLA(Space)](bpy.types.SpaceNLA.html)\n* [SpaceNodeEditor(Space)](bpy.types.SpaceNodeEditor.html)\n* [SpaceNodeEditorPath(bpy\\_struct)](bpy.types.SpaceNodeEditorPath.html)\n* [SpaceNodeOverlay(bpy\\_struct)](bpy.types.SpaceNodeOverlay.html)\n* [SpaceOutliner(Space)](bpy.types.SpaceOutliner.html)\n* [SpacePreferences(Space)](bpy.types.SpacePreferences.html)\n* [SpaceProperties(Space)](bpy.types.SpaceProperties.html)\n* [SpaceSequenceEditor(Space)](bpy.types.SpaceSequenceEditor.html)\n* [SpaceSpreadsheet(Space)](bpy.types.SpaceSpreadsheet.html)\n* [SpaceTextEditor(Space)](bpy.types.SpaceTextEditor.html)\n* [SpaceUVEditor(bpy\\_struct)](bpy.types.SpaceUVEditor.html)\n* [SpaceView3D(Space)](bpy.types.SpaceView3D.html)\n* [Speaker(ID)](bpy.types.Speaker.html)\n* [SpeedControlStrip(EffectStrip)](bpy.types.SpeedControlStrip.html)\n* [Spline(bpy\\_struct)](bpy.types.Spline.html)\n* [SplineBezierPoints(bpy\\_struct)](bpy.types.SplineBezierPoints.html)\n* [SplineIKConstraint(Constraint)](bpy.types.SplineIKConstraint.html)\n* [SplinePoint(bpy\\_struct)](bpy.types.SplinePoint.html)\n* [SplinePoints(bpy\\_struct)](bpy.types.SplinePoints.html)\n* [SpotLight(Light)](bpy.types.SpotLight.html)\n* [SpreadsheetColumn(bpy\\_struct)](bpy.types.SpreadsheetColumn.html)\n* [SpreadsheetColumnID(bpy\\_struct)](bpy.types.SpreadsheetColumnID.html)\n* [SpreadsheetRowFilter(bpy\\_struct)](bpy.types.SpreadsheetRowFilter.html)\n* [SpreadsheetTable(bpy\\_struct)](bpy.types.SpreadsheetTable.html)\n* [SpreadsheetTableID(bpy\\_struct)](bpy.types.SpreadsheetTableID.html)\n* [SpreadsheetTableIDGeometry(SpreadsheetTableID)](bpy.types.SpreadsheetTableIDGeometry.html)\n* [SpreadsheetTables(bpy\\_struct)](bpy.types.SpreadsheetTables.html)\n* [Stereo3dDisplay(bpy\\_struct)](bpy.types.Stereo3dDisplay.html)\n* [Stereo3dFormat(bpy\\_struct)](bpy.types.Stereo3dFormat.html)\n* [StretchToConstraint(Constraint)](bpy.types.StretchToConstraint.html)\n* [StringAttribute(Attribute)](bpy.types.StringAttribute.html)\n* [StringAttributeValue(bpy\\_struct)](bpy.types.StringAttributeValue.html)\n* [StringProperty(Property)](bpy.types.StringProperty.html)\n* [Strip(bpy\\_struct)](bpy.types.Strip.html)\n* [StripColorBalance(StripColorBalanceData)](bpy.types.StripColorBalance.html)\n* [StripColorBalanceData(bpy\\_struct)](bpy.types.StripColorBalanceData.html)\n* [StripCrop(bpy\\_struct)](bpy.types.StripCrop.html)\n* [StripElement(bpy\\_struct)](bpy.types.StripElement.html)\n* [StripElements(bpy\\_struct)](bpy.types.StripElements.html)\n* [StripModifier(bpy\\_struct)](bpy.types.StripModifier.html)\n* [StripModifiers(bpy\\_struct)](bpy.types.StripModifiers.html)\n* [StripProxy(bpy\\_struct)](bpy.types.StripProxy.html)\n* [StripTransform(bpy\\_struct)](bpy.types.StripTransform.html)\n* [StripsMeta(bpy\\_struct)](bpy.types.StripsMeta.html)\n* [StripsTopLevel(bpy\\_struct)](bpy.types.StripsTopLevel.html)\n* [Struct(bpy\\_struct)](bpy.types.Struct.html)\n* [StucciTexture(Texture)](bpy.types.StucciTexture.html)\n* [StudioLight(bpy\\_struct)](bpy.types.StudioLight.html)\n* [StudioLights(bpy\\_struct)](bpy.types.StudioLights.html)\n* [SubsurfModifier(Modifier)](bpy.types.SubsurfModifier.html)\n* [SubtractStrip(EffectStrip)](bpy.types.SubtractStrip.html)\n* [SunLight(Light)](bpy.types.SunLight.html)\n* [SurfaceCurve(Curve)](bpy.types.SurfaceCurve.html)\n* [SurfaceDeformModifier(Modifier)](bpy.types.SurfaceDeformModifier.html)\n* [SurfaceModifier(Modifier)](bpy.types.SurfaceModifier.html)\n* [TEXTURE\\_UL\\_texpaintslots(UIList)](bpy.types.TEXTURE_UL_texpaintslots.html)\n* [TEXTURE\\_UL\\_texslots(UIList)](bpy.types.TEXTURE_UL_texslots.html)\n* [TexMapping(bpy\\_struct)](bpy.types.TexMapping.html)\n* [TexPaintSlot(bpy\\_struct)](bpy.types.TexPaintSlot.html)\n* [Text(ID)](bpy.types.Text.html)\n* [TextBox(bpy\\_struct)](bpy.types.TextBox.html)\n* [TextCharacterFormat(bpy\\_struct)](bpy.types.TextCharacterFormat.html)\n* [TextCurve(Curve)](bpy.types.TextCurve.html)\n* [TextLine(bpy\\_struct)](bpy.types.TextLine.html)\n* [TextStrip(EffectStrip)](bpy.types.TextStrip.html)\n* [Texture(ID)](bpy.types.Texture.html)\n* [TextureNode(NodeInternal)](bpy.types.TextureNode.html)\n* [TextureNodeAt(TextureNode)](bpy.types.TextureNodeAt.html)\n* [TextureNodeBricks(TextureNode)](bpy.types.TextureNodeBricks.html)\n* [TextureNodeChecker(TextureNode)](bpy.types.TextureNodeChecker.html)\n* [TextureNodeCombineColor(TextureNode)](bpy.types.TextureNodeCombineColor.html)\n* [TextureNodeCompose(TextureNode)](bpy.types.TextureNodeCompose.html)\n* [TextureNodeCoordinates(TextureNode)](bpy.types.TextureNodeCoordinates.html)\n* [TextureNodeCurveRGB(TextureNode)](bpy.types.TextureNodeCurveRGB.html)\n* [TextureNodeCurveTime(TextureNode)](bpy.types.TextureNodeCurveTime.html)\n* [TextureNodeDecompose(TextureNode)](bpy.types.TextureNodeDecompose.html)\n* [TextureNodeDistance(TextureNode)](bpy.types.TextureNodeDistance.html)\n* [TextureNodeGroup(TextureNode)](bpy.types.TextureNodeGroup.html)\n* [TextureNodeHueSaturation(TextureNode)](bpy.types.TextureNodeHueSaturation.html)\n* [TextureNodeImage(TextureNode)](bpy.types.TextureNodeImage.html)\n* [TextureNodeInvert(TextureNode)](bpy.types.TextureNodeInvert.html)\n* [TextureNodeMath(TextureNode)](bpy.types.TextureNodeMath.html)\n* [TextureNodeMixRGB(TextureNode)](bpy.types.TextureNodeMixRGB.html)\n* [TextureNodeOutput(TextureNode)](bpy.types.TextureNodeOutput.html)\n* [TextureNodeRGBToBW(TextureNode)](bpy.types.TextureNodeRGBToBW.html)\n* [TextureNodeRotate(TextureNode)](bpy.types.TextureNodeRotate.html)\n* [TextureNodeScale(TextureNode)](bpy.types.TextureNodeScale.html)\n* [TextureNodeSeparateColor(TextureNode)](bpy.types.TextureNodeSeparateColor.html)\n* [TextureNodeTexBlend(TextureNode)](bpy.types.TextureNodeTexBlend.html)\n* [TextureNodeTexClouds(TextureNode)](bpy.types.TextureNodeTexClouds.html)\n* [TextureNodeTexDistNoise(TextureNode)](bpy.types.TextureNodeTexDistNoise.html)\n* [TextureNodeTexMagic(TextureNode)](bpy.types.TextureNodeTexMagic.html)\n* [TextureNodeTexMarble(TextureNode)](bpy.types.TextureNodeTexMarble.html)\n* [TextureNodeTexMusgrave(TextureNode)](bpy.types.TextureNodeTexMusgrave.html)\n* [TextureNodeTexNoise(TextureNode)](bpy.types.TextureNodeTexNoise.html)\n* [TextureNodeTexStucci(TextureNode)](bpy.types.TextureNodeTexStucci.html)\n* [TextureNodeTexVoronoi(TextureNode)](bpy.types.TextureNodeTexVoronoi.html)\n* [TextureNodeTexWood(TextureNode)](bpy.types.TextureNodeTexWood.html)\n* [TextureNodeTexture(TextureNode)](bpy.types.TextureNodeTexture.html)\n* [TextureNodeTranslate(TextureNode)](bpy.types.TextureNodeTranslate.html)\n* [TextureNodeTree(NodeTree)](bpy.types.TextureNodeTree.html)\n* [TextureNodeValToNor(TextureNode)](bpy.types.TextureNodeValToNor.html)\n* [TextureNodeValToRGB(TextureNode)](bpy.types.TextureNodeValToRGB.html)\n* [TextureNodeViewer(TextureNode)](bpy.types.TextureNodeViewer.html)\n* [TextureSlot(bpy\\_struct)](bpy.types.TextureSlot.html)\n* [Theme(bpy\\_struct)](bpy.types.Theme.html)\n* [ThemeBoneColorSet(bpy\\_struct)](bpy.types.ThemeBoneColorSet.html)\n* [ThemeClipEditor(bpy\\_struct)](bpy.types.ThemeClipEditor.html)\n* [ThemeCollectionColor(bpy\\_struct)](bpy.types.ThemeCollectionColor.html)\n* [ThemeCommon(bpy\\_struct)](bpy.types.ThemeCommon.html)\n* [ThemeCommonAnim(bpy\\_struct)](bpy.types.ThemeCommonAnim.html)\n* [ThemeCommonCurves(bpy\\_struct)](bpy.types.ThemeCommonCurves.html)\n* [ThemeConsole(bpy\\_struct)](bpy.types.ThemeConsole.html)\n* [ThemeDopeSheet(bpy\\_struct)](bpy.types.ThemeDopeSheet.html)\n* [ThemeFileBrowser(bpy\\_struct)](bpy.types.ThemeFileBrowser.html)\n* [ThemeFontStyle(bpy\\_struct)](bpy.types.ThemeFontStyle.html)\n* [ThemeGradientColors(bpy\\_struct)](bpy.types.ThemeGradientColors.html)\n* [ThemeGraphEditor(bpy\\_struct)](bpy.types.ThemeGraphEditor.html)\n* [ThemeImageEditor(bpy\\_struct)](bpy.types.ThemeImageEditor.html)\n* [ThemeInfo(bpy\\_struct)](bpy.types.ThemeInfo.html)\n* [ThemeNLAEditor(bpy\\_struct)](bpy.types.ThemeNLAEditor.html)\n* [ThemeNodeEditor(bpy\\_struct)](bpy.types.ThemeNodeEditor.html)\n* [ThemeOutliner(bpy\\_struct)](bpy.types.ThemeOutliner.html)\n* [ThemePreferences(bpy\\_struct)](bpy.types.ThemePreferences.html)\n* [ThemeProperties(bpy\\_struct)](bpy.types.ThemeProperties.html)\n* [ThemeRegions(bpy\\_struct)](bpy.types.ThemeRegions.html)\n* [ThemeRegionsAssetShelf(bpy\\_struct)](bpy.types.ThemeRegionsAssetShelf.html)\n* [ThemeRegionsChannels(bpy\\_struct)](bpy.types.ThemeRegionsChannels.html)\n* [ThemeRegionsScrubbing(bpy\\_struct)](bpy.types.ThemeRegionsScrubbing.html)\n* [ThemeRegionsSidebars(bpy\\_struct)](bpy.types.ThemeRegionsSidebars.html)\n* [ThemeSequenceEditor(bpy\\_struct)](bpy.types.ThemeSequenceEditor.html)\n* [ThemeSpaceGeneric(bpy\\_struct)](bpy.types.ThemeSpaceGeneric.html)\n* [ThemeSpaceGradient(bpy\\_struct)](bpy.types.ThemeSpaceGradient.html)\n* [ThemeSpreadsheet(bpy\\_struct)](bpy.types.ThemeSpreadsheet.html)\n* [ThemeStatusBar(bpy\\_struct)](bpy.types.ThemeStatusBar.html)\n* [ThemeStripColor(bpy\\_struct)](bpy.types.ThemeStripColor.html)\n* [ThemeStyle(bpy\\_struct)](bpy.types.ThemeStyle.html)\n* [ThemeTextEditor(bpy\\_struct)](bpy.types.ThemeTextEditor.html)\n* [ThemeTopBar(bpy\\_struct)](bpy.types.ThemeTopBar.html)\n* [ThemeUserInterface(bpy\\_struct)](bpy.types.ThemeUserInterface.html)\n* [ThemeView3D(bpy\\_struct)](bpy.types.ThemeView3D.html)\n* [ThemeWidgetColors(bpy\\_struct)](bpy.types.ThemeWidgetColors.html)\n* [ThemeWidgetStateColors(bpy\\_struct)](bpy.types.ThemeWidgetStateColors.html)\n* [TimelineMarker(bpy\\_struct)](bpy.types.TimelineMarker.html)\n* [TimelineMarkers(bpy\\_struct)](bpy.types.TimelineMarkers.html)\n* [Timer(bpy\\_struct)](bpy.types.Timer.html)\n* [ToolSettings(bpy\\_struct)](bpy.types.ToolSettings.html)\n* [TrackToConstraint(Constraint)](bpy.types.TrackToConstraint.html)\n* [TransformCacheConstraint(Constraint)](bpy.types.TransformCacheConstraint.html)\n* [TransformConstraint(Constraint)](bpy.types.TransformConstraint.html)\n* [TransformOrientation(bpy\\_struct)](bpy.types.TransformOrientation.html)\n* [TransformOrientationSlot(bpy\\_struct)](bpy.types.TransformOrientationSlot.html)\n* [TriangulateModifier(Modifier)](bpy.types.TriangulateModifier.html)\n* [UDIMTile(bpy\\_struct)](bpy.types.UDIMTile.html)\n* [UDIMTiles(bpy\\_struct)](bpy.types.UDIMTiles.html)\n* [UILayout(bpy\\_struct)](bpy.types.UILayout.html)\n* [UIList(bpy\\_struct)](bpy.types.UIList.html)\n* [UIPieMenu(bpy\\_struct)](bpy.types.UIPieMenu.html)\n* [UIPopover(bpy\\_struct)](bpy.types.UIPopover.html)\n* [UIPopupMenu(bpy\\_struct)](bpy.types.UIPopupMenu.html)\n* [UI\\_UL\\_list(UIList)](bpy.types.UI_UL_list.html)\n* [USDHook(bpy\\_struct)](bpy.types.USDHook.html)\n* [USERPREF\\_UL\\_asset\\_libraries(UIList)](bpy.types.USERPREF_UL_asset_libraries.html)\n* [USERPREF\\_UL\\_extension\\_repos(UIList)](bpy.types.USERPREF_UL_extension_repos.html)\n* [UVLoopLayers(bpy\\_struct)](bpy.types.UVLoopLayers.html)\n* [UVProjectModifier(Modifier)](bpy.types.UVProjectModifier.html)\n* [UVProjector(bpy\\_struct)](bpy.types.UVProjector.html)\n* [UVWarpModifier(Modifier)](bpy.types.UVWarpModifier.html)\n* [UnifiedPaintSettings(bpy\\_struct)](bpy.types.UnifiedPaintSettings.html)\n* [UnitSettings(bpy\\_struct)](bpy.types.UnitSettings.html)\n* [UnknownType(bpy\\_struct)](bpy.types.UnknownType.html)\n* [UserAssetLibrary(bpy\\_struct)](bpy.types.UserAssetLibrary.html)\n* [UserExtensionRepo(bpy\\_struct)](bpy.types.UserExtensionRepo.html)\n* [UserExtensionRepoCollection(bpy\\_struct)](bpy.types.UserExtensionRepoCollection.html)\n* [UserSolidLight(bpy\\_struct)](bpy.types.UserSolidLight.html)\n* [UvSculpt(bpy\\_struct)](bpy.types.UvSculpt.html)\n* [VIEW3D\\_AST\\_brush\\_gpencil\\_paint(AssetShelf)](bpy.types.VIEW3D_AST_brush_gpencil_paint.html)\n* [VIEW3D\\_AST\\_brush\\_gpencil\\_sculpt(AssetShelf)](bpy.types.VIEW3D_AST_brush_gpencil_sculpt.html)\n* [VIEW3D\\_AST\\_brush\\_gpencil\\_vertex(AssetShelf)](bpy.types.VIEW3D_AST_brush_gpencil_vertex.html)\n* [VIEW3D\\_AST\\_brush\\_gpencil\\_weight(AssetShelf)](bpy.types.VIEW3D_AST_brush_gpencil_weight.html)\n* [VIEW3D\\_AST\\_brush\\_sculpt(AssetShelf)](bpy.types.VIEW3D_AST_brush_sculpt.html)\n* [VIEW3D\\_AST\\_brush\\_sculpt\\_curves(AssetShelf)](bpy.types.VIEW3D_AST_brush_sculpt_curves.html)\n* [VIEW3D\\_AST\\_brush\\_texture\\_paint(AssetShelf)](bpy.types.VIEW3D_AST_brush_texture_paint.html)\n* [VIEW3D\\_AST\\_brush\\_vertex\\_paint(AssetShelf)](bpy.types.VIEW3D_AST_brush_vertex_paint.html)\n* [VIEW3D\\_AST\\_brush\\_weight\\_paint(AssetShelf)](bpy.types.VIEW3D_AST_brush_weight_paint.html)\n* [VIEW3D\\_AST\\_pose\\_library(AssetShelf)](bpy.types.VIEW3D_AST_pose_library.html)\n* [VIEW3D\\_FH\\_camera\\_background\\_image(FileHandler)](bpy.types.VIEW3D_FH_camera_background_image.html)\n* [VIEW3D\\_FH\\_empty\\_image(FileHandler)](bpy.types.VIEW3D_FH_empty_image.html)\n* [VIEW3D\\_FH\\_vdb\\_volume(FileHandler)](bpy.types.VIEW3D_FH_vdb_volume.html)\n* [VIEWLAYER\\_UL\\_aov(UIList)](bpy.types.VIEWLAYER_UL_aov.html)\n* [VIEWLAYER\\_UL\\_linesets(UIList)](bpy.types.VIEWLAYER_UL_linesets.html)\n* [VOLUME\\_UL\\_grids(UIList)](bpy.types.VOLUME_UL_grids.html)\n* [VectorFont(ID)](bpy.types.VectorFont.html)\n* [VertexGroup(bpy\\_struct)](bpy.types.VertexGroup.html)\n* [VertexGroupElement(bpy\\_struct)](bpy.types.VertexGroupElement.html)\n* [VertexGroups(bpy\\_struct)](bpy.types.VertexGroups.html)\n* [VertexPaint(Paint)](bpy.types.VertexPaint.html)\n* [VertexWeightEditModifier(Modifier)](bpy.types.VertexWeightEditModifier.html)\n* [VertexWeightMixModifier(Modifier)](bpy.types.VertexWeightMixModifier.html)\n* [VertexWeightProximityModifier(Modifier)](bpy.types.VertexWeightProximityModifier.html)\n* [View2D(bpy\\_struct)](bpy.types.View2D.html)\n* [View3DCursor(bpy\\_struct)](bpy.types.View3DCursor.html)\n* [View3DOverlay(bpy\\_struct)](bpy.types.View3DOverlay.html)\n* [View3DShading(bpy\\_struct)](bpy.types.View3DShading.html)\n* [ViewLayer(bpy\\_struct)](bpy.types.ViewLayer.html)\n* [ViewLayerEEVEE(bpy\\_struct)](bpy.types.ViewLayerEEVEE.html)\n* [ViewLayers(bpy\\_struct)](bpy.types.ViewLayers.html)\n* [ViewerNodeViewerPathElem(ViewerPathElem)](bpy.types.ViewerNodeViewerPathElem.html)\n* [ViewerPath(bpy\\_struct)](bpy.types.ViewerPath.html)\n* [ViewerPathElem(bpy\\_struct)](bpy.types.ViewerPathElem.html)\n* [Volume(ID)](bpy.types.Volume.html)\n* [VolumeDisplaceModifier(Modifier)](bpy.types.VolumeDisplaceModifier.html)\n* [VolumeDisplay(bpy\\_struct)](bpy.types.VolumeDisplay.html)\n* [VolumeGrid(bpy\\_struct)](bpy.types.VolumeGrid.html)\n* [VolumeGrids(bpy\\_struct)](bpy.types.VolumeGrids.html)\n* [VolumeRender(bpy\\_struct)](bpy.types.VolumeRender.html)\n* [VolumeToMeshModifier(Modifier)](bpy.types.VolumeToMeshModifier.html)\n* [VoronoiTexture(Texture)](bpy.types.VoronoiTexture.html)\n* [WORKSPACE\\_UL\\_addons\\_items(UIList)](bpy.types.WORKSPACE_UL_addons_items.html)\n* [WalkNavigation(bpy\\_struct)](bpy.types.WalkNavigation.html)\n* [WarpModifier(Modifier)](bpy.types.WarpModifier.html)\n* [WaveModifier(Modifier)](bpy.types.WaveModifier.html)\n* [WeightedNormalModifier(Modifier)](bpy.types.WeightedNormalModifier.html)\n* [WeldModifier(Modifier)](bpy.types.WeldModifier.html)\n* [WhiteBalanceModifier(StripModifier)](bpy.types.WhiteBalanceModifier.html)\n* [Window(bpy\\_struct)](bpy.types.Window.html)\n* [WindowManager(ID)](bpy.types.WindowManager.html)\n* [WipeStrip(EffectStrip)](bpy.types.WipeStrip.html)\n* [WireframeModifier(Modifier)](bpy.types.WireframeModifier.html)\n* [WoodTexture(Texture)](bpy.types.WoodTexture.html)\n* [WorkSpace(ID)](bpy.types.WorkSpace.html)\n* [WorkSpaceTool(bpy\\_struct)](bpy.types.WorkSpaceTool.html)\n* [World(ID)](bpy.types.World.html)\n* [WorldLighting(bpy\\_struct)](bpy.types.WorldLighting.html)\n* [WorldMistSettings(bpy\\_struct)](bpy.types.WorldMistSettings.html)\n* [XrActionMap(bpy\\_struct)](bpy.types.XrActionMap.html)\n* [XrActionMapBinding(bpy\\_struct)](bpy.types.XrActionMapBinding.html)\n* [XrActionMapBindings(bpy\\_struct)](bpy.types.XrActionMapBindings.html)\n* [XrActionMapItem(bpy\\_struct)](bpy.types.XrActionMapItem.html)\n* [XrActionMapItems(bpy\\_struct)](bpy.types.XrActionMapItems.html)\n* [XrActionMaps(bpy\\_struct)](bpy.types.XrActionMaps.html)\n* [XrComponentPath(bpy\\_struct)](bpy.types.XrComponentPath.html)\n* [XrComponentPaths(bpy\\_struct)](bpy.types.XrComponentPaths.html)\n* [XrEventData(bpy\\_struct)](bpy.types.XrEventData.html)\n* [XrNavigation(bpy\\_struct)](bpy.types.XrNavigation.html)\n* [XrSessionSettings(bpy\\_struct)](bpy.types.XrSessionSettings.html)\n* [XrSessionState(bpy\\_struct)](bpy.types.XrSessionState.html)\n* [XrUserPath(bpy\\_struct)](bpy.types.XrUserPath.html)\n* [XrUserPaths(bpy\\_struct)](bpy.types.XrUserPaths.html)\n* [bpy\\_prop\\_collection](bpy.types.bpy_prop_collection.html)\n* [bpy\\_prop\\_collection\\_idprop](bpy.types.bpy_prop_collection_idprop.html)\n* [bpy\\_struct](bpy.types.bpy_struct.html)\n* [wmOwnerID(bpy\\_struct)](bpy.types.wmOwnerID.html)\n* [wmOwnerIDs(bpy\\_struct)](bpy.types.wmOwnerIDs.html)\n* [wmTools(bpy\\_struct)](bpy.types.wmTools.html)\n* [Shared Enum Types](bpy_types_enum_items/index.html)\nToggle navigation of Shared Enum Types\n**\n* [Id Type Items](bpy_types_enum_items/id_type_items.html)\n* [Object Mode Items](bpy_types_enum_items/object_mode_items.html)\n* [Workspace Object Mode Items](bpy_types_enum_items/workspace_object_mode_items.html)\n* [Object Empty Drawtype Items](bpy_types_enum_items/object_empty_drawtype_items.html)\n* [Object Gpencil Type Items](bpy_types_enum_items/object_gpencil_type_items.html)\n* [Metaelem Type Items](bpy_types_enum_items/metaelem_type_items.html)\n* [Color Space Convert Default Items](bpy_types_enum_items/color_space_convert_default_items.html)\n* [Proportional Falloff Items](bpy_types_enum_items/proportional_falloff_items.html)\n* [Proportional Falloff Curve Only Items](bpy_types_enum_items/proportional_falloff_curve_only_items.html)\n* [Snap Source Items](bpy_types_enum_items/snap_source_items.html)\n* [Snap Element Items](bpy_types_enum_items/snap_element_items.html)\n* [Snap Animation Element Items](bpy_types_enum_items/snap_animation_element_items.html)\n* [Curve Fit Method Items](bpy_types_enum_items/curve_fit_method_items.html)\n* [Mesh Select Mode Items](bpy_types_enum_items/mesh_select_mode_items.html)\n* [Mesh Select Mode Uv Items](bpy_types_enum_items/mesh_select_mode_uv_items.html)\n* [Mesh Delimit Mode Items](bpy_types_enum_items/mesh_delimit_mode_items.html)\n* [Space Graph Mode Items](bpy_types_enum_items/space_graph_mode_items.html)\n* [Space File Browse Mode Items](bpy_types_enum_items/space_file_browse_mode_items.html)\n* [Space Sequencer View Type Items](bpy_types_enum_items/space_sequencer_view_type_items.html)\n* [Space Type Items](bpy_types_enum_items/space_type_items.html)\n* [Space Image Mode Items](bpy_types_enum_items/space_image_mode_items.html)\n* [Space Image Mode All Items](bpy_types_enum_items/space_image_mode_all_items.html)\n* [Space Action Mode Items](bpy_types_enum_items/space_action_mode_items.html)\n* [Fileselect Params Sort Items](bpy_types_enum_items/fileselect_params_sort_items.html)\n* [Region Type Items](bpy_types_enum_items/region_type_items.html)\n* [Object Modifier Type Items](bpy_types_enum_items/object_modifier_type_items.html)\n* [Constraint Type Items](bpy_types_enum_items/constraint_type_items.html)\n* [Boidrule Type Items](bpy_types_enum_items/boidrule_type_items.html)\n* [Strip Modifier Type Items](bpy_types_enum_items/strip_modifier_type_items.html)\n* [Strip Video Modifier Type Items](bpy_types_enum_items/strip_video_modifier_type_items.html)\n* [Strip Sound Modifier Type Items](bpy_types_enum_items/strip_sound_modifier_type_items.html)\n* [Strip Scale Method Items](bpy_types_enum_items/strip_scale_method_items.html)\n* [Object Shaderfx Type Items](bpy_types_enum_items/object_shaderfx_type_items.html)\n* [Modifier Triangulate Quad Method Items](bpy_types_enum_items/modifier_triangulate_quad_method_items.html)\n* [Modifier Triangulate Ngon Method Items](bpy_types_enum_items/modifier_triangulate_ngon_method_items.html)\n* [Modifier Shrinkwrap Mode Items](bpy_types_enum_items/modifier_shrinkwrap_mode_items.html)\n* [Shrinkwrap Type Items](bpy_types_enum_items/shrinkwrap_type_items.html)\n* [Shrinkwrap Face Cull Items](bpy_types_enum_items/shrinkwrap_face_cull_items.html)\n* [Node Warning Type Items](bpy_types_enum_items/node_warning_type_items.html)\n* [Image Type All Items](bpy_types_enum_items/image_type_all_items.html)\n* [Image Color Mode Items](bpy_types_enum_items/image_color_mode_items.html)\n* [Image Color Depth Items](bpy_types_enum_items/image_color_depth_items.html)\n* [Image Generated Type Items](bpy_types_enum_items/image_generated_type_items.html)\n* [Normal Space Items](bpy_types_enum_items/normal_space_items.html)\n* [Normal Swizzle Items](bpy_types_enum_items/normal_swizzle_items.html)\n* [Bake Save Mode Items](bpy_types_enum_items/bake_save_mode_items.html)\n* [Bake Margin Type Items](bpy_types_enum_items/bake_margin_type_items.html)\n* [Bake Target Items](bpy_types_enum_items/bake_target_items.html)\n* [Views Format Items](bpy_types_enum_items/views_format_items.html)\n* [Views Format Multilayer Items](bpy_types_enum_items/views_format_multilayer_items.html)\n* [Views Format Multiview Items](bpy_types_enum_items/views_format_multiview_items.html)\n* [Stereo3D Display Items](bpy_types_enum_items/stereo3d_display_items.html)\n* [Stereo3D Anaglyph Type Items](bpy_types_enum_items/stereo3d_anaglyph_type_items.html)\n* [Stereo3D Interlace Type Items](bpy_types_enum_items/stereo3d_interlace_type_items.html)\n* [Exr Codec Items](bpy_types_enum_items/exr_codec_items.html)\n* [Color Sets Items](bpy_types_enum_items/color_sets_items.html)\n* [Beztriple Keyframe Type Items](bpy_types_enum_items/beztriple_keyframe_type_items.html)\n* [Beztriple Interpolation Mode Items](bpy_types_enum_items/beztriple_interpolation_mode_items.html)\n* [Beztriple Interpolation Easing Items](bpy_types_enum_items/beztriple_interpolation_easing_items.html)\n* [Fcurve Auto Smoothing Items](bpy_types_enum_items/fcurve_auto_smoothing_items.html)\n* [Keyframe Handle Type Items](bpy_types_enum_items/keyframe_handle_type_items.html)\n* [Driver Target Rotation Mode Items](bpy_types_enum_items/driver_target_rotation_mode_items.html)\n* [Keyingset Path Grouping Items](bpy_types_enum_items/keyingset_path_grouping_items.html)\n* [Keying Flag Items](bpy_types_enum_items/keying_flag_items.html)\n* [Keying Flag Api Items](bpy_types_enum_items/keying_flag_api_items.html)\n* [Fmodifier Type Items](bpy_types_enum_items/fmodifier_type_items.html)\n* [Motionpath Bake Location Items](bpy_types_enum_items/motionpath_bake_location_items.html)\n* [Motionpath Display Type Items](bpy_types_enum_items/motionpath_display_type_items.html)\n* [Motionpath Range Items](bpy_types_enum_items/motionpath_range_items.html)\n* [Event Value Items](bpy_types_enum_items/event_value_items.html)\n* [Event Direction Items](bpy_types_enum_items/event_direction_items.html)\n* [Event Type Items](bpy_types_enum_items/event_type_items.html)\n* [Event Type Mask Items](bpy_types_enum_items/event_type_mask_items.html)\n* [Operator Type Flag Items](bpy_types_enum_items/operator_type_flag_items.html)\n* [Operator Return Items](bpy_types_enum_items/operator_return_items.html)\n* [Operator Property Tag Items](bpy_types_enum_items/operator_property_tag_items.html)\n* [Brush Automasking Flag Items](bpy_types_enum_items/brush_automasking_flag_items.html)\n* [Brush Sculpt Brush Type Items](bpy_types_enum_items/brush_sculpt_brush_type_items.html)\n* [Brush Vertex Brush Type Items](bpy_types_enum_items/brush_vertex_brush_type_items.html)\n* [Brush Weight Brush Type Items](bpy_types_enum_items/brush_weight_brush_type_items.html)\n* [Brush Gpencil Types Items](bpy_types_enum_items/brush_gpencil_types_items.html)\n* [Brush Gpencil Vertex Types Items](bpy_types_enum_items/brush_gpencil_vertex_types_items.html)\n* [Brush Gpencil Sculpt Types Items](bpy_types_enum_items/brush_gpencil_sculpt_types_items.html)\n* [Brush Gpencil Weight Types Items](bpy_types_enum_items/brush_gpencil_weight_types_items.html)\n* [Brush Curves Sculpt Brush Type Items](bpy_types_enum_items/brush_curves_sculpt_brush_type_items.html)\n* [Brush Image Brush Type Items](bpy_types_enum_items/brush_image_brush_type_items.html)\n* [Brush Curve Preset Items](bpy_types_enum_items/brush_curve_preset_items.html)\n* [Grease Pencil Selectmode Items](bpy_types_enum_items/grease_pencil_selectmode_items.html)\n* [Stroke Depth Order Items](bpy_types_enum_items/stroke_depth_order_items.html)\n* [Axis Xy Items](bpy_types_enum_items/axis_xy_items.html)\n* [Axis Xyz Items](bpy_types_enum_items/axis_xyz_items.html)\n* [Axis Flag Xyz Items](bpy_types_enum_items/axis_flag_xyz_items.html)\n* [Symmetrize Direction Items](bpy_types_enum_items/symmetrize_direction_items.html)\n* [Texture Type Items](bpy_types_enum_items/texture_type_items.html)\n* [Light Type Items](bpy_types_enum_items/light_type_items.html)\n* [Lightprobes Type Items](bpy_types_enum_items/lightprobes_type_items.html)\n* [Unpack Method Items](bpy_types_enum_items/unpack_method_items.html)\n* [Object Type Items](bpy_types_enum_items/object_type_items.html)\n* [Object Rotation Mode Items](bpy_types_enum_items/object_rotation_mode_items.html)\n* [Object Type Curve Items](bpy_types_enum_items/object_type_curve_items.html)\n* [Rigidbody Object Type Items](bpy_types_enum_items/rigidbody_object_type_items.html)\n* [Rigidbody Object Shape Items](bpy_types_enum_items/rigidbody_object_shape_items.html)\n* [Rigidbody Constraint Type Items](bpy_types_enum_items/rigidbody_constraint_type_items.html)\n* [Object Axis Items](bpy_types_enum_items/object_axis_items.html)\n* [Bake Pass Type Items](bpy_types_enum_items/bake_pass_type_items.html)\n* [Bake Pass Filter Type Items](bpy_types_enum_items/bake_pass_filter_type_items.html)\n* [Keymap Propvalue Items](bpy_types_enum_items/keymap_propvalue_items.html)\n* [Operator Context Items](bpy_types_enum_items/operator_context_items.html)\n* [Wm Report Items](bpy_types_enum_items/wm_report_items.html)\n* [Wm Job Type Items](bpy_types_enum_items/wm_job_type_items.html)\n* [Property Type Items](bpy_types_enum_items/property_type_items.html)\n* [Property Subtype Items](bpy_types_enum_items/property_subtype_items.html)\n* [Property Subtype String Items](bpy_types_enum_items/property_subtype_string_items.html)\n* [Property Subtype Number Items](bpy_types_enum_items/property_subtype_number_items.html)\n* [Property Subtype Number Array Items](bpy_types_enum_items/property_subtype_number_array_items.html)\n* [Property Unit Items](bpy_types_enum_items/property_unit_items.html)\n* [Property Flag Items](bpy_types_enum_items/property_flag_items.html)\n* [Property Flag Enum Items](bpy_types_enum_items/property_flag_enum_items.html)\n* [Property Override Flag Items](bpy_types_enum_items/property_override_flag_items.html)\n* [Property Override Flag Collection Items](bpy_types_enum_items/property_override_flag_collection_items.html)\n* [Property String Search Flag Items](bpy_types_enum_items/property_string_search_flag_items.html)\n* [Shading Type Items](bpy_types_enum_items/shading_type_items.html)\n* [Navigation Mode Items](bpy_types_enum_items/navigation_mode_items.html)\n* [Node Socket In Out Items](bpy_types_enum_items/node_socket_in_out_items.html)\n* [Node Socket Type Items](bpy_types_enum_items/node_socket_type_items.html)\n* [Node Tree Interface Item Type Items](bpy_types_enum_items/node_tree_interface_item_type_items.html)\n* [Node Socket Structure Type Items](bpy_types_enum_items/node_socket_structure_type_items.html)\n* [Node Math Items](bpy_types_enum_items/node_math_items.html)\n* [Mapping Type Items](bpy_types_enum_items/mapping_type_items.html)\n* [Node Vec Math Items](bpy_types_enum_items/node_vec_math_items.html)\n* [Node Boolean Math Items](bpy_types_enum_items/node_boolean_math_items.html)\n* [Node Compare Operation Items](bpy_types_enum_items/node_compare_operation_items.html)\n* [Node Integer Math Items](bpy_types_enum_items/node_integer_math_items.html)\n* [Node Float To Int Items](bpy_types_enum_items/node_float_to_int_items.html)\n* [Node Map Range Items](bpy_types_enum_items/node_map_range_items.html)\n* [Node Clamp Items](bpy_types_enum_items/node_clamp_items.html)\n* [Node Compositor Extension Items](bpy_types_enum_items/node_compositor_extension_items.html)\n* [Node Compositor Interpolation Items](bpy_types_enum_items/node_compositor_interpolation_items.html)\n* [Ramp Blend Items](bpy_types_enum_items/ramp_blend_items.html)\n* [Prop Dynamicpaint Type Items](bpy_types_enum_items/prop_dynamicpaint_type_items.html)\n* [Clip Editor Mode Items](bpy_types_enum_items/clip_editor_mode_items.html)\n* [Icon Items](bpy_types_enum_items/icon_items.html)\n* [Uilist Layout Type Items](bpy_types_enum_items/uilist_layout_type_items.html)\n* [Linestyle Color Modifier Type Items](bpy_types_enum_items/linestyle_color_modifier_type_items.html)\n* [Linestyle Alpha Modifier Type Items](bpy_types_enum_items/linestyle_alpha_modifier_type_items.html)\n* [Linestyle Thickness Modifier Type Items](bpy_types_enum_items/linestyle_thickness_modifier_type_items.html)\n* [Linestyle Geometry Modifier Type Items](bpy_types_enum_items/linestyle_geometry_modifier_type_items.html)\n* [Window Cursor Items](bpy_types_enum_items/window_cursor_items.html)\n* [Dt Method Vertex Items](bpy_types_enum_items/dt_method_vertex_items.html)\n* [Dt Method Edge Items](bpy_types_enum_items/dt_method_edge_items.html)\n* [Dt Method Loop Items](bpy_types_enum_items/dt_method_loop_items.html)\n* [Dt Method Poly Items](bpy_types_enum_items/dt_method_poly_items.html)\n* [Dt Mix Mode Items](bpy_types_enum_items/dt_mix_mode_items.html)\n* [Dt Layers Select Src Items](bpy_types_enum_items/dt_layers_select_src_items.html)\n* [Dt Layers Select Dst Items](bpy_types_enum_items/dt_layers_select_dst_items.html)\n* [Context Mode Items](bpy_types_enum_items/context_mode_items.html)\n* [Preference Section Items](bpy_types_enum_items/preference_section_items.html)\n* [Attribute Type Items](bpy_types_enum_items/attribute_type_items.html)\n* [Color Attribute Type Items](bpy_types_enum_items/color_attribute_type_items.html)\n* [Attribute Type With Auto Items](bpy_types_enum_items/attribute_type_with_auto_items.html)\n* [Attribute Domain Items](bpy_types_enum_items/attribute_domain_items.html)\n* [Attribute Domain Edge Face Items](bpy_types_enum_items/attribute_domain_edge_face_items.html)\n* [Attribute Domain Only Mesh Items](bpy_types_enum_items/attribute_domain_only_mesh_items.html)\n* [Attribute Domain Only Mesh No Edge Items](bpy_types_enum_items/attribute_domain_only_mesh_no_edge_items.html)\n* [Attribute Domain Only Mesh No Corner Items](bpy_types_enum_items/attribute_domain_only_mesh_no_corner_items.html)\n* [Attribute Domain Point Face Curve Items](bpy_types_enum_items/attribute_domain_point_face_curve_items.html)\n* [Attribute Domain Point Edge Face Curve Items](bpy_types_enum_items/attribute_domain_point_edge_face_curve_items.html)\n* [Attribute Curves Domain Items](bpy_types_enum_items/attribute_curves_domain_items.html)\n* [Color Attribute Domain Items](bpy_types_enum_items/color_attribute_domain_items.html)\n* [Attribute Domain Without Corner Items](bpy_types_enum_items/attribute_domain_without_corner_items.html)\n* [Attribute Domain With Auto Items](bpy_types_enum_items/attribute_domain_with_auto_items.html)\n* [Geometry Component Type Items](bpy_types_enum_items/geometry_component_type_items.html)\n* [Node Combsep Color Items](bpy_types_enum_items/node_combsep_color_items.html)\n* [Node Socket Data Type Items](bpy_types_enum_items/node_socket_data_type_items.html)\n* [Node Geometry Curve Handle Side Items](bpy_types_enum_items/node_geometry_curve_handle_side_items.html)\n* [Node Geometry Mesh Circle Fill Type Items](bpy_types_enum_items/node_geometry_mesh_circle_fill_type_items.html)\n* [Volume Grid Data Type Items](bpy_types_enum_items/volume_grid_data_type_items.html)\n* [Collection Color Items](bpy_types_enum_items/collection_color_items.html)\n* [Strip Color Items](bpy_types_enum_items/strip_color_items.html)\n* [Subdivision Uv Smooth Items](bpy_types_enum_items/subdivision_uv_smooth_items.html)\n* [Subdivision Boundary Smooth Items](bpy_types_enum_items/subdivision_boundary_smooth_items.html)\n* [Transform Orientation Items](bpy_types_enum_items/transform_orientation_items.html)\n* [Velocity Unit Items](bpy_types_enum_items/velocity_unit_items.html)\n* [Curves Type Items](bpy_types_enum_items/curves_type_items.html)\n* [Curves Handle Type Items](bpy_types_enum_items/curves_handle_type_items.html)\n* [Curve Normal Mode Items](bpy_types_enum_items/curve_normal_mode_items.html)\n* [Geometry Nodes Gizmo Color Items](bpy_types_enum_items/geometry_nodes_gizmo_color_items.html)\n* [Geometry Nodes Linear Gizmo Draw Style Items](bpy_types_enum_items/geometry_nodes_linear_gizmo_draw_style_items.html)\n* [Particle Edit Hair Brush Items](bpy_types_enum_items/particle_edit_hair_brush_items.html)\n* [Particle Edit Disconnected Hair Brush Items](bpy_types_enum_items/particle_edit_disconnected_hair_brush_items.html)\n* [Keyframe Paste Offset Items](bpy_types_enum_items/keyframe_paste_offset_items.html)\n* [Keyframe Paste Offset Value Items](bpy_types_enum_items/keyframe_paste_offset_value_items.html)\n* [Keyframe Paste Merge Items](bpy_types_enum_items/keyframe_paste_merge_items.html)\n* [Transform Pivot Full Items](bpy_types_enum_items/transform_pivot_full_items.html)\n* [Transform Mode Type Items](bpy_types_enum_items/transform_mode_type_items.html)\n* [Nla Mode Extend Items](bpy_types_enum_items/nla_mode_extend_items.html)\n* [Nla Mode Blend Items](bpy_types_enum_items/nla_mode_blend_items.html)\n* [Keyblock Type Items](bpy_types_enum_items/keyblock_type_items.html)\n* [Asset Library Type Items](bpy_types_enum_items/asset_library_type_items.html)\n* [File Path Foreach Flag Items](bpy_types_enum_items/file_path_foreach_flag_items.html)\n* [Types with Custom Property Support](bpy_types_custom_properties.html)\n* [Utilities (bpy.utils)](bpy.utils.html)\nToggle navigation of Utilities (bpy.utils)\n**\n* [bpy.utils submodule (bpy.utils.previews)](bpy.utils.previews.html)\n* [bpy.utils submodule (bpy.utils.units)](bpy.utils.units.html)\n* [Path Utilities (bpy.path)](bpy.path.html)\n* [Application Data (bpy.app)](bpy.app.html)\nToggle navigation of Application Data (bpy.app)\n**\n* [Application Handlers (bpy.app.handlers)](bpy.app.handlers.html)\n* [Application Translations (bpy.app.translations)](bpy.app.translations.html)\n* [Application Icons (bpy.app.icons)](bpy.app.icons.html)\n* [Application Timers (bpy.app.timers)](bpy.app.timers.html)\n* [Property Definitions (bpy.props)](bpy.props.html)\nStandalone Modules\n* [Audio System (aud)](aud.html)\n* [Additional Math Functions (bl\\_math)](bl_math.html)\n* [Font Drawing (blf)](blf.html)\n* [BMesh Module (bmesh)](bmesh.html)\nToggle navigation of BMesh Module (bmesh)\n**\n* [BMesh Operators (bmesh.ops)](bmesh.ops.html)\n* [BMesh Types (bmesh.types)](bmesh.types.html)\n* [BMesh Utilities (bmesh.utils)](bmesh.utils.html)\n* [BMesh Geometry Utilities (bmesh.geometry)](bmesh.geometry.html)\n* [Extra Utilities (bpy\\_extras)](bpy_extras.html)\nToggle navigation of Extra Utilities (bpy\\_extras)\n**\n* [bpy\\_extras submodule (bpy\\_extras.anim\\_utils)](bpy_extras.anim_utils.html)\n* [bpy\\_extras submodule (bpy\\_extras.asset\\_utils)](bpy_extras.asset_utils.html)\n* [bpy\\_extras submodule (bpy\\_extras.object\\_utils)](bpy_extras.object_utils.html)\n* [bpy\\_extras submodule (bpy\\_extras.io\\_utils)](bpy_extras.io_utils.html)\n* [bpy\\_extras submodule (bpy\\_extras.image\\_utils)](bpy_extras.image_utils.html)\n* [bpy\\_extras submodule (bpy\\_extras.keyconfig\\_utils)](bpy_extras.keyconfig_utils.html)\n* [bpy\\_extras submodule (bpy\\_extras.mesh\\_utils)](bpy_extras.mesh_utils.html)\n* [bpy\\_extras submodule (bpy\\_extras.node\\_utils)](bpy_extras.node_utils.html)\n* [bpy\\_extras submodule (bpy\\_extras.view3d\\_utils)](bpy_extras.view3d_utils.html)\n* [bpy\\_extras submodule (bpy\\_extras.id\\_map\\_utils)](bpy_extras.id_map_utils.html)\n* [Freestyle Module (freestyle)](freestyle.html)\nToggle navigation of Freestyle Module (freestyle)\n**\n* [Freestyle Types (freestyle.types)](freestyle.types.html)\n* [Freestyle Predicates (freestyle.predicates)](freestyle.predicates.html)\n* [Freestyle Functions (freestyle.functions)](freestyle.functions.html)\n* [Freestyle Chaining Iterators (freestyle.chainingiterators)](freestyle.chainingiterators.html)\n* [Freestyle Shaders (freestyle.shaders)](freestyle.shaders.html)\n* [Freestyle Utilities (freestyle.utils)](freestyle.utils.html)\nToggle navigation of Freestyle Utilities (freestyle.utils)\n**\n* [freestyle.utils submodule (freestyle.utils.ContextFunctions)](freestyle.utils.ContextFunctions.html)\n* [GPU Module (gpu)](gpu.html)\nToggle navigation of GPU Module (gpu)\n**\n* [GPU Types (gpu.types)](gpu.types.html)\n* [GPU Matrix Utilities (gpu.matrix)](gpu.matrix.html)\n* [GPU Select Utilities (gpu.select)](gpu.select.html)\n* [GPU Shader Utilities (gpu.shader)](gpu.shader.html)\n* [GPU State Utilities (gpu.state)](gpu.state.html)\n* [GPU Texture Utilities (gpu.texture)](gpu.texture.html)\n* [GPU Platform Utilities (gpu.platform)](gpu.platform.html)\n* [GPU Capabilities Utilities (gpu.capabilities)](gpu.capabilities.html)\n* [GPU Utilities (gpu\\_extras)](gpu_extras.html)\nToggle navigation of GPU Utilities (gpu\\_extras)\n**\n* [gpu\\_extras submodule (gpu\\_extras.batch)](gpu_extras.batch.html)\n* [gpu\\_extras submodule (gpu\\_extras.presets)](gpu_extras.presets.html)\n* [ID Property Access (idprop.types)](idprop.types.html)\n* [Image Buffer (imbuf)](imbuf.html)\nToggle navigation of Image Buffer (imbuf)\n**\n* [Image Buffer Types (imbuf.types)](imbuf.types.html)\n* [Math Types &amp;amp; Utilities (mathutils)](mathutils.html)\nToggle navigation of Math Types &amp;amp; Utilities (mathutils)\n**\n* [Geometry Utilities (mathutils.geometry)](mathutils.geometry.html)\n* [BVHTree Utilities (mathutils.bvhtree)](mathutils.bvhtree.html)\n* [KDTree Utilities (mathutils.kdtree)](mathutils.kdtree.html)\n* [Interpolation Utilities (mathutils.interpolate)](mathutils.interpolate.html)\n* [Noise Utilities (mathutils.noise)](mathutils.noise.html)\n* 5.0\nVersions\n* Loading...\n* * Note\nYou are not using the most up to date version of the documentation.[](#)is the newest version.\n[Back to top](#)\nToggle Light / Dark / Auto color theme\nToggle table of contents sidebar\n**\n# Action(ID)[¶](#action-id)\nbase classes —[&#96;bpy\\_struct&#96;](bpy.types.bpy_struct.html#bpy.types.bpy_struct),[&#96;ID&#96;](bpy.types.ID.html#bpy.types.ID)\n*class*bpy.types.Action(*ID*)[¶](#bpy.types.Action)\nA collection of F-Curves for animation\ncurve\\_frame\\_range[¶](#bpy.types.Action.curve_frame_range)\nThe combined frame range of all F-Curves within this action\nType:\n[&#96;mathutils.Vector&#96;](mathutils.html#mathutils.Vector)of 2 items in [-inf, inf], default (0.0, 0.0), (readonly)\nframe\\_end[¶](#bpy.types.Action.frame_end)\nThe end frame of the manually set intended playback range\nType:\nfloat in [-1.04857e+06, 1.04857e+06], default 0.0\nframe\\_range[¶](#bpy.types.Action.frame_range)\nThe intended playback frame range of this action, using the manually set range if available, or the combined frame range of all F-Curves within this action if not (assigning sets the manual frame range)\nType:\n[&#96;mathutils.Vector&#96;](mathutils.html#mathutils.Vector)of 2 items in [-inf, inf], default (0.0, 0.0)\nframe\\_start[¶](#bpy.types.Action.frame_start)\nThe start frame of the manually set intended playback range\nType:\nfloat in [-1.04857e+06, 1.04857e+06], default 0.0\nis\\_action\\_layered[¶](#bpy.types.Action.is_action_layered)\nReturn whether this is a layered Action. An empty Action is considered as both a ‘legacy’ and a ‘layered’ Action.\nType:\nboolean, default False, (readonly)\nis\\_action\\_legacy[¶](#bpy.types.Action.is_action_legacy)\nReturn whether this is a legacy Action. Legacy Actions have no layers or slots. An empty Action is considered as both a ‘legacy’ and a ‘layered’ Action. Since Blender 4.4 actions are automatically updated to layered actions, and thus this will only return True when the action is empty\nType:\nboolean, default False, (readonly)\nis\\_empty[¶](#bpy.types.Action.is_empty)\nFalse when there is any Layer, Slot, or legacy F-Curve\nType:\nboolean, default False, (readonly)\nlayers[¶](#bpy.types.Action.layers)\nThe list of layers that make up this Action\nType:\n[&#96;ActionLayers&#96;](bpy.types.ActionLayers.html#bpy.types.ActionLayers)[&#96;bpy\\_prop\\_collection&#96;](bpy.types.bpy_prop_collection.html#bpy.types.bpy_prop_collection)of[&#96;ActionLayer&#96;](bpy.types.ActionLayer.html#bpy.types.ActionLayer), (readonly)\npose\\_markers[¶](#bpy.types.Action.pose_markers)\nMarkers specific to this action, for labeling poses\nType:\n[&#96;ActionPoseMarkers&#96;](bpy.types.ActionPoseMarkers.html#bpy.types.ActionPoseMarkers)[&#96;bpy\\_prop\\_collection&#96;](bpy.types.bpy_prop_collection.html#bpy.types.bpy_prop_collection)of[&#96;TimelineMarker&#96;](bpy.types.TimelineMarker.html#bpy.types.TimelineMarker), (readonly)\nslots[¶](#bpy.types.Action.slots)\nThe list of slots in this Action\nType:\n[&#96;ActionSlots&#96;](bpy.types.ActionSlots.html#bpy.types.ActionSlots)[&#96;bpy\\_prop\\_collection&#96;](bpy.types.bpy_prop_collection.html#bpy.types.bpy_prop_collection)of[&#96;ActionSlot&#96;](bpy.types.ActionSlot.html#bpy.types.ActionSlot), (readonly)\nuse\\_cyclic[¶](#bpy.types.Action.use_cyclic)\nThe action is intended to be used as a cycle looping over its manually set playback frame range (enabling this does not automatically make it loop)\nType:\nboolean, default False\nuse\\_frame\\_range[¶](#bpy.types.Action.use_frame_range)\nManually specify the intended playback frame range for the action (this range is used by some tools, but does not affect animation evaluation)\nType:\nboolean, default False\ndeselect\\_keys()[¶](#bpy.types.Action.deselect_keys)\nDeselects all keys of the Action. The selection status of F-Curves is unchanged.\nfcurve\\_ensure\\_for\\_datablock(*datablock*,*data\\_path*,*\\**,*index=0*,*group\\_name=''*)[¶](#bpy.types.Action.fcurve_ensure_for_datablock)\nEnsure that an F-Curve exists, with the given data path and array index, for the given data-block. This action must already be assigned to the data-block. This function will also create the layer, keyframe strip, and action slot if necessary, and take care of assigning the action slot too\nParameters:\n* **datablock**([&#96;ID&#96;](bpy.types.ID.html#bpy.types.ID), (never None)) –The data-block animated by this action, for which to ensure the F-Curve exists. This action must already be assigned to the data-block\n* **data\\_path**(*string**,**(**never None**)*) –Data Path, F-Curve data path\n* **index**(*int in**[**0**,**inf**]**,**(**optional**)*) –Index, Array index\n* **group\\_name**(*string**,**(**optional**,**never None**)*) –Group Name, Name of the group for this F-Curve, if any. If the F-Curve already exists, this parameter is ignored\nReturns:\nThe found or created F-Curve\nReturn type:\n[&#96;FCurve&#96;](bpy.types.FCurve.html#bpy.types.FCurve)\nflip\\_with\\_pose(*object*)[¶](#bpy.types.Action.flip_with_pose)\nFlip the action around the X axis using a pose\nParameters:\n**object**([&#96;Object&#96;](bpy.types.Object.html#bpy.types.Object), (never None)) –The reference armature object to use when flipping\n*classmethod*bl\\_rna\\_get\\_subclass(*id*,*default=None*,*/*)[¶](#bpy.types.Action.bl_rna_get_subclass)Parameters:\n**id**(*str*) –The RNA type identifier.\nReturns:\nThe RNA type or default when not found.\nReturn type:\n[&#96;bpy.types.Struct&#96;](bpy.types.Struct.html#bpy.types.Struct)subclass\n*classmethod*bl\\_rna\\_get\\_subclass\\_py(*id*,*default=None*,*/*)[¶](#bpy.types.Action.bl_rna_get_subclass_py)Parameters:\n**id**(*str*) –The RNA type identifier.\nReturns:\nThe class or default when not found.\nReturn type:\ntype\n## Inherited Properties[¶](#inherited-properties)\n* [&#96;bpy\\_struct.id\\_data&#96;](bpy.types.bpy_struct.html#bpy.types.bpy_struct.id_data)\n* [&#96;ID.name&#96;](bpy.types.ID.html#bpy.types.ID.name)\n* [&#96;ID.name\\_full&#96;](bpy.types.ID.html#bpy.types.ID.name_full)\n* [&#96;ID.id\\_type&#96;](bpy.types.ID.html#bpy.types.ID.id_type)\n* [&#96;ID.session\\_uid&#96;](bpy.types.ID.html#bpy.types.ID.session_uid)\n* [&#96;ID.is\\_evaluated&#96;](bpy.types.ID.html#bpy.types.ID.is_evaluated)\n* [&#96;ID.original&#96;](bpy.types.ID.html#bpy.types.ID.original)\n* [&#96;ID.users&#96;](bpy.types.ID.html#bpy.types.ID.users)\n* [&#96;ID.use\\_fake\\_user&#96;](bpy.types.ID.html#bpy.types.ID.use_fake_user)\n* [&#96;ID.use\\_extra\\_user&#96;](bpy.types.ID.html#bpy.types.ID.use_extra_user)\n* [&#96;ID.is\\_embedded\\_data&#96;](bpy.types.ID.html#bpy.types.ID.is_embedded_data)\n|\n* [&#96;ID.is\\_linked\\_packed&#96;](bpy.types.ID.html#bpy.types.ID.is_linked_packed)\n* [&#96;ID.is\\_missing&#96;](bpy.types.ID.html#bpy.types.ID.is_missing)\n* [&#96;ID.is\\_runtime\\_data&#96;](bpy.types.ID.html#bpy.types.ID.is_runtime_data)\n* [&#96;ID.is\\_editable&#96;](bpy.types.ID.html#bpy.types.ID.is_editable)\n* [&#96;ID.tag&#96;](bpy.types.ID.html#bpy.types.ID.tag)\n* [&#96;ID.is\\_library\\_indirect&#96;](bpy.types.ID.html#bpy.types.ID.is_library_indirect)\n* [&#96;ID.library&#96;](bpy.types.ID.html#bpy.types.ID.library)\n* [&#96;ID.library\\_weak\\_reference&#96;](bpy.types.ID.html#bpy.types.ID.library_weak_reference)\n* [&#96;ID.asset\\_data&#96;](bpy.types.ID.html#bpy.types.ID.asset_data)\n* [&#96;ID.override\\_library&#96;](bpy.types.ID.html#bpy.types.ID.override_library)\n* [&#96;ID.preview&#96;](bpy.types.ID.html#bpy.types.ID.preview)\n|\n## Inherited Functions[¶](#inherited-functions)\n* [&#96;bpy\\_struct.as\\_pointer&#96;](bpy.types.bpy_struct.html#bpy.types.bpy_struct.as_pointer)\n* [&#96;bpy\\_struct.driver\\_add&#96;](bpy.types.bpy_struct.html#bpy.types.bpy_struct.driver_add)\n* [&#96;bpy\\_struct.driver\\_remove&#96;](bpy.types.bpy_struct.html#bpy.types.bpy_struct.driver_remove)\n* [&#96;bpy\\_struct.get&#96;](bpy.types.bpy_struct.html#bpy.types.bpy_struct.get)\n* [&#96;bpy\\_struct.id\\_properties\\_clear&#96;](bpy.types.bpy_struct.html#bpy.types.bpy_struct.id_properties_clear)\n* [&#96;bpy\\_struct.id\\_properties\\_ensure&#96;](bpy.types.bpy_struct.html#bpy.types.bpy_struct.id_properties_ensure)\n* [&#96;bpy\\_struct.id\\_properties\\_ui&#96;](bpy.types.bpy_struct.html#bpy.types.bpy_struct.id_properties_ui)\n* [&#96;bpy\\_struct.is\\_property\\_hidden&#96;](bpy.types.bpy_struct.html#bpy.types.bpy_struct.is_property_hidden)\n* [&#96;bpy\\_struct.is\\_property\\_overridable\\_library&#96;](bpy.types.bpy_struct.html#bpy.types.bpy_struct.is_property_overridable_library)\n* [&#96;bpy\\_struct.is\\_property\\_readonly&#96;](bpy.types.bpy_struct.html#bpy.types.bpy_struct.is_property_readonly)\n* [&#96;bpy\\_struct.is\\_property\\_set&#96;](bpy.types.bpy_struct.html#bpy.types.bpy_struct.is_property_set)\n* [&#96;bpy\\_struct.items&#96;](bpy.types.bpy_struct.html#bpy.types.bpy_struct.items)\n* [&#96;bpy\\_struct.keyframe\\_delete&#96;](bpy.types.bpy_struct.html#bpy.types.bpy_struct.keyframe_delete)\n* [&#96;bpy\\_struct.keyframe\\_insert&#96;](bpy.types.bpy_struct.html#bpy.types.bpy_struct.keyframe_insert)\n* [&#96;bpy\\_struct.keys&#96;](bpy.types.bpy_struct.html#bpy.types.bpy_struct.keys)\n* [&#96;bpy\\_struct.path\\_from\\_id&#96;](bpy.types.bpy_struct.html#bpy.types.bpy_struct.path_from_id)\n* [&#96;bpy\\_struct.path\\_from\\_module&#96;](bpy.types.bpy_struct.html#bpy.types.bpy_struct.path_from_module)\n* [&#96;bpy\\_struct.path\\_resolve&#96;](bpy.types.bpy_struct.html#bpy.types.bpy_struct.path_resolve)\n* [&#96;bpy\\_struct.pop&#96;](bpy.types.bpy_struct.html#bpy.types.bpy_struct.pop)\n* [&#96;bpy\\_struct.property\\_overridable\\_library\\_set&#96;](bpy.types.bpy_struct.html#bpy.types.bpy_struct.property_overridable_library_set)\n* [&#96;bpy\\_struct.property\\_unset&#96;](bpy.types.bpy_struct.html#bpy.types.bpy_struct.property_unset)\n* [&#96;bpy\\_struct.rna\\_ancestors&#96;](bpy.types.bpy_struct.html#bpy.types.bpy_struct.rna_ancestors)\n|\n* [&#96;bpy\\_struct.type\\_recast&#96;](bpy.types.bpy_struct.html#bpy.types.bpy_struct.type_recast)\n* [&#96;bpy\\_struct.values&#96;](bpy.types.bpy_struct.html#bpy.types.bpy_struct.values)\n* [&#96;ID.bl\\_system\\_properties\\_get&#96;](bpy.types.ID.html#bpy.types.ID.bl_system_properties_get)\n* [&#96;ID.rename&#96;](bpy.types.ID.html#bpy.types.ID.rename)\n* [&#96;ID.evaluated\\_get&#96;](bpy.types.ID.html#bpy.types.ID.evaluated_get)\n* [&#96;ID.copy&#96;](bpy.types.ID.html#bpy.types.ID.copy)\n* [&#96;ID.asset\\_mark&#96;](bpy.types.ID.html#bpy.types.ID.asset_mark)\n* [&#96;ID.asset\\_clear&#96;](bpy.types.ID.html#bpy.types.ID.asset_clear)\n* [&#96;ID.asset\\_generate\\_preview&#96;](bpy.types.ID.html#bpy.types.ID.asset_generate_preview)\n* [&#96;ID.override\\_create&#96;](bpy.types.ID.html#bpy.types.ID.override_create)\n* [&#96;ID.override\\_hierarchy\\_create&#96;](bpy.types.ID.html#bpy.types.ID.override_hierarchy_create)\n* [&#96;ID.user\\_clear&#96;](bpy.types.ID.html#bpy.types.ID.user_clear)\n* [&#96;ID.user\\_remap&#96;](bpy.types.ID.html#bpy.types.ID.user_remap)\n* [&#96;ID.make\\_local&#96;](bpy.types.ID.html#bpy.types.ID.make_local)\n* [&#96;ID.user\\_of\\_id&#96;](bpy.types.ID.html#bpy.types.ID.user_of_id)\n* [&#96;ID.animation\\_data\\_create&#96;](bpy.types.ID.html#bpy.types.ID.animation_data_create)\n* [&#96;ID.animation\\_data\\_clear&#96;](bpy.types.ID.html#bpy.types.ID.animation_data_clear)\n* [&#96;ID.update\\_tag&#96;](bpy.types.ID.html#bpy.types.ID.update_tag)\n* [&#96;ID.preview\\_ensure&#96;](bpy.types.ID.html#bpy.types.ID.preview_ensure)\n* [&#96;ID.bl\\_rna\\_get\\_subclass&#96;](bpy.types.ID.html#bpy.types.ID.bl_rna_get_subclass)\n* [&#96;ID.bl\\_rna\\_get\\_subclass\\_py&#96;](bpy.types.ID.html#bpy.types.ID.bl_rna_get_subclass_py)\n|\n## References[¶](#references)\n* [&#96;bpy.context.active\\_action&#96;](bpy.context.html#bpy.context.active_action)\n* [&#96;bpy.context.selected\\_editable\\_actions&#96;](bpy.context.html#bpy.context.selected_editable_actions)\n* [&#96;bpy.context.selected\\_visible\\_actions&#96;](bpy.context.html#bpy.context.selected_visible_actions)\n* [&#96;ActionConstraint.action&#96;](bpy.types.ActionConstraint.html#bpy.types.ActionConstraint.action)\n* [&#96;AnimData.action&#96;](bpy.types.AnimData.html#bpy.types.AnimData.action)\n* [&#96;AnimData.action\\_tweak\\_storage&#96;](bpy.types.AnimData.html#bpy.types.AnimData.action_tweak_storage)\n* [&#96;BlendData.actions&#96;](bpy.types.BlendData.html#bpy.types.BlendData.actions)\n* [&#96;BlendDataActions.new&#96;](bpy.types.BlendDataActions.html#bpy.types.BlendDataActions.new)\n|\n* [&#96;BlendDataActions.remove&#96;](bpy.types.BlendDataActions.html#bpy.types.BlendDataActions.remove)\n* &#96;GLTF2\\_filter\\_action.action&#96;\n* [&#96;NlaStrip.action&#96;](bpy.types.NlaStrip.html#bpy.types.NlaStrip.action)\n* [&#96;NlaStrips.new&#96;](bpy.types.NlaStrips.html#bpy.types.NlaStrips.new)\n* [&#96;Pose.apply\\_pose\\_from\\_action&#96;](bpy.types.Pose.html#bpy.types.Pose.apply_pose_from_action)\n* [&#96;Pose.backup\\_create&#96;](bpy.types.Pose.html#bpy.types.Pose.backup_create)\n* [&#96;Pose.blend\\_pose\\_from\\_action&#96;](bpy.types.Pose.html#bpy.types.Pose.blend_pose_from_action)\n* [&#96;WindowManager.poselib\\_previous\\_action&#96;](bpy.types.WindowManager.html#bpy.types.WindowManager.poselib_previous_action)\n|\nOn this page\n* [Action(ID)](#)\n* [&#96;Action&#96;](#bpy.types.Action)\n* [&#96;Action.curve\\_frame\\_range&#96;](#bpy.types.Action.curve_frame_range)\n* [&#96;Action.frame\\_end&#96;](#bpy.types.Action.frame_end)\n* [&#96;Action.frame\\_range&#96;](#bpy.types.Action.frame_range)\n* [&#96;Action.frame\\_start&#96;](#bpy.types.Action.frame_start)\n* [&#96;Action.is\\_action\\_layered&#96;](#bpy.types.Action.is_action_layered)\n* [&#96;Action.is\\_action\\_legacy&#96;](#bpy.types.Action.is_action_legacy)\n* [&#96;Action.is\\_empty&#96;](#bpy.types.Action.is_empty)\n* [&#96;Action.layers&#96;](#bpy.types.Action.layers)\n* [&#96;Action.pose\\_markers&#96;](#bpy.types.Action.pose_markers)\n* [&#96;Action.slots&#96;](#bpy.types.Action.slots)\n* [&#96;Action.use\\_cyclic&#96;](#bpy.types.Action.use_cyclic)\n* [&#96;Action.use\\_frame\\_range&#96;](#bpy.types.Action.use_frame_range)\n* [&#96;Action.deselect\\_keys()&#96;](#bpy.types.Action.deselect_keys)\n* [&#96;Action.fcurve\\_ensure\\_for\\_datablock()&#96;](#bpy.types.Action.fcurve_ensure_for_datablock)\n* [&#96;Action.flip\\_with\\_pose()&#96;](#bpy.types.Action.flip_with_pose)\n* [&#96;Action.bl\\_rna\\_get\\_subclass()&#96;](#bpy.types.Action.bl_rna_get_subclass)\n* [&#96;Action.bl\\_rna\\_get\\_subclass\\_py()&#96;](#bpy.types.Action.bl_rna_get_subclass_py)\n* [Inherited Properties](#inherited-properties)\n* [Inherited Functions](#inherited-functions)\n* [References](#references)"
+}
+```
+User decision: **accepted**
+
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+
+From the Blender 5.0 API docs, I see that `Action` in 5.0 no longer has `fcurves` directly. It has:
+- `layers` - ActionLayers
+- `slots` - ActionSlots  
+- `is_action_legacy` - True when empty (no layers/slots)
+- `is_action_layered` - For layered actions
+
+The docs say "Legacy Actions have no layers or slots. An empty Action is considered as both a 'legacy' and a 'layered' Action. Since Blender 4.4 actions are automatically updated to layered actions, and thus this will only return True when the action is empty"
+
+So in Blender 5.0, `action.fcurves` was removed. I need to get fcurves through the new structure. I will check ActionLayer and ActionSlot to see how to get fcurves.
+
+From the sidebar in the API docs I see:
+- ActionChannelbag
+- ActionChannelbagFCurves
+- ActionChannelbags
+- ActionSlot
+- ActionSlots
+
+So it seems like in 5.0, fcurves might be under slots or channelbags. I will search for how to iterate fcurves in Blender 5.0.
+</details></think>
+
+---
+
+
+Checking Blender 5.0 Action structure for iterating fcurves:
+
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="web_fetch">
+<details>
+<summary>Tool use: **web_fetch**</summary>
+
+
+Parameters:
+
+```json
+{
+  "url": "https://developer.blender.org/docs/release_notes/5.0/python_api/"
+}
+```
+Result:
+
+```json
+{
+  "url": "https://developer.blender.org/docs/release_notes/5.0/python_api/",
+  "markdown": "Python API - Blender Developer Documentation\n[Skip to content](#blender-50-python-api)\n[](https://projects.blender.org/blender/blender-developer-docs/_edit/main/docs/release_notes/5.0/python_api.md)# Blender 5.0: Python API[&amp;para;](#blender-50-python-api)\n## Breaking Changes[&amp;para;](#breaking-changes)\n### Removal of (Unsupported) Access to Runtime-Defined Properties Storage Data[&amp;para;](#removal-of-unsupported-access-to-runtime-defined-properties-storage-data)\nProperties defined by the[&#96;bpy.props&#96;](https://docs.blender.org/api/5.0/bpy.props.html)API are no longer stored in the same container as user-defined[Custom Properties](https://docs.blender.org/manual/en/5.0/files/custom_properties.html).\nAs a consequence, it is no more possible to access them directly through the Python 'dict-like'\nsyntax.\nE.g.&#96;bpy.context.scene['cycles']&#96;will not give access to Cycles' scene settings.\nFor more details, see the[commit](https://projects.blender.org/blender/blender/commit/7276b2009a8819619263a1b897389662307b0ee0)and related[design task](https://projects.blender.org/blender/blender/issues/123232).\n#### New&#96;get\\_transform&#96;and&#96;set\\_transform&#96;&#96;bpy.props&#96;accessors[&amp;para;](#new-get_transform-and-set_transform-bpyprops-accessors)\nThese new callbacks allow to edit the value, while still using the default\n(IDProperty-based) storage system.\nThese were required because it is now fully unsupported to directly\naccess the underlying IDProperty storage for&#96;bpy.props&#96;-defined properties,\nwhich means that older code using&#96;get&#96;/&#96;set&#96;only to transform the value,\nbut still store it in the IDProperty, was not valid anymore.\nSome related things to note:\n* Read-only properties should now be defined using a new&#96;options&#96;flag,&#96;READ\\_ONLY&#96;.\n* &#96;get&#96;/&#96;set&#96;should only be used when storing data outside of the default system now.\n* Having a&#96;get&#96;without a&#96;set&#96;defined forces property to be read-only\n(same behavior as before).\n* Having a&#96;set&#96;without a&#96;get&#96;is now an error.\n* Typically, a same property should not need both&#96;get&#96;and&#96;get\\_transform&#96;,\nor&#96;set&#96;and&#96;set\\_transform&#96;callbacks.\n* Just like with existing&#96;get/set&#96;callbacks,&#96;get\\_/set\\_transform&#96;callbacks must always\ngenerate values matching the constraints defined by their&#96;bpy.props&#96;property definition\n(same or compatible type, within required range,\nsame dimensions/sizes for the&#96;Vector&#96;properties, etc.).\nNote: From initial benchmarking,\n'transform' versions of get/set are several times faster than 'real' get/set.\nFor more details, see the[commit](https://projects.blender.org/blender/blender/commit/469f54f484)and related[design task](https://projects.blender.org/blender/blender/issues/141042).\n#### Tips for Extensions and Other Python Code Update[&amp;para;](#tips-for-extensions-and-other-python-code-update)\n|Action|Before|After|\nResetting|\n&#96;&#96;&#96;\n&#96;[](#__codelineno-0-1)delobj[&amp;#39;cycles&amp;#39;][](#__codelineno-0-2)[](#__codelineno-0-3)# Or...[](#__codelineno-0-4)[](#__codelineno-0-5)obj.property\\_unset(&amp;#39;cycles&amp;#39;)&#96;\n&#96;&#96;&#96;\n|\n&#96;&#96;&#96;\n&#96;[](#__codelineno-1-1)obj.property\\_unset(&amp;#39;cycles&amp;#39;)&#96;\n&#96;&#96;&#96;\n|\nCopying|\n&#96;&#96;&#96;\n&#96;[](#__codelineno-2-1)# Highly unsafe, as there is no check[](#__codelineno-2-2)# performed on the content of the[](#__codelineno-2-3)# assigned dict-like data.[](#__codelineno-2-4)obj[&amp;#39;cycles&amp;#39;]=another\\_obj[&amp;#39;cycles&amp;#39;]&#96;\n&#96;&#96;&#96;\n|WIP, the idea is to[copy content recursively](https://projects.blender.org/Mets/blender_studio_utils/src/branch/main/properties.py#L74),\nbut could also improve handling of this feature at GroupProperty level itself...|\nVersioning|\n&#96;&#96;&#96;\n&#96;[](#__codelineno-3-1)old\\_prop=obj[&amp;#39;&amp;#39;old\\_data&amp;#39;&amp;#39;][&amp;#39;&amp;#39;old\\_prop&amp;#39;&amp;#39;][](#__codelineno-3-2)obj.new\\_data.new\\_prop=old\\_prop&#96;\n&#96;&#96;&#96;\n|\n&#96;&#96;&#96;\n&#96;[](#__codelineno-4-1)# This is the main expected use-case for[](#__codelineno-4-2)# &#96;bl\\_system\\_properties\\_get&#96;[](#__codelineno-4-3)sys\\_props=obj.bl\\_system\\_properties\\_get()[](#__codelineno-4-4)old\\_prop=sys\\_props[&amp;#39;&amp;#39;old\\_data&amp;#39;&amp;#39;][&amp;#39;&amp;#39;old\\_prop&amp;#39;&amp;#39;][](#__codelineno-4-5)obj.new\\_data.new\\_prop=old\\_prop&#96;\n&#96;&#96;&#96;\n|\nAvoid Property Handling|\n&#96;&#96;&#96;\n&#96;[](#__codelineno-5-1)# Get property without triggering[](#__codelineno-5-2)# getter callback function[](#__codelineno-5-3)my\\_var=obj.my\\_addon[&amp;#39;&amp;#39;my\\_prop&amp;#39;&amp;#39;][](#__codelineno-5-4)[](#__codelineno-5-5)# Set property without triggering[](#__codelineno-5-6)# setter or update callback functions[](#__codelineno-5-7)obj.my\\_addon[&amp;#39;&amp;#39;my\\_prop&amp;#39;&amp;#39;]=1&#96;\n&#96;&#96;&#96;\n|This is no longer directly supported.\nYou may need to restructure your code to not have to rely on this.\nOtherwise, you can define a flag to check against in your getter/setter functions (see[here](https://projects.blender.org/blender/blender/issues/141042#issuecomment-1683440)),\nor force using a custom data storage (like the custom properties) with explicit custom getters and\nsetters.\nSuch bypassing of RNA properties system handling is**strongly**discouraged.\nDo so at your own risk!|\n#### IDProperties Duplication[&amp;para;](#idproperties-duplication)\nFor types that had their IDProperties storage actually split in two\n(all of the&#96;ID&#96;types, and&#96;ViewLayers&#96;,&#96;Bone&#96;,&#96;EditBone&#96;,&#96;BoneCollection&#96;,&#96;PoseBone&#96;,&#96;Strip&#96;), to ensure that no data is lost over versioning, blenfiles\nfrom 4.5 and before get their 'custom data' IDProperties duplicated into the system ones.\nWhile this is usually fine, in some cases it can lead to undesirable side-effects\n(e.g. unexpected ID usages that never get cleared, or when there is already an\nunreasonable amount of IDProperties, doubling this can cause significant performance\nissues).\nSome generic 'IDProperties cleanup' tooling is being worked on for Blender 5.1, but in\nthe mean time, add-ons can also handle their own data on a case-by-case basis,\nby deleting the values hrought their old, now deprecated 'ID property' paths:\n&#96;&#96;&#96;\n&#96;[](#__codelineno-6-1)# Cleanup &#96;Object.my\\_addon&#96; data storage from pre-Blender 5.0 blendfiles:[](#__codelineno-6-2)forobinbpy.data.objects:[](#__codelineno-6-3)if&amp;#39;&amp;#39;my\\_addon&amp;#39;&amp;#39;inob:[](#__codelineno-6-4)delob[&amp;#39;&amp;#39;my\\_addon&amp;#39;&amp;#39;]&#96;\n&#96;&#96;&#96;\nWarning\nRemoving this data has to be done carefully, to avoid removing actual, valid user[Custom Properties](https://docs.blender.org/manual/en/latest/files/custom_properties.html#custom-properties).\nNote\nRemoving these properties from the deprecated 'dict-like' user properties in IDs etc.\nwill fully break forward compatibility. In other words, these blendfiles, if opened again\nin older versions of Blender, will only have default values for all the add-on's defined properties.\n### Bundled Modules Now Private[&amp;para;](#bundled-modules-now-private)\nBlender comes with various bundled Python modules,\nwhile these were not documented as part of the public API, scripts may have imported them.\nThe following modules have been made private and should not be used by scripts.\n* &#96;animsys\\_refactor&#96;\n* &#96;bl\\_console\\_utils&#96;\n* &#96;bl\\_i18n\\_utils&#96;\n* &#96;bl\\_previews\\_utils&#96;\n* &#96;bl\\_rna\\_utils&#96;\n* &#96;bl\\_text\\_utils&#96;\n* &#96;bl\\_ui\\_utils&#96;\n* &#96;bpy\\_restrict\\_state&#96;\n* &#96;console\\_python&#96;\n* &#96;console\\_shell&#96;\n* &#96;graphviz\\_export&#96;\n* &#96;keyingsets\\_utils&#96;\n* &#96;rna\\_info&#96;\n* &#96;rna\\_manual\\_reference&#96;\n* &#96;rna\\_xml&#96;### GPU[&amp;para;](#gpu)\n* Remove deprecated BGL API\n([decd88f67e](https://projects.blender.org/blender/blender/commit/decd88f67efab2e622cf6c81ec62b9d93bb8bd7a))\n* Remove deprecated&#96;Image.bindcode&#96;. Use&#96;gpu.texture.from\\_image(image)&#96;and the new&#96;gpu.types.GPUTexture&#96;type instead.\n([decd88f67e](https://projects.blender.org/blender/blender/commit/decd88f67efab2e622cf6c81ec62b9d93bb8bd7a))\n* Remove creating shaders directly from GLSL source files\n([11063b5b90](https://projects.blender.org/blender/blender/commit/11063b5b907ece53fb7bd9b8d1b7221342f4e35d))\n* When drawn inside python draw handler, textures returned from&#96;gpu.texture.from\\_image&#96;needs to be drawn\nwith&#96;draw\\_texture\\_2d(is\\_scene\\_linear\\_with\\_rec709\\_srgb\\_target=True)&#96;or\nwith the&#96;IMAGE\\_SCENE\\_LINEAR\\_TO\\_REC709\\_SRGB&#96;builtin shader.\nThis is not needed if the render target is known to be in Scene Linear color space.\n([e2dc63c5de](https://projects.blender.org/blender/blender/commit/e2dc63c5deba4e247277f90e4d0285448f801ede))### Render[&amp;para;](#render)\n* EEVEE's render engine identifier was changed from&#96;BLENDER\\_EEVEE\\_NEXT&#96;to&#96;BLENDER\\_EEVEE&#96;.\n([4fe75da973](https://projects.blender.org/blender/blender/commit/4fe75da973ec74ab4073d3f4d0293428a50ecb55))\n* Many render passes were renamed to avoid obscure abbreviations.\nFor example 'DiffCol' to 'Diffuse Color', 'IndexMA' to 'Material Index' and 'Z' to 'Depth'.\n([PR#141675](https://projects.blender.org/blender/blender/pulls/141675),[PR#142731](https://projects.blender.org/blender/blender/pulls/142731))\n* &#96;scene.eevee.gtao\\_distance&#96;has been moved to view layer and renamed to&#96;view\\_layer.eevee.ambient\\_occlusion\\_distance&#96;.\n([1c29a2e2e5](https://projects.blender.org/blender/blender/commit/1c29a2e2e5a85f57e27ab2bc9b6b8c24318385bf))\n* &#96;SceneEEVEE&#96;properties&#96;gtao\\_quality&#96;,&#96;use\\_gtao&#96;has been removed (they did nothing since 4.2).\n([1c29a2e2e5](https://projects.blender.org/blender/blender/commit/1c29a2e2e5a85f57e27ab2bc9b6b8c24318385bf))### Paint[&amp;para;](#paint)\n* Brush type enum property name has changed from being prefixed with&#96;\\_tool&#96;to&#96;\\_brush\\_type&#96;(e.g.&#96;brush.sculpt\\_tool&#96;becomes&#96;brush.sculpt\\_brush\\_type&#96;).\n([ab3c129dd9](https://projects.blender.org/blender/blender/commit/ab3c129dd97fc871e6991b10281489343940fca0))\n* The&#96;unified\\_paint\\_settings&#96;struct has been moved from the&#96;tool\\_settings&#96;struct to the mode-specific&#96;Paint&#96;struct (e.g.&#96;scene.tool\\_settings.unified\\_paint\\_settings&#96;becomes&#96;scene.tool\\_settings.sculpt.unified\\_paint\\_settings&#96;). ([4434a30d40](https://projects.blender.org/blender/blender/commit/4434a30d4042594ee2fbb95f4b9c46da38ca950a))\n* Radial symmetry is now moved from the scene tool settings (e.g. as&#96;scene.tool\\_settings.sculpt.radial\\_symmetry&#96;)\nto the mesh (as&#96;mesh.radial\\_symmetry&#96;). ([d73b8dd4f3](https://projects.blender.org/blender/blender/commit/d73b8dd4f3f5fb91cdf85311b98ff30faea14fb5))\n* Brush&#96;curve&#96;and&#96;curve\\_preset&#96;properties have been renamed to&#96;curve\\_distance\\_falloff&#96;and&#96;curve\\_distance\\_falloff\\_preset&#96;. ([327a1925cf](https://projects.blender.org/blender/blender/commit/327a1925cfa11338d3b400c6d7725a3c63a65bdb))\n* The&#96;brush.curve\\_preset&#96;and&#96;brush.sculpt\\_curves\\_falloff\\_preset&#96;operators have been removed. Their functionality is replaced with direct control of the curve via the template. ([0f3c6da272](https://projects.blender.org/blender/blender/commit/0f3c6da27250e200130f54757b844dfbe8eb791f))\n* The&#96;brush.use\\_custom\\_icon&#96;and&#96;brush.icon\\_filepath&#96;properties have been removed. Custom brush assets\nshould use the asset preview image instead. ([4ccf435058](https://projects.blender.org/blender/blender/commit/4ccf435058a5958df8b721c7470a8d0f90df9ada))### Image[&amp;para;](#image)\n* &#96;ImageTexture&#96;properties&#96;filter\\_type&#96;,&#96;use\\_mipmap&#96;,&#96;use\\_mipmap\\_gauss&#96;,&#96;filter\\_lightprobes&#96;,&#96;filter\\_eccentricity&#96;,&#96;use\\_filter\\_size\\_min&#96;have been removed (they did nothing since 2.80).\n([PR#139978](https://projects.blender.org/blender/blender/pulls/139978))### VSE[&amp;para;](#vse)\n* The VSE now uses a different scene for its context:\n* The&#96;context.workspace.sequencer\\_scene&#96;(or&#96;context.sequencer\\_scene&#96;for short) is the scene\nthat is used by all the sequence editors in the current workspace.\n* The&#96;context.scene&#96;refers to the active scene\nin the window (which can be different from the scene that the VSE uses!).\n* The&#96;end\\_frame&#96;property on newly added image and effect strips\n(which indirectly controlled their duration relative to the&#96;start\\_frame&#96;)\nhas been replaced with&#96;length&#96;, to support multiple image strips being added at a time.\n([PR#143974](https://projects.blender.org/blender/blender/pulls/143974))\n* Strip add operators use&#96;move\\_strips&#96;property which allows to transform strip after it is added.\nThis property is enabled by default, which makes these operators modal.\n([PR#138382](https://projects.blender.org/blender/blender/pulls/138382))### Assets[&amp;para;](#assets)\n* &#96;context.active\\_file&#96;isn't available in the asset shelf anymore. Use&#96;context.asset&#96;instead.\n([7cd26d37ea](https://projects.blender.org/blender/blender/commit/7cd26d37ea))\n* &#96;bpy.types.AssetHandle&#96;was removed. Use&#96;AssetRepresentation&#96;instead.\n([85878cf541](https://projects.blender.org/blender/blender/commit/85878cf541))\n* &#96;bpy.types.AssetCatalogPath&#96;was removed, it wasn't used or available anywhere.\n([bafb63a654](https://projects.blender.org/blender/blender/commit/bafb63a654))\n* &#96;UILayout.template\\_asset\\_view()&#96;was removed. Its been superseded by the[asset shelf](https://docs.blender.org/api/current/bpy.types.AssetShelf.html)([ae9ca35e3b](https://projects.blender.org/blender/blender/commit/ae9ca35e3b))### Theme[&amp;para;](#theme)\n* The following per-editor theme properties have been removed:\n* &#96;navigation\\_bar&#96;,&#96;execution\\_buts&#96;. ([dd43eae0d3](https://projects.blender.org/blender/blender/commit/dd43eae0d3))\n* &#96;tab\\_active&#96;,&#96;tab\\_inactive&#96;,&#96;tab\\_outline&#96;. They follow regular tab widget colors now.\n([e8735c3203](https://projects.blender.org/blender/blender/commit/e8735c3203))\n* &#96;panelcolors&#96;, including&#96;header&#96;,&#96;back&#96;,&#96;sub\\_back&#96;.\nReplaced by global styling:&#96;panel\\_header&#96;,&#96;panel\\_back&#96;,&#96;panel\\_sub\\_back&#96;.\n([7818082d02](https://projects.blender.org/blender/blender/commit/7818082d02))### Nodes[&amp;para;](#nodes)\n* Deprecated compositor nodes were removed. ([#140355](https://projects.blender.org/blender/blender/issues/140355))\n* Deprecated combine and separate nodes were removed. ([#135376](https://projects.blender.org/blender/blender/issues/135376))\n* Point density texture node was removed. ([#140292](https://projects.blender.org/blender/blender/issues/140292))\n* &#96;sun\\_direction&#96;,&#96;turbidity&#96;, and&#96;ground\\_albedo&#96;inputs from the Sky Texture node were removed.\n([ab21755aaf](https://projects.blender.org/blender/blender/commit/ab21755aaf))\n* Tree interface items can be looked up by identifier.\n([6f2988f0af](https://projects.blender.org/blender/blender/commit/6f2988f0af7352c35d6e7dff779a51c5b1001dba))\n* &#96;scene.use\\_nodes&#96;is deprecated and will be removed in 6.0\nCurrently it always returns&#96;True&#96;and setting it has no effect.\n([PR#143578](https://projects.blender.org/blender/blender/pulls/143578)).\n* &#96;scene.node\\_tree&#96;was removed, use&#96;scene.compositing\\_node\\_group&#96;instead\n([PR#143619](https://projects.blender.org/blender/blender/pulls/143619)). To create a basic node tree:\n&#96;&#96;&#96;\n&#96;[](#__codelineno-7-1)# Old way of creating a default compositing node tree.[](#__codelineno-7-2)scene.use\\_nodes=True# Node tree with default nodes is created here[](#__codelineno-7-3)default\\_render\\_layers=scene.node\\_tree.nodes[&amp;quot;Render Layers&amp;quot;][](#__codelineno-7-4)...[](#__codelineno-7-5)[](#__codelineno-7-6)# New way of creating a node tree[](#__codelineno-7-7)tree=bpy.data.node\\_groups.new(&amp;quot;My new comp&amp;quot;,&amp;quot;CompositorNodeTree&amp;quot;)[](#__codelineno-7-8)scene.compositing\\_node\\_group=tree[](#__codelineno-7-9)rlayers=tree.nodes.new(type=&amp;quot;CompositorNodeRLayers&amp;quot;)[](#__codelineno-7-10)output=tree.nodes.new(type=&amp;#39;NodeGroupOutput&amp;#39;)[](#__codelineno-7-11)tree.interface.new\\_socket(name=&amp;quot;Image&amp;quot;,in\\_out=&amp;quot;OUTPUT&amp;quot;,socket\\_type=&amp;quot;NodeSocketColor&amp;quot;)[](#__codelineno-7-12)tree.links.new(output.inputs[&amp;quot;Image&amp;quot;],rlayers.outputs[&amp;quot;Image&amp;quot;])[](#__codelineno-7-13)rlayers.location[0]-=1.5\\*rlayers.width&#96;\n&#96;&#96;&#96;\n* File Output node now takes&#96;directory&#96;and&#96;file\\_name&#96;as two different inputs\n* Removed:\n* &#96;bpy.types.CompositorNodeOutputFile.file\\_slots&#96;\n* &#96;bpy.types.CompositorNodeOutputFile.layer\\_slots&#96;\n* &#96;bpy.types.CompositorNodeOutputFile.base\\_path&#96;\n* Added:\n* &#96;bpy.types.CompositorNodeOutputFile.directory&#96;\n* &#96;bpy.types.CompositorNodeOutputFile.file\\_name&#96;\n* &#96;bpy.types.CompositorNodeOutputFile.file\\_output\\_items&#96;\n&#96;&#96;&#96;\n&#96;[](#__codelineno-8-1)# Giving input sockets a custom name in 4.5:[](#__codelineno-8-2)file\\_output\\_node=...[](#__codelineno-8-3)file\\_output\\_node.file\\_slots[0].path=&amp;quot;&amp;quot;my\\_custom\\_socket\\_name&amp;quot;&amp;quot;[](#__codelineno-8-4)[](#__codelineno-8-5)# In 5.0:[](#__codelineno-8-6)file\\_output\\_node=...[](#__codelineno-8-7)file\\_output\\_node.file\\_output\\_items[0].name=&amp;quot;&amp;quot;my\\_custom\\_socket\\_name&amp;quot;&amp;quot;&#96;\n&#96;&#96;&#96;\n* &#96;SpaceNodeEditor.geometry\\_nodes\\_type&#96;and&#96;SpaceNodeEditor.geometry\\_nodes\\_tool\\_tree&#96;were renamed to&#96;node\\_tree\\_sub\\_type&#96;and&#96;selected\\_node\\_group&#96;respectively.\n([3d7c8d022e](https://projects.blender.org/blender/blender/commit/3d7c8d022e))\n* Renamed Compositing Color node output socket from \"RGBA\" to \"Color\" ([fff3af04c4](https://projects.blender.org/blender/blender/commit/fff3af04c4))\n* The compositor Gamma Node&#96;CompositorNodeGamma&#96;was replaced by its Shader Node counterpart&#96;ShaderNodeGamma&#96;. Example mitigation:\n&#96;&#96;&#96;\n&#96;[](#__codelineno-9-1)# Old:[](#__codelineno-9-2)n=bpy.context.scene.node\\_tree.nodes.new(&amp;quot;CompositorNodeGamma&amp;quot;)[](#__codelineno-9-3)# New:[](#__codelineno-9-4)n=bpy.context.scene.node\\_tree.nodes.new(&amp;quot;ShaderNodeGamma&amp;quot;)&#96;\n&#96;&#96;&#96;\n### Alembic[&amp;para;](#alembic)\n* Removed deprecated&#96;Scene.alembic\\_export&#96;API.\nThis has been deprecated since 2.8 and had no import equivalent.\nThe real import/export operators are unchanged and remain as&#96;bpy.ops.wm.alembic\\_import&#96;and&#96;bpy.ops.wm.alembic\\_export&#96;([ec4db5825d](https://projects.blender.org/blender/blender/commit/ec4db5825d974579ddf8733941323cdadec3d766))\n* Removed the&#96;visible\\_objects\\_only&#96;operator option for&#96;bpy.ops.wm.alembic\\_export&#96;.\n([7c75651b3b](https://projects.blender.org/blender/blender/commit/7c75651b3b50ad180c955a10dd2c46a135cb0b6b))### USD[&amp;para;](#usd)\n* Renamed the&#96;import\\_subdiv&#96;operator option to&#96;import\\_subdivision&#96;for&#96;bpy.ops.wm.usd\\_import&#96;([fe54725113](https://projects.blender.org/blender/blender/commit/fe54725113b))\n* Renamed the&#96;attr\\_import\\_mode&#96;operator option to&#96;property\\_import\\_mode&#96;for&#96;bpy.ops.wm.usd\\_import&#96;([c2cf3783c4](https://projects.blender.org/blender/blender/commit/c2cf3783c4e))\n* Removed the&#96;export\\_textures&#96;operator option for&#96;bpy.ops.wm.usd\\_export&#96;.\nThis has been superseded by the&#96;export\\_textures\\_mode&#96;option.\n([b248c83027](https://projects.blender.org/blender/blender/commit/b248c8302772efed8f369bd5c3238b2262346187))\n* Changed the&#96;allow\\_unicode&#96;operator option to&#96;true&#96;by default for&#96;bpy.ops.wm.usd\\_export&#96;([f7210eabd8](https://projects.blender.org/blender/blender/commit/f7210eabd88ab7c93c54a81d312f1e253782b55d))\n* Removed the&#96;visible\\_objects\\_only&#96;operator option for&#96;bpy.ops.wm.usd\\_export&#96;.\n([7c75651b3b](https://projects.blender.org/blender/blender/commit/7c75651b3b50ad180c955a10dd2c46a135cb0b6b))### Logging[&amp;para;](#logging)\n* The format of[logging output has changed](../core/#logging),\nincluding background render progress.\nAdd-ons or render farms parsing this output may need to be updated.### Mesh[&amp;para;](#mesh)\n* The UV layer&#96;pin&#96;property no longer create the corresponding\nattribute when the property is accessed. Instead&#96;\\_ensure()&#96;functions\nwith the same names make sure the attributes are created\n([e1c121cd6a](https://projects.blender.org/blender/blender/commit/e1c121cd6ad2546b80f57d158ea1797bc5d97736)).\n* The UV selection is now shared between all UV maps.\n* Added:\nThe following UV attributes have been added.\n* &#96;.uv\\_select\\_vert&#96;(face-corner).\n* &#96;.uv\\_select\\_edge&#96;(face-edge).\n* &#96;.uv\\_select\\_face&#96;(face).\nBMesh attributes:\n* &#96;bmesh.types.BMLoop.uv\\_select\\_vert&#96;.\n* &#96;bmesh.types.BMLoop.uv\\_select\\_edge&#96;.\n* &#96;bmesh.types.BMFace.uv\\_select&#96;.\n* &#96;bmesh.types.BMesh.uv\\_select\\_sync\\_valid&#96;.\nBMesh methods:\n* &#96;bmesh.types.BMLoop.uv\\_select\\_vert\\_set()&#96;.\n* &#96;bmesh.types.BMLoop.uv\\_select\\_edge\\_set()&#96;.\n* &#96;bmesh.types.BMFace.uv\\_select\\_set()&#96;.\n* &#96;bmesh.types.BMesh.uv\\_select\\_flush\\_mode()&#96;.\n* &#96;bmesh.types.BMesh.uv\\_select\\_flush()&#96;.\n* &#96;bmesh.types.BMesh.uv\\_select\\_flush\\_shared()&#96;.\n* &#96;bmesh.types.BMesh.uv\\_select\\_sync\\_from\\_mesh()&#96;.\n* &#96;bmesh.types.BMesh.uv\\_select\\_sync\\_to\\_mesh()&#96;.\n* &#96;bmesh.types.BMesh.uv\\_select\\_foreach\\_set()&#96;.\n* &#96;bmesh.types.BMesh.uv\\_select\\_foreach\\_set\\_from\\_mesh()&#96;.\nSee the[bmesh.types](https://docs.blender.org/api/5.0/bmesh.types.html)API docs for details\n* Removed:\nThe following UV selection properties have been removed:\n* &#96;bpy.types.MeshUVLoopLayer.vertex\\_selection&#96;.\n* &#96;bpy.types.MeshUVLoopLayer.edge\\_selection&#96;.\n* &#96;bmesh.types.BMLoopUV.select&#96;.\n* &#96;bmesh.types.BMLoopUV.select\\_edge&#96;.### Modeling[&amp;para;](#modeling)\n* The \"FAST\" boolean solver has been renamed to \"FLOAT\". This impacts the boolean modifier and boolean operator. ([PR#141686](https://projects.blender.org/blender/blender/pulls/141686))### User Interface[&amp;para;](#user-interface)\n* The&#96;GRID&#96;enum value in&#96;bpy.types.UIList.layout\\_type&#96;was removed.[eef971e377](https://projects.blender.org/blender/blender/commit/eef971e3778a))\n* The&#96;RNA\\_ADD&#96;icon wasn't being used by Blender itself and is now removed\n([c8468f5cfa](https://projects.blender.org/blender/blender/commit/c8468f5cfa46edeae946f4c8ddcb94c82ca9914f)).\n* The&#96;RADIAL\\_MENU&#96;enum value in&#96;bpy.types.UILayout.emboss&#96;was renamed to&#96;PIE\\_MENU&#96;([c7b91903df](https://projects.blender.org/blender/blender/commit/c7b91903dfc8)).### Annotations &amp;amp; Grease Pencil[&amp;para;](#annotations-grease-pencil)\n* RNA types &amp;amp; properties related to the Annotations got renamed:**Types**:\n|Before|After|\n&#96;bpy.types.GPencilStrokePoint&#96;|&#96;bpy.types.AnnotationStrokePoint&#96;|\n&#96;bpy.types.GPencilStroke&#96;|&#96;bpy.types.AnnotationStroke&#96;|\n&#96;bpy.types.GPencilFrame&#96;|&#96;bpy.types.AnnotationFrame&#96;|\n&#96;bpy.types.GPencilFrames&#96;|&#96;bpy.types.AnnotationFrames&#96;|\n&#96;bpy.types.GPencilLayer&#96;|&#96;bpy.types.AnnotationLayer&#96;|\n&#96;bpy.types.GPencilLayers&#96;|&#96;bpy.types.AnnotationLayers&#96;|\n&#96;bpy.types.GreasePencil&#96;|&#96;bpy.types.Annotation&#96;|\n&#96;bpy.types.BlendDataGreasePencils&#96;|&#96;bpy.types.BlendDataAnnotations&#96;|\n**Properties**:\n|Before|After|\n&#96;bpy.data.grease\\_pencils&#96;|&#96;bpy.types.annotations&#96;|\n&#96;MovieClip.grease\\_pencil&#96;|&#96;MovieClip.annotation&#96;|\n&#96;NodeTree.grease\\_pencil&#96;|&#96;NodeTree.annotation&#96;|\n&#96;Scene.grease\\_pencil&#96;|&#96;Scene.annotation&#96;|\n&#96;SpaceImageEditor.grease\\_pencil&#96;|&#96;SpaceImageEditor.annotation&#96;|\n&#96;SpaceSequenceEditor.grease\\_pencil&#96;|&#96;SpaceSequenceEditor.annotation&#96;|\n&#96;MovieTrackingTrack.grease\\_pencil&#96;|&#96;MovieTrackingTrack.annotation&#96;|\n* Some RNA types related to Grease Pencil got renamed:\n|Before|After|\n&#96;bpy.types.GreasePencilv3&#96;|&#96;bpy.types.GreasePencil&#96;|\n&#96;bpy.data.grease\\_pencils\\_v3&#96;|&#96;bpy.data.grease\\_pencils&#96;|\n### Animation &amp;amp; Rigging[&amp;para;](#animation-rigging)\n* The&#96;hide&#96;property on the bone (e.g.&#96;bpy.data.armatures[\"Armature\"].bones[0].hide&#96;)\nnow affects the edit bone visibility. To affect the visibility of the bone in Object or Pose mode,\nuse the new property on the pose bone (&#96;bpy.data.objects[\"Armature\"].pose.bones[0].hide&#96;).\nThe property on the edit bone still exists and is unchanged.\n* Pose bones now have a&#96;select&#96;property that stores their selection state.\n(&#96;bpy.data.objects[\"Armature\"].pose.bones[0].select&#96;)\nSelection is synced with edit bones when going in and out of Edit Mode. The properties&#96;select&#96;,&#96;select\\_head&#96;and&#96;select\\_tail&#96;of the bone itself (&#96;bpy.data.armatures[\"Armature\"].bones[0].select&#96;) have been removed. Instead, the identically named properties of the edit bone\n(&#96;bpy.data.armatures[\"Armature\"].edit\\_bones[0].select&#96;) should be used.\n* The&#96;activate\\_new\\_action&#96;property from the&#96;poselib.create\\_pose\\_asset&#96;operator was removed.\nThat property was already deprecated and had no effect starting from 4.5.\n([debd0c0877](https://projects.blender.org/blender/blender/commit/debd0c0877e535a25c040ddb23ad50859c70db76))\n* The&#96;context.space\\_data.action&#96;pointer has been removed from the Dope Sheet context\n([d1962be44c](https://projects.blender.org/blender/blender/commit/d1962be44c313464ad3c4e5143418fbab076d3e0)).\nUse&#96;context.active\\_action&#96;instead.\n* The&#96;action.layer\\_prev&#96;and&#96;action.layer\\_next&#96;operators were removed\n([19bf803e51](https://projects.blender.org/blender/blender/commit/19bf803e5152548af7e260088ff1e0679a9ac821))\n* The deprecated and non-functional&#96;INSERTKEY\\_XYZ\\_TO\\_RGB&#96;flag for&#96;keyframe\\_insert()&#96;'s&#96;options&#96;parameter has been fully removed\n([e6f1cd6a29](https://projects.blender.org/blender/blender/commit/e6f1cd6a29804f383824d2b2ab522ad34d48838f)).\n* New functions &amp;amp; parameters to make it simpler to port code from the legacy Action API\n(removed in 5.0) to the current one (introduced in 4.4)\n([dbcb701eb2](https://projects.blender.org/blender/blender/commit/dbcb701eb2e6b9fbc2e74b5a469f882c4782ba83)):\n* &#96;channelbag.fcurves.new()&#96;and&#96;action.fcurve\\_ensure\\_for\\_datablock()&#96;now have a&#96;group\\_name&#96;parameter that determines the channel group the F-Curves will be put into.\nIf the group doesn't exist yet, it will be created.\n* A new function&#96;bpy\\_extras.anim\\_utils.action\\_ensure\\_channelbag\\_for\\_slot(action, slot)&#96;that returns an&#96;ActionChannelbag&#96;for the given slot.\nIf necessary, it creates a new layer and a new keyframe strip to contain that channelbag.\n* A new function&#96;channelbag.fcurves.ensure()&#96;that takes the same parameters as&#96;channelbag.fcurves.new()&#96;, but simply returns the F-Curve if it already exists.\n* The legacy&#96;Action&#96;API has been removed\n([1395abc502](https://projects.blender.org/blender/blender/commit/1395abc502ec2801b243c50f0ee4f83a392f3937)).\nThis covered the properties&#96;action.fcurves&#96;,&#96;action.groups&#96;, and&#96;action.id\\_root&#96;.\nInstead of&#96;action.fcurves&#96;and&#96;action.groups&#96;, access those properties on the channelbag. Each\nslot of an Action can have a channelbag. You can use the convenience functions in&#96;bpy\\_extras.anim\\_utils&#96;to get one, or to ensure one exists.\nReplace this legacy code:\n&#96;&#96;&#96;\n&#96;[](#__codelineno-10-1)# Finding:[](#__codelineno-10-2)found\\_fcurve=action.fcurves.find(&amp;quot;location&amp;quot;,index=2)[](#__codelineno-10-3)[](#__codelineno-10-4)# Creating:[](#__codelineno-10-5)new\\_fcurve=action.fcurves.new(&amp;quot;location&amp;quot;,index=2,action\\_group=&amp;quot;Name&amp;quot;)&#96;\n&#96;&#96;&#96;\nwith this code:\n&#96;&#96;&#96;\n&#96;[](#__codelineno-11-1)# Finding:[](#__codelineno-11-2)channelbag=anim\\_utils.action\\_get\\_channelbag\\_for\\_slot(action,action\\_slot)[](#__codelineno-11-3)found\\_fcurve=channelbag.fcurves.find(&amp;quot;location&amp;quot;,index=2)[](#__codelineno-11-4)[](#__codelineno-11-5)# Creating:[](#__codelineno-11-6)channelbag=anim\\_utils.action\\_ensure\\_channelbag\\_for\\_slot(action,action\\_slot)[](#__codelineno-11-7)new\\_fcurve=channelbag.fcurves.new(&amp;quot;location&amp;quot;,index=2,group\\_name=&amp;quot;Name&amp;quot;)&#96;\n&#96;&#96;&#96;\nReplace this legacy code:\n&#96;&#96;&#96;\n&#96;[](#__codelineno-12-1)# Ensuring the F-Curve exists:[](#__codelineno-12-2)fcurve=action.fcurves.find(&amp;quot;location&amp;quot;,index=2,action\\_group=&amp;quot;Name&amp;quot;)[](#__codelineno-12-3)ifnotfcurve:[](#__codelineno-12-4)fcurve=action.fcurves.new(&amp;quot;location&amp;quot;,index=2,action\\_group=&amp;quot;Name&amp;quot;)&#96;\n&#96;&#96;&#96;\nwith this code:\n&#96;&#96;&#96;\n&#96;[](#__codelineno-13-1)# Ensuring the F-Curve exists:[](#__codelineno-13-2)channelbag=anim\\_utils.action\\_ensure\\_channelbag\\_for\\_slot(action,action\\_slot)[](#__codelineno-13-3)fcurve=channelbag.fcurves.ensure(&amp;quot;location&amp;quot;,index=2,group\\_name=&amp;quot;Name&amp;quot;)&#96;\n&#96;&#96;&#96;\nIn a similar way, instead of&#96;action.groups&#96;use&#96;channelbag.groups&#96;.\nNote that the group parameter name is different (&#96;action\\_group&#96;became&#96;group\\_name&#96;). This\nclarifies that this is the name of the group, and not a reference to the group itself.\nActions themselves have not been bound to any specific data-block type since Blender 4.4. This has\nmoved to the Action slot.&#96;action.id\\_root&#96;has been replaced with&#96;action\\_slot.target\\_id\\_type&#96;.\nAlso see the[Blender 4.4 release notes](../../4.4/upgrading/slotted_actions/)for many examples of\nhow to port legacy code to the current API. Of course that does not include the changes in Blender\n5.0 that are described above, but it gives a good overview.\n### mathutils[&amp;para;](#mathutils)\n* Native buffer protocol support was added for&#96;mathutils&#96;types.\nThis causes the underlying type of a&#96;Vector&#96;for example to be a&#96;float32&#96;where it was previously a&#96;float64&#96;.\n([b856b6010e](https://projects.blender.org/blender/blender/commit/b856b6010ea331ffb568d7bd9eab64f5501bb263))\n## Inline Shader Nodes[&amp;para;](#inline-shader-nodes)\nThere is a new API for retrieving an inlined shader node tree to support\nclosures, bundles and repeat zones in external render engines. Additionally,\nthis inlines node groups and eliminates reroute and muted nodes, which\nsimplifies export of shader nodes. ([c3f49cd24e](https://projects.blender.org/blender/blender/commit/c3f49cd24e9658b699c86768b5ef1c072291c506)).\nSee the[Python API docs](https://docs.blender.org/api/5.0/bpy.types.InlineShaderNodes.html)for\nmore details.\n## PointCaches[&amp;para;](#pointcaches)\n* The&#96;PointCache.compression&#96;property was removed; caches are always compressed now.\n([PR#144356](https://projects.blender.org/blender/blender/pulls/144356))## Deprecation[&amp;para;](#deprecation)\n### GPU[&amp;para;](#gpu_1)\n* &#96;DEPTH24\\_STENCIL8&#96;and&#96;DEPTH\\_COMPONENT24&#96;are now deprecated.\nWhen used they will use depth32f variants ([#140644](https://projects.blender.org/blender/blender/issues/140644))\n* &#96;UINT\\_24\\_8&#96;datatype are now deprecated. When used consider using&#96;FLOAT&#96;.\n([#140715](https://projects.blender.org/blender/blender/issues/140715))### Shading[&amp;para;](#shading)\n* &#96;world.use\\_nodes&#96;is deprecated and will be removed in 6.0. Currently it always returns&#96;True&#96;and setting it has no effect. ([PR#142342](https://projects.blender.org/blender/blender/pulls/142342))\nTo create a node tree with default nodes:\n&#96;&#96;&#96;\n&#96;[](#__codelineno-14-1)# Old way of creating a default world node tree.[](#__codelineno-14-2)scene.world=bpy.data.worlds.new(&amp;quot;My new world&amp;quot;)[](#__codelineno-14-3)scene.world.use\\_nodes=True# Node tree with default nodes is created here[](#__codelineno-14-4)...[](#__codelineno-14-5)[](#__codelineno-14-6)# New way of creating a node tree[](#__codelineno-14-7)scene.world=bpy.data.worlds.new(&amp;quot;My new world&amp;quot;)# Node tree with default nodes is created here[](#__codelineno-14-8)scene.world.use\\_nodes=True# Deprecated, has no effect&#96;\n&#96;&#96;&#96;\n* &#96;material.use\\_nodes&#96;is deprecated and will be removed in 6.0. Currently it always returns&#96;True&#96;and setting it has no effect. ([PR#141278](https://projects.blender.org/blender/blender/pulls/141278)).\nTo create a node tree with default nodes:\n&#96;&#96;&#96;\n&#96;[](#__codelineno-15-1)# Old way of creating a default material node tree[](#__codelineno-15-2)mat=bpy.data.materials.new(&amp;quot;My new material&amp;quot;)[](#__codelineno-15-3)obj=...# Get active object[](#__codelineno-15-4)obj.active\\_material=mat[](#__codelineno-15-5)mat.use\\_nodes=True# Creates a default node tree[](#__codelineno-15-6)[](#__codelineno-15-7)# New way of creating a default material node tree[](#__codelineno-15-8)mat=bpy.data.materials.new(&amp;quot;My new material&amp;quot;)# Creates a default node tree[](#__codelineno-15-9)obj=...# Get active object[](#__codelineno-15-10)obj.active\\_material=mat[](#__codelineno-15-11)mat.use\\_nodes=True# Deprecated, has no effect.&#96;\n&#96;&#96;&#96;\n## Additions[&amp;para;](#additions)\n* Add the ability to query the Python module path from structs and properties with&#96;path\\_from\\_module&#96;.\n([df7273930f](https://projects.blender.org/blender/blender/commit/df7273930f30aab75c5f0b012d9abc6cacb4d98b))### Pipeline &amp;amp; I/O[&amp;para;](#pipeline-io)\n* Add three new RNA functions to&#96;bpy.types.CollectionExports&#96;to create, remove,\nand reorder collection exporters ([7f0d15b31f](https://projects.blender.org/blender/blender/commit/7f0d15b31f)):\n* &#96;collection.exporters.new('IO\\_FH\\_alembic', name=\"Alembic\")&#96;\n* &#96;collection.exporters.remove(exporter)&#96;\n* &#96;collection.exporters.move(0, 1)&#96;### Rendering[&amp;para;](#rendering)\n* The&#96;render.render()&#96;operator now supports&#96;frame\\_start&#96;and&#96;frame\\_end&#96;optional arguments.\n([PR#146022](https://projects.blender.org/blender/blender/pulls/146022),[PR#147169](https://projects.blender.org/blender/blender/pulls/147169))### Context Logging[&amp;para;](#context-logging)\n* Add the ability to log context members by calling&#96;logging\\_set(True)&#96;on the “with” target of a temporary override. This will log the members that are being accessed during the operation and may assist in debugging when it is unclear which members can be overridden. ([439fe8a1a0](https://projects.blender.org/blender/blender/commit/439fe8a1a0d69be6bb9e080e90b89bc6342cac82))\n&#96;&#96;&#96;\n&#96;[](#__codelineno-16-1)importbpy[](#__codelineno-16-2)frombpyimportcontext[](#__codelineno-16-3)[](#__codelineno-16-4)my\\_objects=[context.scene.camera][](#__codelineno-16-5)[](#__codelineno-16-6)withcontext.temp\\_override(selected\\_objects=my\\_objects)asoverride:[](#__codelineno-16-7)override.logging\\_set(True)# Enable logging.[](#__codelineno-16-8)bpy.ops.object.delete()&#96;\n&#96;&#96;&#96;\n* Command Line Logging is also avaliable to globally log all context member acccess via the&#96;context&#96;logging category which replaces the previous&#96;bpy.context&#96;logging category. ([e2872c0bfe](https://projects.blender.org/blender/blender/commit/e2872c0bfef729bcc2f03a583b100033f13c5ea0))\n&#96;&#96;&#96;\n&#96;[](#__codelineno-17-1)./blender--log-leveltrace--log&amp;quot;context&amp;quot;&#96;\n&#96;&#96;&#96;\n### Working Color Space[&amp;para;](#working-color-space)\nWhile it was already possible with custom OpenColorIO configurations,\nthe addition of the[Working Space](../color_management/#working-space)option means that it will now be more common for the scene linear colorspace\nto be different than Linear Rec.709.\nTo get the same colors regardless of the working space, exporters can convert material,\nlight and other colors[to Linear Rec.709](https://docs.blender.org/api/main/mathutils.html#mathutils.Color.from_scene_linear_to_rec709_linear).\nImporters can convert from[from Linear Rec.709](https://docs.blender.org/api/main/mathutils.html#mathutils.Color.from_rec709_linear_to_scene_linear)to scene linear.\nAlternatively if the file format supports color-space metadata,\nthen&#96;bpy.data.colorspace.working\\_space\\_interop\\_id&#96;may be used to identify the working space.\nCommon values are&#96;lin\\_rec709\\_scene&#96;,&#96;lin\\_rec2020\\_scene&#96;and&#96;lin\\_ap1\\_scene&#96;(ACEScg).\n### mathutils[&amp;para;](#mathutils_1)\n* Add&#96;mathutils.geometry.intersect\\_point\\_line\\_segment&#96;function,\nsimilar to&#96;intersect\\_point\\_line&#96;but clamps at the line-segment end-points.\n([44d04ad857](https://projects.blender.org/blender/blender/commit/44d04ad8578ae7c31c1c6cc14d8b03b5387b29f5)).### Core[&amp;para;](#core)\n* Add&#96;bpy.data.file\\_path\\_foreach()&#96;,\nwhich calls a callback function for each file path used in the blend file\n([d33a6a1723](https://projects.blender.org/blender/blender/commit/d33a6a172377f43e82c84ac9f130413d918afe8e)).\nThe callback function can return a new path, which will replace the visited path.\nBack to top"
+}
+```
+User decision: **accepted**
+
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search">
+<details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+
+Parameters:
+
+```json
+{
+  "pattern": "action\\.fcurves|\\.fcurves",
+  "path": "E:\\Rainys_Bulk_Scene_Tools",
+  "caseInsensitive": false
+}
+```
+Result:
+
+```json
+{
+  "success": {
+    "pattern": "action\\.fcurves|\\.fcurves",
+    "path": "E:\\Rainys_Bulk_Scene_Tools",
+    "outputMode": "content",
+    "workspaceResults": {
+      "E:\\Rainys_Bulk_Scene_Tools": {
+        "content": {
+          "matches": [
+            {
+              "file": ".\\ops\\delete_single_keyframe_actions.py",
+              "matches": [
+                {
+                  "lineNumber": 17,
+                  "content": "            for fcurve in action.fcurves:"
+                }
+              ]
+            }
+          ],
+          "totalLines": 1,
+          "totalMatchedLines": 1
+        }
+      }
+    }
+  }
+}
+```
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+
+
+---
+
+<think><details><summary>Thought Process</summary>
+
+The user wants me to implement the version branch in `delete_single_keyframe_actions.py` to make it compatible with Blender 5.0 (using the new channelbag/slots API) while keeping compatibility with 4.2 LTS and 4.5 LTS (using the old `action.fcurves` API).
+
+I will read the current state of the operator and the version utils to implement this correctly.
+</details></think>
+
+---
+
+
+
+
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: E:\Rainys_Bulk_Scene_Tools\ops\delete_single_keyframe_actions.py</summary>
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: E:\Rainys_Bulk_Scene_Tools\utils\version.py</summary>
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+
+Now I need to understand the Blender 5.0 API for iterating F-Curves via channelbags. The summary said:
+- Use `bpy_extras.anim_utils` - e.g. `action_get_channelbag_for_slot`, `action_ensure_channelbag_for_slot`
+- Iterate over `action.slots`, get the channelbag per slot, then iterate `channelbag.fcurves`
+
+I will search for how other parts of the codebase use bpy_extras.anim_utils or the 5.0 action API, and also check Blender docs or existing usage of action.slots / channelbag.
+</details></think>
+
+---
+
+
+Checking how Blender 5.0 anim_utils and action slots are used in the codebase:
+
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search">
+<details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+
+Parameters:
+
+```json
+{
+  "pattern": "anim_utils|action_get_channelbag|action\\.slots|channelbag",
+  "path": "E:\\Rainys_Bulk_Scene_Tools",
+  "caseInsensitive": false
+}
+```
+Result:
+
+```json
+{
+  "success": {
+    "pattern": "anim_utils|action_get_channelbag|action\\.slots|channelbag",
+    "path": "E:\\Rainys_Bulk_Scene_Tools",
+    "outputMode": "content",
+    "workspaceResults": {
+      "E:\\Rainys_Bulk_Scene_Tools": {
+        "content": {}
+      }
+    }
+  }
+}
+```
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="search" data-tool-name="web_search">
+<details>
+            <summary>Tool use: **web_search** • Searched web `undefined` • **1** results</summary>
+        
+| Title | URL | Chunk |
+|-------|-----|-------|
+| Web search results for query: Blender 5.0 Python API action.fcurves removed bpy_extras.anim_utils channelbag action slots |  | Links:<br/>1. [ActionChannelbagFCurves(bpy_struct) ¶](https://docs.blender.org/api/current/bpy.types.ActionChannelbagFCurves.html)<br/>2. [Slotted Actions: Upgrading to 4.4 ¶](https://developer.blender.org/docs/release_notes/4.4/upgrading/slotted_actions/)<br/>3. [Anim: Remove 'Slotted Actions' experimental flag](https://projects.blender.org/blender/blender/pulls/128889)<br/>4. [Layered Actions ¶](https://developer.blender.org/docs/features/animation/animation_system/layered/)<br/>5. [](https://docs.blender.org/api/current/bpy.types.ActionFCurves.html)<br/><br/># Blender 5.0 Python API Changes: Actions and F-Curves<br/><br/>## Key Changes in Action API<br/><br/>In Blender 4.4+, the Python API for Actions underwent significant changes with the introduction of Slotted Actions. The legacy `action.fcurves` property is still available but now operates only on the first slot's data.[5]<br/><br/>## F-Curves Access Pattern<br/><br/>**Legacy approach (still works):**[2]<br/>```python<br/>fcurve = action.fcurves.new("location", index=1)<br/>action.fcurves.remove(fcurve)<br/>```<br/><br/>**New approach with slots and layers:**[2]<br/>To access F-Curves in Blender 4.4+, you must work through the Action's layers, strips, and channelbags:<br/>```python<br/>layer = action.layers.new("Layer")<br/>strip = layer.strips.new(type='KEYFRAME')<br/>channelbag = strip.channelbag(slot, ensure=True)<br/>fcurve = channelbag.fcurves.new("location", index=1)<br/>channelbag.fcurves.remove(fcurve)<br/>```<br/><br/>## ActionChannelbagFCurves<br/><br/>The `ActionChannelbagFCurves` class[1] provides F-Curve collection access through channelbags, which are associated with specific slots within animation strips.<br/><br/>## Backward Compatibility<br/><br/>The legacy API remains functional as a compatibility layer, automatically proxying operations to `action.layers[0].strips[0].channelbag(action.slots[0])`.[2] However, new code should use the slot-aware API to work with Actions properly in Blender 4.4+.<br/><br/>Note: `bpy_extras.anim_utils` was not mentioned in the search results provided. |
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+
+So the web search says:
+- In 4.4+, the legacy `action.fcurves` proxies to the first slot's data
+- In 5.0, the legacy API might have been removed entirely (hence the AttributeError)
+- New approach: iterate layers, strips, channelbags
+
+I will fetch the Blender docs for "Slotted Actions: Upgrading to 4.4" and the Action API to get exact attribute names (action.slots, action.layers, etc.).
+</details></think>
+
+---
+
+
+
+
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="web_fetch">
+<details>
+<summary>Tool use: **web_fetch**</summary>
+
+
+Parameters:
+
+```json
+{
+  "url": "https://developer.blender.org/docs/release_notes/4.4/upgrading/slotted_actions/"
+}
+```
+Result:
+
+```json
+{
+  "url": "https://developer.blender.org/docs/release_notes/4.4/upgrading/slotted_actions/",
+  "markdown": "Slotted Actions - Blender Developer Documentation\n[Skip to content](#slotted-actions-upgrading-to-44)\n[](https://projects.blender.org/blender/blender-developer-docs/_edit/main/docs/release_notes/4.4/upgrading/slotted_actions.md)# Slotted Actions: Upgrading to 4.4[&amp;para;](#slotted-actions-upgrading-to-44)\nThis page documents the upgrade path, from Blender 4.3 to 4.4, for\nPython code that was working with Actions and Action assignments.\nFor a basic overview of how to work with Slotted Actions, check[Animation &amp;amp; Rigging](../../animation_rigging/#slotted-actions)and[Python API](../../python_api/#slotted-actions)in the 4.4 release notes.\n## Actions[&amp;para;](#actions)\nThis section describes the new API on the[&#96;Action&#96;](https://docs.blender.org/api/4.4/bpy.types.Action.html)class\n### Getting the Action and Slot you want to work with[&amp;para;](#getting-the-action-and-slot-you-want-to-work-with)\nBlender 4.3 and older:\n&#96;&#96;&#96;\n&#96;[](#__codelineno-0-1)# Depending on the situation, get the Action from the animated thing.[](#__codelineno-0-2)action=animated\\_thing.animation\\_data.action[](#__codelineno-0-3)[](#__codelineno-0-4)# Or use the action name:[](#__codelineno-0-5)action=bpy.data.actions[&amp;quot;SuzanneAction&amp;quot;]&#96;\n&#96;&#96;&#96;\nBlender 4.4:\n&#96;&#96;&#96;\n&#96;[](#__codelineno-1-1)# Depending on the situation, get the Action + Slot from the animated thing.[](#__codelineno-1-2)action=animated\\_thing.animation\\_data.action[](#__codelineno-1-3)slot=animated\\_thing.animation\\_data.action\\_slot[](#__codelineno-1-4)[](#__codelineno-1-5)# Or use the action name and slot identifier:[](#__codelineno-1-6)action=bpy.data.actions[&amp;quot;SuzanneAction&amp;quot;][](#__codelineno-1-7)slot=action.slots[&amp;quot;OBSuzanne&amp;quot;][](#__codelineno-1-8)[](#__codelineno-1-9)# Or create a new slot on an Action:[](#__codelineno-1-10)slot=action.slots.new(id\\_type=&amp;#39;OBJECT&amp;#39;,name=&amp;quot;Suzanne&amp;quot;)&#96;\n&#96;&#96;&#96;\n### Creating F-Curves and assigning Groups[&amp;para;](#creating-f-curves-and-assigning-groups)\nBlender 4.3 and older:\n&#96;&#96;&#96;\n&#96;[](#__codelineno-2-1)fcurve=action.fcurves.new(&amp;quot;location&amp;quot;,index=1)[](#__codelineno-2-2)group=action.groups.new(&amp;quot;Object Transform&amp;quot;)[](#__codelineno-2-3)fcurve.group=group&#96;\n&#96;&#96;&#96;\nBlender 4.4:\n&#96;&#96;&#96;\n&#96;[](#__codelineno-3-1)# If there is no yet a layer with a keyframe strip:[](#__codelineno-3-2)# (Blender 4.4 only supports a single layer with a single strip)[](#__codelineno-3-3)layer=action.layers.new(&amp;quot;Layer&amp;quot;)[](#__codelineno-3-4)strip=layer.strips.new(type=&amp;#39;KEYFRAME&amp;#39;)[](#__codelineno-3-5)[](#__codelineno-3-6)# Or grab the existing one:[](#__codelineno-3-7)strip=action.layers[0].strips[0][](#__codelineno-3-8)[](#__codelineno-3-9)# Get the channelbag for this slot, creating it if necessary:[](#__codelineno-3-10)channelbag=strip.channelbag(slot,ensure=True)[](#__codelineno-3-11)[](#__codelineno-3-12)# The channelbag behaves like legacy Actions:[](#__codelineno-3-13)fcurve=channelbag.fcurves.new(&amp;quot;location&amp;quot;,index=1)[](#__codelineno-3-14)group=channelbag.groups.new(&amp;quot;Object Transform&amp;quot;)[](#__codelineno-3-15)fcurve.group=group&#96;\n&#96;&#96;&#96;\n### Accessing existing F-Curves[&amp;para;](#accessing-existing-f-curves)\nBlender 4.3 and older:\n&#96;&#96;&#96;\n&#96;[](#__codelineno-4-1)fcurve=action.fcurves.find(&amp;quot;location&amp;quot;,index=1)[](#__codelineno-4-2)action.fcurves.remove(fcurve)&#96;\n&#96;&#96;&#96;\nBlender 4.4:\n&#96;&#96;&#96;\n&#96;[](#__codelineno-5-1)# F-Curves can be found &amp;amp; removed from the appropriate channelbag.[](#__codelineno-5-2)strip=action.layers[0].strips[0][](#__codelineno-5-3)channelbag=strip.channelbag(slot)[](#__codelineno-5-4)[](#__codelineno-5-5)fcurve=channelbag.fcurves.find(&amp;quot;location&amp;quot;,index=1)[](#__codelineno-5-6)channelbag.fcurves.remove(fcurve)&#96;\n&#96;&#96;&#96;\n### Backward-Compatible Legacy API[&amp;para;](#backward-compatible-legacy-api)\nThe code shown above for \"Blender 4.3 and older\" will work in Blender 4.4 as well. The properties\nused there will act as a proxy for the data in&#96;action.layers[0].strips[0].channelbag(action.slots[0])&#96;, creating the layer, strip, and slot if\nnecessary.\nSimilarly,&#96;action.id\\_root&#96;acts as a proxy for&#96;action.slots[0].target\\_id\\_type&#96;. Writing to&#96;action.id\\_root&#96;will write to&#96;action.slots[0].target\\_id\\_type&#96;, creating the slot if necessary.\n|Legacy API|Are proxies of|\n&#96;action.fcurves&#96;|&#96;action.layers[0].strips[0].channelbag(action.slots[0]).fcurves&#96;|\n&#96;action.groups&#96;|&#96;action.layers[0].strips[0].channelbag(action.slots[0]).groups&#96;|\n&#96;action.id\\_root&#96;|&#96;action.slots[0].target\\_id\\_type&#96;|\nThis legacy API is considered deprecated, and will be removed in Blender 5.0.\n## Action &amp;amp; Slot Assignments[&amp;para;](#action-slot-assignments)\nTechnically, assigning Actions still works the same way:\n&#96;&#96;&#96;\n&#96;[](#__codelineno-6-1)object=bpy.context.object[](#__codelineno-6-2)anim\\_data=object.animation\\_data\\_create()[](#__codelineno-6-3)anim\\_data.action=action&#96;\n&#96;&#96;&#96;\nIn Blender 4.3, this was enough to make&#96;object&#96;animated by&#96;action&#96;.\nIn Blender 4.4, this assignment will try and auto-assign a slot as well, based on[a set of\nheuristics](../../animation_rigging/#auto-assignment-rules). As a result, sometimes there may not be\na slot auto-assigned, in which cases the Action assignment has worked, but does not result in the\nobject actually being animated.\nAssuming that a suitable slot exists on the Action, you can use this code to assign a slot explicitly:\n&#96;&#96;&#96;\n&#96;[](#__codelineno-7-1)# Assign the action as above, then:[](#__codelineno-7-2)anim\\_data.action\\_slot=anim\\_data.action\\_suitable\\_slots[0]&#96;\n&#96;&#96;&#96;\nFor more information, see[AnimData in the Python API documentation](https://docs.blender.org/api/4.4/bpy.types.AnimData.html).\n## NLA Strips &amp;amp; Action Constraints[&amp;para;](#nla-strips-action-constraints)\n[NLA strips](https://docs.blender.org/api/4.4/bpy.types.NlaStrip.html)and[Action Constraints](https://docs.blender.org/api/4.4/bpy.types.ActionConstraint.html)have similar properties &amp;amp;\nbehavior as the main Action &amp;amp; Slot assignment described above.\nJust like normal Action assignment, assigning an Action will auto-assign a suitable slot as well.\nFor NLA Strips and Action Constraints, this auto-assignment is a little bit more \"eager\" to select a\nslot: If there is a suitable slot on the Action (i.e. where its&#96;.target\\_id\\_type&#96;matches the\nanimated data-block's&#96;.id\\_type&#96;), it will be chosen.\n## What did not change[&amp;para;](#what-did-not-change)\nProperties can still be keyed via the&#96;.keyframe\\_insert()&#96;method:\n&#96;&#96;&#96;\n&#96;[](#__codelineno-8-1)object=bpy.context.object[](#__codelineno-8-2)object.pose.bones[&amp;quot;&amp;quot;Arm\\_L&amp;quot;&amp;quot;].keyframe\\_insert(&amp;quot;&amp;quot;rotation\\_euler&amp;quot;&amp;quot;,1)&#96;\n&#96;&#96;&#96;\nThis will ensure the appropriate data exists, so:\n1. an action, and assign it to the object\n2. a slot for the object, and assign that too\n3. a layer, with a keyframe strip\n4. a channelbag for the slot\n5. the F-Curve, and where appropriate, a group for that F-Curve.\nBack to top"
+}
+```
+User decision: **accepted**
+
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="search" data-tool-name="web_search">
+<details>
+            <summary>Tool use: **web_search** • Searched web `undefined` • **1** results</summary>
+        
+| Title | URL | Chunk |
+|-------|-----|-------|
+| Web search results for query: Blender 5.0 Action Python API fcurves AttributeError removed iterate all fcurves |  | Links:<br/>1. [](https://docs.blender.org/api/current/bpy.types.ActionFCurves.html)<br/>2. [ActionFCurves(bpy_struct) - Blender Python API](https://docs.blender.org/api/current/bpy.types.ActionFCurves.html?highlight=fcurves%20find)<br/>3. [How to Access and Manipulate Keyframes in the Blender Python API](https://harlepengren.com/how-to-access-and-manipulate-keyframes-in-the-blender-python-api/)<br/>4. [how to get a list of all FCurves in a scene](https://blender.stackexchange.com/questions/28162/how-to-get-a-list-of-all-fcurves-in-a-scene)<br/>5. [Determine if fcurves cannot be evaluated from Python](https://blender.stackexchange.com/questions/222090/determine-if-fcurves-cannot-be-evaluated-from-python)<br/><br/># Blender 5.0 F-Curves Iteration and API Changes<br/><br/>## Iterating All F-Curves<br/><br/>To iterate all F-Curves in an Action, use the `fcurves` collection as a standard Python iterable:[1]<br/><br/>```python<br/>for fcurve in action.fcurves:<br/>    print(fcurve)<br/>```<br/><br/>You can access all actions via `bpy.data.actions` and then loop through their F-Curves:[4]<br/><br/>```python<br/>for action in bpy.data.actions:<br/>    for fcurve in action.fcurves:<br/>        for keyframe in fcurve.keyframe_points:<br/>            x, y = keyframe.co<br/>```<br/><br/>## Blender 5.0 API Changes<br/><br/>In Blender 5.0, the `ActionFCurves` API was updated with a critical change: **the legacy API is now action-slot aware**. The documentation notes that `ActionFCurves` will "only consider the F-Curves for this action's first slot."[1] This means operations like `find()` now scan only the first slot's F-Curves rather than all F-Curves in the action.[1]<br/><br/>## Available Methods<br/><br/>The `ActionFCurves` collection provides these methods:[1]<br/><br/>- `new(data_path, index=0, action_group='')` – Add an F-Curve<br/>- `find(data_path, index=0)` – Find a specific F-Curve (performs linear scan of first slot)<br/>- `remove(fcurve)` – Remove an F-Curve<br/>- `clear()` – Remove all F-Curves from the first slot<br/><br/>If you encounter an `AttributeError`, verify you're accessing `fcurves` as a standard collection rather than relying on removed legacy properties. |
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+
+The developer docs say clearly: "This legacy API is considered deprecated, and will be removed in Blender 5.0." So in 5.0, `action.fcurves` is gone.
+
+For 5.0 we need to iterate:
+- action.layers
+- for each layer: layer.strips
+- for each strip: get channelbag for each slot - strip.channelbag(slot)
+- for each channelbag: channelbag.fcurves
+
+To get all F-Curves for an action in 5.0 we need to walk:
+- action.layers
+- layer.strips  
+- for each strip, we need to get channelbags. The strip.channelbag(slot, ensure=False) takes a slot. So we need action.slots and for each slot get strip.channelbag(slot).
+
+So the 5.0 path:
+```python
+for action in actions:
+    keyframe_frames = set()
+    total_keyframes = 0
+    for layer in action.layers:
+        for strip in layer.strips:
+            for slot in action.slots:
+                channelbag = strip.channelbag(slot, ensure=False)
+                if channelbag is None:
+                    continue
+                for fcurve in channelbag.fcurves:
+                    for kf in fcurve.keyframe_points:
+                        keyframe_frames.add(kf.co[0])
+                        total_keyframes += 1
+    # ... rest same
+```
+
+Actually, I need to check the Blender 5.0 API for strip.channelbag - is it a method? The 4.4 docs said:
+`channelbag = strip.channelbag(slot, ensure=True)` - so it's a method taking slot and ensure.
+
+I will also ensure we don't import anything that doesn't exist in 4.2. We only need to branch in execute():
+- if is_version_less_than(5, 0, 0): use action.fcurves
+- else: use action.layers -> strips -> channelbags
+
+We need to handle the case where action.layers might be empty (no layers), or action.slots might be empty. So we need safe iteration.
+
+I will also verify: in 5.0 does Action have .layers and .slots? The doc said the legacy API "will be removed" in 5.0 - so they'd add the new API in 4.4 and remove the legacy in 5.0. So in 5.0 we have action.layers, action.slots, and we get channelbags via strip.channelbag(slot).
+
+I'll implement this. We need to import the version helper. The ops folder - how do they import from utils? I will check another op that uses version.
+</details></think>
+
+---
+
+
+Checking how other ops import the version utils:
+
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search">
+<details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+
+Parameters:
+
+```json
+{
+  "pattern": "from.*version|import.*version",
+  "path": "E:\\Rainys_Bulk_Scene_Tools",
+  "caseInsensitive": false
+}
+```
+Result:
+
+```json
+{
+  "success": {
+    "pattern": "from.*version|import.*version",
+    "path": "E:\\Rainys_Bulk_Scene_Tools",
+    "outputMode": "content",
+    "workspaceResults": {
+      "E:\\Rainys_Bulk_Scene_Tools": {
+        "content": {
+          "matches": [
+            {
+              "file": ".\\.specstory\\history\\2026-01-07_21-47Z-datablock-utilities-integration-for-duplicates.md",
+              "matches": [
+                {
+                  "lineNumber": 42288,
+                  "content": "        \"contents\": \"import bpy # type: ignore\\nimport numpy as np\\nfrom time import time\\nimport os\\nfrom enum import Enum\\nimport colorsys  # Add colorsys for RGB to HSV conversion\\nfrom ..ops.select_diffuse_nodes import select_diffuse_nodes  # Import the specific function\\nfrom ..utils import compat\\nfrom ..utils import version\\n\\n# Material processing status enum\\nclass RBST_ViewDisp_MaterialStatus(Enum):\\n    PENDING = 0\\n    PROCESSING = 1\\n    COMPLETED = 2\\n    FAILED = 3\\n    PREVIEW_BASED = 4\\n\\n# Global variables to store results and track progress\\nmaterial_results = {}\","
+                },
+                {
+                  "lineNumber": 42312,
+                  "content": "            \"text\": \"import colorsys  # Add colorsys for RGB to HSV conversion\","
+                },
+                {
+                  "lineNumber": 42324,
+                  "content": "            \"text\": \"from ..utils import version\","
+                }
+              ]
+            },
+            {
+              "file": ".\\panels\\bulk_viewport_display.py",
+              "matches": [
+                {
+                  "lineNumber": 6,
+                  "content": "import colorsys  # Add colorsys for RGB to HSV conversion"
+                },
+                {
+                  "lineNumber": 9,
+                  "content": "from ..utils import version"
+                }
+              ]
+            },
+            {
+              "file": ".\\.specstory\\history\\2026-01-01_22-02Z-github-issue-#11-context.md",
+              "matches": [
+                {
+                  "lineNumber": 283,
+                  "content": "+ from ..utils import version"
+                }
+              ]
+            },
+            {
+              "file": ".\\.specstory\\history\\2025-12-02_20-45Z-basedplayblast-issue-integration.md",
+              "matches": [
+                {
+                  "lineNumber": 31,
+                  "content": "| Web Search Results |  | To integrate the functionality discussed in [BasedPlayblast Issue #8](https://github.com/RaincloudTheDragon/BasedPlayblast/issues/8) and align it with the structure of the other add-on you're maintaining, you can follow these steps:&lt;br/&gt;&lt;br/&gt;1. **Review the Existing Add-on Structure**:&lt;br/&gt;   - Examine the &#96;version.py&#96; and &#96;compat.py&#96; files located in &#96;E:\\atomic_data_manager\\utils&#96;. These files likely handle version management and compatibility checks, respectively.&lt;br/&gt;&lt;br/&gt;2. **Incorporate Version Management**:&lt;br/&gt;   - Create a &#96;version.py&#96; in the BasedPlayblast add-on to manage versioning. This file can define the add-on's version and provide functions to retrieve it.&lt;br/&gt;   - For example, a &#96;version.py&#96; might include:&lt;br/&gt;     &#96;&#96;&#96;python&lt;br/&gt;     __version__ = '1.0.0'&lt;br/&gt;&lt;br/&gt;     def get_version():&lt;br/&gt;         return __version__&lt;br/&gt;     &#96;&#96;&#96;&lt;br/&gt;&lt;br/&gt;3. **Implement Compatibility Checks**:&lt;br/&gt;   - Develop a &#96;compat.py&#96; to handle compatibility across dif [... omitted end of long line]"
+                },
+                {
+                  "lineNumber": 608,
+                  "content": "  \"plan\": \"# Multi-Version Compatibility Integration\\n\\nIntegrate version detection and compatibility utilities to support multiple Blender versions (4.2, 4.4, 4.5, 5.0) following the pattern from &amp;#96;atomic_data_manager&amp;#96;.\\n\\n## Implementation Steps\\n\\n### 1. Create utils directory structure\\n- Create &amp;#96;utils/&amp;#96; directory\\n- Add &amp;#96;utils/version.py&amp;#96; - version detection and comparison utilities\\n- Add &amp;#96;utils/compat.py&amp;#96; - API compatibility functions for cross-version support\\n- Add &amp;#96;utils/__init__.py&amp;#96; - package initialization\\n\\n### 2. Implement version.py\\nBased on &amp;#96;E:\\\\atomic_data_manager\\\\utils\\\\version.py&amp;#96;, adapt for this addon:\\n- Version constants for 4.2, 4.4, 4.5, and 5.0\\n- Functions: &amp;#96;get_blender_version()&amp;#96;, &amp;#96;get_version_string()&amp;#96;, &amp;#96;is_version_at_least()&amp;#96;, &amp;#96;is_version_less_than()&amp;#96;, &amp;#96;get_version_category()&amp;#96;\\n- Version check helpers: &amp;#96;is_version_4_2()&amp;#96;, &amp;#96;is_version_4_4()&amp;#96;, &amp;#96;is_ver [... omitted end of long line]"
+                },
+                {
+                  "lineNumber": 798,
+                  "content": "+ from . import version"
+                },
+                {
+                  "lineNumber": 965,
+                  "content": "+ from . import version"
+                },
+                {
+                  "lineNumber": 1389,
+                  "content": "  import colorsys  # Add colorsys for RGB to HSV conversion"
+                },
+                {
+                  "lineNumber": 2120,
+                  "content": "For some reason, I was getting this error when using the copy attributes menu addon https://extensions.blender.org/add-ons/copy-attributes-menu/?utm_source=blender-5.0.0 to copy vertex weights from one object to another. This was occurring in version 0.12.0, before any compat work, so do you think our compat fixed it? I'm not sure why it was even occurring in the first place, when I didn't run any RBST operators."
+                },
+                {
+                  "lineNumber": 3566,
+                  "content": "- The old errors you're seeing are from the previous version still loaded in memory; the new version couldn't load due to the missing module."
+                }
+              ]
+            },
+            {
+              "file": ".\\utils\\compat.py",
+              "matches": [
+                {
+                  "lineNumber": 9,
+                  "content": "from . import version"
+                }
+              ]
+            },
+            {
+              "file": ".\\utils\\__init__.py",
+              "matches": [
+                {
+                  "lineNumber": 6,
+                  "content": "from . import version"
+                }
+              ]
+            },
+            {
+              "file": ".\\.specstory\\history\\2025-12-02_19-26Z-integrate-bootstrapper-into-repository.md",
+              "matches": [
+                {
+                  "lineNumber": 322,
+                  "content": "                  \"content\": \"  \\\"contentsAfterEdit\\\": \\\"name: Create Release\\\\r\\\\n\\\\r\\\\non:\\\\r\\\\n  workflow_dispatch:\\\\r\\\\n    inputs:\\\\r\\\\n      release_tag:\\\\r\\\\n        description: 'Release tag (e.g., v0.2.0)'\\\\r\\\\n        required: true\\\\r\\\\n        type: string\\\\r\\\\n\\\\r\\\\njobs:\\\\r\\\\n  build:\\\\r\\\\n    runs-on: ubuntu-latest\\\\r\\\\n    permissions:\\\\r\\\\n      contents: write\\\\r\\\\n    steps:\\\\r\\\\n      - uses: actions/checkout@v4\\\\r\\\\n      \\\\r\\\\n      - name: Install dependencies\\\\r\\\\n        run: pip install toml\\\\r\\\\n      \\\\r\\\\n      - name: Get Version\\\\r\\\\n        id: get_version\\\\r\\\\n        run: |\\\\r\\\\n          VERSION=$(python -c \\\\\\\"import toml; print(toml.load('blender_manifest.toml')['version'])\\\\\\\")\\\\r\\\\n          echo \\\\\\\"version=$VERSION\\\\\\\" &amp;amp;gt;&amp;amp;gt; $GITHUB_OUTPUT\\\\r\\\\n          echo \\\\\\\"zip_name=BasedPlayblast.${{ inputs.release_tag }}.zip\\\\\\\" &amp;amp;gt;&amp;amp;gt; $GITHUB_OUTPUT\\\\r\\\\n      \\\\r\\\\n      - name: Create ZIP\\\\r\\\\n        run: |\\\\r\\\\n          # Creat [... omitted end of long line]"
+                },
+                {
+                  "lineNumber": 872,
+                  "content": "  \"contentsAfterEdit\": \"name: Create Release\\r\\n\\r\\non:\\r\\n  workflow_dispatch:\\r\\n    inputs:\\r\\n      release_tag:\\r\\n        description: 'Release tag (e.g., v0.2.0)'\\r\\n        required: true\\r\\n        type: string\\r\\n\\r\\njobs:\\r\\n  build:\\r\\n    runs-on: ubuntu-latest\\r\\n    permissions:\\r\\n      contents: write\\r\\n    steps:\\r\\n      - uses: actions/checkout@v4\\r\\n      \\r\\n      - name: Get Version\\r\\n        id: get_version\\r\\n        run: |\\r\\n          python - &amp;lt;&amp;lt;'PY'\\r\\n          import os\\r\\n          import tomllib\\r\\n          from pathlib import Path\\r\\n\\r\\n          data = tomllib.loads(Path(\\\"blender_manifest.toml\\\").read_text(encoding=\\\"utf-8\\\"))\\r\\n          version = data[\\\"version\\\"]\\r\\n\\r\\n          with open(os.environ[\\\"GITHUB_OUTPUT\\\"], \\\"a\\\", encoding=\\\"utf-8\\\") as fh:\\r\\n              fh.write(f\\\"version={version}\\\\n\\\")\\r\\n              fh.write(f\\\"zip_name=Rainys_Bulk_Scene_Tools.v{version}.zip\\\\n\\\")\\r\\n          PY\\r\\n      \\r\\n      - name: Create Z [... omitted end of long line]"
+                }
+              ]
+            },
+            {
+              "file": ".\\.specstory\\history\\2025-12-01_23-41Z-convert-document-to-blender-extension.md",
+              "matches": [
+                {
+                  "lineNumber": 110,
+                  "content": "        \"diffString\": \"          id: get_version\\r\\n          run: |\\r\\n-           VERSION=$(python -c \\\"import json; v=json.load(open('bl_info.json'))['version']; print(f'{v[0]}.{v[1]}.{v[2]}')\\\")\\r\\n-           echo \\\"version=$VERSION\\\" &amp;gt;&amp;gt; $GITHUB_OUTPUT\\r\\n-           echo \\\"zip_name=Rainys-Bulk-Scene-Tools.v$VERSION.zip\\\" &amp;gt;&amp;gt; $GITHUB_OUTPUT\\r\\n+           python - &amp;lt;&amp;lt;'PY'\\r\\n+           import ast\\r\\n+           import os\\r\\n+           from pathlib import Path\\r\\n+ \\r\\n+           text = Path(\\\"__init__.py\\\").read_text(encoding=\\\"utf-8\\\")\\r\\n+           module = ast.parse(text)\\r\\n+ \\r\\n+           info = None\\r\\n+           for node in module.body:\\r\\n+               if isinstance(node, ast.Assign) and any(getattr(target, \\\"id\\\", None) == \\\"bl_info\\\" for target in node.targets):\\r\\n+                   info = ast.literal_eval(node.value)\\r\\n+                   break\\r\\n+ \\r\\n+           if info is None:\\r\\n+               raise SystemExit(\\\"Unable to locate bl_inf [... omitted end of long line]"
+                },
+                {
+                  "lineNumber": 123,
+                  "content": "  \"contentsAfterEdit\": \"name: Create Release\\r\\n\\r\\non:\\r\\n  workflow_dispatch:\\r\\n    inputs:\\r\\n      release_tag:\\r\\n        description: 'Release tag (e.g., v0.2.0)'\\r\\n        required: true\\r\\n        type: string\\r\\n\\r\\njobs:\\r\\n  build:\\r\\n    runs-on: ubuntu-latest\\r\\n    permissions:\\r\\n      contents: write\\r\\n    steps:\\r\\n      - uses: actions/checkout@v4\\r\\n      \\r\\n      - name: Get Version\\r\\n        id: get_version\\r\\n        run: |\\r\\n          python - &amp;lt;&amp;lt;'PY'\\r\\n          import ast\\r\\n          import os\\r\\n          from pathlib import Path\\r\\n\\r\\n          text = Path(\\\"__init__.py\\\").read_text(encoding=\\\"utf-8\\\")\\r\\n          module = ast.parse(text)\\r\\n\\r\\n          info = None\\r\\n          for node in module.body:\\r\\n              if isinstance(node, ast.Assign) and any(getattr(target, \\\"id\\\", None) == \\\"bl_info\\\" for target in node.targets):\\r\\n                  info = ast.literal_eval(node.value)\\r\\n                  break\\r\\n\\r\\n          if info is N [... omitted end of long line]"
+                },
+                {
+                  "lineNumber": 237,
+                  "content": "I’m reworking the release workflow to get the version info from &#96;blender_manifest.toml&#96; instead of &#96;bl_info&#96; in &#96;__init__&#96; since &#96;bl_info&#96; was removed. I plan to use Python's &#96;tomllib&#96; (since GitHub runner runs Python 3.11) to parse the manifest and extract the version and possibly the zip name. I need to update the script step in the workflow to read the manifest, set the version, and name the zipped release folder consistently with the manifest ID, favoring underscores over hyphens to match the user’s preferences.&lt;/details&gt;&lt;/think&gt;"
+                },
+                {
+                  "lineNumber": 267,
+                  "content": "        \"diffString\": \"          run: |\\r\\n            python - &amp;lt;&amp;lt;'PY'\\r\\n-           import ast\\r\\n            import os\\r\\n+           import tomllib\\r\\n            from pathlib import Path\\r\\n  \\r\\n-           text = Path(\\\"__init__.py\\\").read_text(encoding=\\\"utf-8\\\")\\r\\n-           module = ast.parse(text)\\r\\n- \\r\\n-           info = None\\r\\n-           for node in module.body:\\r\\n-               if isinstance(node, ast.Assign) and any(getattr(target, \\\"id\\\", None) == \\\"bl_info\\\" for target in node.targets):\\r\\n-                   info = ast.literal_eval(node.value)\\r\\n-                   break\\r\\n- \\r\\n-           if info is None:\\r\\n-               raise SystemExit(\\\"Unable to locate bl_info in __init__.py\\\")\\r\\n- \\r\\n-           version = \\\".\\\".join(str(part) for part in info[\\\"version\\\"])\\r\\n+           data = tomllib.loads(Path(\\\"blender_manifest.toml\\\").read_text(encoding=\\\"utf-8\\\"))\\r\\n+           version = data[\\\"version\\\"]\\r\\n  \\r\\n            with open(os.environ[\\\" [... omitted end of long line]"
+                },
+                {
+                  "lineNumber": 280,
+                  "content": "  \"contentsAfterEdit\": \"name: Create Release\\r\\n\\r\\non:\\r\\n  workflow_dispatch:\\r\\n    inputs:\\r\\n      release_tag:\\r\\n        description: 'Release tag (e.g., v0.2.0)'\\r\\n        required: true\\r\\n        type: string\\r\\n\\r\\njobs:\\r\\n  build:\\r\\n    runs-on: ubuntu-latest\\r\\n    permissions:\\r\\n      contents: write\\r\\n    steps:\\r\\n      - uses: actions/checkout@v4\\r\\n      \\r\\n      - name: Get Version\\r\\n        id: get_version\\r\\n        run: |\\r\\n          python - &amp;lt;&amp;lt;'PY'\\r\\n          import os\\r\\n          import tomllib\\r\\n          from pathlib import Path\\r\\n\\r\\n          data = tomllib.loads(Path(\\\"blender_manifest.toml\\\").read_text(encoding=\\\"utf-8\\\"))\\r\\n          version = data[\\\"version\\\"]\\r\\n\\r\\n          with open(os.environ[\\\"GITHUB_OUTPUT\\\"], \\\"a\\\", encoding=\\\"utf-8\\\") as fh:\\r\\n              fh.write(f\\\"version={version}\\\\n\\\")\\r\\n              fh.write(f\\\"zip_name=Rainys_Bulk_Scene_Tools.v{version}.zip\\\\n\\\")\\r\\n          PY\\r\\n      \\r\\n      - name: Create Z [... omitted end of long line]"
+                },
+                {
+                  "lineNumber": 419,
+                  "content": "  \"contentsAfterEdit\": \"name: Create Release\\r\\n\\r\\non:\\r\\n  workflow_dispatch:\\r\\n    inputs:\\r\\n      release_tag:\\r\\n        description: 'Release tag (e.g., v0.2.0)'\\r\\n        required: true\\r\\n        type: string\\r\\n\\r\\njobs:\\r\\n  build:\\r\\n    runs-on: ubuntu-latest\\r\\n    permissions:\\r\\n      contents: write\\r\\n    steps:\\r\\n      - uses: actions/checkout@v4\\r\\n      \\r\\n      - name: Get Version\\r\\n        id: get_version\\r\\n        run: |\\r\\n          python - &amp;lt;&amp;lt;'PY'\\r\\n          import os\\r\\n          import tomllib\\r\\n          from pathlib import Path\\r\\n\\r\\n          data = tomllib.loads(Path(\\\"blender_manifest.toml\\\").read_text(encoding=\\\"utf-8\\\"))\\r\\n          version = data[\\\"version\\\"]\\r\\n\\r\\n          with open(os.environ[\\\"GITHUB_OUTPUT\\\"], \\\"a\\\", encoding=\\\"utf-8\\\") as fh:\\r\\n              fh.write(f\\\"version={version}\\\\n\\\")\\r\\n              fh.write(f\\\"zip_name=Rainys_Bulk_Scene_Tools.v{version}.zip\\\\n\\\")\\r\\n          PY\\r\\n      \\r\\n      - name: Create Z [... omitted end of long line]"
+                },
+                {
+                  "lineNumber": 476,
+                  "content": "  \"contentsAfterEdit\": \"name: Create Release\\r\\n\\r\\non:\\r\\n  workflow_dispatch:\\r\\n    inputs:\\r\\n      release_tag:\\r\\n        description: 'Release tag (e.g., v0.2.0)'\\r\\n        required: true\\r\\n        type: string\\r\\n\\r\\njobs:\\r\\n  build:\\r\\n    runs-on: ubuntu-latest\\r\\n    permissions:\\r\\n      contents: write\\r\\n    steps:\\r\\n      - uses: actions/checkout@v4\\r\\n      \\r\\n      - name: Get Version\\r\\n        id: get_version\\r\\n        run: |\\r\\n          python - &amp;lt;&amp;lt;'PY'\\r\\n          import os\\r\\n          import tomllib\\r\\n          from pathlib import Path\\r\\n\\r\\n          data = tomllib.loads(Path(\\\"blender_manifest.toml\\\").read_text(encoding=\\\"utf-8\\\"))\\r\\n          version = data[\\\"version\\\"]\\r\\n\\r\\n          with open(os.environ[\\\"GITHUB_OUTPUT\\\"], \\\"a\\\", encoding=\\\"utf-8\\\") as fh:\\r\\n              fh.write(f\\\"version={version}\\\\n\\\")\\r\\n              fh.write(f\\\"zip_name=Rainys_Bulk_Scene_Tools.v{version}.zip\\\\n\\\")\\r\\n          PY\\r\\n      \\r\\n      - name: Create Z [... omitted end of long line]"
+                }
+              ]
+            },
+            {
+              "file": ".\\.specstory\\history\\2025-12-01_18-24Z-convert-to-blender-extension-platform.md",
+              "matches": [
+                {
+                  "lineNumber": 337,
+                  "content": "  &amp;quot;plan&amp;quot;: &amp;quot;# Convert to Blender Extension Platform\\n\\n## Overview\\nRemove the CGCookie updater system and prepare the addon for the Blender Extension Platform, which handles updates natively.\\n\\n## Changes Required\\n\\n### 1. Remove Updater Module\\n- Delete the &amp;#96;updater/&amp;#96; directory and all its contents\\n- Remove &amp;#96;from . import updater&amp;#96; import from &amp;#96;__init__.py&amp;#96;\\n- Remove &amp;#96;updater.register()&amp;#96; and &amp;#96;updater.unregister()&amp;#96; calls\\n- Remove &amp;#96;updater.check_for_updates()&amp;#96; call on startup\\n- Remove the &amp;#96;check_for_updates_handler&amp;#96; from &amp;#96;bpy.app.handlers.load_post&amp;#96; (in updater module)\\n\\n### 2. Update &amp;#96;__init__.py&amp;#96;\\n- Remove update-related properties from &amp;#96;BST_AddonPreferences&amp;#96;:\\n  - &amp;#96;check_for_updates&amp;#96; (BoolProperty)\\n  - &amp;#96;update_check_interval&amp;#96; (IntProperty)\\n- Remove update-related UI from &amp;#96;BST_AddonPreferences.draw()&amp;#96;:\\n  - Remove the \\&amp;quot;Update Settings\\&amp;quot; box and all i [... omitted end of long line]"
+                },
+                {
+                  "lineNumber": 562,
+                  "content": "  &amp;quot;plan&amp;quot;: &amp;quot;# Convert to Blender Extension Platform\\n\\n## Overview\\nRemove the CGCookie updater system, add the &amp;#96;blender_manifest.toml&amp;#96; required by the Blender Extension Platform, and keep the add-on metadata (&amp;#96;bl_info&amp;#96;/&amp;#96;__init__.py&amp;#96;) in sync with the manifest.\\n\\n## Changes Required\\n\\n### 1. Remove Updater Module\\n- Delete the &amp;#96;updater/&amp;#96; directory and all its contents\\n- Remove &amp;#96;from . import updater&amp;#96; import from &amp;#96;__init__.py&amp;#96;\\n- Remove &amp;#96;updater.register()&amp;#96;/&amp;#96;updater.unregister()&amp;#96; calls and the startup &amp;#96;check_for_updates()&amp;#96; invocation\\n- Remove the updater handler registration from &amp;#96;bpy.app.handlers&amp;#96;\\n\\n### 2. Update &amp;#96;__init__.py&amp;#96;\\n- Strip update-related properties (&amp;#96;check_for_updates&amp;#96;, &amp;#96;update_check_interval&amp;#96;) and UI elements from &amp;#96;BST_AddonPreferences&amp;#96;, keeping only AutoMat Extractor preferences\\n- Remove usage of &amp;#96;updater.UpdaterState&amp;#96; and updater op [... omitted end of long line]"
+                },
+                {
+                  "lineNumber": 837,
+                  "content": "I'm planning a thorough cleanup by removing the updater folder and related imports like Operator and IntProperty, while keeping BoolProperty since it's still used. I'll update the add-on version in bl_info to 0.10.0 and gradually remove update-related code and references across the codebase. Also, I'll create a new blender_manifest file with detailed metadata, clean requirements.txt to empty, and adjust the README accordingly. After these structural changes, I'll verify no leftover references remain and carefully patch __init__.py to reflect all these updates.&lt;/details&gt;&lt;/think&gt;"
+                },
+                {
+                  "lineNumber": 885,
+                  "content": "        &amp;quot;diffString&amp;quot;: &amp;quot;  from .ops.FreeGPU import BST_FreeGPU\\r\\n  from .ops import ghost_buster\\r\\n- from . import updater\\r\\n  \\r\\n  # Addon preferences class for update settings\\r\\n  class BST_AddonPreferences(AddonPreferences):\\r\\n      bl_idname = __package__\\r\\n- \\r\\n-     # Auto Updater settings\\r\\n-     check_for_updates: BoolProperty(\\r\\n-         name=\\&amp;quot;Check for Updates on Startup\\&amp;quot;,\\r\\n-         description=\\&amp;quot;Automatically check for new versions of the addon when Blender starts\\&amp;quot;,\\r\\n-         default=True,\\r\\n-     )\\r\\n-     \\r\\n-     update_check_interval: IntProperty(  # type: ignore\\r\\n-         name=\\&amp;quot;Update check interval (hours)\\&amp;quot;,\\r\\n-         description=\\&amp;quot;How often to check for updates (in hours)\\&amp;quot;,\\r\\n-         default=24,\\r\\n-         min=1,\\r\\n-         max=168  # 1 week max\\r\\n-     )\\r\\n  \\r\\n      # AutoMat Extractor settings\\r&amp;quot;,"
+                },
+                {
+                  "lineNumber": 1071,
+                  "content": "        &amp;quot;diffString&amp;quot;: &amp;quot;  - Bulk Data Remap\\r\\n  - Bulk Viewport Display\\r\\n- - Automatic update checking and one-click updates from GitHub releases\\r\\n  \\r\\n  Officially supports Blender 4.4.1, but may still work on older versions.\\r&amp;quot;,"
+                }
+              ]
+            },
+            {
+              "file": ".\\.specstory\\history\\2025-11-27_06-42Z-implement-default-refresh-for-material-previews.md",
+              "matches": [
+                {
+                  "lineNumber": 260,
+                  "content": "  &amp;quot;contentsAfterEdit&amp;quot;: &amp;quot;import bpy # type: ignore\\r\\nimport numpy as np\\r\\nfrom time import time\\r\\nimport os\\r\\nfrom enum import Enum\\r\\nimport colorsys  # Add colorsys for RGB to HSV conversion\\r\\nfrom ..ops.select_diffuse_nodes import select_diffuse_nodes  # Import the specific function\\r\\n\\r\\n# Material processing status enum\\r\\nclass MaterialStatus(Enum):\\r\\n    PENDING = 0\\r\\n    PROCESSING = 1\\r\\n    COMPLETED = 2\\r\\n    FAILED = 3\\r\\n    PREVIEW_BASED = 4\\r\\n\\r\\n# Global variables to store results and track progress\\r\\nmaterial_results = {}  # {material_name: (color, status)}\\r\\ncurrent_material = \\&amp;quot;\\&amp;quot;\\r\\nprocessed_count = 0\\r\\ntotal_materials = 0\\r\\nstart_time = 0\\r\\nis_processing = False\\r\\nmaterial_queue = []\\r\\ncurrent_index = 0\\r\\n\\r\\n# Scene properties for viewport display settings\\r\\ndef register_viewport_properties():\\r\\n    bpy.types.Scene.viewport_colors_selected_only = bpy.props.BoolProperty(  # type: ignore\\r\\n        name=\\&amp;quot;Selected Ob [... omitted end of long line]"
+                },
+                {
+                  "lineNumber": 525,
+                  "content": "  &amp;quot;contentsAfterEdit&amp;quot;: &amp;quot;import bpy # type: ignore\\r\\nimport numpy as np\\r\\nfrom time import time\\r\\nimport os\\r\\nfrom enum import Enum\\r\\nimport colorsys  # Add colorsys for RGB to HSV conversion\\r\\nfrom ..ops.select_diffuse_nodes import select_diffuse_nodes  # Import the specific function\\r\\n\\r\\n# Material processing status enum\\r\\nclass MaterialStatus(Enum):\\r\\n    PENDING = 0\\r\\n    PROCESSING = 1\\r\\n    COMPLETED = 2\\r\\n    FAILED = 3\\r\\n    PREVIEW_BASED = 4\\r\\n\\r\\n# Global variables to store results and track progress\\r\\nmaterial_results = {}  # {material_name: (color, status)}\\r\\ncurrent_material = \\&amp;quot;\\&amp;quot;\\r\\nprocessed_count = 0\\r\\ntotal_materials = 0\\r\\nstart_time = 0\\r\\nis_processing = False\\r\\nmaterial_queue = []\\r\\ncurrent_index = 0\\r\\n\\r\\n# Scene properties for viewport display settings\\r\\ndef register_viewport_properties():\\r\\n    bpy.types.Scene.viewport_colors_selected_only = bpy.props.BoolProperty(  # type: ignore\\r\\n        name=\\&amp;quot;Selected Ob [... omitted end of long line]"
+                },
+                {
+                  "lineNumber": 590,
+                  "content": "  &amp;quot;contentsAfterEdit&amp;quot;: &amp;quot;import bpy # type: ignore\\r\\nimport numpy as np\\r\\nfrom time import time\\r\\nimport os\\r\\nfrom enum import Enum\\r\\nimport colorsys  # Add colorsys for RGB to HSV conversion\\r\\nfrom ..ops.select_diffuse_nodes import select_diffuse_nodes  # Import the specific function\\r\\n\\r\\n# Material processing status enum\\r\\nclass MaterialStatus(Enum):\\r\\n    PENDING = 0\\r\\n    PROCESSING = 1\\r\\n    COMPLETED = 2\\r\\n    FAILED = 3\\r\\n    PREVIEW_BASED = 4\\r\\n\\r\\n# Global variables to store results and track progress\\r\\nmaterial_results = {}  # {material_name: (color, status)}\\r\\ncurrent_material = \\&amp;quot;\\&amp;quot;\\r\\nprocessed_count = 0\\r\\ntotal_materials = 0\\r\\nstart_time = 0\\r\\nis_processing = False\\r\\nmaterial_queue = []\\r\\ncurrent_index = 0\\r\\n\\r\\n# Scene properties for viewport display settings\\r\\ndef register_viewport_properties():\\r\\n    bpy.types.Scene.viewport_colors_selected_only = bpy.props.BoolProperty(  # type: ignore\\r\\n        name=\\&amp;quot;Selected Ob [... omitted end of long line]"
+                },
+                {
+                  "lineNumber": 668,
+                  "content": "  &amp;quot;contentsAfterEdit&amp;quot;: &amp;quot;import bpy # type: ignore\\r\\nimport numpy as np\\r\\nfrom time import time\\r\\nimport os\\r\\nfrom enum import Enum\\r\\nimport colorsys  # Add colorsys for RGB to HSV conversion\\r\\nfrom ..ops.select_diffuse_nodes import select_diffuse_nodes  # Import the specific function\\r\\n\\r\\n# Material processing status enum\\r\\nclass MaterialStatus(Enum):\\r\\n    PENDING = 0\\r\\n    PROCESSING = 1\\r\\n    COMPLETED = 2\\r\\n    FAILED = 3\\r\\n    PREVIEW_BASED = 4\\r\\n\\r\\n# Global variables to store results and track progress\\r\\nmaterial_results = {}  # {material_name: (color, status)}\\r\\ncurrent_material = \\&amp;quot;\\&amp;quot;\\r\\nprocessed_count = 0\\r\\ntotal_materials = 0\\r\\nstart_time = 0\\r\\nis_processing = False\\r\\nmaterial_queue = []\\r\\ncurrent_index = 0\\r\\n\\r\\n# Scene properties for viewport display settings\\r\\ndef register_viewport_properties():\\r\\n    bpy.types.Scene.viewport_colors_selected_only = bpy.props.BoolProperty(  # type: ignore\\r\\n        name=\\&amp;quot;Selected Ob [... omitted end of long line]"
+                },
+                {
+                  "lineNumber": 750,
+                  "content": "  &amp;quot;contentsAfterEdit&amp;quot;: &amp;quot;import bpy # type: ignore\\r\\nimport numpy as np\\r\\nfrom time import time\\r\\nimport os\\r\\nfrom enum import Enum\\r\\nimport colorsys  # Add colorsys for RGB to HSV conversion\\r\\nfrom ..ops.select_diffuse_nodes import select_diffuse_nodes  # Import the specific function\\r\\n\\r\\n# Material processing status enum\\r\\nclass MaterialStatus(Enum):\\r\\n    PENDING = 0\\r\\n    PROCESSING = 1\\r\\n    COMPLETED = 2\\r\\n    FAILED = 3\\r\\n    PREVIEW_BASED = 4\\r\\n\\r\\n# Global variables to store results and track progress\\r\\nmaterial_results = {}  # {material_name: (color, status)}\\r\\ncurrent_material = \\&amp;quot;\\&amp;quot;\\r\\nprocessed_count = 0\\r\\ntotal_materials = 0\\r\\nstart_time = 0\\r\\nis_processing = False\\r\\nmaterial_queue = []\\r\\ncurrent_index = 0\\r\\n\\r\\n# Scene properties for viewport display settings\\r\\ndef register_viewport_properties():\\r\\n    bpy.types.Scene.viewport_colors_selected_only = bpy.props.BoolProperty(  # type: ignore\\r\\n        name=\\&amp;quot;Selected Ob [... omitted end of long line]"
+                },
+                {
+                  "lineNumber": 1044,
+                  "content": "  &amp;quot;contentsAfterEdit&amp;quot;: &amp;quot;import bpy # type: ignore\\r\\nimport numpy as np\\r\\nfrom time import time\\r\\nimport os\\r\\nfrom enum import Enum\\r\\nimport colorsys  # Add colorsys for RGB to HSV conversion\\r\\nfrom ..ops.select_diffuse_nodes import select_diffuse_nodes  # Import the specific function\\r\\n\\r\\n# Material processing status enum\\r\\nclass MaterialStatus(Enum):\\r\\n    PENDING = 0\\r\\n    PROCESSING = 1\\r\\n    COMPLETED = 2\\r\\n    FAILED = 3\\r\\n    PREVIEW_BASED = 4\\r\\n\\r\\n# Global variables to store results and track progress\\r\\nmaterial_results = {}  # {material_name: (color, status)}\\r\\ncurrent_material = \\&amp;quot;\\&amp;quot;\\r\\nprocessed_count = 0\\r\\ntotal_materials = 0\\r\\nstart_time = 0\\r\\nis_processing = False\\r\\nmaterial_queue = []\\r\\ncurrent_index = 0\\r\\n\\r\\n# Scene properties for viewport display settings\\r\\ndef register_viewport_properties():\\r\\n    bpy.types.Scene.viewport_colors_selected_only = bpy.props.BoolProperty(  # type: ignore\\r\\n        name=\\&amp;quot;Selected Ob [... omitted end of long line]"
+                }
+              ]
+            },
+            {
+              "file": ".\\.specstory\\history\\2025-11-27_06-40Z-discuss-github-issue-#8.md",
+              "matches": [
+                {
+                  "lineNumber": 607,
+                  "content": "  &amp;quot;contentsAfterEdit&amp;quot;: &amp;quot;import bpy # type: ignore\\r\\nfrom bpy.types import Panel, Operator, PropertyGroup # type: ignore\\r\\nfrom bpy.props import StringProperty, BoolProperty, EnumProperty, PointerProperty, CollectionProperty # type: ignore\\r\\nimport os\\r\\nimport re\\r\\n\\r\\nclass REMOVE_EXT_OT_summary_dialog(bpy.types.Operator):\\r\\n    \\&amp;quot;\\&amp;quot;\\&amp;quot;Show remove extensions operation summary\\&amp;quot;\\&amp;quot;\\&amp;quot;\\r\\n    bl_idname = \\&amp;quot;remove_ext.summary_dialog\\&amp;quot;\\r\\n    bl_label = \\&amp;quot;Remove Extensions Summary\\&amp;quot;\\r\\n    bl_options = {&amp;#39;REGISTER&amp;#39;, &amp;#39;INTERNAL&amp;#39;}\\r\\n    \\r\\n    # Properties to store summary data\\r\\n    total_selected: bpy.props.IntProperty(default=0)\\r\\n    removed_count: bpy.props.IntProperty(default=0)\\r\\n    no_extension_count: bpy.props.IntProperty(default=0)\\r\\n    linked_count: bpy.props.IntProperty(default=0)\\r\\n    removal_details: bpy.props.StringProperty(default=\\&amp;quot;\\&amp;quot;)\\r\\n    \\r\\n    def draw(self, context): [... omitted end of long line]"
+                },
+                {
+                  "lineNumber": 688,
+                  "content": "  &amp;quot;contentsAfterEdit&amp;quot;: &amp;quot;import bpy # type: ignore\\r\\nfrom bpy.types import Panel, Operator, PropertyGroup # type: ignore\\r\\nfrom bpy.props import StringProperty, BoolProperty, EnumProperty, PointerProperty, CollectionProperty # type: ignore\\r\\nimport os\\r\\nimport re\\r\\n\\r\\nclass REMOVE_EXT_OT_summary_dialog(bpy.types.Operator):\\r\\n    \\&amp;quot;\\&amp;quot;\\&amp;quot;Show remove extensions operation summary\\&amp;quot;\\&amp;quot;\\&amp;quot;\\r\\n    bl_idname = \\&amp;quot;remove_ext.summary_dialog\\&amp;quot;\\r\\n    bl_label = \\&amp;quot;Remove Extensions Summary\\&amp;quot;\\r\\n    bl_options = {&amp;#39;REGISTER&amp;#39;, &amp;#39;INTERNAL&amp;#39;}\\r\\n    \\r\\n    # Properties to store summary data\\r\\n    total_selected: bpy.props.IntProperty(default=0)\\r\\n    removed_count: bpy.props.IntProperty(default=0)\\r\\n    no_extension_count: bpy.props.IntProperty(default=0)\\r\\n    linked_count: bpy.props.IntProperty(default=0)\\r\\n    removal_details: bpy.props.StringProperty(default=\\&amp;quot;\\&amp;quot;)\\r\\n    \\r\\n    def draw(self, context): [... omitted end of long line]"
+                },
+                {
+                  "lineNumber": 1245,
+                  "content": "  &amp;quot;contentsAfterEdit&amp;quot;: &amp;quot;import bpy # type: ignore\\nfrom bpy.types import Panel, Operator, PropertyGroup # type: ignore\\nfrom bpy.props import StringProperty, BoolProperty, EnumProperty, PointerProperty, CollectionProperty # type: ignore\\nimport os\\nimport re\\n\\nclass REMOVE_EXT_OT_summary_dialog(bpy.types.Operator):\\n    \\&amp;quot;\\&amp;quot;\\&amp;quot;Show remove extensions operation summary\\&amp;quot;\\&amp;quot;\\&amp;quot;\\n    bl_idname = \\&amp;quot;remove_ext.summary_dialog\\&amp;quot;\\n    bl_label = \\&amp;quot;Remove Extensions Summary\\&amp;quot;\\n    bl_options = {&amp;#39;REGISTER&amp;#39;, &amp;#39;INTERNAL&amp;#39;}\\n    \\n    # Properties to store summary data\\n    total_selected: bpy.props.IntProperty(default=0)\\n    removed_count: bpy.props.IntProperty(default=0)\\n    no_extension_count: bpy.props.IntProperty(default=0)\\n    linked_count: bpy.props.IntProperty(default=0)\\n    removal_details: bpy.props.StringProperty(default=\\&amp;quot;\\&amp;quot;)\\n    \\n    def draw(self, context):\\n        layout = self.layout\\n       [... omitted end of long line]"
+                }
+              ]
+            }
+          ],
+          "totalLines": 38,
+          "totalMatchedLines": 38
+        }
+      }
+    }
+  }
+}
+```
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: E:\Rainys_Bulk_Scene_Tools\ops\delete_single_keyframe_actions.py</summary>
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+
+Ops use `from ..utils import version`. I'll add that import and implement the version branch.
+
+For Blender 5.0, the docs say:
+- Legacy `action.fcurves` is removed
+- New path: action.layers -> layer.strips -> strip.channelbag(slot) -> channelbag.fcurves
+- action.slots gives the slots
+
+So the 5.0 loop:
+```python
+for layer in action.layers:
+    for strip in layer.strips:
+        for slot in action.slots:
+            channelbag = strip.channelbag(slot, ensure=False)
+            if channelbag is None:
+                continue
+            for fcurve in channelbag.fcurves:
+                for kf in fcurve.keyframe_points:
+                    keyframe_frames.add(kf.co[0])
+                    total_keyframes += 1
+```
+
+I need to check the signature of strip.channelbag - is it (slot, ensure=False)? The 4.4 doc said `strip.channelbag(slot, ensure=True)`. So ensure=False will avoid creating new channelbags when we're just reading.
+
+I will implement. I'll use is_version_at_least(5, 0, 0) or is_version_less_than(5, 0, 0) - the version module has is_version_less_than and is_version_at_least. Using is_version_less_than(5, 0, 0) for the legacy branch is clear.
+</details></think>
+
+---
+
+
+Implementing the version branch: use `action.fcurves` when Blender < 5.0, and use layers → strips → channelbags when Blender >= 5.0.
+
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\ops\delete_single_keyframe_actions.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+
+I will double-check the Blender 5.0 API for strip.channelbag. The 4.4 doc said it's a method: `strip.channelbag(slot, ensure=True)`. In 5.0 the same slotted-action model applies, so it should still be strip.channelbag(slot, ensure=False).
+
+I'll verify the file and run lints.
+</details></think>
+
+---
+
+
+
+
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="read_lints">
+<details>
+<summary>Tool use: **read_lints**</summary>
+
+
+Parameters:
+
+```json
+{
+  "paths": [
+    "E:\\Rainys_Bulk_Scene_Tools\\ops\\delete_single_keyframe_actions.py"
+  ]
+}
+```
+Result:
+
+```json
+{
+  "linterErrorsByFile": [
+    {
+      "relativeWorkspacePath": "E:\\Rainys_Bulk_Scene_Tools\\ops\\delete_single_keyframe_actions.py"
+    }
+  ]
+}
+```
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: E:\Rainys_Bulk_Scene_Tools\ops\delete_single_keyframe_actions.py</summary>
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+
+The code looks good. I should double-check the Blender 5.0 API for strip.channelbag - whether it returns None when ensure=False and there is no channelbag. The 4.4 doc showed:
+`channelbag = strip.channelbag(slot)` (without ensure) for "Accessing existing F-Curves", and `channelbag = strip.channelbag(slot, ensure=True)` when creating. So when ensure=False or omitted, it might return None if the channelbag doesn't exist. Our `if channelbag is None: continue` is defensive and correct.
+
+Implementation is complete. Summary for the user:
+</details></think>
+
+---
+
+
+Summary of changes:
+
+**Updates in `ops/delete_single_keyframe_actions.py`:**
+
+1. **Import**  
+   - `from ..utils import version`
+
+2. **`_collect_keyframe_stats(action)`**  
+   - Returns `(total_keyframes, keyframe_frames_set)`.
+   - **Blender &lt; 5.0:** uses `action.fcurves` (unchanged behavior for 4.2 LTS and 4.5 LTS).
+   - **Blender ≥ 5.0:** uses the slotted-action path: `action.layers` → `layer.strips` → `strip.channelbag(slot, ensure=False)` → `channelbag.fcurves`, and skips when `channelbag` is `None`.
+
+3. **`execute()`**  
+   - Calls `_collect_keyframe_stats(action)` and keeps the same rules: delete when there are 0 keyframes, 1 keyframe, or all keyframes on a single frame.
+
+The 5.0 branch follows the [4.4 slotted-actions upgrade notes](https://developer.blender.org/docs/release_notes/4.4/upgrading/slotted_actions/): the legacy `action.fcurves` API was removed in 5.0, so F-Curves are read via layers → strips → channelbags. No `bpy_extras.anim_utils` is used; the built-in `action.layers`, `layer.strips`, and `strip.channelbag(slot)` are enough.
+
+You can re-run the operator in Blender 5.0 and in 4.2/4.5 to confirm it runs and only deletes the intended actions.
+
+---
+
+_**User**_
+
+@c:\Users\Nathan\.cursor\projects\e-Rainys-Bulk-Scene-Tools\terminals\4.txt those 13 actions were in linked libraries. linked libraries should be ignored.
+
+---
+
+_**Agent (model default, mode Agent)**_
+
+<think><details><summary>Thought Process</summary>
+
+The user is saying that the Delete Single Keyframe Actions operator deleted 13 actions that were in linked libraries. Linked libraries should be ignored - meaning we should not consider or delete actions that come from linked library data (i.e. actions that are not local/editable because they're from a linked .blend).
+
+In Blender, linked data-blocks have `library` set - they're linked from another file. We should skip actions where `action.library` is not None (i.e. they're linked from an external file). We might also want to only iterate over `bpy.data.actions` that are "local" - or we could simply skip any action that has `action.library` set.
+
+I will check Blender's API: `id.library` - if an ID data-block is linked from another file, `id.library` returns the Library data-block it was linked from. So we should skip actions where `action.library is not None`.
+
+I'll add a filter in the execute() loop to skip linked actions when collecting candidates for deletion. So when we iterate `for action in actions`, we skip those where `action.library is not None`.
+</details></think>
+
+---
+
+
+Skipping actions from linked libraries so we don't consider or delete them. Checking how linked IDs are identified in the codebase:
+
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search">
+<details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+
+Parameters:
+
+```json
+{
+  "pattern": "\\.library|is_library|linked",
+  "path": "E:\\Rainys_Bulk_Scene_Tools",
+  "glob": "*.py",
+  "caseInsensitive": false
+}
+```
+Result:
+
+```json
+{
+  "success": {
+    "pattern": "\\.library|is_library|linked",
+    "path": "E:\\Rainys_Bulk_Scene_Tools",
+    "outputMode": "content",
+    "workspaceResults": {
+      "E:\\Rainys_Bulk_Scene_Tools": {
+        "content": {
+          "matches": [
+            {
+              "file": ".\\panels\\bulk_path_management.py",
+              "matches": [
+                {
+                  "lineNumber": 18,
+                  "content": "    linked_count: bpy.props.IntProperty(default=0)"
+                },
+                {
+                  "lineNumber": 36,
+                  "content": "        if self.linked_count &gt; 0:"
+                },
+                {
+                  "lineNumber": 37,
+                  "content": "            col.label(text=f\"Linked images skipped: {self.linked_count}\", icon='RADIOBUT_OFF')"
+                },
+                {
+                  "lineNumber": 694,
+                  "content": "        # Check if the datablock is linked"
+                },
+                {
+                  "lineNumber": 695,
+                  "content": "        if hasattr(datablock, 'library') and datablock.library is not None:"
+                },
+                {
+                  "lineNumber": 696,
+                  "content": "            self.report({'ERROR'}, \"Cannot rename linked image\")"
+                },
+                {
+                  "lineNumber": 1071,
+                  "content": "        linked_count = 0"
+                },
+                {
+                  "lineNumber": 1084,
+                  "content": "            # Skip linked images"
+                },
+                {
+                  "lineNumber": 1085,
+                  "content": "            if hasattr(img, 'library') and img.library is not None:"
+                },
+                {
+                  "lineNumber": 1086,
+                  "content": "                linked_count += 1"
+                },
+                {
+                  "lineNumber": 1087,
+                  "content": "                print(f\"DEBUG: Skipped linked image: {img.name}\")"
+                },
+                {
+                  "lineNumber": 1120,
+                  "content": "        print(f\"Linked images (skipped): {linked_count}\")"
+                },
+                {
+                  "lineNumber": 1130,
+                  "content": "        self.show_summary_dialog(context, len(selected_images), removed_count, no_extension_count, linked_count, removal_list)"
+                },
+                {
+                  "lineNumber": 1134,
+                  "content": "    def show_summary_dialog(self, context, total_selected, removed_count, no_extension_count, linked_count, removal_list):"
+                },
+                {
+                  "lineNumber": 1147,
+                  "content": "                                                  linked_count=linked_count,"
+                }
+              ]
+            },
+            {
+              "file": ".\\ops\\ghost_buster.py",
+              "matches": [
+                {
+                  "lineNumber": 33,
+                  "content": "                # Skip linked objects (they're legitimate library content)"
+                },
+                {
+                  "lineNumber": 34,
+                  "content": "                if hasattr(obj, 'library') and obj.library is not None:"
+                },
+                {
+                  "lineNumber": 35,
+                  "content": "                    print(f\"  Skipping linked WGT: {obj.name} (from {obj.library.name})\")"
+                },
+                {
+                  "lineNumber": 69,
+                  "content": "    \"\"\"Remove empty collections that are not linked to scenes\"\"\""
+                },
+                {
+                  "lineNumber": 81,
+                  "content": "            # Skip linked collections (they're legitimate library content)"
+                },
+                {
+                  "lineNumber": 82,
+                  "content": "            if hasattr(collection, 'library') and collection.library is not None:"
+                },
+                {
+                  "lineNumber": 83,
+                  "content": "                print(f\"  Skipping linked empty collection: {collection.name}\")"
+                },
+                {
+                  "lineNumber": 87,
+                  "content": "            linked_to_scene = False"
+                },
+                {
+                  "lineNumber": 90,
+                  "content": "                    linked_to_scene = True"
+                },
+                {
+                  "lineNumber": 94,
+                  "content": "            if not linked_to_scene:"
+                },
+                {
+                  "lineNumber": 141,
+                  "content": "    # Collection instance objects (linked collection references) are legitimate"
+                },
+                {
+                  "lineNumber": 222,
+                  "content": "        # Skip linked objects (they're legitimate library content)"
+                },
+                {
+                  "lineNumber": 223,
+                  "content": "        if hasattr(obj, 'library') and obj.library is not None:"
+                },
+                {
+                  "lineNumber": 282,
+                  "content": "        # Skip linked objects for analysis"
+                },
+                {
+                  "lineNumber": 283,
+                  "content": "        if hasattr(obj, 'library') and obj.library is not None:"
+                },
+                {
+                  "lineNumber": 330,
+                  "content": "    print(\"2. Empty unlinked collections\") "
+                },
+                {
+                  "lineNumber": 355,
+                  "content": "        bpy.ops.outliner.orphans_purge(do_local_ids=True, do_linked_ids=True, do_recursive=True)"
+                },
+                {
+                  "lineNumber": 435,
+                  "content": "                # Skip linked objects (they're legitimate library content)"
+                },
+                {
+                  "lineNumber": 436,
+                  "content": "                if hasattr(obj, 'library') and obj.library is not None:"
+                },
+                {
+                  "lineNumber": 460,
+                  "content": "                # Skip linked collections (they're legitimate library content)"
+                },
+                {
+                  "lineNumber": 461,
+                  "content": "                if hasattr(collection, 'library') and collection.library is not None:"
+                },
+                {
+                  "lineNumber": 465,
+                  "content": "                linked_to_scene = False"
+                },
+                {
+                  "lineNumber": 468,
+                  "content": "                        linked_to_scene = True"
+                },
+                {
+                  "lineNumber": 471,
+                  "content": "                if not linked_to_scene:"
+                },
+                {
+                  "lineNumber": 489,
+                  "content": "            # Skip linked objects (they're legitimate library content)"
+                },
+                {
+                  "lineNumber": 490,
+                  "content": "            if hasattr(obj, 'library') and obj.library is not None:"
+                },
+                {
+                  "lineNumber": 517,
+                  "content": "        self.ghost_objects = len([obj for obj in candidate_objects if len([s for s in bpy.data.scenes if obj in s.objects.values()]) == 0 and not (hasattr(obj, 'library') and obj.library is not None)])"
+                },
+                {
+                  "lineNumber": 554,
+                  "content": "            col.label(text=f\"Empty unlinked collections: {self.empty_collections}\", icon='ERROR')"
+                },
+                {
+                  "lineNumber": 562,
+                  "content": "            col.label(text=\"No empty unlinked collections found\", icon='CHECKMARK')"
+                },
+                {
+                  "lineNumber": 610,
+                  "content": "    \"\"\"Resync Enforce: Fix broken library override hierarchies by rebuilding from linked references\"\"\""
+                },
+                {
+                  "lineNumber": 648,
+                  "content": "            result = bpy.ops.object.library_override_operation("
+                }
+              ]
+            },
+            {
+              "file": ".\\panels\\bulk_data_remap.py",
+              "matches": [
+                {
+                  "lineNumber": 14,
+                  "content": "# Function to check if any datablocks in a collection are linked from a library"
+                },
+                {
+                  "lineNumber": 15,
+                  "content": "def RBST_DatRem_has_linked_datablocks(data_collection):"
+                },
+                {
+                  "lineNumber": 16,
+                  "content": "    \"\"\"Check if any datablocks in the collection are linked from a library\"\"\""
+                },
+                {
+                  "lineNumber": 18,
+                  "content": "        if data.users &gt; 0 and hasattr(data, 'library') and data.library is not None:"
+                },
+                {
+                  "lineNumber": 173,
+                  "content": "    \"\"\"Group data blocks by their base name, excluding those with no users or linked from libraries\"\"\""
+                },
+                {
+                  "lineNumber": 181,
+                  "content": "        # Skip linked datablocks"
+                },
+                {
+                  "lineNumber": 182,
+                  "content": "        if hasattr(data, 'library') and data.library is not None:"
+                },
+                {
+                  "lineNumber": 193,
+                  "content": "    # Also filter out groups where all items are linked"
+                },
+                {
+                  "lineNumber": 195,
+                  "content": "            if len(items) &gt; 1 and any(not (hasattr(item, 'library') and item.library is not None) for item in items)}"
+                },
+                {
+                  "lineNumber": 199,
+                  "content": "    # Filter out linked datablocks"
+                },
+                {
+                  "lineNumber": 200,
+                  "content": "    local_data_group = [data for data in data_group if not (hasattr(data, 'library') and data.library is not None)]"
+                },
+                {
+                  "lineNumber": 202,
+                  "content": "    # If all datablocks are linked, return the first one (though this shouldn't happen due to earlier checks)"
+                },
+                {
+                  "lineNumber": 234,
+                  "content": "        # Skip linked datablocks"
+                },
+                {
+                  "lineNumber": 235,
+                  "content": "        if hasattr(data, 'library') and data.library is not None:"
+                },
+                {
+                  "lineNumber": 266,
+                  "content": "                    # Skip if the target is linked and can't be renamed"
+                },
+                {
+                  "lineNumber": 267,
+                  "content": "                    print(f\"Warning: Cannot rename linked image {target_image.name}\")"
+                },
+                {
+                  "lineNumber": 280,
+                  "content": "                            # Skip if the image is linked and can't be remapped"
+                },
+                {
+                  "lineNumber": 281,
+                  "content": "                            print(f\"Warning: Cannot remap linked image {image.name}\")"
+                },
+                {
+                  "lineNumber": 296,
+                  "content": "                                            # Skip if the node is in a linked material"
+                },
+                {
+                  "lineNumber": 297,
+                  "content": "                                            print(f\"Warning: Cannot modify linked material {mat.name}\")"
+                },
+                {
+                  "lineNumber": 307,
+                  "content": "                                        # Skip if the brush is linked"
+                },
+                {
+                  "lineNumber": 308,
+                  "content": "                                        print(f\"Warning: Cannot modify linked brush {brush.name}\")"
+                },
+                {
+                  "lineNumber": 319,
+                  "content": "                                            # Skip if the world is linked"
+                },
+                {
+                  "lineNumber": 320,
+                  "content": "                                            print(f\"Warning: Cannot modify linked world {world.name}\")"
+                },
+                {
+                  "lineNumber": 344,
+                  "content": "                    # Skip if the target is linked and can't be renamed"
+                },
+                {
+                  "lineNumber": 345,
+                  "content": "                    print(f\"Warning: Cannot rename linked material {target_material.name}\")"
+                },
+                {
+                  "lineNumber": 358,
+                  "content": "                            # Skip if the material is linked and can't be remapped"
+                },
+                {
+                  "lineNumber": 359,
+                  "content": "                            print(f\"Warning: Cannot remap linked material {material.name}\")"
+                },
+                {
+                  "lineNumber": 376,
+                  "content": "                                            # Skip if the object is linked"
+                },
+                {
+                  "lineNumber": 377,
+                  "content": "                                            print(f\"Warning: Cannot modify linked object {obj.name}\")"
+                },
+                {
+                  "lineNumber": 387,
+                  "content": "                                        # Skip if the node group is linked"
+                },
+                {
+                  "lineNumber": 388,
+                  "content": "                                        print(f\"Warning: Cannot modify linked node group {node_group.name}\")"
+                },
+                {
+                  "lineNumber": 399,
+                  "content": "                                            # Skip if the material is linked"
+                },
+                {
+                  "lineNumber": 400,
+                  "content": "                                            print(f\"Warning: Cannot modify linked material {other_mat.name}\")"
+                },
+                {
+                  "lineNumber": 412,
+                  "content": "                                                # Skip if the collection is linked"
+                },
+                {
+                  "lineNumber": 413,
+                  "content": "                                                print(f\"Warning: Cannot modify linked collection {coll.name}\")"
+                },
+                {
+                  "lineNumber": 427,
+                  "content": "                                            # Skip if the grease pencil is linked"
+                },
+                {
+                  "lineNumber": 428,
+                  "content": "                                            print(f\"Warning: Cannot modify linked grease pencil {gpencil.name}\")"
+                },
+                {
+                  "lineNumber": 439,
+                  "content": "                                                # Skip if the object is linked"
+                },
+                {
+                  "lineNumber": 440,
+                  "content": "                                                print(f\"Warning: Cannot modify linked object {obj.name}\")"
+                },
+                {
+                  "lineNumber": 464,
+                  "content": "                    # Skip if the target is linked and can't be renamed"
+                },
+                {
+                  "lineNumber": 465,
+                  "content": "                    print(f\"Warning: Cannot rename linked font {target_font.name}\")"
+                },
+                {
+                  "lineNumber": 478,
+                  "content": "                            # Skip if the font is linked and can't be remapped"
+                },
+                {
+                  "lineNumber": 479,
+                  "content": "                            print(f\"Warning: Cannot remap linked font {font.name}\")"
+                },
+                {
+                  "lineNumber": 494,
+                  "content": "                                        # Skip if the text is linked"
+                },
+                {
+                  "lineNumber": 495,
+                  "content": "                                        print(f\"Warning: Cannot modify linked text {text.name}\")"
+                },
+                {
+                  "lineNumber": 501,
+                  "content": "                                        # Skip if the text is linked"
+                },
+                {
+                  "lineNumber": 502,
+                  "content": "                                        print(f\"Warning: Cannot modify linked text {text.name}\")"
+                },
+                {
+                  "lineNumber": 508,
+                  "content": "                                        # Skip if the text is linked"
+                },
+                {
+                  "lineNumber": 509,
+                  "content": "                                        print(f\"Warning: Cannot modify linked text {text.name}\")"
+                },
+                {
+                  "lineNumber": 515,
+                  "content": "                                        # Skip if the text is linked"
+                },
+                {
+                  "lineNumber": 516,
+                  "content": "                                        print(f\"Warning: Cannot modify linked text {text.name}\")"
+                },
+                {
+                  "lineNumber": 540,
+                  "content": "                    # Skip if the target is linked and can't be renamed"
+                },
+                {
+                  "lineNumber": 541,
+                  "content": "                    print(f\"Warning: Cannot rename linked world {target_world.name}\")"
+                },
+                {
+                  "lineNumber": 554,
+                  "content": "                            # Skip if the world is linked and can't be remapped"
+                },
+                {
+                  "lineNumber": 555,
+                  "content": "                            print(f\"Warning: Cannot remap linked world {world.name}\")"
+                },
+                {
+                  "lineNumber": 570,
+                  "content": "                                    # Skip if the scene is linked"
+                },
+                {
+                  "lineNumber": 571,
+                  "content": "                                    print(f\"Warning: Cannot modify linked scene {scene.name}\")"
+                },
+                {
+                  "lineNumber": 581,
+                  "content": "                                        # Skip if the node group is linked"
+                },
+                {
+                  "lineNumber": 582,
+                  "content": "                                        print(f\"Warning: Cannot modify linked node group {node_group.name}\")"
+                },
+                {
+                  "lineNumber": 622,
+                  "content": "                                and not (hasattr(img, 'library') and img.library is not None)"
+                },
+                {
+                  "lineNumber": 627,
+                  "content": "                                and not (hasattr(mat, 'library') and mat.library is not None)"
+                },
+                {
+                  "lineNumber": 632,
+                  "content": "                                and not (hasattr(font, 'library') and font.library is not None)"
+                },
+                {
+                  "lineNumber": 637,
+                  "content": "                                and not (hasattr(world, 'library') and world.library is not None)"
+                },
+                {
+                  "lineNumber": 746,
+                  "content": "        bpy.ops.outliner.orphans_purge(do_local_ids=True, do_linked_ids=True, do_recursive=True)"
+                },
+                {
+                  "lineNumber": 1138,
+                  "content": "        # Check for linked datablocks and create a separate warning section if found"
+                },
+                {
+                  "lineNumber": 1139,
+                  "content": "        linked_datablocks_found = False"
+                },
+                {
+                  "lineNumber": 1140,
+                  "content": "        linked_types = []"
+                },
+                {
+                  "lineNumber": 1141,
+                  "content": "        linked_paths = set()"
+                },
+                {
+                  "lineNumber": 1143,
+                  "content": "        if context.scene.dataremap_images and RBST_DatRem_has_linked_datablocks(bpy.data.images):"
+                },
+                {
+                  "lineNumber": 1144,
+                  "content": "            linked_datablocks_found = True"
+                },
+                {
+                  "lineNumber": 1145,
+                  "content": "            linked_types.append(\"images\")"
+                },
+                {
+                  "lineNumber": 1146,
+                  "content": "            linked_paths.update(RBST_DatRem_get_linked_file_paths(bpy.data.images))"
+                },
+                {
+                  "lineNumber": 1148,
+                  "content": "        if context.scene.dataremap_materials and RBST_DatRem_has_linked_datablocks(bpy.data.materials):"
+                },
+                {
+                  "lineNumber": 1149,
+                  "content": "            linked_datablocks_found = True"
+                },
+                {
+                  "lineNumber": 1150,
+                  "content": "            linked_types.append(\"materials\")"
+                },
+                {
+                  "lineNumber": 1151,
+                  "content": "            linked_paths.update(RBST_DatRem_get_linked_file_paths(bpy.data.materials))"
+                },
+                {
+                  "lineNumber": 1153,
+                  "content": "        if context.scene.dataremap_fonts and RBST_DatRem_has_linked_datablocks(bpy.data.fonts):"
+                },
+                {
+                  "lineNumber": 1154,
+                  "content": "            linked_datablocks_found = True"
+                },
+                {
+                  "lineNumber": 1155,
+                  "content": "            linked_types.append(\"fonts\")"
+                },
+                {
+                  "lineNumber": 1156,
+                  "content": "            linked_paths.update(RBST_DatRem_get_linked_file_paths(bpy.data.fonts))"
+                },
+                {
+                  "lineNumber": 1158,
+                  "content": "        if context.scene.dataremap_worlds and RBST_DatRem_has_linked_datablocks(bpy.data.worlds):"
+                },
+                {
+                  "lineNumber": 1159,
+                  "content": "            linked_datablocks_found = True"
+                },
+                {
+                  "lineNumber": 1160,
+                  "content": "            linked_types.append(\"worlds\")"
+                },
+                {
+                  "lineNumber": 1161,
+                  "content": "            linked_paths.update(RBST_DatRem_get_linked_file_paths(bpy.data.worlds))"
+                },
+                {
+                  "lineNumber": 1163,
+                  "content": "        # Display warning about linked datablocks in a separate section if found"
+                },
+                {
+                  "lineNumber": 1164,
+                  "content": "        if linked_datablocks_found:"
+                },
+                {
+                  "lineNumber": 1168,
+                  "content": "            warning_box.label(text=f\"Types: {', '.join(linked_types)}\")"
+                },
+                {
+                  "lineNumber": 1169,
+                  "content": "            warning_box.label(text=\"Cannot remap linked datablocks.\")"
+                },
+                {
+                  "lineNumber": 1172,
+                  "content": "            # Add buttons to open linked files"
+                },
+                {
+                  "lineNumber": 1173,
+                  "content": "            if linked_paths:"
+                },
+                {
+                  "lineNumber": 1176,
+                  "content": "                for path in linked_paths:"
+                },
+                {
+                  "lineNumber": 1179,
+                  "content": "                    op = row.operator(\"bst.open_linked_file\", text=\"Open\", icon='FILE_BLEND')"
+                },
+                {
+                  "lineNumber": 1383,
+                  "content": "        col.label(text=\"• Empty unlinked collections\")"
+                },
+                {
+                  "lineNumber": 1462,
+                  "content": "# Function to get unique linked file paths from datablocks"
+                },
+                {
+                  "lineNumber": 1463,
+                  "content": "def RBST_DatRem_get_linked_file_paths(data_collection):"
+                },
+                {
+                  "lineNumber": 1464,
+                  "content": "    \"\"\"Get unique file paths of linked libraries from datablocks\"\"\""
+                },
+                {
+                  "lineNumber": 1465,
+                  "content": "    linked_paths = set()"
+                },
+                {
+                  "lineNumber": 1468,
+                  "content": "        if data.users &gt; 0 and hasattr(data, 'library') and data.library is not None:"
+                },
+                {
+                  "lineNumber": 1469,
+                  "content": "            if hasattr(data.library, 'filepath') and data.library.filepath:"
+                },
+                {
+                  "lineNumber": 1470,
+                  "content": "                linked_paths.add(data.library.filepath)"
+                },
+                {
+                  "lineNumber": 1472,
+                  "content": "    return linked_paths"
+                },
+                {
+                  "lineNumber": 1475,
+                  "content": "    \"\"\"Open the linked file in a new Blender instance\"\"\""
+                },
+                {
+                  "lineNumber": 1476,
+                  "content": "    bl_idname = \"bst.open_linked_file\""
+                },
+                {
+                  "lineNumber": 1482,
+                  "content": "        description=\"Path to the linked file\","
+                },
+                {
+                  "lineNumber": 1491,
+                  "content": "        # Try to open the linked file in a new Blender instance"
+                },
+                {
+                  "lineNumber": 1495,
+                  "content": "            self.report({'INFO'}, f\"Opening linked file: {self.filepath}\")"
+                },
+                {
+                  "lineNumber": 1497,
+                  "content": "            self.report({'ERROR'}, f\"Failed to open linked file: {e}\")"
+                },
+                {
+                  "lineNumber": 1557,
+                  "content": "        # Check if the datablock is linked"
+                },
+                {
+                  "lineNumber": 1558,
+                  "content": "        if hasattr(datablock, 'library') and datablock.library is not None:"
+                },
+                {
+                  "lineNumber": 1559,
+                  "content": "            self.report({'ERROR'}, f\"Cannot rename linked {self.data_type}\")"
+                }
+              ]
+            },
+            {
+              "file": ".\\ops\\remove_unused_material_slots.py",
+              "matches": [
+                {
+                  "lineNumber": 20,
+                  "content": "                if obj.type == 'MESH' and obj.material_slots and obj.library is None:"
+                },
+                {
+                  "lineNumber": 22,
+                  "content": "                    was_linked = False"
+                },
+                {
+                  "lineNumber": 25,
+                  "content": "                        was_linked = True"
+                },
+                {
+                  "lineNumber": 41,
+                  "content": "                    # Unlink if we linked it"
+                },
+                {
+                  "lineNumber": 42,
+                  "content": "                    if was_linked:"
+                }
+              ]
+            }
+          ],
+          "totalLines": 162,
+          "totalMatchedLines": 162
+        }
+      }
+    }
+  }
+}
+```
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: E:\Rainys_Bulk_Scene_Tools\ops\delete_single_keyframe_actions.py</summary>
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+
+The codebase consistently uses `hasattr(datablock, 'library') and datablock.library is not None` to detect linked datablocks. For actions we should skip any action that is linked (from a library). So in the execute() loop, we skip actions where `action.library is not None` (or with hasattr for safety, though ID types in Blender always have .library).
+
+I'll add a skip at the start of the per-action loop: skip linked actions entirely (don't consider them for deletion).
+</details></think>
+
+---
+
+
+Skipping actions that come from linked libraries. The codebase uses `hasattr(x, 'library') and x.library is not None` to detect linked datablocks. Adding that check so we never consider or delete linked actions.
+
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\ops\delete_single_keyframe_actions.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+
+Using getattr(action, "library", None) is a concise way to avoid hasattr + separate access; it's consistent with the pattern and safe. The codebase often uses `hasattr(x, 'library') and x.library is not None`; getattr(action, "library", None) is not None is equivalent and keeps the loop concise.
+
+Done. Linked actions are now skipped before we even compute stats or add them to actions_to_delete.
+</details></think>
+
+---
+
+
+
+
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="read_lints">
+<details>
+<summary>Tool use: **read_lints**</summary>
+
+
+Parameters:
+
+```json
+{
+  "paths": [
+    "E:\\Rainys_Bulk_Scene_Tools\\ops\\delete_single_keyframe_actions.py"
+  ]
+}
+```
+Result:
+
+```json
+{
+  "linterErrorsByFile": [
+    {
+      "relativeWorkspacePath": "E:\\Rainys_Bulk_Scene_Tools\\ops\\delete_single_keyframe_actions.py"
+    }
+  ]
+}
+```
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+
+Good. The change is minimal: we skip any action that has a non-None .library (i.e. it comes from a linked .blend). Those actions are never considered for deletion.
+</details></think>
+
+---
+
+
+Update is in place: the operator now ignores actions from linked libraries.
+
+Before evaluating or deleting anything, it skips any action whose `library` is set (i.e. it comes from a linked .blend). Those actions are never added to `actions_to_delete`, so the 13 linked actions will no longer be removed.
 
 ---
 
