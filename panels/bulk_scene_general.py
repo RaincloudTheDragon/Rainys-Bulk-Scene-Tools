@@ -6,6 +6,7 @@ from ..ops.spawn_scene_structure import SpawnSceneStructure
 from ..ops.delete_single_keyframe_actions import DeleteSingleKeyframeActions
 from ..ops.remove_unused_material_slots import RemoveUnusedMaterialSlots
 from ..ops.convert_relations_to_constraint import ConvertRelationsToConstraint
+from ..ops.white_world import WhiteWorld
 from ..utils import compat
 
 class RBST_SceneGen_PT_BulkSceneGeneral(bpy.types.Panel):
@@ -27,6 +28,8 @@ class RBST_SceneGen_PT_BulkSceneGeneral(bpy.types.Panel):
         row = box.row()
         row.scale_y = 1.2
         row.operator("bst.spawn_scene_structure", text="Spawn Scene Structure", icon='OUTLINER_COLLECTION')
+        row = box.row(align=True)
+        row.operator("bst.white_world", text="White World", icon='WORLD')
         
         # Mesh section
         box = layout.box()
@@ -64,6 +67,7 @@ classes = (
     RemoveCustomSplitNormals,
     CreateOrthoCamera,
     SpawnSceneStructure,
+    WhiteWorld,
     DeleteSingleKeyframeActions,
     RemoveUnusedMaterialSlots,
     ConvertRelationsToConstraint,

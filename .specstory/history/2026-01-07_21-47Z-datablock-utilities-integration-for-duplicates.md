@@ -50526,3 +50526,353 @@ Don't leave a deprecation warning. We can just remove the operator and button.
 
 ---
 
+_**Agent (model default, mode Agent)**_
+
+<think><details><summary>Thought Process</summary>
+
+The user wants to fully remove the Find Material Users operator and its button—no deprecation warning, just delete the feature. I need to:
+
+1. Remove the Find Material Users button from the panel (already done - the button is gone, only a comment remains)
+2. Remove the deprecation warning from find_material_users.py - but actually the user said "remove the operator and button", so they want to remove the operator entirely
+3. Remove the operator registration, import, and the bst_temp_material property from bulk_scene_general.py
+4. Either delete the find_material_users.py file entirely, or remove it from the addon's registration flow. If we delete the file, we need to remove all imports and registration of FindMaterialUsers and MATERIAL_USERS_OT_summary_dialog from bulk_scene_general.py, and remove bst_temp_material registration.
+
+So the full removal means:
+- bulk_scene_general.py: Remove import of FindMaterialUsers, MATERIAL_USERS_OT_summary_dialog; remove them from classes tuple; remove the comment about Find Material Users deprecated; remove bst_temp_material registration/unregistration
+- Check if any other file imports or registers find_material_users - we already saw only bulk_scene_general.py does
+- Delete ops/find_material_users.py (or leave it but unregister - user said "remove the operator" so removing the file and all references is cleanest)
+
+I'll:
+1. In bulk_scene_general.py: remove the import, remove FindMaterialUsers and MATERIAL_USERS_OT_summary_dialog from classes, remove the deprecated comment line, remove bst_temp_material from register/unregister
+2. Delete ops/find_material_users.py
+</details></think>
+
+---
+
+
+Removing the operator and its UI entry: dropping the import/registration and `bst_temp_material` from the panel, then deleting the operator file.
+
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_scene_general.py</summary>
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+
+I need to:
+1. Remove the import line for find_material_users
+2. Remove the comment "# Find Material Users deprecated (issue #14): use Atomic or DBU"
+3. Remove FindMaterialUsers and MATERIAL_USERS_OT_summary_dialog from the classes tuple
+4. Remove the bst_temp_material registration and unregistration
+5. Delete ops/find_material_users.py
+
+Also check if __init__.py or any other file references find_material_users.
+</details></think>
+
+---
+
+
+
+
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search">
+<details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+
+Parameters:
+
+```json
+{
+  "pattern": "find_material_users|FindMaterialUsers|material_users_summary|bst_temp_material",
+  "path": "E:\\Rainys_Bulk_Scene_Tools",
+  "glob": "*.py",
+  "outputMode": "content",
+  "contextBefore": 0,
+  "contextAfter": 0,
+  "caseInsensitive": false
+}
+```
+Result:
+
+```json
+{
+  "success": {
+    "pattern": "find_material_users|FindMaterialUsers|material_users_summary|bst_temp_material",
+    "path": "E:\\Rainys_Bulk_Scene_Tools",
+    "outputMode": "content",
+    "workspaceResults": {
+      "E:\\Rainys_Bulk_Scene_Tools": {
+        "content": {
+          "matches": [
+            {
+              "file": ".\\ops\\find_material_users.py",
+              "matches": [
+                {
+                  "lineNumber": 5,
+                  "content": "    bl_idname = \"bst.material_users_summary_dialog\""
+                },
+                {
+                  "lineNumber": 73,
+                  "content": "class FindMaterialUsers(bpy.types.Operator):"
+                },
+                {
+                  "lineNumber": 75,
+                  "content": "    bl_idname = \"bst.find_material_users\""
+                },
+                {
+                  "lineNumber": 91,
+                  "content": "            context.scene.bst_temp_material = bpy.data.materials[self.material_name]"
+                },
+                {
+                  "lineNumber": 94,
+                  "content": "        layout.template_ID(context.scene, \"bst_temp_material\", text=\"Material\")"
+                },
+                {
+                  "lineNumber": 102,
+                  "content": "        material = getattr(context.scene, 'bst_temp_material', None)"
+                },
+                {
+                  "lineNumber": 150,
+                  "content": "        dialog_op = bpy.ops.bst.material_users_summary_dialog"
+                }
+              ]
+            },
+            {
+              "file": ".\\panels\\bulk_scene_general.py",
+              "matches": [
+                {
+                  "lineNumber": 7,
+                  "content": "from ..ops.find_material_users import FindMaterialUsers, MATERIAL_USERS_OT_summary_dialog  # TODO: Rename these classes"
+                },
+                {
+                  "lineNumber": 70,
+                  "content": "    FindMaterialUsers,"
+                },
+                {
+                  "lineNumber": 87,
+                  "content": "    bpy.types.Scene.bst_temp_material = bpy.props.PointerProperty("
+                },
+                {
+                  "lineNumber": 100,
+                  "content": "    if hasattr(bpy.types.Scene, \"bst_temp_material\"):"
+                },
+                {
+                  "lineNumber": 101,
+                  "content": "        del bpy.types.Scene.bst_temp_material"
+                }
+              ]
+            }
+          ],
+          "totalLines": 12,
+          "totalMatchedLines": 12
+        }
+      }
+    }
+  }
+}
+```
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+
+Only bulk_scene_general.py references find_material_users outside of the ops file itself. I'll update the panel file and delete the operator file.
+</details></think>
+
+---
+
+
+
+
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_scene_general.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_scene_general.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_scene_general.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_scene_general.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_scene_general.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="delete_file">
+<details><summary>Tool use: **delete_file**</summary>
+
+Explanation: undefined
+
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+
+All edits applied. I will verify there are no other references to find_material_users in the addon (e.g. __init__.py bl_operators or similar).
+</details></think>
+
+---
+
+
+
+
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search">
+<details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+
+Parameters:
+
+```json
+{
+  "pattern": "find_material_users|FindMaterialUsers|material_users|bst_temp_material",
+  "path": "E:\\Rainys_Bulk_Scene_Tools",
+  "glob": "*.py",
+  "caseInsensitive": false
+}
+```
+Result:
+
+```json
+{
+  "success": {
+    "pattern": "find_material_users|FindMaterialUsers|material_users|bst_temp_material",
+    "path": "E:\\Rainys_Bulk_Scene_Tools",
+    "outputMode": "content",
+    "workspaceResults": {
+      "E:\\Rainys_Bulk_Scene_Tools": {
+        "content": {}
+      }
+    }
+  }
+}
+```
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="read_lints">
+<details>
+<summary>Tool use: **read_lints**</summary>
+
+
+Parameters:
+
+```json
+{
+  "paths": [
+    "E:\\Rainys_Bulk_Scene_Tools\\panels\\bulk_scene_general.py"
+  ]
+}
+```
+Result:
+
+```json
+{
+  "linterErrorsByFile": [
+    {
+      "relativeWorkspacePath": "E:\\Rainys_Bulk_Scene_Tools\\panels\\bulk_scene_general.py"
+    }
+  ]
+}
+```
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+
+No remaining references and no linter errors. The operator and button are fully removed.
+</details></think>
+
+---
+
+
+Summary of changes:
+
+1. **`panels/bulk_scene_general.py`**
+   - Dropped the import of `FindMaterialUsers` and `MATERIAL_USERS_OT_summary_dialog`.
+   - Removed both from the `classes` tuple.
+   - Removed the deprecation comment and the “Find Material Users” button.
+   - Removed registration and unregistration of `bst_temp_material`.
+
+2. **`ops/find_material_users.py`**
+   - File deleted (operator and summary dialog removed).
+
+The Find Material Users operator and its button are fully removed; there are no remaining references or linter issues.
+
+---
+
+_**User**_
+
+Check out issue #13: https://github.com/RaincloudTheDragon/Rainys-Bulk-Scene-Tools/issues/13 The operator and button is available in T:\AmazonCharacterTools specifically \ops\white_world.py
+
+---
+
