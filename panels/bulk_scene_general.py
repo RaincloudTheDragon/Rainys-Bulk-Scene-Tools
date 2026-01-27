@@ -4,7 +4,6 @@ from ..ops.remove_custom_split_normals import RemoveCustomSplitNormals
 from ..ops.create_ortho_camera import CreateOrthoCamera
 from ..ops.spawn_scene_structure import SpawnSceneStructure
 from ..ops.delete_single_keyframe_actions import DeleteSingleKeyframeActions
-from ..ops.find_material_users import FindMaterialUsers, MATERIAL_USERS_OT_summary_dialog  # TODO: Rename these classes
 from ..ops.remove_unused_material_slots import RemoveUnusedMaterialSlots
 from ..ops.convert_relations_to_constraint import ConvertRelationsToConstraint
 from ..utils import compat
@@ -49,8 +48,6 @@ class RBST_SceneGen_PT_BulkSceneGeneral(bpy.types.Panel):
         box.label(text="Materials")
         row = box.row(align=True)
         row.operator("bst.remove_unused_material_slots", text="Remove Unused Material Slots", icon='MATERIAL')
-        row = box.row(align=True)
-        row.operator("bst.find_material_users", text="Find Material Users", icon='VIEWZOOM')
 
         # Animation Data section
         box = layout.box()
@@ -68,8 +65,6 @@ classes = (
     CreateOrthoCamera,
     SpawnSceneStructure,
     DeleteSingleKeyframeActions,
-    FindMaterialUsers,
-    MATERIAL_USERS_OT_summary_dialog,
     RemoveUnusedMaterialSlots,
     ConvertRelationsToConstraint,
 )
@@ -84,12 +79,6 @@ def register():
         description="Apply only to selected objects",
         default=True
     )
-    # Register temporary material property for Find Material Users operator
-    bpy.types.Scene.bst_temp_material = bpy.props.PointerProperty(
-        name="Temporary Material",
-        description="Temporary material selection for Find Material Users operator",
-        type=bpy.types.Material
-    )
 
 def unregister():
     for cls in reversed(classes):
@@ -97,6 +86,3 @@ def unregister():
     # Unregister the window manager property
     if hasattr(bpy.types.WindowManager, "bst_no_subdiv_only_selected"):
         del bpy.types.WindowManager.bst_no_subdiv_only_selected
-    # Unregister temporary material property
-    if hasattr(bpy.types.Scene, "bst_temp_material"):
-        del bpy.types.Scene.bst_temp_material

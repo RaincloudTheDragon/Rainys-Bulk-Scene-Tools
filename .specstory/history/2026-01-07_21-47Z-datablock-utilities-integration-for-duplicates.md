@@ -49977,3 +49977,552 @@ Before evaluating or deleting anything, it skips any action whose `library` is s
 
 ---
 
+_**User**_
+
+look at issue #14: https://github.com/RaincloudTheDragon/Rainys-Bulk-Scene-Tools/issues/14 
+
+---
+
+_**Agent (model default, mode Agent)**_
+
+<think><details><summary>Thought Process</summary>
+
+The user wants me to look at GitHub issue #14 for Rainys-Bulk-Scene-Tools. From the web search results provided, I can see:
+
+**Issue #14: Deprecate bpy.ops.bst.find_material_users()**
+- Opened Jan 15, 2026
+- Label: enhancement
+- Description: "Atomic and DBU have better operators, and I haven't touched this in ages."
+
+So the issue is about deprecating the operator `bpy.ops.bst.find_material_users()` because Atomic (Atomic Data Manager?) and DBU (Blender's Data-Blocks Utilities / built-in?) have better operators for finding material users, and the maintainer hasn't touched this feature in ages.
+
+The user is asking me to look at it - they may want me to implement the deprecation. I should:
+1. Find where `find_material_users` is defined and used in the codebase
+2. Understand what "deprecate" means in this context - typically: mark as deprecated in the UI/docs, or remove it, or hide it and point users to alternatives
+
+I will search the codebase for find_material_users to see the current implementation and where it's registered/exposed.
+</details></think>
+
+---
+
+
+Searching the codebase for where `find_material_users` is defined and used:
+
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search">
+<details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+
+Parameters:
+
+```json
+{
+  "pattern": "find_material_users",
+  "path": "E:\\Rainys_Bulk_Scene_Tools",
+  "caseInsensitive": false
+}
+```
+Result:
+
+```json
+{
+  "success": {
+    "pattern": "find_material_users",
+    "path": "E:\\Rainys_Bulk_Scene_Tools",
+    "outputMode": "content",
+    "workspaceResults": {
+      "E:\\Rainys_Bulk_Scene_Tools": {
+        "content": {
+          "matches": [
+            {
+              "file": ".\\.specstory\\history\\2026-01-07_21-47Z-datablock-utilities-integration-for-duplicates.md",
+              "matches": [
+                {
+                  "lineNumber": 9639,
+                  "content": "            \"name\": \"find_material_users.py\""
+                },
+                {
+                  "lineNumber": 10656,
+                  "content": "        \"contents\": \"class BulkSceneGeneral(bpy.types.Panel):\\n\\n    \\n    def draw(self, context):\\n        layout = self.layout\\n        \\n        # Scene Structure section\\n        box = layout.box()\\n        box.label(text=\\\"Scene Structure\\\")\\n        row = box.row()\\n        row.scale_y = 1.2\\n        row.operator(\\\"bst.spawn_scene_structure\\\", text=\\\"Spawn Scene Structure\\\", icon='OUTLINER_COLLECTION')\\n        \\n        # Mesh section\\n        box = layout.box()\\n        box.label(text=\\\"Mesh\\\")\\n        # Add checkbox for only_selected property\\n        row = box.row()\\n        row.prop(context.window_manager, \\\"bst_no_subdiv_only_selected\\\", text=\\\"Selected Only\\\")\\n        row = box.row(align=True)\\n        row.operator(\\\"bst.no_subdiv\\\", text=\\\"No Subdiv\\\", icon='MOD_SUBSURF').only_selected = context.window_manager.bst_no_subdiv_only_selected\\n        row.operator(\\\"bst.remove_custom_split_normals\\\", text=\\\"Remove Custom Split Normals\\\", icon='X').only_selected = context.wi [... omitted end of long line]"
+                },
+                {
+                  "lineNumber": 10807,
+                  "content": "            \"text\": \"        row.operator(\\\"bst.find_material_users\\\", text=\\\"Find Material Users\\\", icon='VIEWZOOM')\","
+                },
+                {
+                  "lineNumber": 11500,
+                  "content": "        \"relativeWorkspacePath\": \".\\\\ops\\\\find_material_users.py\","
+                },
+                {
+                  "lineNumber": 11807,
+                  "content": "        \"contents\": \"import bpy\\nfrom ..ops.NoSubdiv import NoSubdiv\\nfrom ..ops.remove_custom_split_normals import RemoveCustomSplitNormals\\nfrom ..ops.create_ortho_camera import CreateOrthoCamera\\nfrom ..ops.spawn_scene_structure import SpawnSceneStructure\\nfrom ..ops.delete_single_keyframe_actions import DeleteSingleKeyframeActions\\nfrom ..ops.find_material_users import FindMaterialUsers, MATERIAL_USERS_OT_summary_dialog\\nfrom ..ops.remove_unused_material_slots import RemoveUnusedMaterialSlots\\nfrom ..ops.convert_relations_to_constraint import ConvertRelationsToConstraint\\nfrom ..utils import compat\\n\\nclass BulkSceneGeneral(bpy.types.Panel):\\n    \\\"\\\"\\\"Bulk Scene General Panel\\\"\\\"\\\"\\n    bl_label = \\\"Scene General\\\"\\n    bl_idname = \\\"VIEW3D_PT_bulk_scene_general\\\"\\n    bl_space_type = 'VIEW_3D'\\n    bl_region_type = 'UI'\\n    bl_category = 'Edit'\\n    bl_parent_id = \\\"VIEW3D_PT_bulk_scene_tools\\\"\\n    bl_order = 0  # This will make it appear at the very top of the main panel\\n     [... omitted end of long line]"
+                },
+                {
+                  "lineNumber": 11835,
+                  "content": "            \"text\": \"from ..ops.find_material_users import FindMaterialUsers, MATERIAL_USERS_OT_summary_dialog\","
+                },
+                {
+                  "lineNumber": 15368,
+                  "content": "              \"file\": \"ops/find_material_users.py\","
+                },
+                {
+                  "lineNumber": 16414,
+                  "content": "        \"name\": \"find_material_users.py\""
+                },
+                {
+                  "lineNumber": 22286,
+                  "content": "              \"file\": \"ops/find_material_users.py\","
+                },
+                {
+                  "lineNumber": 22303,
+                  "content": "                  \"content\": \"from ..ops.find_material_users import FindMaterialUsers, MATERIAL_USERS_OT_summary_dialog\""
+                },
+                {
+                  "lineNumber": 22320,
+                  "content": "                  \"content\": \"from ..ops.find_material_users import FindMaterialUsers, MATERIAL_USERS_OT_summary_dialog\""
+                },
+                {
+                  "lineNumber": 22349,
+                  "content": "                  \"content\": \"        \\\"contents\\\": \\\"import bpy\\\\nfrom ..ops.NoSubdiv import NoSubdiv\\\\nfrom ..ops.remove_custom_split_normals import RemoveCustomSplitNormals\\\\nfrom ..ops.create_ortho_camera import CreateOrthoCamera\\\\nfrom ..ops.spawn_scene_structure import SpawnSceneStructure\\\\nfrom ..ops.delete_single_keyframe_actions import DeleteSingleKeyframeActions\\\\nfrom ..ops.find_material_users import FindMaterialUsers, MATERIAL_USERS_OT_summary_dialog\\\\nfrom ..ops.remove_unused_material_slots import RemoveUnusedMaterialSlots\\\\nfrom ..ops.convert_relations_to_constraint import ConvertRelationsToConstraint\\\\nfrom ..utils import compat\\\\n\\\\nclass BulkSceneGeneral(bpy.types.Panel):\\\\n    \\\\\\\"\\\\\\\"\\\\\\\"Bulk Scene General Panel\\\\\\\"\\\\\\\"\\\\\\\"\\\\n    bl_label = \\\\\\\"Scene General\\\\\\\"\\\\n    bl_idname = \\\\\\\"VIEW3D_PT_bulk_scene_general\\\\\\\"\\\\n    bl_space_type = 'VIEW_3D'\\\\n    bl_region_type = 'UI'\\\\n    bl_category = 'Edit'\\\\n    bl_parent_id = \\\\\\\"VIEW3D_PT_bulk_scene_tools\\\\\\\"\\\\n    bl_o [... omitted end of long line]"
+                },
+                {
+                  "lineNumber": 22353,
+                  "content": "                  \"content\": \"            \\\"text\\\": \\\"from ..ops.find_material_users import FindMaterialUsers, MATERIAL_USERS_OT_summary_dialog\\\",\""
+                },
+                {
+                  "lineNumber": 22375,
+                  "content": "&lt;details&gt;&lt;summary&gt;Tool use: **read_file_v2** • Read file: E:\\Rainys_Bulk_Scene_Tools\\ops\\find_material_users.py&lt;/summary&gt;"
+                },
+                {
+                  "lineNumber": 22407,
+                  "content": "  \"pattern\": \"from.*find_material_users|MATERIAL_USERS_OT_summary_dialog|FindMaterialUsers\","
+                },
+                {
+                  "lineNumber": 22417,
+                  "content": "    \"pattern\": \"from.*find_material_users|MATERIAL_USERS_OT_summary_dialog|FindMaterialUsers\","
+                },
+                {
+                  "lineNumber": 22425,
+                  "content": "              \"file\": \"ops/find_material_users.py\","
+                },
+                {
+                  "lineNumber": 22442,
+                  "content": "                  \"content\": \"from ..ops.find_material_users import FindMaterialUsers, MATERIAL_USERS_OT_summary_dialog\""
+                },
+                {
+                  "lineNumber": 22459,
+                  "content": "                  \"content\": \"from ..ops.find_material_users import FindMaterialUsers, MATERIAL_USERS_OT_summary_dialog\""
+                },
+                {
+                  "lineNumber": 22488,
+                  "content": "                  \"content\": \"        \\\"contents\\\": \\\"import bpy\\\\nfrom ..ops.NoSubdiv import NoSubdiv\\\\nfrom ..ops.remove_custom_split_normals import RemoveCustomSplitNormals\\\\nfrom ..ops.create_ortho_camera import CreateOrthoCamera\\\\nfrom ..ops.spawn_scene_structure import SpawnSceneStructure\\\\nfrom ..ops.delete_single_keyframe_actions import DeleteSingleKeyframeActions\\\\nfrom ..ops.find_material_users import FindMaterialUsers, MATERIAL_USERS_OT_summary_dialog\\\\nfrom ..ops.remove_unused_material_slots import RemoveUnusedMaterialSlots\\\\nfrom ..ops.convert_relations_to_constraint import ConvertRelationsToConstraint\\\\nfrom ..utils import compat\\\\n\\\\nclass BulkSceneGeneral(bpy.types.Panel):\\\\n    \\\\\\\"\\\\\\\"\\\\\\\"Bulk Scene General Panel\\\\\\\"\\\\\\\"\\\\\\\"\\\\n    bl_label = \\\\\\\"Scene General\\\\\\\"\\\\n    bl_idname = \\\\\\\"VIEW3D_PT_bulk_scene_general\\\\\\\"\\\\n    bl_space_type = 'VIEW_3D'\\\\n    bl_region_type = 'UI'\\\\n    bl_category = 'Edit'\\\\n    bl_parent_id = \\\\\\\"VIEW3D_PT_bulk_scene_tools\\\\\\\"\\\\n    bl_o [... omitted end of long line]"
+                },
+                {
+                  "lineNumber": 22492,
+                  "content": "                  \"content\": \"            \\\"text\\\": \\\"from ..ops.find_material_users import FindMaterialUsers, MATERIAL_USERS_OT_summary_dialog\\\",\""
+                }
+              ]
+            },
+            {
+              "file": ".\\panels\\bulk_scene_general.py",
+              "matches": [
+                {
+                  "lineNumber": 7,
+                  "content": "from ..ops.find_material_users import FindMaterialUsers, MATERIAL_USERS_OT_summary_dialog  # TODO: Rename these classes"
+                },
+                {
+                  "lineNumber": 53,
+                  "content": "        row.operator(\"bst.find_material_users\", text=\"Find Material Users\", icon='VIEWZOOM')"
+                }
+              ]
+            },
+            {
+              "file": ".\\.specstory\\history\\2026-01-01_22-02Z-github-issue-#11-context.md",
+              "matches": [
+                {
+                  "lineNumber": 44,
+                  "content": "| &#96;ops/find_material_users.py&#96; | L70-156 |"
+                },
+                {
+                  "lineNumber": 231,
+                  "content": "| &#96;ops/find_material_users.py&#96; | L70-156 |"
+                }
+              ]
+            },
+            {
+              "file": ".\\.specstory\\history\\2025-12-18_23-07Z-github-issue-#3-integration.md",
+              "matches": [
+                {
+                  "lineNumber": 94,
+                  "content": "        \"name\": \"find_material_users.py\""
+                },
+                {
+                  "lineNumber": 1712,
+                  "content": "        \"contents\": \"class BulkSceneGeneral(bpy.types.Panel):\\n\\n    \\n    def draw(self, context):\\n        layout = self.layout\\n        \\n        # Scene Structure section\\n        box = layout.box()\\n        box.label(text=\\\"Scene Structure\\\")\\n        row = box.row()\\n        row.scale_y = 1.2\\n        row.operator(\\\"bst.spawn_scene_structure\\\", text=\\\"Spawn Scene Structure\\\", icon='OUTLINER_COLLECTION')\\n        \\n        # Mesh section\\n        box = layout.box()\\n        box.label(text=\\\"Mesh\\\")\\n        # Add checkbox for only_selected property\\n        row = box.row()\\n        row.prop(context.window_manager, \\\"bst_no_subdiv_only_selected\\\", text=\\\"Selected Only\\\")\\n        row = box.row(align=True)\\n        row.operator(\\\"bst.no_subdiv\\\", text=\\\"No Subdiv\\\", icon='MOD_SUBSURF').only_selected = context.window_manager.bst_no_subdiv_only_selected\\n        row.operator(\\\"bst.remove_custom_split_normals\\\", text=\\\"Remove Custom Split Normals\\\", icon='X').only_selected = context.wi [... omitted end of long line]"
+                },
+                {
+                  "lineNumber": 1863,
+                  "content": "            \"text\": \"        row.operator(\\\"bst.find_material_users\\\", text=\\\"Find Material Users\\\", icon='VIEWZOOM')\","
+                },
+                {
+                  "lineNumber": 1922,
+                  "content": "        \"contents\": \"import bpy\\nfrom ..ops.NoSubdiv import NoSubdiv\\nfrom ..ops.remove_custom_split_normals import RemoveCustomSplitNormals\\nfrom ..ops.create_ortho_camera import CreateOrthoCamera\\nfrom ..ops.spawn_scene_structure import SpawnSceneStructure\\nfrom ..ops.delete_single_keyframe_actions import DeleteSingleKeyframeActions\\nfrom ..ops.find_material_users import FindMaterialUsers, MATERIAL_USERS_OT_summary_dialog\\nfrom ..ops.remove_unused_material_slots import RemoveUnusedMaterialSlots\\nfrom ..ops.convert_relations_to_constraint import ConvertRelationsToConstraint\\nfrom ..utils import compat\\n\\nclass BulkSceneGeneral(bpy.types.Panel):\\n    \\\"\\\"\\\"Bulk Scene General Panel\\\"\\\"\\\"\\n    bl_label = \\\"Scene General\\\"\\n    bl_idname = \\\"VIEW3D_PT_bulk_scene_general\\\"\\n    bl_space_type = 'VIEW_3D'\\n    bl_region_type = 'UI'\\n    bl_category = 'Edit'\\n    bl_parent_id = \\\"VIEW3D_PT_bulk_scene_tools\\\"\\n    bl_order = 0  # This will make it appear at the very top of the main panel\\n     [... omitted end of long line]"
+                },
+                {
+                  "lineNumber": 1950,
+                  "content": "            \"text\": \"from ..ops.find_material_users import FindMaterialUsers, MATERIAL_USERS_OT_summary_dialog\","
+                }
+              ]
+            },
+            {
+              "file": ".\\ops\\find_material_users.py",
+              "matches": [
+                {
+                  "lineNumber": 75,
+                  "content": "    bl_idname = \"bst.find_material_users\""
+                }
+              ]
+            }
+          ],
+          "totalLines": 31,
+          "totalMatchedLines": 31
+        }
+      }
+    }
+  }
+}
+```
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+
+So the issue #14 says: "Deprecate bpy.ops.bst.find_material_users()" - Atomic and DBU have better operators, and the maintainer hasn't touched this in ages.
+
+I need to:
+1. Read the find_material_users operator and panel usage
+2. "Deprecate" typically means: either remove the button/operator entirely, or keep it but mark it deprecated (bl_options with DEPRECATED, or description text, or move to a "deprecated" sub-panel)
+
+In Blender, operators can have a deprecation notice. One approach is to:
+- Keep the operator registered but add a deprecation warning when it's invoked (self.report({'WARNING'}, "Deprecated: Use Atomic/DBU instead") and still run the old logic, or just report and return CANCELLED)
+- Or hide the operator from the UI (remove the button) but keep it registered for backward compatibility with any scripts that call it - and have it show a deprecation message if called
+- Or remove it entirely
+
+"Issue: Deprecate" usually means mark as deprecated, not necessarily remove. So I'd:
+1. Remove or replace the UI button in bulk_scene_general.py - either remove the row, or show a "Deprecated - use Atomic/DBU" message/link
+2. In the operator itself, we could add a deprecation path: when executed, report {'WARNING'} that it's deprecated and point to Atomic/DBU, and either still run or cancel.
+
+I will read the panel and operator to see the current UI and what makes sense.
+</details></think>
+
+---
+
+
+
+
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: E:\Rainys_Bulk_Scene_Tools\ops\find_material_users.py</summary>
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_scene_general.py</summary>
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+
+Issue #14 says: "Deprecate bpy.ops.bst.find_material_users()" - Atomic and DBU have better operators.
+
+"Deprecate" here could mean:
+1. **Remove from UI** but keep operator registered (script/API calls still work, but we warn and maybe no-op or still run)
+2. **Mark as deprecated in UI** - keep the button but gray it out or add "(Deprecated)" and a message pointing to Atomic/DBU
+3. **Fully remove** - unregister operator, remove UI, remove the bst_temp_material property
+
+The issue says "Deprecate" not "Remove", so the maintainer likely wants to stop promoting it (remove or downplay in UI) and warn users to use Atomic/DBU instead. A common deprecation approach is:
+- Remove the button from the panel (cleanest - users use Atomic/DBU)
+- Keep the operator registered for backward compatibility if any addon/script calls it, but when invoked report a deprecation warning
+
+Or we could:
+- Keep the operator but in execute() first report {'WARNING'}, "Find Material Users is deprecated. Use Atomic or Blender's Data-Blocks Utilities (DBU) for better material user lookup." and then still run the old logic, **or** return CANCELLED and only show the message.
+- Remove the UI button so it's not discoverable in the panel, but scripts calling bpy.ops.bst.find_material_users() still work (and get the warning).
+
+I'll:
+1. Remove the "Find Material Users" button from the Materials section in bulk_scene_general.py
+2. In find_material_users.py, add a deprecation path: when execute() is called, report WARNING that it's deprecated and suggest Atomic/DBU. We can still run the operator for backward compatibility, or cancel. The issue says "deprecate" so I'll have it still run but show the warning - that way existing scripts get a warning but don't break. Alternatively, just removing the UI is "deprecation" enough - we don't need to change the operator code if we're only hiding it. But then scripts that call it would have no warning. Adding the warning in the operator is good practice.
+3. We could unregister the operator and remove the module entirely - but "deprecate" often means "mark as deprecated" not "delete". I'll remove from UI + add deprecation warning when invoked. We need to keep the operator registered (and the dialog) or scripts that call bpy.ops.bst.find_material_users() would crash. So: remove UI row, add in execute() a report({'WARNING'}, "Deprecated. Use Atomic or Blender's Data-Blocks Utilities (DBU) for material user lookup.") at the start, then continue with existing logic.
+
+Actually re-reading the issue again: "Deprecate bpy.ops.bst.find_material_users()" and "Atomic and DBU have better operators, and I haven't touched this in ages." So the intent is to deprecate it—stop recommending it and direct users elsewhere. Removing the button from the UI is the main change; adding a one-line deprecation warning when the op is invoked (e.g. from search or old script) completes the deprecation.
+
+Checking __init__.py for registration of FindMaterialUsers / find_material_users.
+</details></think>
+
+---
+
+
+Checking how the addon registers this operator so we don't break registration:
+
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search">
+<details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+
+Parameters:
+
+```json
+{
+  "pattern": "find_material_users|FindMaterialUsers|material_users_summary|bst_temp_material",
+  "path": "E:\\Rainys_Bulk_Scene_Tools",
+  "glob": "*.py",
+  "caseInsensitive": false
+}
+```
+Result:
+
+```json
+{
+  "success": {
+    "pattern": "find_material_users|FindMaterialUsers|material_users_summary|bst_temp_material",
+    "path": "E:\\Rainys_Bulk_Scene_Tools",
+    "outputMode": "content",
+    "workspaceResults": {
+      "E:\\Rainys_Bulk_Scene_Tools": {
+        "content": {
+          "matches": [
+            {
+              "file": ".\\panels\\bulk_scene_general.py",
+              "matches": [
+                {
+                  "lineNumber": 7,
+                  "content": "from ..ops.find_material_users import FindMaterialUsers, MATERIAL_USERS_OT_summary_dialog  # TODO: Rename these classes"
+                },
+                {
+                  "lineNumber": 53,
+                  "content": "        row.operator(\"bst.find_material_users\", text=\"Find Material Users\", icon='VIEWZOOM')"
+                },
+                {
+                  "lineNumber": 71,
+                  "content": "    FindMaterialUsers,"
+                },
+                {
+                  "lineNumber": 88,
+                  "content": "    bpy.types.Scene.bst_temp_material = bpy.props.PointerProperty("
+                },
+                {
+                  "lineNumber": 101,
+                  "content": "    if hasattr(bpy.types.Scene, \"bst_temp_material\"):"
+                },
+                {
+                  "lineNumber": 102,
+                  "content": "        del bpy.types.Scene.bst_temp_material"
+                }
+              ]
+            },
+            {
+              "file": ".\\ops\\find_material_users.py",
+              "matches": [
+                {
+                  "lineNumber": 5,
+                  "content": "    bl_idname = \"bst.material_users_summary_dialog\""
+                },
+                {
+                  "lineNumber": 73,
+                  "content": "class FindMaterialUsers(bpy.types.Operator):"
+                },
+                {
+                  "lineNumber": 75,
+                  "content": "    bl_idname = \"bst.find_material_users\""
+                },
+                {
+                  "lineNumber": 91,
+                  "content": "            context.scene.bst_temp_material = bpy.data.materials[self.material_name]"
+                },
+                {
+                  "lineNumber": 94,
+                  "content": "        layout.template_ID(context.scene, \"bst_temp_material\", text=\"Material\")"
+                },
+                {
+                  "lineNumber": 98,
+                  "content": "        material = getattr(context.scene, 'bst_temp_material', None)"
+                },
+                {
+                  "lineNumber": 146,
+                  "content": "        dialog_op = bpy.ops.bst.material_users_summary_dialog"
+                }
+              ]
+            }
+          ],
+          "totalLines": 13,
+          "totalMatchedLines": 13
+        }
+      }
+    }
+  }
+}
+```
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+
+Registration is in bulk_scene_general.py (the panel file registers FindMaterialUsers and MATERIAL_USERS_OT_summary_dialog, and bst_temp_material). There's no separate __init__ that imports find_material_users - it's all via the panel module.
+
+For deprecation per [issue #14](https://github.com/RaincloudTheDragon/Rainys-Bulk-Scene-Tools/issues/14):
+1. **Remove the UI button** – stop advertising "Find Material Users" in the Scene General panel.
+2. **Keep the operator registered** – scripts/addons that call `bpy.ops.bst.find_material_users()` keep working.
+3. **Emit a deprecation warning when invoked** – in `FindMaterialUsers.execute()`, add something like  
+   `self.report({'WARNING'}, "Find Material Users is deprecated. Prefer Atomic or Blender's Data-Blocks Utilities (DBU).")`  
+   and then continue with the existing logic.
+
+Optionally we could add `bl_options = {'REGISTER', 'DEPRECATED'}` if Blender supports that for operators—I'm not sure. I won't rely on that.
+
+Implementation:
+- **bulk_scene_general.py**: Remove the row that draws the Find Material Users button (the row with `row.operator("bst.find_material_users", ...)`). We keep the import and registration so the operator still exists when called from search or scripts.
+- **find_material_users.py**: At the start of `execute()`, after getting the material (or before if we want to warn even on "no material" path), add  
+  `self.report({'WARNING'}, "Find Material Users is deprecated. Use Atomic or Blender's Data-Blocks Utilities (DBU) for better material user lookup.")`  
+  I'll add it at the beginning of execute(), after the material check, so we only warn when the op actually runs (not when cancelled for "no material").
+
+Actually, warn as soon as execute() is entered, so any invocation (including from F3 search) gets the message. So: first line of execute(): self.report(...), then rest of logic.
+</details></think>
+
+---
+
+
+Implementing deprecation per [issue #14](https://github.com/RaincloudTheDragon/Rainys-Bulk-Scene-Tools/issues/14): removing the operator from the UI and adding a deprecation warning when it's invoked (e.g. via search or scripts).
+
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_scene_general.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\ops\find_material_users.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+
+Good. The operator stays registered and the summary dialog still works when invoked via F3 or scripts; we just removed the button from the panel and added a deprecation warning on each run. The import and registration in bulk_scene_general.py still include FindMaterialUsers and MATERIAL_USERS_OT_summary_dialog, and bst_temp_material is still registered—so invoking bpy.ops.bst.find_material_users() from search or scripts continues to work and will show the warning.
+
+I will verify no lint errors.
+</details></think>
+
+---
+
+
+
+
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="read_lints">
+<details>
+<summary>Tool use: **read_lints**</summary>
+
+
+Parameters:
+
+```json
+{
+  "paths": [
+    "E:\\Rainys_Bulk_Scene_Tools\\panels\\bulk_scene_general.py",
+    "E:\\Rainys_Bulk_Scene_Tools\\ops\\find_material_users.py"
+  ]
+}
+```
+Result:
+
+```json
+{
+  "linterErrorsByFile": [
+    {
+      "relativeWorkspacePath": "E:\\Rainys_Bulk_Scene_Tools\\panels\\bulk_scene_general.py"
+    },
+    {
+      "relativeWorkspacePath": "E:\\Rainys_Bulk_Scene_Tools\\ops\\find_material_users.py"
+    }
+  ]
+}
+```
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+
+All good. Summary for the user.
+</details></think>
+
+---
+
+
+Summary of changes for [issue #14](https://github.com/RaincloudTheDragon/Rainys-Bulk-Scene-Tools/issues/14) (Deprecate `bpy.ops.bst.find_material_users()`):
+
+**1. Panel no longer shows the operator**  
+In `panels/bulk_scene_general.py`, the “Find Material Users” button was removed from the Materials section. A short comment references issue #14 and that Atomic/DBU are preferred.
+
+**2. Deprecation warning when the operator runs**  
+In `ops/find_material_users.py`, at the start of `execute()` a warning is reported:
+
+- **Message:**  
+  `"Find Material Users is deprecated. Use Atomic or Blender's Data-Blocks Utilities (DBU) for material user lookup."`
+
+The operator still runs as before (material selection, user lookup, summary dialog), so callers via F3 or `bpy.ops.bst.find_material_users()` keep working and see the deprecation notice.
+
+**3. What stayed the same**  
+- `FindMaterialUsers` and `MATERIAL_USERS_OT_summary_dialog` remain registered.  
+- `bst_temp_material` is still registered.  
+- No API or behavior change beyond the new warning.
+
+So the operator is no longer promoted in the Scene General UI, but remains available and clearly deprecated in favor of Atomic and DBU.
+
+---
+
+_**User**_
+
+Don't leave a deprecation warning. We can just remove the operator and button.
+
+---
+
