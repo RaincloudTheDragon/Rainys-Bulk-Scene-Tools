@@ -1,3 +1,8 @@
+# v0.16.0 2026-01-15
+  - Delete Single Keyframe Actions: Blender 5.0 compatible (action layers/strips/channelbags); skip actions from linked libraries
+  - Find Material Users: removed (issue #14; use Atomic or DBU)
+  - White World: new operator in Scene General (#13)—white background world, film transparent, orphans purge
+
 # v0.15.1 2026-01-12
   - Fixed AutoMatExtractor MSMNAO Pack texture handling: preserve texture type suffixes (MSMNAO Pack, SSTM Pack, etc.) when sanitizing filenames
   - Fixed issue #12: corrected duplicated prefix in RBST_ViewDisp_MaterialStatus enum definition

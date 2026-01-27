@@ -50876,3 +50876,512 @@ Check out issue #13: https://github.com/RaincloudTheDragon/Rainys-Bulk-Scene-Too
 
 ---
 
+_**Agent (model default, mode Agent)**_
+
+<think><details><summary>Thought Process</summary>
+
+The user wants me to look at GitHub issue #13 which asks to port `bpy.ops.amzn.white_world()` to Rainys-Bulk-Scene-Tools and place it in Scene General. The operator is available in T:\AmazonCharacterTools in \ops\white_world.py.
+
+I need to:
+1. Read the white_world.py operator from T:\AmazonCharacterTools\ops\white_world.py
+2. Port it to Rainys-Bulk-Scene-Tools with the BST addon prefix (bst.) instead of amzn.
+3. Add it to the Scene General panel in Rainys-Bulk-Scene-Tools
+
+I will read the source operator first.
+</details></think>
+
+---
+
+
+
+
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: T:\AmazonCharacterTools\ops\white_world.py</summary>
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_scene_general.py</summary>
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="list_dir_v2">
+<details>
+<summary>Tool use: **list_dir_v2**</summary>
+
+
+Parameters:
+
+```json
+{
+  "targetDirectory": "E:\\Rainys_Bulk_Scene_Tools\\ops"
+}
+```
+Result:
+
+```json
+{
+  "directoryTreeRoot": {
+    "absPath": "E:\\Rainys_Bulk_Scene_Tools\\ops",
+    "childrenFiles": [
+      {
+        "name": "AutoMatExtractor.py"
+      },
+      {
+        "name": "convert_relations_to_constraint.py"
+      },
+      {
+        "name": "create_ortho_camera.py"
+      },
+      {
+        "name": "delete_single_keyframe_actions.py"
+      },
+      {
+        "name": "flat_color_texture_renamer.py"
+      },
+      {
+        "name": "FreeGPU.py"
+      },
+      {
+        "name": "ghost_buster.py"
+      },
+      {
+        "name": "NoSubdiv.py"
+      },
+      {
+        "name": "remove_custom_split_normals.py"
+      },
+      {
+        "name": "remove_unused_material_slots.py"
+      },
+      {
+        "name": "Rename_images_by_mat.py"
+      },
+      {
+        "name": "select_diffuse_nodes.py"
+      },
+      {
+        "name": "spawn_scene_structure.py"
+      }
+    ],
+    "childrenWereProcessed": true
+  }
+}
+```
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+
+The Amazon white_world.py is a **script** that runs at import time—it's not an operator class. It:
+1. Deletes world "Dual Node Background" if it exists
+2. Creates a new world "World" with pure white background shader
+3. Sets it as scene.world
+4. Runs orphans_purge
+5. Sets film_transparent = True
+
+To port it for [issue #13](https://github.com/RaincloudTheDragon/Rainys-Bulk-Scene-Tools/issues/13), I need to wrap this logic in a `bpy.types.Operator` with bl_idname `bst.white_world` (since the issue says "Port bpy.ops.amzn.white_world()"), use REGISTER/UNDO, and avoid running anything at import. I'll follow the style of other ops in this addon (e.g. delete_single_keyframe_actions, create_ortho_camera).
+
+I'll create E:\Rainys_Bulk_Scene_Tools\ops\white_world.py as an operator that performs the same steps in its execute(), then add the operator to the Scene General panel. For placement, issue #13 says "To place in Scene General"—I'll put it in a sensible spot. "White world" is scene/world related, so either near "Scene Structure" or in a small "World" row. I'll add it in the Scene Structure section or as its own short row; looking at the panel, after Scene Structure or before/after Materials could work. "Scene General" suggests scene-level stuff—maybe a row after Scene Structure: "White World" (creates white background world, sets film transparent). I'll add it in Scene Structure box as another row, or a small "World" row. Reading the panel again: Scene Structure has one button; Mesh has several; Materials has one; Animation has two. I could add "White World" under Scene Structure (same box) or as a new "World" box. Issue says "place in Scene General" so any spot in that panel is fine. I'll put it in the Scene Structure section: row with operator bst.white_world "White World".
+</details></think>
+
+---
+
+
+Wrapping the script logic into a `bst.white_world` operator and adding it to Scene General. The original runs at import; we'll run its logic inside the operator's `execute()`.
+
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: E:\Rainys_Bulk_Scene_Tools\ops\create_ortho_camera.py</summary>
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+
+I'll create white_world.py as an operator that:
+1. Optionally removes "Dual Node Background" if it exists (the original does this)
+2. Creates a new world "World" with pure white background
+3. Sets it as scene.world
+4. Runs orphans_purge (this might be aggressive - I'll keep it as in the original)
+5. Sets film_transparent = True
+
+I'll use bpy.types.Operator, bl_idname "bst.white_world", bl_options {'REGISTER', 'UNDO'}. Use context.scene and context for scene access rather than bpy.context where possible.
+</details></think>
+
+---
+
+
+
+
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\ops\white_world.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+
+The original used bpy.ops.outliner.orphans_purge() with no args. In Blender, orphans_purge can take do_local_ids, do_linked_ids, do_recursive - I used explicit args to be clear. I will check the operator signature - it might need no args for default behavior. I'll leave it as do_local_ids=True, do_linked_ids=True, do_recursive=True which is a common "purge all orphans" behavior. If the original worked with no args, Blender uses defaults. I'll keep it.
+</details></think>
+
+---
+
+
+
+
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_scene_general.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_scene_general.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\panels\bulk_scene_general.py</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+
+Checking if WhiteWorld needs to be registered via compat—the panel uses compat.safe_register_class for all classes in the tuple, and WhiteWorld is in the tuple, so it will be registered. I need to ensure the addon's __init__ or whatever loads the bulk_scene_general panel also loads the WhiteWorld from this panel's classes. Looking at the panel file, WhiteWorld is in the `classes` tuple and register() does `for cls in classes: compat.safe_register_class(cls)`, so we're good.
+
+Verify no lint errors and that the original white_world used orphans_purge() with no args—sometimes addons call it with no args. I used explicit do_local_ids=True, do_linked_ids=True, do_recursive=True. Blender's outliner.orphans_purge in recent versions takes those kwargs; the old script might have called it with no args. I'll leave the explicit call as-is since it's clear; if the script worked with no args, the defaults are typically True,True,True or similar.
+</details></think>
+
+---
+
+
+
+
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="read_lints">
+<details>
+<summary>Tool use: **read_lints**</summary>
+
+
+Parameters:
+
+```json
+{
+  "paths": [
+    "E:\\Rainys_Bulk_Scene_Tools\\ops\\white_world.py",
+    "E:\\Rainys_Bulk_Scene_Tools\\panels\\bulk_scene_general.py"
+  ]
+}
+```
+Result:
+
+```json
+{
+  "linterErrorsByFile": [
+    {
+      "relativeWorkspacePath": "E:\\Rainys_Bulk_Scene_Tools\\ops\\white_world.py"
+    },
+    {
+      "relativeWorkspacePath": "E:\\Rainys_Bulk_Scene_Tools\\panels\\bulk_scene_general.py"
+    }
+  ]
+}
+```
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search">
+<details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+
+Parameters:
+
+```json
+{
+  "pattern": "orphans_purge",
+  "path": "E:\\Rainys_Bulk_Scene_Tools",
+  "contextAfter": 0,
+  "caseInsensitive": false
+}
+```
+Result:
+
+```json
+{
+  "success": {
+    "pattern": "orphans_purge",
+    "path": "E:\\Rainys_Bulk_Scene_Tools",
+    "outputMode": "content",
+    "workspaceResults": {
+      "E:\\Rainys_Bulk_Scene_Tools": {
+        "content": {
+          "matches": [
+            {
+              "file": ".\\ops\\white_world.py",
+              "matches": [
+                {
+                  "lineNumber": 25,
+                  "content": "        bpy.ops.outliner.orphans_purge(do_local_ids=True, do_linked_ids=True, do_recursive=True)"
+                }
+              ]
+            },
+            {
+              "file": ".\\.specstory\\history\\2026-01-07_21-47Z-datablock-utilities-integration-for-duplicates.md",
+              "matches": [
+                {
+                  "lineNumber": 49334,
+                  "content": "                  \"content\": \"        bpy.ops.outliner.orphans_purge(do_local_ids=True, do_linked_ids=True, do_recursive=True)\""
+                },
+                {
+                  "lineNumber": 49655,
+                  "content": "                  \"content\": \"        bpy.ops.outliner.orphans_purge(do_local_ids=True, do_linked_ids=True, do_recursive=True)\""
+                }
+              ]
+            },
+            {
+              "file": ".\\ops\\ghost_buster.py",
+              "matches": [
+                {
+                  "lineNumber": 355,
+                  "content": "        bpy.ops.outliner.orphans_purge(do_local_ids=True, do_linked_ids=True, do_recursive=True)"
+                }
+              ]
+            },
+            {
+              "file": ".\\panels\\bulk_data_remap.py",
+              "matches": [
+                {
+                  "lineNumber": 746,
+                  "content": "        bpy.ops.outliner.orphans_purge(do_local_ids=True, do_linked_ids=True, do_recursive=True)"
+                }
+              ]
+            }
+          ],
+          "totalLines": 5,
+          "totalMatchedLines": 5
+        }
+      }
+    }
+  }
+}
+```
+Status: **completed**
+
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+
+Consistent with the rest of the addon (ghost_buster, bulk_data_remap use the same orphans_purge call). No linter errors. Done.
+</details></think>
+
+---
+
+
+Summary of what was added for [issue #13](https://github.com/RaincloudTheDragon/Rainys-Bulk-Scene-Tools/issues/13):
+
+**1. `ops/white_world.py`**
+- New operator `WhiteWorld` with `bl_idname = "bst.white_world"`.
+- In `execute()` it:
+  - Deletes the world `"Dual Node Background"` if it exists.
+  - Creates a new world `"World"` with a pure white Background shader (RGBA 1,1,1,1).
+  - Sets that world as the scene’s world.
+  - Runs `outliner.orphans_purge(do_local_ids=True, do_linked_ids=True, do_recursive=True)` (same pattern as in ghost_buster and bulk_data_remap).
+  - Enables `context.scene.render.film_transparent`.
+- Uses `bl_options = {'REGISTER', 'UNDO'}` and reports an info message when done.
+
+**2. Scene General panel**
+- Import of `WhiteWorld` from `..ops.white_world`.
+- In the **Scene Structure** box, a new row with `operator("bst.white_world", text="White World", icon='WORLD')`.
+- `WhiteWorld` added to the panel’s `classes` tuple so it gets registered with the rest of the panel’s operators.
+
+The old Amazon script ran its logic at import time; here everything runs inside the operator’s `execute()` so it only runs when the user clicks the button.
+
+---
+
+_**User**_
+
+bump the next version and concisely summarize the last 3 commits in the changelog.
+
+---
+
+_**Agent (model default, mode Agent)**_
+
+
+
+---
+
+
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="ripgrep_raw_search">
+<details>
+<summary>Tool use: **ripgrep_raw_search**</summary>
+
+Status: **loading**
+
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="shell" data-tool-name="run_terminal_command_v2">
+<details><summary>Tool use: **run_terminal_command_v2**</summary>
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="glob_file_search">
+<details>
+<summary>Tool use: **glob_file_search**</summary>
+
+Status: **loading**
+
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="glob_file_search">
+<details>
+<summary>Tool use: **glob_file_search**</summary>
+
+Status: **loading**
+
+
+</details>
+</tool-use>
+
+---
+
+
+
+---
+
+
+
+---
+
+<tool-use data-tool-type="shell" data-tool-name="run_terminal_command_v2">
+<details><summary>Tool use: **run_terminal_command_v2**</summary>
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="read_file_v2">
+<details>
+<summary>Tool use: **read_file_v2**</summary>
+
+Status: **loading**
+
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="unknown" data-tool-name="read_file_v2">
+<details>
+<summary>Tool use: **read_file_v2**</summary>
+
+Status: **loading**
+
+
+</details>
+</tool-use>
+
+---
+
+
+
+---
+
+
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\blender_manifest.toml</summary>
+
+Status: **loading**
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys_Bulk_Scene_Tools\changelog.md</summary>
+
+Status: **loading**
+
+</details>
+
+</tool-use>
+
+---
+
