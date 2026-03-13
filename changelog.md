@@ -1,3 +1,6 @@
+# v0.17.0 2026-03-13
+  - Remove Action FU: new operator in Animation Data section—clears fake users from all actions so only used animations are kept
+
 # v0.16.0 2026-01-15
   - Delete Single Keyframe Actions: Blender 5.0 compatible (action layers/strips/channelbags); skip actions from linked libraries
   - Find Material Users: removed (issue #14; use Atomic or DBU)

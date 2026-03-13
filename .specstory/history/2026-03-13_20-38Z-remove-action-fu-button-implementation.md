@@ -490,3 +490,78 @@ Added 'Remove Action FU' button to clear fake users from unused actions
 
 ---
 
+_**User**_
+
+bump 0.17.0 and concisely summarize the last commit in the changelog.
+
+---
+
+_**Agent (model kimi-k2.5, mode Agent)**_
+
+<think><details><summary>Thought Process</summary>
+The user wants me to:
+1. Bump the version to 0.17.0
+2. Add a concise summary of the last commit to the changelog
+
+Let me first read the manifest and changelog files to understand the current structure.</details></think>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: E:\Rainys-Bulk-Scene-Tools\blender_manifest.toml</summary>
+
+</details>
+</tool-use>
+
+---
+
+<tool-use data-tool-type="read" data-tool-name="read_file_v2">
+<details><summary>Tool use: **read_file_v2** • Read file: E:\Rainys-Bulk-Scene-Tools\changelog.md</summary>
+
+</details>
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Now I need to:
+1. Update the version from 0.16.0 to 0.17.0 in the manifest
+2. Add a changelog entry at the top for v0.17.0 with a concise summary
+
+The last commit added the "Remove Action FU" operator that removes fake users from all actions. I'll add a concise entry at the top of the changelog.</details></think>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys-Bulk-Scene-Tools\blender_manifest.toml</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<tool-use data-tool-type="write" data-tool-name="edit_file_v2">
+
+<details><summary>Tool use: **edit_file_v2** • Edit file: E:\Rainys-Bulk-Scene-Tools\changelog.md</summary>
+
+</details>
+
+</tool-use>
+
+---
+
+<think><details><summary>Thought Process</summary>
+Done! I've updated:
+1. The version in `blender_manifest.toml` from 0.16.0 to 0.17.0
+2. Added a changelog entry for v0.17.0 with a concise summary of the new "Remove Action FU" operator
+
+The changelog entry follows the same format as the previous entries (e.g., the White World entry).</details></think>
+
+---
+
+Done. Bumped version to **0.17.0** and added changelog entry.
+
+---
+
