@@ -6,6 +6,7 @@ from ..ops.spawn_scene_structure import SpawnSceneStructure
 from ..ops.delete_single_keyframe_actions import DeleteSingleKeyframeActions
 from ..ops.remove_unused_material_slots import RemoveUnusedMaterialSlots
 from ..ops.convert_relations_to_constraint import ConvertRelationsToConstraint
+from ..ops.remove_action_fake_users import RemoveActionFakeUsers
 from ..ops.white_world import WhiteWorld
 from ..utils import compat
 
@@ -56,6 +57,8 @@ class RBST_SceneGen_PT_BulkSceneGeneral(bpy.types.Panel):
         box = layout.box()
         box.label(text="Animation Data")
         row = box.row(align=True)
+        row.operator("bst.remove_action_fake_users", text="Remove Action FU", icon='FAKE_USER_OFF')
+        row = box.row(align=True)
         row.operator("bst.delete_single_keyframe_actions", text="Delete Single Keyframe Actions", icon='ANIM_DATA')
         row = box.row(align=True)
         row.operator("bst.convert_relations_to_constraint", text="Convert Relations to Constraint", icon_value=405)
@@ -71,6 +74,7 @@ classes = (
     DeleteSingleKeyframeActions,
     RemoveUnusedMaterialSlots,
     ConvertRelationsToConstraint,
+    RemoveActionFakeUsers,
 )
 
 # Registration
