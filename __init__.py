@@ -8,7 +8,6 @@ from .panels import bulk_scene_general
 from .ops.AutoMatExtractor import RBST_AutoMat_OT_AutoMatExtractor, RBST_AutoMat_OT_summary_dialog
 from .ops.Rename_images_by_mat import RBST_RenameImg_OT_Rename_images_by_mat, RBST_RenameImg_OT_summary_dialog
 from .ops.FreeGPU import RBST_FreeGPU
-from .ops import ghost_buster
 from . import rainys_repo_bootstrap
 from .utils import compat
 
@@ -77,7 +76,6 @@ def register():
     bulk_viewport_display.register()
     bulk_data_remap.register()
     bulk_path_management.register()
-    ghost_buster.register()
     
     # Add keybind for Free GPU (global context)
     wm = bpy.context.window_manager
@@ -106,10 +104,6 @@ def unregister():
         delattr(bpy.types.Scene, '_bst_keymaps')
     
     # Unregister modules
-    try:
-        ghost_buster.unregister()
-    except Exception:
-        pass
     try:
         bulk_path_management.unregister()
     except Exception:

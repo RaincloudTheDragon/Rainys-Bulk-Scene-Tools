@@ -4,8 +4,6 @@ import os
 import sys
 import subprocess
 
-# Import ghost buster functionality
-from ..ops.ghost_buster import RBST_Bustin_OT_GhostBuster, RBST_Bustin_OT_GhostDetector, RBST_Bustin_OT_ResyncEnforce
 from ..utils import compat
 
 # Regular expression to match numbered suffixes like .001, .002, _001, _0001, etc.
@@ -151,13 +149,6 @@ def RBST_DatRem_register_properties():
     # Store the last clicked group for shift-click range selection
     if not hasattr(bpy.types.Scene, "last_clicked_group"):
         bpy.types.Scene.last_clicked_group = {}
-    
-    # Ghost Buster properties
-    bpy.types.Scene.ghost_buster_delete_low_priority = bpy.props.BoolProperty(  # type: ignore
-        name="Delete Low Priority Ghosts",
-        description="Delete objects not in scenes with no legitimate use and users < 2",
-        default=False
-    )
 
 def RBST_DatRem_unregister_properties():
     del bpy.types.Scene.dataremap_images
@@ -183,10 +174,6 @@ def RBST_DatRem_unregister_properties():
     del bpy.types.Scene.dataremap_sort_fonts
     del bpy.types.Scene.dataremap_sort_worlds
     del bpy.types.Scene.dataremap_sort_node_groups
-    
-    # Delete ghost buster properties
-    if hasattr(bpy.types.Scene, "ghost_buster_delete_low_priority"):
-        del bpy.types.Scene.ghost_buster_delete_low_priority
 
 def RBST_DatRem_get_base_name(name):
     """Extract the base name without numbered suffix"""
@@ -1521,33 +1508,6 @@ class RBST_DatRem_PT_BulkDataRemap(bpy.types.Panel):
         box.separator()
         row = box.row()
         row.operator("bst.purge_unused_data", icon='TRASH')
-        
-        # Ghost Buster section
-        layout.separator()
-        ghost_box = layout.box()
-        ghost_box.label(text="Ghost Buster - Experimental")
-        
-        col = ghost_box.column()
-        col.label(text="Ghost data cleanup & library override fixes:")
-        col.label(text="• Unused local WGT widget objects")
-        col.label(text="• Empty unlinked collections")
-        col.label(text="• Objects not in scenes with no legitimate use")
-        col.label(text="• Fix broken library override hierarchies")
-        
-        # Two button layout
-        row = ghost_box.row(align=True)
-        row.scale_y = 1.5
-        row.operator("bst.ghost_detector", text="Ghost Detector", icon='ZOOM_IN')
-        row.operator("bst.ghost_buster", text="Ghost Buster", icon='GHOST_ENABLED')
-        
-        # Ghost Buster option
-        ghost_box.prop(context.scene, "ghost_buster_delete_low_priority", text="Delete Low Priority Ghosts")
-        
-        # Resync Enforce button
-        ghost_box.separator()
-        row = ghost_box.row()
-        row.scale_y = 1.2
-        row.operator("bst.resync_enforce", text="Resync Enforce", icon='FILE_REFRESH')
 
 # Add a new operator for toggling data types
 class RBST_DatRem_OT_ToggleDataType(bpy.types.Operator):
