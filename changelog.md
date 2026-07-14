@@ -1,3 +1,9 @@
+# v0.18.0 2026-07-14
+  - Official support: Blender 4.5 and 5.2 LTS only; minimum version raised to 4.5 (#9)
+  - Bulk Data Remap: native node group rename/merge for numbered duplicates (#16)
+  - Ghost Buster removed; use Atomic instead (#17)
+  - Remapper UI: larger Purge Unused button, fixed post-Ghost-Buster spacing
+
 # v0.17.0 2026-03-13
   - Remove Action FU: new operator in Animation Data section—clears fake users from all actions so only used animations are kept
 
