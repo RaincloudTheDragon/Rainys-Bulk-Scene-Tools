@@ -1,16 +1,14 @@
 """
 This module provides version detection and comparison utilities for
-multi-version Blender support (4.2, 4.4, 4.5, and 5.0).
-
+multi-version Blender support (4.5 and 5.2).
 """
 
 import bpy
 
 # Version constants
-VERSION_4_2 = (4, 2, 0)
-VERSION_4_4 = (4, 4, 0)
 VERSION_4_5 = (4, 5, 0)
 VERSION_5_0 = (5, 0, 0)
+VERSION_5_2 = (5, 2, 0)
 
 
 def get_blender_version():
@@ -25,7 +23,7 @@ def get_blender_version():
 
 def get_version_string():
     """
-    Returns the current Blender version as a string (e.g., "4.2.0").
+    Returns the current Blender version as a string (e.g., "4.5.0").
     
     Returns:
         str: Version string in format "major.minor.patch"
@@ -76,35 +74,16 @@ def get_version_category():
     Returns the version category string for the current Blender version.
     
     Returns:
-        str: '4.2', '4.4', '4.5', or '5.0' based on the current version
+        str: '4.5' or '5.2' for officially supported versions; otherwise 'major.minor'
     """
     version = get_blender_version()
     major, minor = version[0], version[1]
     
-    if major == 4:
-        if minor < 4:
-            return '4.2'
-        elif minor < 5:
-            return '4.4'
-        else:
-            return '4.5'
-    elif major >= 5:
-        return '5.0'
-    else:
-        # Fallback for older versions
-        return f"{major}.{minor}"
-
-
-def is_version_4_2():
-    """Check if running Blender 4.2 (4.2.x only, not 4.3 or 4.4)."""
-    version = get_blender_version()
-    return version[0] == 4 and version[1] == 2
-
-
-def is_version_4_4():
-    """Check if running Blender 4.4 (4.4.x only, not 4.5)."""
-    version = get_blender_version()
-    return version[0] == 4 and version[1] == 4
+    if major == 4 and minor >= 5:
+        return '4.5'
+    if major >= 5 and is_version_at_least(5, 2, 0):
+        return '5.2'
+    return f"{major}.{minor}"
 
 
 def is_version_4_5():
@@ -116,3 +95,7 @@ def is_version_5_0():
     """Check if running Blender 5.0 or later."""
     return is_version_at_least(5, 0, 0)
 
+
+def is_version_5_2():
+    """Check if running Blender 5.2 LTS or later."""
+    return is_version_at_least(5, 2, 0)

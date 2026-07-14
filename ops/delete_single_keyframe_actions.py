@@ -4,7 +4,7 @@ from ..utils import version
 
 
 def _collect_keyframe_stats(action):
-    """Return (total_keyframes, keyframe_frames_set). Compatible with 4.2/4.5 (action.fcurves) and 5.0 (layers/strips/channelbags)."""
+    """Return (total_keyframes, keyframe_frames_set). Compatible with 4.5 (action.fcurves) and 5.0+ (layers/strips/channelbags)."""
     keyframe_frames = set()
     total_keyframes = 0
     if version.is_version_less_than(5, 0, 0):

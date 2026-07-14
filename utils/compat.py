@@ -1,6 +1,6 @@
 """
 This module provides API compatibility functions for handling differences
-between Blender 4.2, 4.4, 4.5, and 5.0.
+between Blender 4.5 and 5.2.
 
 """
 

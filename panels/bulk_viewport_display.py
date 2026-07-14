@@ -395,7 +395,7 @@ class RBST_ViewDisp_OT_RefreshMaterialPreviews(bpy.types.Operator):
             if hasattr(material, 'preview_ensure'):
                 try:
                     preview = material.preview_ensure()
-                    # In Blender 4.2/4.5, accessing icon_id is safe and helps ensure generation
+                    # In Blender 4.5, accessing icon_id is safe and helps ensure generation
                     # In Blender 5.0+, we skip this to avoid crashes
                     if not version.is_version_5_0() and preview and hasattr(preview, 'icon_id'):
                         try:

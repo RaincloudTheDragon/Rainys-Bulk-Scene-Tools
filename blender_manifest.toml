@@ -3,12 +3,12 @@ schema_version = "1.0.0"
 id = "rainclouds_bulk_scene_tools"
 name = "Raincloud's Bulk Scene Tools"
 tagline = "Bulk utilities for optimizing scene data"
-version = "0.17.0"
+version = "0.17.1"
 type = "add-on"
 
 maintainer = "RaincloudTheDragon <raincloudthedragon@gmail.com>"
 license = ["GPL-3.0-or-later"]
-blender_version_min = "4.2.0"
+blender_version_min = "4.5.0"
 
 website = "https://github.com/RaincloudTheDragon/Rainys-Bulk-Scene-Tools"
 
