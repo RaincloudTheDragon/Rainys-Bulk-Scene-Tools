@@ -1267,9 +1267,9 @@ class RBST_DatRem_PT_BulkDataRemap(bpy.types.Panel):
             linked_types.append("node groups")
             linked_paths.update(RBST_DatRem_get_linked_file_paths(bpy.data.node_groups))
         
-        # Display warning about linked datablocks in a separate section if found
+        # Display warning about linked datablocks inside the remapper box
         if linked_datablocks_found:
-            warning_box = layout.box()
+            warning_box = box.box()
             warning_box.alert = True
             warning_box.label(text="Warning: Linked datablocks detected", icon='ERROR')
             warning_box.label(text=f"Types: {', '.join(linked_types)}")
@@ -1504,9 +1504,8 @@ class RBST_DatRem_PT_BulkDataRemap(bpy.types.Panel):
         else:
             box.label(text="No data blocks to process")
         
-        # Add a separator and purge button
-        box.separator()
-        row = box.row()
+        row = layout.row()
+        row.scale_y = 1.5
         row.operator("bst.purge_unused_data", icon='TRASH')
 
 # Add a new operator for toggling data types
