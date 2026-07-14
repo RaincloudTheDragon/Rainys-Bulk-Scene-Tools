@@ -45,6 +45,12 @@ def RBST_DatRem_register_properties():
         default=True
     )
     
+    bpy.types.Scene.dataremap_node_groups = bpy.props.BoolProperty(  # type: ignore
+        name="Node Groups",
+        description="Find and remap duplicate node groups",
+        default=True
+    )
+    
     # Add properties for showing duplicate lists
     bpy.types.Scene.show_image_duplicates = bpy.props.BoolProperty(  # type: ignore
         name="Show Image Duplicates",
@@ -70,6 +76,12 @@ def RBST_DatRem_register_properties():
         default=False
     )
     
+    bpy.types.Scene.show_node_group_duplicates = bpy.props.BoolProperty(  # type: ignore
+        name="Show Node Group Duplicates",
+        description="Show list of duplicate node groups",
+        default=False
+    )
+    
     # Sort by selected properties for each data type
     bpy.types.Scene.dataremap_sort_images = bpy.props.BoolProperty(  # type: ignore
         name="Sort Images by Selected",
@@ -89,6 +101,11 @@ def RBST_DatRem_register_properties():
     bpy.types.Scene.dataremap_sort_worlds = bpy.props.BoolProperty(  # type: ignore
         name="Sort Worlds by Selected",
         description="Show selected world groups at the top of the list",
+        default=False
+    )
+    bpy.types.Scene.dataremap_sort_node_groups = bpy.props.BoolProperty(  # type: ignore
+        name="Sort Node Groups by Selected",
+        description="Show selected node group groups at the top of the list",
         default=False
     )
     
@@ -117,6 +134,12 @@ def RBST_DatRem_register_properties():
         default=""
     )
     
+    bpy.types.Scene.dataremap_search_node_groups = bpy.props.StringProperty(  # type: ignore
+        name="Search Node Groups",
+        description="Filter node groups by name (case-insensitive)",
+        default=""
+    )
+    
     # Dictionary to store excluded groups
     if not hasattr(bpy.types.Scene, "excluded_remap_groups"):
         bpy.types.Scene.excluded_remap_groups = {}
@@ -141,10 +164,12 @@ def RBST_DatRem_unregister_properties():
     del bpy.types.Scene.dataremap_materials
     del bpy.types.Scene.dataremap_fonts
     del bpy.types.Scene.dataremap_worlds
+    del bpy.types.Scene.dataremap_node_groups
     del bpy.types.Scene.show_image_duplicates
     del bpy.types.Scene.show_material_duplicates
     del bpy.types.Scene.show_font_duplicates
     del bpy.types.Scene.show_world_duplicates
+    del bpy.types.Scene.show_node_group_duplicates
     if hasattr(bpy.types.Scene, "excluded_remap_groups"):
         del bpy.types.Scene.excluded_remap_groups
     if hasattr(bpy.types.Scene, "expanded_remap_groups"):
@@ -157,6 +182,7 @@ def RBST_DatRem_unregister_properties():
     del bpy.types.Scene.dataremap_sort_materials
     del bpy.types.Scene.dataremap_sort_fonts
     del bpy.types.Scene.dataremap_sort_worlds
+    del bpy.types.Scene.dataremap_sort_node_groups
     
     # Delete ghost buster properties
     if hasattr(bpy.types.Scene, "ghost_buster_delete_low_priority"):
@@ -193,6 +219,56 @@ def RBST_DatRem_find_data_groups(data_collection):
     # Also filter out groups where all items are linked
     return {name: items for name, items in groups.items() 
             if len(items) > 1 and any(not (hasattr(item, 'library') and item.library is not None) for item in items)}
+
+def RBST_DatRem_get_node_group_tree_label(node_group):
+    """Return a short label for a node group's tree type."""
+    tree_id = getattr(node_group, 'bl_idname', '') or ''
+    if tree_id.endswith('NodeTree'):
+        return tree_id[:-8]
+    return tree_id or 'Unknown'
+
+def RBST_DatRem_format_node_group_group_key(group_key):
+    """Format a node group group key for display."""
+    if ':' not in group_key:
+        return group_key
+    tree_id, base_name = group_key.split(':', 1)
+    tree_label = tree_id.replace('NodeTree', '') if tree_id.endswith('NodeTree') else tree_id
+    return f"{base_name} ({tree_label})"
+
+def RBST_DatRem_find_node_group_data_groups():
+    """Group node groups by tree type and base name."""
+    groups = {}
+    
+    for node_group in bpy.data.node_groups:
+        if node_group.users == 0:
+            continue
+        if hasattr(node_group, 'library') and node_group.library is not None:
+            continue
+        
+        base_name = RBST_DatRem_get_base_name(node_group.name)
+        tree_id = getattr(node_group, 'bl_idname', 'UnknownNodeTree')
+        group_key = f"{tree_id}:{base_name}"
+        
+        if group_key not in groups:
+            groups[group_key] = []
+        groups[group_key].append(node_group)
+    
+    return {name: items for name, items in groups.items()
+            if len(items) > 1 and any(not (hasattr(item, 'library') and item.library is not None) for item in items)}
+
+def RBST_DatRem_get_duplicate_groups(data_type):
+    """Return duplicate groups for a remapper data type."""
+    if data_type == "images":
+        return RBST_DatRem_find_data_groups(bpy.data.images)
+    if data_type == "materials":
+        return RBST_DatRem_find_data_groups(bpy.data.materials)
+    if data_type == "fonts":
+        return RBST_DatRem_find_data_groups(bpy.data.fonts)
+    if data_type == "worlds":
+        return RBST_DatRem_find_data_groups(bpy.data.worlds)
+    if data_type == "node_groups":
+        return RBST_DatRem_find_node_group_data_groups()
+    return {}
 
 def RBST_DatRem_find_target_data(data_group):
     """Find the target data block to remap to"""
@@ -242,7 +318,7 @@ def RBST_DatRem_clean_data_names(data_collection):
     
     return cleaned_count
 
-def RBST_DatRem_remap_data_blocks(context, remap_images, remap_materials, remap_fonts, remap_worlds):
+def RBST_DatRem_remap_data_blocks(context, remap_images, remap_materials, remap_fonts, remap_worlds, remap_node_groups):
     """Remap redundant data blocks to their base versions like Blender's Remap Users function, and clean up names."""
     remapped_count = 0
     cleaned_count = 0
@@ -587,6 +663,35 @@ def RBST_DatRem_remap_data_blocks(context, remap_images, remap_materials, remap_
         # Then clean up any remaining numbered suffixes
         cleaned_count += RBST_DatRem_clean_data_names(bpy.data.worlds)
     
+    # Process node groups
+    if remap_node_groups:
+        node_group_groups = RBST_DatRem_find_node_group_data_groups()
+        for group_key, node_groups in node_group_groups.items():
+            if f"node_groups:{group_key}" in context.scene.excluded_remap_groups:
+                continue
+            
+            target_group = RBST_DatRem_find_target_data(node_groups)
+            
+            if RBST_DatRem_get_base_name(target_group.name) != target_group.name:
+                try:
+                    target_group.name = RBST_DatRem_get_base_name(target_group.name)
+                except AttributeError:
+                    print(f"Warning: Cannot rename linked node group {target_group.name}")
+                    continue
+            
+            try:
+                for node_group in node_groups:
+                    if node_group != target_group:
+                        try:
+                            node_group.user_remap(target_group)
+                            remapped_count += 1
+                        except AttributeError:
+                            print(f"Warning: Cannot remap linked node group {node_group.name}")
+            except Exception as e:
+                print(f"Error using built-in remap for node groups: {e}")
+        
+        cleaned_count += RBST_DatRem_clean_data_names(bpy.data.node_groups)
+    
     # Force an update of the dependency graph to ensure all users are properly updated
     if context.view_layer:
         context.view_layer.update()
@@ -605,14 +710,20 @@ class RBST_DatRem_OT_RemapData(bpy.types.Operator):
         remap_materials = context.scene.dataremap_materials
         remap_fonts = context.scene.dataremap_fonts
         remap_worlds = context.scene.dataremap_worlds
+        remap_node_groups = context.scene.dataremap_node_groups
         
         # Count duplicates before remapping (only for local datablocks)
         image_groups = RBST_DatRem_find_data_groups(bpy.data.images) if remap_images else {}
         material_groups = RBST_DatRem_find_data_groups(bpy.data.materials) if remap_materials else {}
         font_groups = RBST_DatRem_find_data_groups(bpy.data.fonts) if remap_fonts else {}
         world_groups = RBST_DatRem_find_data_groups(bpy.data.worlds) if remap_worlds else {}
+        node_group_groups = RBST_DatRem_find_node_group_data_groups() if remap_node_groups else {}
         
-        total_duplicates = sum(len(group) - 1 for groups in [image_groups, material_groups, font_groups, world_groups] for group in groups.values())
+        total_duplicates = sum(
+            len(group) - 1
+            for groups in [image_groups, material_groups, font_groups, world_groups, node_group_groups]
+            for group in groups.values()
+        )
         
         # Count data blocks with numbered suffixes (only for local datablocks)
         total_numbered = 0
@@ -636,6 +747,11 @@ class RBST_DatRem_OT_RemapData(bpy.types.Operator):
                                 if world.users > 0 
                                 and not (hasattr(world, 'library') and world.library is not None)
                                 and RBST_DatRem_get_base_name(world.name) != world.name)
+        if remap_node_groups:
+            total_numbered += sum(1 for node_group in bpy.data.node_groups
+                                if node_group.users > 0
+                                and not (hasattr(node_group, 'library') and node_group.library is not None)
+                                and RBST_DatRem_get_base_name(node_group.name) != node_group.name)
         
         if total_duplicates == 0 and total_numbered == 0:
             self.report({'INFO'}, "No local data blocks to process")
@@ -647,7 +763,8 @@ class RBST_DatRem_OT_RemapData(bpy.types.Operator):
             remap_images,
             remap_materials,
             remap_fonts,
-            remap_worlds
+            remap_worlds,
+            remap_node_groups,
         )
         
         # Report results
@@ -808,15 +925,7 @@ class RBST_DatRem_OT_SelectAllGroups(bpy.types.Operator):
             context.scene.excluded_remap_groups = {}
         
         # Get the appropriate data groups based on data_type
-        data_groups = {}
-        if self.data_type == "images":
-            data_groups = RBST_DatRem_find_data_groups(bpy.data.images)
-        elif self.data_type == "materials":
-            data_groups = RBST_DatRem_find_data_groups(bpy.data.materials)
-        elif self.data_type == "fonts":
-            data_groups = RBST_DatRem_find_data_groups(bpy.data.fonts)
-        elif self.data_type == "worlds":
-            data_groups = RBST_DatRem_find_data_groups(bpy.data.worlds)
+        data_groups = RBST_DatRem_get_duplicate_groups(self.data_type)
         
         # Process only groups with more than one item
         for base_name, items in data_groups.items():
@@ -873,15 +982,7 @@ class RBST_DatRem_OT_ToggleGroupSelection(bpy.types.Operator):
             last_group = context.scene.last_clicked_group[self.data_type]
             
             # Get all data groups for this data type
-            data_groups = []
-            if self.data_type == "images":
-                data_groups = list(RBST_DatRem_find_data_groups(bpy.data.images).keys())
-            elif self.data_type == "materials":
-                data_groups = list(RBST_DatRem_find_data_groups(bpy.data.materials).keys())
-            elif self.data_type == "fonts":
-                data_groups = list(RBST_DatRem_find_data_groups(bpy.data.fonts).keys())
-            elif self.data_type == "worlds":
-                data_groups = list(RBST_DatRem_find_data_groups(bpy.data.worlds).keys())
+            data_groups = list(RBST_DatRem_get_duplicate_groups(self.data_type).keys())
             
             # Find the indices of the last clicked group and the current group
             try:
@@ -966,6 +1067,10 @@ def RBST_DatRem_search_matches_group(group, search_string):
     # Check base name
     if search_lower in base_name.lower():
         return True
+    if ':' in base_name:
+        formatted_name = RBST_DatRem_format_node_group_group_key(base_name)
+        if search_lower in formatted_name.lower():
+            return True
     # Check all item names in group
     for item in items:
         if search_lower in item.name.lower():
@@ -1075,9 +1180,13 @@ def RBST_DatRem_draw_data_duplicates(layout, context, data_type, data_groups):
                     row.template_icon(icon_value=target_item.preview.icon_id, scale=1.0)
                 else:
                     row.label(text="", icon='WORLD')
+            elif data_type == "node_groups":
+                row.label(text="", icon='NODETREE')
+            
+            display_name = RBST_DatRem_format_node_group_group_key(base_name) if data_type == "node_groups" else base_name
             
             # Add rename operator for the group name
-            rename_op = row.operator("bst.rename_datablock_remap", text=f"{base_name}: {len(items)} versions", emboss=False)
+            rename_op = row.operator("bst.rename_datablock_remap", text=f"{display_name}: {len(items)} versions", emboss=False)
             rename_op.data_type = data_type
             rename_op.old_name = target_item.name
             
@@ -1112,9 +1221,15 @@ def RBST_DatRem_draw_data_duplicates(layout, context, data_type, data_groups):
                             sub_row.template_icon(icon_value=item.preview.icon_id, scale=1.0)
                         else:
                             sub_row.label(text="", icon='WORLD')
+                    elif data_type == "node_groups":
+                        sub_row.label(text="", icon='NODETREE')
+                    
+                    item_label = item.name
+                    if data_type == "node_groups":
+                        item_label = f"{item.name} ({RBST_DatRem_get_node_group_tree_label(item)})"
                     
                     # Add rename operator for each item
-                    rename_op = sub_row.operator("bst.rename_datablock_remap", text=f"{item.name}", emboss=False)
+                    rename_op = sub_row.operator("bst.rename_datablock_remap", text=item_label, emboss=False)
                     rename_op.data_type = data_type
                     rename_op.old_name = item.name
 
@@ -1160,6 +1275,11 @@ class RBST_DatRem_PT_BulkDataRemap(bpy.types.Panel):
             linked_types.append("worlds")
             linked_paths.update(RBST_DatRem_get_linked_file_paths(bpy.data.worlds))
         
+        if context.scene.dataremap_node_groups and RBST_DatRem_has_linked_datablocks(bpy.data.node_groups):
+            linked_datablocks_found = True
+            linked_types.append("node groups")
+            linked_paths.update(RBST_DatRem_get_linked_file_paths(bpy.data.node_groups))
+        
         # Display warning about linked datablocks in a separate section if found
         if linked_datablocks_found:
             warning_box = layout.box()
@@ -1192,16 +1312,19 @@ class RBST_DatRem_PT_BulkDataRemap(bpy.types.Panel):
         material_groups = RBST_DatRem_find_data_groups(bpy.data.materials)
         font_groups = RBST_DatRem_find_data_groups(bpy.data.fonts)
         world_groups = RBST_DatRem_find_data_groups(bpy.data.worlds)
+        node_group_groups = RBST_DatRem_find_node_group_data_groups()
         
         image_duplicates = sum(len(group) - 1 for group in image_groups.values())
         material_duplicates = sum(len(group) - 1 for group in material_groups.values())
         font_duplicates = sum(len(group) - 1 for group in font_groups.values())
         world_duplicates = sum(len(group) - 1 for group in world_groups.values())
+        node_group_duplicates = sum(len(group) - 1 for group in node_group_groups.values())
         
         image_numbered = sum(1 for img in bpy.data.images if img.users > 0 and RBST_DatRem_get_base_name(img.name) != img.name)
         material_numbered = sum(1 for mat in bpy.data.materials if mat.users > 0 and RBST_DatRem_get_base_name(mat.name) != mat.name)
         font_numbered = sum(1 for font in bpy.data.fonts if font.users > 0 and RBST_DatRem_get_base_name(font.name) != font.name)
         world_numbered = sum(1 for world in bpy.data.worlds if world.users > 0 and RBST_DatRem_get_base_name(world.name) != world.name)
+        node_group_numbered = sum(1 for node_group in bpy.data.node_groups if node_group.users > 0 and RBST_DatRem_get_base_name(node_group.name) != node_group.name)
         
         # Initialize excluded_remap_groups if it doesn't exist
         if not hasattr(context.scene, "excluded_remap_groups"):
@@ -1332,6 +1455,33 @@ class RBST_DatRem_PT_BulkDataRemap(bpy.types.Panel):
         if context.scene.show_world_duplicates and world_duplicates > 0 and context.scene.dataremap_worlds:
             RBST_DatRem_draw_data_duplicates(col, context, "worlds", world_groups)
         
+        # Node Groups
+        row = col.row()
+        split = row.split(factor=0.6)
+        sub_row = split.row()
+        
+        op = sub_row.operator("bst.toggle_data_type", text="", icon='NODETREE', depress=context.scene.dataremap_node_groups)
+        op.data_type = "node_groups"
+        
+        if context.scene.dataremap_node_groups:
+            sub_row.label(text="Node Groups")
+        else:
+            sub_row.label(text="Node Groups", icon='RADIOBUT_OFF')
+        
+        sub_row = split.row()
+        if node_group_duplicates > 0:
+            sub_row.prop(context.scene, "show_node_group_duplicates",
+                         text=f"{node_group_duplicates} duplicates",
+                         icon='DISCLOSURE_TRI_DOWN' if context.scene.show_node_group_duplicates else 'DISCLOSURE_TRI_RIGHT',
+                         emboss=False)
+        elif node_group_numbered > 0:
+            sub_row.label(text=f"{node_group_numbered} numbered")
+        else:
+            sub_row.label(text="0 duplicates")
+        
+        if context.scene.show_node_group_duplicates and node_group_duplicates > 0 and context.scene.dataremap_node_groups:
+            RBST_DatRem_draw_data_duplicates(col, context, "node_groups", node_group_groups)
+        
         # Add the operator button
         row = box.row()
         row.scale_y = 1.5
@@ -1355,8 +1505,8 @@ class RBST_DatRem_PT_BulkDataRemap(bpy.types.Panel):
             dbu_box.label(text="Data-block utilities addon not installed", icon='ERROR')
         
         # Show total counts
-        total_duplicates = image_duplicates + material_duplicates + font_duplicates + world_duplicates
-        total_numbered = image_numbered + material_numbered + font_numbered + world_numbered
+        total_duplicates = image_duplicates + material_duplicates + font_duplicates + world_duplicates + node_group_duplicates
+        total_numbered = image_numbered + material_numbered + font_numbered + world_numbered + node_group_numbered
         
         if total_duplicates > 0 or total_numbered > 0:
             box.separator()
@@ -1421,6 +1571,8 @@ class RBST_DatRem_OT_ToggleDataType(bpy.types.Operator):
             context.scene.dataremap_fonts = not context.scene.dataremap_fonts
         elif self.data_type == "worlds":
             context.scene.dataremap_worlds = not context.scene.dataremap_worlds
+        elif self.data_type == "node_groups":
+            context.scene.dataremap_node_groups = not context.scene.dataremap_node_groups
         
         return {'FINISHED'}
 
@@ -1543,6 +1695,8 @@ class RBST_DatRem_OT_RenameDatablock(bpy.types.Operator):
             data_collection = bpy.data.fonts
         elif self.data_type == "worlds":
             data_collection = bpy.data.worlds
+        elif self.data_type == "node_groups":
+            data_collection = bpy.data.node_groups
         
         if not data_collection:
             self.report({'ERROR'}, "Invalid data type")
