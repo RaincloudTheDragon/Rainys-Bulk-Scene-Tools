@@ -11,6 +11,18 @@ from .ops.FreeGPU import RBST_FreeGPU
 from . import rainys_repo_bootstrap
 from .utils import compat
 
+
+def _rbst_persist_prefs_sidecar(self, context):
+    """Write reload-safe prefs sidecar after AddonPreferences changes."""
+    try:
+        from .utils.prefs_sidecar import is_restoring, save_sidecar
+        if is_restoring():
+            return
+        save_sidecar(self)
+    except Exception:
+        pass
+
+
 # Addon preferences class for update settings
 class RBST_AddonPreferences(AddonPreferences):
     bl_idname = __package__
@@ -20,6 +32,7 @@ class RBST_AddonPreferences(AddonPreferences):
         name="Place 'common' folder outside 'blend' folder",
         description="If enabled, the 'common' folder for shared textures will be placed directly in 'textures/'. If disabled, it will be placed inside 'textures/<blend_name>/'",
         default=False,
+        update=_rbst_persist_prefs_sidecar,
     )
 
     def draw(self, context):
@@ -59,6 +72,12 @@ def register():
     # Register classes from this module (do this first to ensure preferences are available)
     for cls in classes:
         compat.safe_register_class(cls)
+
+    try:
+        from .utils.prefs_sidecar import restore_sidecar_into_prefs
+        restore_sidecar_into_prefs()
+    except Exception as e:
+        print(f"[RBST] Prefs sidecar restore failed: {e}")
     
     # Print debug info about preferences
     try:
@@ -92,6 +111,11 @@ def register():
     rainys_repo_bootstrap.register()
 
 def unregister():
+    try:
+        from .utils.prefs_sidecar import save_sidecar
+        save_sidecar()
+    except Exception:
+        pass
     # Remove keybinds
     addon_keymaps = getattr(bpy.types.Scene, '_bst_keymaps', [])
     for km, kmi in addon_keymaps:
