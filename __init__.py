@@ -1,6 +1,6 @@
 import bpy # type: ignore
 from bpy.types import AddonPreferences, Panel # type: ignore
-from bpy.props import BoolProperty # type: ignore
+from bpy.props import BoolProperty, StringProperty, FloatProperty # type: ignore
 from .panels import bulk_viewport_display
 from .panels import bulk_data_remap
 from .panels import bulk_path_management
@@ -10,6 +10,7 @@ from .ops.Rename_images_by_mat import RBST_RenameImg_OT_Rename_images_by_mat, RB
 from .ops.FreeGPU import RBST_FreeGPU
 from . import rainys_repo_bootstrap
 from .utils import compat
+from .utils.org_runtime import org_runtime_status
 
 
 def _rbst_persist_prefs_sidecar(self, context):
@@ -35,6 +36,72 @@ class RBST_AddonPreferences(AddonPreferences):
         update=_rbst_persist_prefs_sidecar,
     )
 
+    # Outliner org (#18)
+    org_template_path: StringProperty(
+        name="Org Template",
+        description="JSON template for outliner organization (create-if-missing folders, excludes)",
+        default="",
+        subtype="FILE_PATH",
+        update=_rbst_persist_prefs_sidecar,
+    )
+    org_gguf_path: StringProperty(
+        name="GGUF Path",
+        description="Optional explicit path to a local instruct GGUF for org-with-model",
+        default="",
+        subtype="FILE_PATH",
+        update=_rbst_persist_prefs_sidecar,
+    )
+    org_gguf_filename: StringProperty(
+        name="Cached GGUF Filename",
+        description="Filename inside the addon org model cache",
+        default="",
+        update=_rbst_persist_prefs_sidecar,
+    )
+    org_llama_cli_path: StringProperty(
+        name="llama-cli Path",
+        description="Optional override for the downloaded llama-cli binary",
+        default="",
+        subtype="FILE_PATH",
+        update=_rbst_persist_prefs_sidecar,
+    )
+    org_llm_allow_heuristic: BoolProperty(
+        name="Allow Basic Rules Without AI",
+        description="Enable Organize with Local Model using simple heuristics when llama-cli/GGUF are not installed",
+        default=False,
+        update=_rbst_persist_prefs_sidecar,
+    )
+    org_llm_timeout: FloatProperty(
+        name="Worker Timeout (s)",
+        description="Kill the org worker if it exceeds this many seconds",
+        default=120.0,
+        min=10.0,
+        max=600.0,
+        update=_rbst_persist_prefs_sidecar,
+    )
+    is_downloading_org_model: BoolProperty(
+        name="Downloading Org Model",
+        default=False,
+        options={"HIDDEN", "SKIP_SAVE"},
+    )
+    org_download_progress: FloatProperty(
+        name="Download Progress",
+        default=0.0,
+        min=0.0,
+        max=1.0,
+        subtype="FACTOR",
+        options={"HIDDEN", "SKIP_SAVE"},
+    )
+    org_download_label: StringProperty(
+        name="Download Label",
+        default="",
+        options={"HIDDEN", "SKIP_SAVE"},
+    )
+    is_inferring_org: BoolProperty(
+        name="Org Inferring",
+        default=False,
+        options={"HIDDEN", "SKIP_SAVE"},
+    )
+
     def draw(self, context):
         layout = self.layout
 
@@ -44,6 +111,52 @@ class RBST_AddonPreferences(AddonPreferences):
         row = box.row()
         row.prop(self, "automat_common_outside_blend")
 
+        box = layout.box()
+        box.label(text="Outliner Organization")
+        box.prop(self, "org_template_path")
+        box.prop(self, "org_llm_timeout")
+        box.prop(self, "org_llm_allow_heuristic")
+
+        status = org_runtime_status(__package__, self)
+        if status["ready"]:
+            box.label(text="Local runtime: Ready (Vulkan llama-cli + GGUF)", icon="CHECKMARK")
+        elif status.get("needs_upgrade"):
+            box.label(text="Local runtime: outdated (reinstall for Vulkan GPU)", icon="ERROR")
+        elif self.is_downloading_org_model:
+            box.label(
+                text=self.org_download_label or "Installing… Esc cancels",
+                icon="TIME",
+            )
+            try:
+                box.progress(
+                    factor=float(self.org_download_progress),
+                    type="BAR",
+                    text=f"{int(self.org_download_progress * 100)}%",
+                )
+            except Exception:
+                box.prop(self, "org_download_progress", text="Progress", slider=True)
+        elif not status["platform_supported"]:
+            box.label(text="Local runtime: platform not supported", icon="ERROR")
+        else:
+            box.label(text="Local runtime: not installed", icon="INFO")
+
+        row = box.row(align=True)
+        row.enabled = not self.is_downloading_org_model
+        label = (
+            "Reinstall Local Org Runtime"
+            if status.get("needs_upgrade")
+            else "Install Local Org Runtime"
+        )
+        row.operator("bst.install_org_runtime", text=label, icon="IMPORT")
+
+        # Advanced overrides (collapsed look via secondary props)
+        col = box.column(align=True)
+        col.enabled = not self.is_downloading_org_model
+        col.prop(self, "org_gguf_path")
+        col.prop(self, "org_llama_cli_path")
+
+        if self.is_inferring_org:
+            box.label(text="Org worker running…", icon="TIME")
 # Main panel for Bulk Scene Tools
 class VIEW3D_PT_BulkSceneTools(Panel):
     """Bulk Scene Tools Panel"""

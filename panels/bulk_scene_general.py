@@ -3,12 +3,27 @@ from ..ops.NoSubdiv import NoSubdiv
 from ..ops.remove_custom_split_normals import RemoveCustomSplitNormals
 from ..ops.create_ortho_camera import CreateOrthoCamera
 from ..ops.spawn_scene_structure import SpawnSceneStructure
+from ..ops.org_scene_structure import OrgSceneStructure, RBST_Org_OT_summary_dialog
+from ..ops.capture_outliner_template import CaptureOutlinerTemplate
+from ..ops.org_scene_structure_llm import (
+    OrgSceneStructureLLM,
+    DownloadOrgModel,
+    InstallOrgRuntime,
+)
 from ..ops.delete_single_keyframe_actions import DeleteSingleKeyframeActions
 from ..ops.remove_unused_material_slots import RemoveUnusedMaterialSlots
 from ..ops.convert_relations_to_constraint import ConvertRelationsToConstraint
 from ..ops.remove_action_fake_users import RemoveActionFakeUsers
 from ..ops.white_world import WhiteWorld
 from ..utils import compat
+from ..utils.org_runtime import org_runtime_ready
+
+
+def _addon_prefs(context):
+    pkg = __package__.rsplit(".", 1)[0] if __package__ else ""
+    addon = context.preferences.addons.get(pkg)
+    return addon.preferences if addon else None
+
 
 class RBST_SceneGen_PT_BulkSceneGeneral(bpy.types.Panel):
     """Bulk Scene General Panel"""
@@ -22,13 +37,47 @@ class RBST_SceneGen_PT_BulkSceneGeneral(bpy.types.Panel):
     
     def draw(self, context):
         layout = self.layout
-        
+        wm = context.window_manager
+        prefs = _addon_prefs(context)
+
         # Scene Structure section
         box = layout.box()
         box.label(text="Scene Structure")
+        row = box.row(align=True)
+        row.prop(wm, "bst_org_dry_run", text="Dry Run")
         row = box.row()
         row.scale_y = 1.2
-        row.operator("bst.spawn_scene_structure", text="Spawn Scene Structure", icon='OUTLINER_COLLECTION')
+        op = row.operator(
+            "bst.spawn_scene_structure",
+            text="Spawn Scene Structure",
+            icon="OUTLINER_COLLECTION",
+        )
+        op.dry_run = wm.bst_org_dry_run
+
+        row = box.row()
+        row.scale_y = 1.1
+        llm_row = row.row()
+        has_runtime = False
+        if prefs is not None:
+            pkg = __package__.rsplit(".", 1)[0] if __package__ else ""
+            has_runtime = org_runtime_ready(pkg, prefs) or getattr(
+                prefs, "org_llm_allow_heuristic", False
+            )
+        llm_row.enabled = has_runtime and not getattr(prefs, "is_inferring_org", False)
+        op_llm = llm_row.operator(
+            "bst.org_scene_structure_llm",
+            text="Organize with Local Model…",
+            icon="WORDWRAP_ON",
+        )
+        op_llm.dry_run = wm.bst_org_dry_run
+
+        row = box.row(align=True)
+        row.operator(
+            "bst.capture_outliner_template",
+            text="Capture Template from this File",
+            icon="FILE_TICK",
+        )
+
         row = box.row(align=True)
         row.operator("bst.white_world", text="White World", icon='WORLD')
         
@@ -66,10 +115,16 @@ class RBST_SceneGen_PT_BulkSceneGeneral(bpy.types.Panel):
 # List of all classes in this module
 classes = (
     RBST_SceneGen_PT_BulkSceneGeneral,
-    NoSubdiv,  # Add NoSubdiv operator class
+    NoSubdiv,
     RemoveCustomSplitNormals,
     CreateOrthoCamera,
     SpawnSceneStructure,
+    OrgSceneStructure,
+    RBST_Org_OT_summary_dialog,
+    CaptureOutlinerTemplate,
+    OrgSceneStructureLLM,
+    DownloadOrgModel,
+    InstallOrgRuntime,
     WhiteWorld,
     DeleteSingleKeyframeActions,
     RemoveUnusedMaterialSlots,
@@ -87,10 +142,16 @@ def register():
         description="Apply only to selected objects",
         default=True
     )
+    bpy.types.WindowManager.bst_org_dry_run = bpy.props.BoolProperty(
+        name="Dry Run",
+        description="Preview outliner organization without modifying the scene",
+        default=False,
+    )
 
 def unregister():
     for cls in reversed(classes):
         compat.safe_unregister_class(cls)
-    # Unregister the window manager property
     if hasattr(bpy.types.WindowManager, "bst_no_subdiv_only_selected"):
         del bpy.types.WindowManager.bst_no_subdiv_only_selected
+    if hasattr(bpy.types.WindowManager, "bst_org_dry_run"):
+        del bpy.types.WindowManager.bst_org_dry_run

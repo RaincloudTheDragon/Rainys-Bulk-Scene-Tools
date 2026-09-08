@@ -41,6 +41,14 @@ def prefs_snapshot(prefs):
     return {
         "version": SIDECAR_VERSION,
         "automat_common_outside_blend": bool(prefs.automat_common_outside_blend),
+        "org_template_path": str(getattr(prefs, "org_template_path", "") or ""),
+        "org_gguf_path": str(getattr(prefs, "org_gguf_path", "") or ""),
+        "org_gguf_filename": str(getattr(prefs, "org_gguf_filename", "") or ""),
+        "org_llama_cli_path": str(getattr(prefs, "org_llama_cli_path", "") or ""),
+        "org_llm_allow_heuristic": bool(
+            getattr(prefs, "org_llm_allow_heuristic", False)
+        ),
+        "org_llm_timeout": float(getattr(prefs, "org_llm_timeout", 120.0) or 120.0),
     }
 
 
@@ -55,10 +63,23 @@ def apply_snapshot(data, prefs):
             prefs.automat_common_outside_blend = bool(
                 data["automat_common_outside_blend"]
             )
+        if "org_template_path" in data and hasattr(prefs, "org_template_path"):
+            prefs.org_template_path = str(data["org_template_path"] or "")
+        if "org_gguf_path" in data and hasattr(prefs, "org_gguf_path"):
+            prefs.org_gguf_path = str(data["org_gguf_path"] or "")
+        if "org_gguf_filename" in data and hasattr(prefs, "org_gguf_filename"):
+            prefs.org_gguf_filename = str(data["org_gguf_filename"] or "")
+        if "org_llama_cli_path" in data and hasattr(prefs, "org_llama_cli_path"):
+            prefs.org_llama_cli_path = str(data["org_llama_cli_path"] or "")
+        if "org_llm_allow_heuristic" in data and hasattr(
+            prefs, "org_llm_allow_heuristic"
+        ):
+            prefs.org_llm_allow_heuristic = bool(data["org_llm_allow_heuristic"])
+        if "org_llm_timeout" in data and hasattr(prefs, "org_llm_timeout"):
+            prefs.org_llm_timeout = float(data["org_llm_timeout"] or 120.0)
         return True
     finally:
         _restoring = False
-
 
 def load_sidecar():
     path = sidecar_path()
