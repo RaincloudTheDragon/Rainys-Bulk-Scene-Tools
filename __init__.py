@@ -53,6 +53,15 @@ class VIEW3D_PT_BulkSceneTools(Panel):
     bl_region_type = 'UI'
     bl_category = 'Edit'
 
+    def draw_header(self, context):
+        # Prefs cog — same pattern as Atomic / Dynamic Library Manager
+        layout = self.layout
+        layout.operator(
+            "preferences.addon_show",
+            text="",
+            icon="PREFERENCES",
+        ).module = __package__
+
     def draw(self, context):
         layout = self.layout
         layout.label(text="Tools for bulk operations on scene data")
