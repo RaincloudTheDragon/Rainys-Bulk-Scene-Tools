@@ -1,3 +1,11 @@
+## [v0.19.0] - 2026-09-09
+
+### Features
+
+- Outliner org (#18): Spawn Scene Structure creates/fixes folder order and case only
+- Organize with Local Model: deterministic Cam/Lgt/nests baseline plus optional llama-cli Props/Dressing assist (heuristic fallback)
+- Runtime install for llama-cli + GGUF from addon preferences; preserves packed content and skips WGTS/set instances
+
 ## [v0.18.0] - 2026-07-14
 
 ### Features
