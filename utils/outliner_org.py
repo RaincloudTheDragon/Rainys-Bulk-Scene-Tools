@@ -1,10 +1,11 @@
 """
 Outliner organization helpers for RBST (#18).
 
-Deterministic path: ensure/rename/migrate structure only (aliases, type
-placement for Cam/Lgt, override-safe nests). Props vs Dressing rulesets and
-other guesses belong on the LLM path. Never calls make_local. WGTS_* / WGT-*
-widget trees are left alone under their character.
+Spawn path (run_spawn / SSS): ensure folders, alias case, pin order, excludes.
+Deterministic org (run_org): plus migrate/nests/Cam-Lgt placement/purge —
+used as the Local Model baseline. Props vs Dressing guesses stay on the LLM /
+heuristic decide path. Never calls make_local. WGTS_* / WGT-* widget trees
+are left alone under their character.
 """
 
 from __future__ import annotations
@@ -1514,6 +1515,7 @@ def filter_plan_against_inventory(plan: dict, inventory: dict) -> dict[str, Any]
     props_hints = {
         "empty_on_parent",
         "anim_helper_empty",
+        "empty_parents_rig",
         "animated",
         "constrained",
     }
@@ -1633,6 +1635,19 @@ def filter_plan_against_inventory(plan: dict, inventory: dict) -> dict[str, Any]
             )
             continue
         hint = hint_by_name.get(str(name), "")
+        # Live structural catch: empty parenting a rig must not go to Dressing.
+        if (
+            obj is not None
+            and _empty_is_anim_helper(obj)
+            and path == dressing_path
+        ):
+            path = list(props_path)
+            why = (
+                (why + "; coerced→Props (rig/prop empty)").strip("; ")
+                if why
+                else "coerced→Props (rig/prop empty)"
+            )
+            hint = hint or "anim_helper_empty"
         # Constrained/animated helpers must land in Props, not Char/Dressing.
         if hint in props_hints and path not in (props_path, lgt_path):
             path = list(props_path)
@@ -1855,6 +1870,54 @@ def build_deterministic_plan(context, template: dict | None = None) -> dict:
     )
 
 
+def run_spawn(context, template: dict | None = None, dry_run: bool = False) -> dict:
+    """
+    Spawn-only: ensure folders, alias/case renames, view-layer excludes, order.
+
+    No object/collection sortation (nests, merges, Cam/Lgt/Props moves, purge).
+    Use run_org / Organize with Local Model for that.
+    """
+    tmpl = template or default_template()
+    ensure = ensure_builtin_structure(context, tmpl, dry_run=dry_run)
+    aliases = tmpl.get("rename_aliases") or COLLECTION_ALIASES
+    rename_plan = [
+        {"from": p["from"], "to": p["to"]}
+        for p in plan_renames(context, aliases)
+    ]
+    renamed = apply_renames(rename_plan, dry_run=dry_run)
+    excludes = apply_view_layer_exclude_plan(
+        context,
+        list(tmpl.get("view_layer_exclude") or []),
+        dry_run=dry_run,
+    )
+    cleared = clear_accidental_structure_excludes(context, dry_run=dry_run)
+    order = reorder_structure_collections(context, dry_run=dry_run)
+
+    notes: list[str] = ["spawn only (no sortation)"]
+    for label in cleared.get("cleared") or []:
+        notes.append(f"cleared exclude: {label}")
+    for label in order.get("reordered") or []:
+        notes.append(f"ordered {label}")
+    for label in ensure.get("reordered") or []:
+        if f"ordered {label}" not in notes:
+            notes.append(f"ordered {label}")
+
+    return {
+        "created": ensure.get("created", []),
+        "adopted": ensure.get("adopted", []),
+        "ensure_skipped": ensure.get("skipped", []),
+        "renamed": renamed.get("renamed", []),
+        "moved": [],
+        "nested": [],
+        "merged": [],
+        "excluded": excludes.get("excluded", []),
+        "purged": [],
+        "skipped": list(renamed.get("skipped", [])),
+        "notes": notes,
+        "dry_run": dry_run,
+    }
+
+
 def run_org(context, template: dict | None = None, dry_run: bool = False) -> dict:
     """
     Full deterministic org: ensure/adopt tree, reconcile merges, apply plan, purge.
@@ -1979,12 +2042,20 @@ def _object_has_action(obj) -> bool:
 
 
 def _empty_is_anim_helper(obj) -> bool:
-    """Helper empties: parented and/or constrained (no name matching)."""
+    """
+    Helper empties: parented, constrained, or parenting rig/prop content.
+
+    A root EMPTY under Char that parents armatures (or meshes) is a prop/rig
+    holder — not Env/Dressing leftover.
+    """
     if obj is None or obj.type != "EMPTY":
         return False
     if obj.parent is not None:
         return True
-    return len(obj.constraints) > 0
+    if len(obj.constraints) > 0:
+        return True
+    # Parent of rigs / prop meshes (e.g. shared root empty for char + cart).
+    return any(ch.type in {"ARMATURE", "MESH", "EMPTY"} for ch in obj.children)
 
 
 def _object_relates_to_armature(obj) -> bool:
@@ -2053,9 +2124,12 @@ def build_decide_candidates(context, limit: int = 40) -> list[dict[str, Any]]:
         if _is_light_group_object(obj):
             _add(obj, "light_group", 110)
         elif obj.type == "EMPTY" and _empty_is_anim_helper(obj):
-            hint = (
-                "empty_on_parent" if obj.parent is not None else "anim_helper_empty"
-            )
+            if obj.parent is not None:
+                hint = "empty_on_parent"
+            elif any(ch.type == "ARMATURE" for ch in obj.children):
+                hint = "empty_parents_rig"
+            else:
+                hint = "anim_helper_empty"
             _add(obj, hint, 100)
         elif _object_has_action(obj) and obj.type not in {
             "CAMERA",
@@ -2107,6 +2181,7 @@ def heuristic_decide_object_moves(inventory: dict, context=None) -> list[dict[st
     props_hints = {
         "empty_on_parent",
         "anim_helper_empty",
+        "empty_parents_rig",
         "animated",
         "constrained",
     }

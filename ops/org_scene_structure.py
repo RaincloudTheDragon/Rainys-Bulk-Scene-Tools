@@ -1,7 +1,7 @@
-"""Deterministic outliner organization + summary dialog (#18).
+"""Spawn summary dialog + thin alias of Spawn Scene Structure (#18).
 
-`bst.org_scene_structure` remains as a thin alias of Spawn Scene Structure
-(same `run_org` pipeline) for scripts/keymaps.
+`bst.org_scene_structure` aliases SSS (folders / order / case only). Full
+sortation lives on Organize with Local Model (`run_org` baseline + decide).
 """
 
 import bpy
@@ -9,8 +9,6 @@ from bpy.props import BoolProperty, IntProperty, StringProperty
 
 from ..utils.outliner_org import (
     format_org_summary,
-    load_template,
-    run_org,
 )
 
 
@@ -108,7 +106,7 @@ def show_org_summary(report: dict):
 
 
 class OrgSceneStructure(bpy.types.Operator):
-    """Alias of Spawn Scene Structure (deterministic org)."""
+    """Alias of Spawn Scene Structure (folders / order / case only)."""
 
     bl_idname = "bst.org_scene_structure"
     bl_label = "Organize into Scene Structure"
@@ -121,7 +119,7 @@ class OrgSceneStructure(bpy.types.Operator):
     )
 
     def execute(self, context):
-        # Same pipeline as SSS — kept for scripts / older UI references.
+        # Same light spawn pipeline as SSS — kept for scripts / older UI.
         return bpy.ops.bst.spawn_scene_structure(
             "EXEC_DEFAULT", dry_run=bool(self.dry_run)
         )

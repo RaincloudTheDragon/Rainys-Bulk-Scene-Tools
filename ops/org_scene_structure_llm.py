@@ -134,6 +134,8 @@ def _build_org_prompt(inventory: dict) -> str:
     example = (
         '{"rename_collections":[],"move_collections":[],'
         '"move_objects":['
+        '{"name":"RigRootEmpty","to":["Animation","Char","Props"],'
+        '"why":"empty parenting armatures"},'
         '{"name":"HelperEmpty","to":["Animation","Char","Props"],'
         '"why":"empty with constraint"},'
         '{"name":"HatMesh","to":["Animation","Char","Props"],'
@@ -152,7 +154,8 @@ def _build_org_prompt(inventory: dict) -> str:
         "- Destinations must be exact paths only: "
         '["Animation","Char","Props"] or ["Env","Dressing"] or ["Lgt"].\n'
         "- Never use Char alone, Animation alone, MESH, or invented folders.\n"
-        "- empty_on_parent / anim_helper_empty / animated / constrained → "
+        "- empty_on_parent / anim_helper_empty / empty_parents_rig / "
+        "animated / constrained → "
         '["Animation","Char","Props"] (full Props path).\n'
         '- light_group → ["Lgt"]\n'
         '- armature_child (static) / loose mesh → ["Env","Dressing"]\n'
@@ -528,7 +531,7 @@ _ORG_LLM_PATH_TAG = "RBST org_llm — baseline + filtered object moves"
 
 
 class OrgSceneStructureLLM(bpy.types.Operator):
-    """Organize via deterministic rules; local model is advisory-only (not applied)."""
+    """Full deterministic org baseline, then Props/Dressing via local model."""
 
     bl_idname = "bst.org_scene_structure_llm"
     bl_label = "Organize with Local Model"
@@ -594,7 +597,7 @@ class OrgSceneStructureLLM(bpy.types.Operator):
         self._stderr_handle = None
         self._last_heartbeat = 0.0
 
-        # Always run deterministic org first — this is the only mutate path.
+        # Full deterministic sortation first; model then does Props/Dressing.
         self._baseline_done = False
         template = load_template(_get_org_template_path())
         print("[RBST] org_llm: running baseline deterministic org…")
