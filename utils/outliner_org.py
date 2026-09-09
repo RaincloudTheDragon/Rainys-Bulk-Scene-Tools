@@ -948,6 +948,15 @@ def _is_light_dominated_collection(coll) -> bool:
     return lights * 2 >= total  # lights are at least half the content
 
 
+def _is_collection_instance(obj) -> bool:
+    """True when the object instances a collection (set/pack empty)."""
+    if obj is None:
+        return False
+    if getattr(obj, "instance_type", "") != "COLLECTION":
+        return False
+    return getattr(obj, "instance_collection", None) is not None
+
+
 def _is_light_group_object(obj) -> bool:
     """
     Empty/helper that groups lights (parent of lights, or instances a light pack).
@@ -959,7 +968,7 @@ def _is_light_group_object(obj) -> bool:
         return False
     if any(child.type == "LIGHT" for child in obj.children):
         return True
-    if getattr(obj, "instance_type", "") == "COLLECTION":
+    if _is_collection_instance(obj):
         inst = getattr(obj, "instance_collection", None)
         if inst is None:
             return False
@@ -968,6 +977,17 @@ def _is_light_group_object(obj) -> bool:
             return False
         return _is_light_dominated_collection(inst)
     return False
+
+
+def _is_env_set_instance(obj) -> bool:
+    """
+    Collection instance that is a set/env pack (not a light group).
+
+    These stay under Env — never Props/Dressing leftovers.
+    """
+    if not _is_collection_instance(obj):
+        return False
+    return not _is_light_group_object(obj)
 
 
 def _build_light_helper_names(context) -> set[str]:
@@ -1484,6 +1504,24 @@ def filter_plan_against_inventory(plan: dict, inventory: dict) -> dict[str, Any]
                 obj_names.add(name)
 
     valid_dests = {tuple(p) for p in STRUCTURE_PATHS.values()}
+    props_path = list(STRUCTURE_PATHS.get("Props") or ["Animation", "Char", "Props"])
+    dressing_path = list(
+        STRUCTURE_PATHS.get("Dressing") or ["Env", "Dressing"]
+    )
+    env_path = list(STRUCTURE_PATHS.get("Env") or ["Env"])
+    lgt_path = list(STRUCTURE_PATHS.get("Lgt") or ["Lgt"])
+    # Hint → preferred dest for tiny-model correction.
+    props_hints = {
+        "empty_on_parent",
+        "anim_helper_empty",
+        "animated",
+        "constrained",
+    }
+    hint_by_name = {
+        str(d.get("name")): str(d.get("hint") or "")
+        for d in (inventory.get("decide_objects") or [])
+        if isinstance(d, dict) and d.get("name")
+    }
     dropped = 0
     drop_log: list[str] = []
 
@@ -1587,8 +1625,27 @@ def filter_plan_against_inventory(plan: dict, inventory: dict) -> dict[str, Any]
                 + (f" — {why}" if why else "")
             )
             continue
+        # Set/env collection instances stay under Env (not Dressing leftovers).
+        if obj is not None and _is_env_set_instance(obj):
+            _drop(
+                f"move_obj: env set instance leave under Env {name}"
+                + (f" — {why}" if why else "")
+            )
+            continue
+        hint = hint_by_name.get(str(name), "")
+        # Constrained/animated helpers must land in Props, not Char/Dressing.
+        if hint in props_hints and path not in (props_path, lgt_path):
+            path = list(props_path)
+            why = (why + "; coerced→Props").strip("; ") if why else "coerced→Props"
+        elif hint == "light_group" and path != lgt_path:
+            path = list(lgt_path)
+            why = (why + "; coerced→Lgt").strip("; ") if why else "coerced→Lgt"
+        elif hint == "loose" and _env_like(name) and path == dressing_path:
+            # Name looks like a set; keep under Env rather than Dressing.
+            path = list(env_path)
+            why = (why + "; coerced→Env").strip("; ") if why else "coerced→Env"
         if _env_like(name) and (
-            path == list(STRUCTURE_PATHS.get("Props") or []) or "Props" in path
+            path == props_path or "Props" in path
         ):
             path = _env_dest_path_for_name(name)
         entry = {"name": name, "to": path}
@@ -1949,6 +2006,7 @@ def build_decide_candidates(context, limit: int = 40) -> list[dict[str, Any]]:
 
     Structural signals only — no asset-name heuristics. Skips objects that
     already live in a preserved (non-structure / instance / ROOTS) home.
+    Skips env/set collection instances (those stay under Env).
     """
     scored: list[tuple[int, dict[str, Any]]] = []
     seen: set[str] = set()
@@ -1959,6 +2017,9 @@ def build_decide_candidates(context, limit: int = 40) -> list[dict[str, Any]]:
         if _is_rig_widget(obj) or _object_in_wgt_collection(obj):
             return
         if obj.type in {"CAMERA", "LIGHT"}:
+            return
+        # Set packs are not Props/Dressing decisions.
+        if _is_env_set_instance(obj):
             return
         if _structure_home_name(obj) in {"Props", "Lgt", "Cam"}:
             return
@@ -1987,6 +2048,8 @@ def build_decide_candidates(context, limit: int = 40) -> list[dict[str, Any]]:
         )
 
     for obj in context.scene.objects:
+        if _is_env_set_instance(obj):
+            continue
         if _is_light_group_object(obj):
             _add(obj, "light_group", 110)
         elif obj.type == "EMPTY" and _empty_is_anim_helper(obj):
@@ -2011,6 +2074,7 @@ def build_decide_candidates(context, limit: int = 40) -> list[dict[str, Any]]:
                 and not obj.constraints
                 and not _object_has_action(obj)
                 and not _is_light_group_object(obj)
+                and not _is_collection_instance(obj)
             ):
                 _add(obj, "loose", 20)
 
@@ -2023,6 +2087,7 @@ def heuristic_decide_object_moves(inventory: dict, context=None) -> list[dict[st
     Fallback Props/Dressing moves when the tiny local model returns nothing.
 
     Structural signals only. Never empties preserved content collections.
+    Never routes env/set collection instances into Dressing.
     """
     props = list(STRUCTURE_PATHS.get("Props") or ["Animation", "Char", "Props"])
     dressing = list(STRUCTURE_PATHS.get("Dressing") or ["Env", "Dressing"])
@@ -2032,6 +2097,9 @@ def heuristic_decide_object_moves(inventory: dict, context=None) -> list[dict[st
 
     def _emit(name: str, dest: list[str], why: str) -> None:
         if not name or name in seen:
+            return
+        live = bpy.data.objects.get(name)
+        if live is not None and _is_env_set_instance(live):
             return
         seen.add(name)
         moves.append({"name": name, "to": list(dest), "why": why})
@@ -2052,6 +2120,8 @@ def heuristic_decide_object_moves(inventory: dict, context=None) -> list[dict[st
         live = bpy.data.objects.get(name)
         if live is not None and object_has_preserved_home(live):
             continue
+        if live is not None and _is_env_set_instance(live):
+            continue
         if hint == "light_group":
             _emit(name, lgt, "heuristic (light_group) → Lgt")
         elif hint in props_hints:
@@ -2070,6 +2140,8 @@ def heuristic_decide_object_moves(inventory: dict, context=None) -> list[dict[st
             if obj.name in seen:
                 continue
             if _is_rig_widget(obj) or _object_in_wgt_collection(obj):
+                continue
+            if _is_env_set_instance(obj):
                 continue
             if _structure_home_name(obj) in {"Props", "Lgt", "Cam"}:
                 continue
@@ -2105,10 +2177,51 @@ def heuristic_decide_object_moves(inventory: dict, context=None) -> list[dict[st
                 and not obj.constraints
                 and not _object_has_action(obj)
                 and not _is_light_group_object(obj)
+                and not _is_collection_instance(obj)
             ):
                 _emit(obj.name, dressing, "heuristic (loose leftover) → Dressing")
 
     return moves
+
+
+def fill_missed_decide_object_moves(
+    inventory: dict,
+    kept_moves: list[dict[str, Any]],
+    context=None,
+) -> list[dict[str, Any]]:
+    """
+    Add heuristic moves for decide_objects the model skipped or mis-routed.
+
+    Tiny models often invent bad destinations (e.g. MESH/Char) for constrained
+    props; after filtering those out, still place the real Props/Lgt cases.
+    """
+    kept_names = {
+        str(m.get("name"))
+        for m in (kept_moves or [])
+        if isinstance(m, dict) and m.get("name")
+    }
+    decide_names = {
+        str(d.get("name"))
+        for d in (inventory.get("decide_objects") or [])
+        if isinstance(d, dict) and d.get("name")
+    }
+    if not decide_names:
+        return []
+    fallback = heuristic_decide_object_moves(inventory, context=context)
+    extras = [
+        m
+        for m in fallback
+        if isinstance(m, dict)
+        and m.get("name") in decide_names
+        and str(m.get("name")) not in kept_names
+    ]
+    if not extras:
+        return []
+    filtered = filter_plan_against_inventory(
+        sanitize_plan({"move_objects": extras, "notes": []}),
+        inventory,
+    )
+    return list(filtered.get("move_objects") or [])
 
 
 

@@ -29,6 +29,7 @@ from ..utils.outliner_org import (
     apply_plan,
     build_inventory,
     clear_accidental_structure_excludes,
+    fill_missed_decide_object_moves,
     filter_plan_against_inventory,
     heuristic_decide_object_moves,
     load_template,
@@ -135,10 +136,12 @@ def _build_org_prompt(inventory: dict) -> str:
         '"move_objects":['
         '{"name":"HelperEmpty","to":["Animation","Char","Props"],'
         '"why":"empty with constraint"},'
+        '{"name":"HatMesh","to":["Animation","Char","Props"],'
+        '"why":"constrained to character rig"},'
         '{"name":"AnimatedProp","to":["Animation","Char","Props"],'
         '"why":"has action"},'
         '{"name":"LooseMesh","to":["Env","Dressing"],'
-        '"why":"loose leftover"}'
+        '"why":"loose leftover mesh"}'
         '],"view_layer_exclude":[["Env","ROOTS"]],"notes":[]}'
     )
     decide = inventory.get("decide_objects") or []
@@ -146,10 +149,15 @@ def _build_org_prompt(inventory: dict) -> str:
         "Move decide_objects into Props or Dressing. ONE JSON object only.\n"
         "Rules:\n"
         "- Only names from decide_objects.\n"
+        "- Destinations must be exact paths only: "
+        '["Animation","Char","Props"] or ["Env","Dressing"] or ["Lgt"].\n'
+        "- Never use Char alone, Animation alone, MESH, or invented folders.\n"
         "- empty_on_parent / anim_helper_empty / animated / constrained → "
-        '["Animation","Char","Props"]\n'
-        '- light_group (empty parenting or instancing lights) → ["Lgt"]\n'
-        '- armature_child (static) / loose → ["Env","Dressing"]\n'
+        '["Animation","Char","Props"] (full Props path).\n'
+        '- light_group → ["Lgt"]\n'
+        '- armature_child (static) / loose mesh → ["Env","Dressing"]\n'
+        "- Collection-instance set packs are not in decide_objects; never "
+        "treat an EMPTY that instances a whole scene as Dressing.\n"
         "- Never unpack objects that already live in a non-structure / "
         "instance / ROOTS collection — those are preserved homes.\n"
         "- Include short why on each move_objects item when possible.\n"
@@ -820,6 +828,22 @@ class OrgSceneStructureLLM(bpy.types.Operator):
                     f"model object moves applied: {len(llm_moves)} "
                     f"(collection moves still ignored)"
                 )
+                # Fill constrained/animated props the model skipped or mis-routed.
+                extras = fill_missed_decide_object_moves(
+                    self._inventory or {}, llm_moves, context=context
+                )
+                if extras:
+                    llm_moves = list(llm_moves) + list(extras)
+                    notes.append(
+                        f"heuristic filled {len(extras)} missed decide move(s)"
+                    )
+                    # Re-wrap filtered for console dump with filled moves.
+                    filtered = sanitize_plan(
+                        {
+                            "move_objects": llm_moves,
+                            "notes": list(filtered.get("notes") or []),
+                        }
+                    )
             for n in filtered.get("notes") or []:
                 if n not in notes:
                     notes.append(str(n))
