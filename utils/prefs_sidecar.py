@@ -42,6 +42,12 @@ def prefs_snapshot(prefs):
         "version": SIDECAR_VERSION,
         "automat_common_outside_blend": bool(prefs.automat_common_outside_blend),
         "org_template_path": str(getattr(prefs, "org_template_path", "") or ""),
+        "org_active_template_json": str(
+            getattr(prefs, "org_active_template_json", "") or ""
+        ),
+        "org_active_template_label": str(
+            getattr(prefs, "org_active_template_label", "") or ""
+        ),
         "org_gguf_path": str(getattr(prefs, "org_gguf_path", "") or ""),
         "org_gguf_filename": str(getattr(prefs, "org_gguf_filename", "") or ""),
         "org_llama_cli_path": str(getattr(prefs, "org_llama_cli_path", "") or ""),
@@ -65,6 +71,18 @@ def apply_snapshot(data, prefs):
             )
         if "org_template_path" in data and hasattr(prefs, "org_template_path"):
             prefs.org_template_path = str(data["org_template_path"] or "")
+        if "org_active_template_json" in data and hasattr(
+            prefs, "org_active_template_json"
+        ):
+            prefs.org_active_template_json = str(
+                data["org_active_template_json"] or ""
+            )
+        if "org_active_template_label" in data and hasattr(
+            prefs, "org_active_template_label"
+        ):
+            prefs.org_active_template_label = str(
+                data["org_active_template_label"] or ""
+            )
         if "org_gguf_path" in data and hasattr(prefs, "org_gguf_path"):
             prefs.org_gguf_path = str(data["org_gguf_path"] or "")
         if "org_gguf_filename" in data and hasattr(prefs, "org_gguf_filename"):

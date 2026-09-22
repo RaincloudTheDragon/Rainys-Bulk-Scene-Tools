@@ -32,13 +32,16 @@ from ..utils.outliner_org import (
     fill_missed_decide_object_moves,
     filter_plan_against_inventory,
     heuristic_decide_object_moves,
-    load_template,
     merge_org_reports,
     plan_action_count,
     run_org,
     sanitize_plan,
 )
-from .org_scene_structure import _get_org_template_path, show_org_summary
+from ..utils.org_template_context import (
+    compact_user_template,
+    resolve_org_template,
+)
+from .org_scene_structure import show_org_summary
 
 # Module-level llama-cli handle for prefs / cancel.
 _worker_proc: subprocess.Popen | None = None
@@ -67,7 +70,7 @@ def grammar_path() -> str:
     return os.path.join(worker_script_dir(), "rbst_org_worker", "plan.gbnf")
 
 
-def _compact_inventory(inventory: dict) -> dict:
+def _compact_inventory(inventory: dict, template: dict | None = None) -> dict:
     """Shrink inventory for small local models — decide_objects is the payload."""
     decide = list(inventory.get("decide_objects") or [])[:16]
     # Tiny structure index so the model knows legal destinations exist.
@@ -92,9 +95,13 @@ def _compact_inventory(inventory: dict) -> dict:
                     "override": bool(node.get("override")),
                 }
             )
+    user_template = compact_user_template(
+        template if template is not None else resolve_org_template()
+    )
     return {
         "scene": inventory.get("scene"),
         "structure": structure,
+        "user_template": user_template,
         "decide_objects": decide,
         # Allow filter lookups for decide names.
         "collections": structure,
@@ -147,6 +154,7 @@ def _build_org_prompt(inventory: dict) -> str:
         '],"view_layer_exclude":[["Env","ROOTS"]],"notes":[]}'
     )
     decide = inventory.get("decide_objects") or []
+    user_template = inventory.get("user_template") or compact_user_template(None)
     return (
         "Move decide_objects into Props or Dressing. ONE JSON object only.\n"
         "Rules:\n"
@@ -154,6 +162,9 @@ def _build_org_prompt(inventory: dict) -> str:
         "- Destinations must be exact paths only: "
         '["Animation","Char","Props"] or ["Env","Dressing"] or ["Lgt"].\n'
         "- Never use Char alone, Animation alone, MESH, or invented folders.\n"
+        "- user_template.folders is the user's preferred hierarchy; keep "
+        "Props/Dressing/Lgt moves consistent with it; do not invent top-level "
+        "structure names outside that template and builtin leaves.\n"
         "- empty_on_parent / anim_helper_empty / empty_parents_rig / "
         "animated / constrained → "
         '["Animation","Char","Props"] (full Props path).\n'
@@ -166,6 +177,7 @@ def _build_org_prompt(inventory: dict) -> str:
         "- Include short why on each move_objects item when possible.\n"
         "- Leave WGTS/WGT widget trees untouched. Never make_local.\n"
         f"Example:\n{example}\n"
+        f"user_template:\n{json.dumps(user_template, separators=(',', ':'))}\n"
         f"decide_objects:\n{json.dumps(decide, separators=(',', ':'))}\n"
     )
 
@@ -599,7 +611,7 @@ class OrgSceneStructureLLM(bpy.types.Operator):
 
         # Full deterministic sortation first; model then does Props/Dressing.
         self._baseline_done = False
-        template = load_template(_get_org_template_path())
+        template = resolve_org_template(context)
         print("[RBST] org_llm: running baseline deterministic org…")
         self._baseline_report = run_org(
             context, template=template, dry_run=bool(self.dry_run)
@@ -607,7 +619,7 @@ class OrgSceneStructureLLM(bpy.types.Operator):
         self._baseline_done = True
         print("[RBST] org_llm: baseline done; building inventory…")
 
-        inventory = _compact_inventory(build_inventory(context))
+        inventory = _compact_inventory(build_inventory(context), template=template)
         self._inventory = inventory
         n_decide = len(inventory.get("decide_objects") or [])
         print(f"[RBST] org_llm: inventory ready (decide_objects={n_decide})")

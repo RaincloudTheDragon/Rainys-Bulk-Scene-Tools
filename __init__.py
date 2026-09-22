@@ -44,6 +44,19 @@ class RBST_AddonPreferences(AddonPreferences):
         subtype="FILE_PATH",
         update=_rbst_persist_prefs_sidecar,
     )
+    org_active_template_json: StringProperty(
+        name="Active Org Template JSON",
+        description="Prefs/sidecar snapshot of the outliner template used across blend files",
+        default="",
+        options={"HIDDEN"},
+        update=_rbst_persist_prefs_sidecar,
+    )
+    org_active_template_label: StringProperty(
+        name="Active Org Template Label",
+        description="Short status for the active org template context",
+        default="",
+        update=_rbst_persist_prefs_sidecar,
+    )
     org_gguf_path: StringProperty(
         name="GGUF Path",
         description="Optional explicit path to a local instruct GGUF for org-with-model",
@@ -114,6 +127,19 @@ class RBST_AddonPreferences(AddonPreferences):
         box = layout.box()
         box.label(text="Outliner Organization")
         box.prop(self, "org_template_path")
+        label = (self.org_active_template_label or "").strip()
+        if (self.org_active_template_json or "").strip():
+            box.label(
+                text=f"Active context: {label or 'set'}",
+                icon="CHECKMARK",
+            )
+            box.operator(
+                "bst.reset_outliner_template_context",
+                text="Reset Active Org Context",
+                icon="X",
+            )
+        else:
+            box.label(text="Active context: none (file path / builtin)", icon="INFO")
         box.prop(self, "org_llm_timeout")
         box.prop(self, "org_llm_allow_heuristic")
 

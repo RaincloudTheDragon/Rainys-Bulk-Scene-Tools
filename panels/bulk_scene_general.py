@@ -5,6 +5,10 @@ from ..ops.create_ortho_camera import CreateOrthoCamera
 from ..ops.spawn_scene_structure import SpawnSceneStructure
 from ..ops.org_scene_structure import OrgSceneStructure, RBST_Org_OT_summary_dialog
 from ..ops.capture_outliner_template import CaptureOutlinerTemplate
+from ..ops.apply_outliner_template_context import (
+    ApplyOutlinerTemplateContext,
+    ResetOutlinerTemplateContext,
+)
 from ..ops.org_scene_structure_llm import (
     OrgSceneStructureLLM,
     DownloadOrgModel,
@@ -17,6 +21,7 @@ from ..ops.remove_action_fake_users import RemoveActionFakeUsers
 from ..ops.white_world import WhiteWorld
 from ..utils import compat
 from ..utils.org_runtime import org_runtime_ready
+from ..utils.org_template_context import active_org_template_status
 
 
 def _addon_prefs(context):
@@ -77,6 +82,21 @@ class RBST_SceneGen_PT_BulkSceneGeneral(bpy.types.Panel):
             text="Capture Template from this File",
             icon="FILE_TICK",
         )
+        row = box.row(align=True)
+        row.operator(
+            "bst.apply_outliner_template_context",
+            text="Add Current Outliner to Org Context",
+            icon="IMPORT",
+        )
+        status = active_org_template_status(prefs)
+        if status:
+            row = box.row(align=True)
+            row.label(text=status, icon="CHECKMARK")
+            row.operator(
+                "bst.reset_outliner_template_context",
+                text="Reset",
+                icon="X",
+            )
 
         row = box.row(align=True)
         row.operator("bst.white_world", text="White World", icon='WORLD')
@@ -122,6 +142,8 @@ classes = (
     OrgSceneStructure,
     RBST_Org_OT_summary_dialog,
     CaptureOutlinerTemplate,
+    ApplyOutlinerTemplateContext,
+    ResetOutlinerTemplateContext,
     OrgSceneStructureLLM,
     DownloadOrgModel,
     InstallOrgRuntime,

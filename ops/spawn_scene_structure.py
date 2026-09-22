@@ -3,8 +3,9 @@
 import bpy
 from bpy.props import BoolProperty
 
-from ..utils.outliner_org import load_template, run_spawn
-from .org_scene_structure import _get_org_template_path, show_org_summary
+from ..utils.org_template_context import resolve_org_template
+from ..utils.outliner_org import run_spawn
+from .org_scene_structure import show_org_summary
 
 
 class SpawnSceneStructure(bpy.types.Operator):
@@ -26,7 +27,7 @@ class SpawnSceneStructure(bpy.types.Operator):
 
     def execute(self, context):
         try:
-            template = load_template(_get_org_template_path())
+            template = resolve_org_template(context)
             report = run_spawn(context, template=template, dry_run=bool(self.dry_run))
             show_org_summary(report)
             if self.dry_run:
