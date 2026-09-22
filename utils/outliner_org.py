@@ -1036,6 +1036,32 @@ def _has_armature_relation(obj, armature_targets: set[str] | None = None) -> boo
     return False
 
 
+def _collection_has_armature(coll) -> bool:
+    """True if any object in the collection subtree is an armature."""
+    if coll is None:
+        return False
+    return any(obj.type == "ARMATURE" for obj in _iter_collection_objects(coll))
+
+
+def _override_blob_dest_path(coll) -> list[str]:
+    """
+    Destination for an orphan locked/override collection under the scene root.
+
+    Characters/rig packs (name hint or any armature) → Animation/Char.
+    Everything else (sets, mesh packs) → Env.
+    """
+    char_path = list(STRUCTURE_PATHS.get("Char") or ["Animation", "Char"])
+    env_path = list(STRUCTURE_PATHS.get("Env") or ["Env"])
+    if coll is None:
+        return env_path
+    if _char_like(coll.name):
+        return char_path
+    # Structural: armature packs are characters/rigs, not Env dressing.
+    if _collection_has_armature(coll):
+        return char_path
+    return env_path
+
+
 def plan_override_nests(context, template: dict | None = None) -> list[dict]:
     """
     Nest only orphan locked collections that sit directly under Scene Collection.
@@ -1043,12 +1069,13 @@ def plan_override_nests(context, template: dict | None = None) -> list[dict]:
     Do not pull locked blobs out of Env / Animation / alias parents (e.g. leave
     DOCK SCENE BSDF under env→Env). Interactive prop rigs are handled by
     plan_prop_rig_nests. ROOTS is not a dump for every non-character override.
+
+    Character detection is structural (armature in subtree) plus name hints —
+    not limited to names containing "char"/"rig".
     """
     tmpl = template or default_template()
     scene_collection = context.scene.collection
     structure_names = _structure_collection_names(tmpl)
-    char_path = ["Animation", "Char"]
-    env_path = ["Env"]
     proposals: list[dict] = []
 
     for child in list(scene_collection.children):
@@ -1056,7 +1083,7 @@ def plan_override_nests(context, template: dict | None = None) -> list[dict]:
             continue
         if child.name in structure_names or _is_wgt_collection(child.name):
             continue
-        dest_path = char_path if _char_like(child.name) else env_path
+        dest_path = _override_blob_dest_path(child)
         dest = get_collection_by_path(scene_collection, dest_path)
         if dest is not None and child.name in dest.children:
             continue
@@ -1845,12 +1872,15 @@ def build_deterministic_plan(context, template: dict | None = None) -> dict:
     nests = plan_override_nests(context, tmpl)
     prop_nests = plan_prop_rig_nests(context, tmpl)
     env_nests = plan_env_like_nests(context, tmpl)
-    # De-dupe moves: reconcile, orphans, env-like, then prop-rig nests.
-    move_names = {m["name"] for m in reconcile.get("move_collections") or []}
+    # De-dupe: later lists win so prop-rigs can refine Char → Props.
+    move_by_name: dict[str, dict] = {}
+    for item in reconcile.get("move_collections") or []:
+        if isinstance(item, dict) and item.get("name"):
+            move_by_name[item["name"]] = item
     for n in nests + env_nests + prop_nests:
-        if n["name"] not in move_names:
-            reconcile.setdefault("move_collections", []).append(n)
-            move_names.add(n["name"])
+        if isinstance(n, dict) and n.get("name"):
+            move_by_name[n["name"]] = n
+    reconcile["move_collections"] = list(move_by_name.values())
 
     return sanitize_plan(
         {
