@@ -1,3 +1,10 @@
+## [v0.20.0] - 2026-09-22
+
+### Features
+
+- Active org template context in prefs/sidecar: add current outliner across blends (additive), reset to clear; feeds spawn/org and local-model prompt
+- Deterministic org: nest armature override packs under Animation/Char (not Env by name alone)
+
 ## [v0.19.0] - 2026-09-09
 
 ### Features
