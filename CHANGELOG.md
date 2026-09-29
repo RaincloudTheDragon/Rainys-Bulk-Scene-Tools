@@ -1,3 +1,10 @@
+## [v0.21.0] - 2026-09-29
+
+### Features
+
+- Org templates record placement examples (content under Char/Props/Env/…) so heuristics prefer known homes before loose Dressing
+- Capture merges into the existing template (local model when runtime ready, else additive deterministic) and syncs prefs org context
+
 ## [v0.20.0] - 2026-09-22
 
 ### Features
