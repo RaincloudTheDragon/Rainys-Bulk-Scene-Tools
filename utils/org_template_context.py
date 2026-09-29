@@ -7,6 +7,8 @@ Resolution order for spawn/org/LLM:
   3. default_template()
 
 Apply merges each capture into the active snapshot (additive); Reset clears it.
+Capture merges into the chosen JSON file (llama when runtime ready, else
+merge_org_templates) and also apply_active_org_template so prefs stay in sync.
 """
 
 from __future__ import annotations
@@ -49,6 +51,8 @@ def _normalize_template(data: dict[str, Any]) -> dict[str, Any]:
         base["rename_aliases"] = dict(base.get("rename_aliases") or {})
     if not data.get("type_placement"):
         base["type_placement"] = dict(base.get("type_placement") or {})
+    if "placement_examples" not in data or data.get("placement_examples") is None:
+        base["placement_examples"] = list(base.get("placement_examples") or [])
     return base
 
 
@@ -102,9 +106,10 @@ def merge_org_templates(
     base: dict[str, Any] | None, incoming: dict[str, Any]
 ) -> dict[str, Any]:
     """
-    Additive merge: union folders / excludes / hides; later aliases win.
+    Additive merge: union folders / excludes / hides / placement_examples;
+    later aliases win.
 
-    Used so Apply from successive blend files accumulates context without Reset.
+    Used so Apply / Capture from successive blend files accumulates context.
     """
     if not isinstance(incoming, dict) or not incoming.get("folders"):
         raise ValueError("incoming template must include folders")
@@ -118,6 +123,29 @@ def merge_org_templates(
             aliases[str(key)] = str(val)
         for key, val in (src.get("type_placement") or {}).items():
             type_placement[str(key)] = list(val) if isinstance(val, list) else val
+
+    # placement_examples: key by (name, path); incoming refreshes signals.
+    examples_by_key: dict[tuple[str, tuple[str, ...]], dict[str, Any]] = {}
+    for src in (base, incoming):
+        if not src:
+            continue
+        for ex in src.get("placement_examples") or []:
+            if not isinstance(ex, dict) or not ex.get("name"):
+                continue
+            path = ex.get("path")
+            path_key = _path_list_key(path)
+            if path_key is None:
+                continue
+            key = (str(ex["name"]), path_key)
+            examples_by_key[key] = {
+                "name": str(ex["name"]),
+                "path": list(path_key),
+                "signals": [
+                    str(s) for s in (ex.get("signals") or []) if s
+                ][:8],
+            }
+    placement_examples = list(examples_by_key.values())[:80]
+
     merged = {
         "version": incoming.get("version")
         or (base.get("version") if base else None)
@@ -136,6 +164,7 @@ def merge_org_templates(
         ),
         "rename_aliases": aliases,
         "type_placement": type_placement,
+        "placement_examples": placement_examples,
     }
     return _normalize_template(merged)
 
@@ -235,11 +264,28 @@ def resolve_org_template(context=None) -> dict[str, Any]:
 
 
 def compact_user_template(template: dict[str, Any] | None) -> dict[str, Any]:
-    """Trim template for LLM inventory (folders + excludes only)."""
+    """Trim template for LLM inventory (folders, excludes, placement examples)."""
     if not template:
         template = default_template()
+    examples = []
+    for ex in template.get("placement_examples") or []:
+        if not isinstance(ex, dict) or not ex.get("name"):
+            continue
+        path = ex.get("path")
+        if not isinstance(path, list) or not path:
+            continue
+        examples.append(
+            {
+                "name": str(ex["name"]),
+                "path": [str(p) for p in path],
+                "signals": [str(s) for s in (ex.get("signals") or []) if s][:6],
+            }
+        )
+        if len(examples) >= 24:
+            break
     return {
         "folders": list(template.get("folders") or []),
         "view_layer_exclude": list(template.get("view_layer_exclude") or []),
         "hide_viewport": list(template.get("hide_viewport") or []),
+        "placement_examples": examples,
     }

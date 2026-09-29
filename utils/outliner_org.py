@@ -272,6 +272,7 @@ def default_template() -> dict[str, Any]:
         "type_placement": {k: list(v) for k, v in TYPE_PLACEMENT.items()},
         "view_layer_exclude": [list(p) for p in BUILTIN_EXCLUDE_PATHS],
         "hide_viewport": [list(p) for p in BUILTIN_HIDE_VIEWPORT_PATHS],
+        "placement_examples": [],
     }
 
 
@@ -291,6 +292,10 @@ def load_template(path: str | None) -> dict[str, Any]:
                     base["type_placement"] = {
                         k: list(v) for k, v in TYPE_PLACEMENT.items()
                     }
+                if "placement_examples" not in data or data.get(
+                    "placement_examples"
+                ) is None:
+                    base["placement_examples"] = []
                 return base
         except Exception as exc:
             print(f"[RBST] Failed to load org template {path}: {exc}")
@@ -1043,17 +1048,68 @@ def _collection_has_armature(coll) -> bool:
     return any(obj.type == "ARMATURE" for obj in _iter_collection_objects(coll))
 
 
-def _override_blob_dest_path(coll) -> list[str]:
+def _placement_example_leaf(path) -> str | None:
+    """Map an example path to a structure leaf (Char/Props/Env/Dressing/…)."""
+    if not isinstance(path, list) or not path:
+        return None
+    leaf = str(path[-1])
+    if leaf == "ROOTS":
+        return "Env"
+    if leaf in STRUCTURE_PATHS:
+        return leaf
+    return None
+
+
+def placement_example_lookup(template: dict | None) -> dict[str, str]:
+    """
+    name → preferred structure leaf from template placement_examples.
+
+    Later examples for the same name win (incoming capture refresh).
+    """
+    out: dict[str, str] = {}
+    if not template:
+        return out
+    for ex in template.get("placement_examples") or []:
+        if not isinstance(ex, dict) or not ex.get("name"):
+            continue
+        leaf = _placement_example_leaf(ex.get("path"))
+        if leaf:
+            out[str(ex["name"])] = leaf
+    return out
+
+
+def _example_dest_path_for_leaf(leaf: str) -> list[str] | None:
+    """Full structure path for a placement leaf used by override nests."""
+    if leaf == "Props":
+        return list(STRUCTURE_PATHS.get("Props") or ["Animation", "Char", "Props"])
+    if leaf == "Char":
+        return list(STRUCTURE_PATHS.get("Char") or ["Animation", "Char"])
+    if leaf in {"Env", "Dressing", "ROOTS"}:
+        return list(STRUCTURE_PATHS.get("Env") or ["Env"])
+    if leaf == "Lgt":
+        return list(STRUCTURE_PATHS.get("Lgt") or ["Lgt"])
+    if leaf == "Cam":
+        return list(STRUCTURE_PATHS.get("Cam") or ["Animation", "Cam"])
+    return None
+
+
+def _override_blob_dest_path(coll, template: dict | None = None) -> list[str]:
     """
     Destination for an orphan locked/override collection under the scene root.
 
-    Characters/rig packs (name hint or any armature) → Animation/Char.
-    Everything else (sets, mesh packs) → Env.
+    Prefer template placement_examples (Char/Props/Env). Else characters/rig
+    packs (name hint or any armature) → Animation/Char; everything else → Env.
     """
     char_path = list(STRUCTURE_PATHS.get("Char") or ["Animation", "Char"])
     env_path = list(STRUCTURE_PATHS.get("Env") or ["Env"])
     if coll is None:
         return env_path
+    lookup = placement_example_lookup(template)
+    leaf = lookup.get(coll.name)
+    if leaf:
+        dest = _example_dest_path_for_leaf(leaf)
+        if dest is not None and leaf in {"Char", "Props", "Env", "Dressing"}:
+            return dest
     if _char_like(coll.name):
         return char_path
     # Structural: armature packs are characters/rigs, not Env dressing.
@@ -1071,7 +1127,8 @@ def plan_override_nests(context, template: dict | None = None) -> list[dict]:
     plan_prop_rig_nests. ROOTS is not a dump for every non-character override.
 
     Character detection is structural (armature in subtree) plus name hints —
-    not limited to names containing "char"/"rig".
+    not limited to names containing "char"/"rig". Template placement_examples
+    bias Char/Props/Env when the blob was previously captured there.
     """
     tmpl = template or default_template()
     scene_collection = context.scene.collection
@@ -1083,7 +1140,7 @@ def plan_override_nests(context, template: dict | None = None) -> list[dict]:
             continue
         if child.name in structure_names or _is_wgt_collection(child.name):
             continue
-        dest_path = _override_blob_dest_path(child)
+        dest_path = _override_blob_dest_path(child, tmpl)
         dest = get_collection_by_path(scene_collection, dest_path)
         if dest is not None and child.name in dest.children:
             continue
@@ -1986,6 +2043,84 @@ def run_org(context, template: dict | None = None, dry_run: bool = False) -> dic
     }
 
 
+def _placement_signals_for_collection(coll) -> list[str]:
+    """Structural signals only for template placement_examples."""
+    signals: list[str] = []
+    if coll is None:
+        return signals
+    if is_locked_collection(coll):
+        signals.append("override" if getattr(coll, "override_library", None) else "library")
+    if _collection_has_armature(coll):
+        signals.append("armature")
+    counts = _collection_object_type_counts(coll)
+    lights = counts.get("LIGHT", 0)
+    meshes = counts.get("MESH", 0)
+    if lights and lights >= meshes:
+        signals.append("light")
+    elif meshes:
+        signals.append("mesh")
+    # Collection-instance empties that reference this pack.
+    for obj in bpy.data.objects:
+        if getattr(obj, "instance_type", "") != "COLLECTION":
+            continue
+        if getattr(obj, "instance_collection", None) == coll:
+            signals.append("instance")
+            break
+    return signals
+
+
+def _collect_placement_examples(context, limit: int = 40) -> list[dict[str, Any]]:
+    """
+    Sample content collections under structure folders (skip WGTS).
+
+    Records name + structure path + structural signals so later org can
+    prefer Char/Props/Env without project-specific name lists.
+    """
+    scene_collection = context.scene.collection
+    structure_names = _structure_collection_names(default_template())
+    examples: list[dict[str, Any]] = []
+    seen: set[str] = set()
+
+    # Structure leaf paths we care about for content homes.
+    host_paths = [
+        ["Env"],
+        ["Env", "Dressing"],
+        ["Env", "ROOTS"],
+        ["Animation", "Char"],
+        ["Animation", "Char", "Props"],
+        ["Animation", "Cam"],
+        ["Lgt"],
+    ]
+
+    for path in host_paths:
+        host = get_collection_by_path(scene_collection, path)
+        if host is None:
+            continue
+        for child in list(host.children):
+            if child.name in structure_names or _is_wgt_collection(child.name):
+                continue
+            if child.name in seen:
+                continue
+            # Prefer content packs (locked blobs or non-empty local wrappers).
+            if not (
+                is_locked_collection(child)
+                or len(child.objects) > 0
+                or any(is_locked_collection(c) for c in child.children)
+            ):
+                continue
+            seen.add(child.name)
+            examples.append(
+                {
+                    "name": child.name,
+                    "path": list(path),
+                    "signals": _placement_signals_for_collection(child),
+                }
+            )
+            if len(examples) >= limit:
+                return examples
+    return examples
+
+
 def capture_template_from_scene(context) -> dict[str, Any]:
     """Walk current scene tree into a template JSON-serializable dict."""
     scene_collection = context.scene.collection
@@ -2047,6 +2182,7 @@ def capture_template_from_scene(context) -> dict[str, Any]:
         "type_placement": {k: list(v) for k, v in TYPE_PLACEMENT.items()},
         "view_layer_exclude": exclude_paths or list(base["view_layer_exclude"]),
         "hide_viewport": hide_paths or list(base["hide_viewport"]),
+        "placement_examples": _collect_placement_examples(context),
     }
 
 
@@ -2186,18 +2322,48 @@ def build_decide_candidates(context, limit: int = 40) -> list[dict[str, Any]]:
     return [item for _prio, item in scored[:limit]]
 
 
-def heuristic_decide_object_moves(inventory: dict, context=None) -> list[dict[str, Any]]:
+def heuristic_decide_object_moves(
+    inventory: dict, context=None, template: dict | None = None
+) -> list[dict[str, Any]]:
     """
     Fallback Props/Dressing moves when the tiny local model returns nothing.
 
-    Structural signals only. Never empties preserved content collections.
-    Never routes env/set collection instances into Dressing.
+    Structural signals first; template placement_examples bias Props vs
+    Dressing before loose→Dressing. Never empties preserved content
+    collections. Never routes env/set collection instances into Dressing.
     """
     props = list(STRUCTURE_PATHS.get("Props") or ["Animation", "Char", "Props"])
     dressing = list(STRUCTURE_PATHS.get("Dressing") or ["Env", "Dressing"])
     lgt = list(STRUCTURE_PATHS.get("Lgt") or ["Lgt"])
     moves: list[dict[str, Any]] = []
     seen: set[str] = set()
+    # Prefer explicit template when passed; else inventory compact; else resolve.
+    tmpl = template
+    if tmpl is None and isinstance(inventory, dict):
+        ut = inventory.get("user_template")
+        if isinstance(ut, dict):
+            tmpl = ut
+    if tmpl is None:
+        try:
+            from .org_template_context import resolve_org_template
+
+            tmpl = resolve_org_template(context)
+        except Exception:
+            tmpl = None
+    lookup = placement_example_lookup(tmpl if isinstance(tmpl, dict) else None)
+
+    def _example_leaf_for_object(obj) -> str | None:
+        """Match object name or a containing content pack against examples."""
+        if obj is None:
+            return None
+        leaf = lookup.get(obj.name)
+        if leaf:
+            return leaf
+        for coll in obj.users_collection:
+            leaf = lookup.get(coll.name)
+            if leaf in {"Props", "Dressing", "Lgt", "Cam", "Char", "Env"}:
+                return leaf
+        return None
 
     def _emit(name: str, dest: list[str], why: str) -> None:
         if not name or name in seen:
@@ -2227,6 +2393,19 @@ def heuristic_decide_object_moves(inventory: dict, context=None) -> list[dict[st
             continue
         if live is not None and _is_env_set_instance(live):
             continue
+        # Template examples: Props vs Dressing before loose default.
+        ex_leaf = _example_leaf_for_object(live) if live is not None else lookup.get(
+            str(name)
+        )
+        if ex_leaf == "Props":
+            _emit(name, props, "heuristic (placement_example Props)")
+            continue
+        if ex_leaf == "Dressing":
+            _emit(name, dressing, "heuristic (placement_example Dressing)")
+            continue
+        if ex_leaf == "Lgt":
+            _emit(name, lgt, "heuristic (placement_example Lgt)")
+            continue
         if hint == "light_group":
             _emit(name, lgt, "heuristic (light_group) → Lgt")
         elif hint in props_hints:
@@ -2251,6 +2430,16 @@ def heuristic_decide_object_moves(inventory: dict, context=None) -> list[dict[st
             if _structure_home_name(obj) in {"Props", "Lgt", "Cam"}:
                 continue
             if object_has_preserved_home(obj):
+                continue
+            ex_leaf = _example_leaf_for_object(obj)
+            if ex_leaf == "Props":
+                _emit(obj.name, props, "heuristic (placement_example Props)")
+                continue
+            if ex_leaf == "Dressing":
+                _emit(obj.name, dressing, "heuristic (placement_example Dressing)")
+                continue
+            if ex_leaf == "Lgt":
+                _emit(obj.name, lgt, "heuristic (placement_example Lgt)")
                 continue
             if _is_light_group_object(obj):
                 _emit(obj.name, lgt, "heuristic (light_group) → Lgt")

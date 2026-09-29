@@ -1,0 +1,15 @@
+root ::= object
+object ::= "{" ws version-kv "," ws folders-kv "," ws exclude-kv "," ws hide-kv "," ws examples-kv ws "}"
+version-kv ::= "\"version\"" ws ":" ws number
+folders-kv ::= "\"folders\"" ws ":" ws array-paths
+exclude-kv ::= "\"view_layer_exclude\"" ws ":" ws array-paths
+hide-kv ::= "\"hide_viewport\"" ws ":" ws array-paths
+examples-kv ::= "\"placement_examples\"" ws ":" ws array-examples
+array-paths ::= "[" ws (path ("," ws path)*)? ws "]"
+array-examples ::= "[" ws (example ("," ws example)*)? ws "]"
+array-str ::= "[" ws (string ("," ws string)*)? ws "]"
+example ::= "{" ws "\"name\"" ws ":" ws string "," ws "\"path\"" ws ":" ws path ("," ws "\"signals\"" ws ":" ws array-str)? ws "}"
+path ::= "[" ws (string ("," ws string)*)? ws "]"
+string ::= "\"" ([^"\\] | "\\" ["\\/bfnrt])* "\""
+number ::= [0-9]+
+ws ::= [ \t\n]*

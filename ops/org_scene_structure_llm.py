@@ -165,6 +165,8 @@ def _build_org_prompt(inventory: dict) -> str:
         "- user_template.folders is the user's preferred hierarchy; keep "
         "Props/Dressing/Lgt moves consistent with it; do not invent top-level "
         "structure names outside that template and builtin leaves.\n"
+        "- Prefer destinations consistent with user_template.placement_examples "
+        "(same name or home pack under Props vs Dressing).\n"
         "- empty_on_parent / anim_helper_empty / empty_parents_rig / "
         "animated / constrained → "
         '["Animation","Char","Props"] (full Props path).\n'
